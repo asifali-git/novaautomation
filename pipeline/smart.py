@@ -499,7 +499,7 @@ def _seeded_plan(feats, dur, seed, title_hint=""):
         if feats.get("brightness", 0.5) > 0.6 and preset == "neon":
             preset = "warm"
         crop_amt = round((s % 4) * 0.015, 3)
-        sharp = round(0.12 + (s % 3) * 0.05, 3)
+        sharp = round(0.05 + (s % 3) * 0.03, 3)
 
         # Narration: seeded pick, avoid ALL previously used (not just previous)
         narr = ""
@@ -576,7 +576,7 @@ def _simple_plan(dur):
         speed = [1.12, 1.10, 1.15, 1.11, 1.13, 1.10, 1.14, 1.12][i % 8]
         # Only bright/natural presets — NO moody/vintage (they look B&W).
         preset = ["warm", "cool", "vivid", "warm", "cool", "vivid", "warm", "cool"][i % 8]
-        sharp = 0.35
+        sharp = 0.12
         # Heavy crop: 8-12% top+bottom, 4% left+right — very visible recomposition.
         crop_top = 0.08
         crop_bot = 0.06

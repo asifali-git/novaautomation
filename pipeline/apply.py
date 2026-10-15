@@ -182,8 +182,8 @@ def _video_chain(seg, caption_crop_top=0.0, caption_crop_bottom=0.0, delogo_filt
 
     sharp = float(seg.get("sharpness", 0) or 0)
     if sharp > 0.01:
-        # Gentle: 0.18 -> ~0.72, 0.35 -> ~0.92 (was 2.55 = over-sharpened).
-        luma = round(0.5 + sharp * 1.2, 2)
+        # Subtle: 0.18 -> ~0.57, 0.35 -> ~0.64 (was 1.2 multiplier = over-sharpened).
+        luma = round(0.3 + sharp * 0.5, 2)
         parts.append(f"unsharp=5:5:{luma}:5:5:0")
 
     color = seg.get("color") or {}

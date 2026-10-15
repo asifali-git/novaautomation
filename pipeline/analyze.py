@@ -141,7 +141,7 @@ Return ONLY valid JSON (no markdown fences, no commentary):
       "speed": 1.10,
       "crop": {"top": 0.08, "bottom": 0.06, "left": 0.04, "right": 0.04},
       "zoom": {"type": "none", "amount": 1.0},
-      "sharpness": 0.18,
+      "sharpness": 0.10,
       "color": {"preset": "vivid"|"warm"|"cool"|"moody"|"noir"|"vintage"|"neon", "brightness": 0.0, "contrast": 1.06, "saturation": 1.12},
       "overlay": {"type": "none", "value": ""},
       "caption": {"text": "<=5 words", "position": "top"|"center"|"bottom", "style": "outline"|"box"|"bold"},
@@ -316,8 +316,8 @@ def _transform_floor(seg, idx):
         seg["color"]["saturation"] = 1.12
     if seg["color"]["contrast"] < 1.03:
         seg["color"]["contrast"] = 1.06
-    if seg["sharpness"] < 0.12:
-        seg["sharpness"] = 0.18
+    if seg["sharpness"] < 0.08:
+        seg["sharpness"] = 0.10
 
 
 def _fallback_plan(duration, title_hint=""):
@@ -378,7 +378,7 @@ def _normalize(plan, duration):
             zoom = s.get("zoom") or {}
             ztype = zoom.get("type", "none")
             zamt = min(1.4, max(1.0, float(zoom.get("amount", 1.0))))
-            sharp = min(1.0, max(0.0, float(s.get("sharpness", 0))))
+            sharp = min(0.4, max(0.0, float(s.get("sharpness", 0))))
             color = s.get("color") or {}
             caption = s.get("caption") or {}
             narration = (s.get("narration") or "").strip()
