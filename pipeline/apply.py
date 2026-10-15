@@ -241,9 +241,13 @@ def render_segment(src, seg, out, has_audio=True, caption_crop_top=0.0, caption_
 
 def concat_segments(seg_paths, out):
     listfile = out + ".txt"
+    out_dir = os.path.dirname(os.path.abspath(out))
     with open(listfile, "w", encoding="utf-8") as f:
         for p in seg_paths:
-            f.write("file '" + p.replace("'", "'\\''") + "'\n")
+            # ffmpeg concat resolves relative paths against the listfile's dir,
+            # so use absolute paths to avoid manual_7/manual_7/seg_00.mp4.
+            abs_p = os.path.abspath(p)
+            f.write("file '" + abs_p.replace("'", "'\\''") + "'\n")
     # Stream copy first (fast). Then strip metadata via a second pass if needed.
     cmd = [FFMPEG, "-y", "-f", "concat", "-safe", "0", "-i", listfile, "-c", "copy",
            "-map_metadata", "-1", out]
