@@ -36,6 +36,14 @@
               <option value="youtube">YouTube</option>
             </select>
           </label>
+          <label class="checkbox-group">
+            Upload also to
+            <div class="checks">
+              <label class="check"><input type="checkbox" id="f-tiktok" value="tiktok" /> TikTok</label>
+              <label class="check"><input type="checkbox" id="f-instagram" value="instagram" /> Instagram</label>
+              <label class="check"><input type="checkbox" id="f-facebook" value="facebook" /> Facebook</label>
+            </div>
+          </label>
           <label>Account
             <select id="f-login"></select>
           </label>
@@ -45,12 +53,34 @@
       </section>
 
       <section class="card">
-        <h2>Connected account</h2>
+        <h2>YouTube account</h2>
         <div id="login-list" class="login-list"></div>
         <button id="btn-login" class="btn google" type="button">
           <span class="g">▶</span> Login with Google
         </button>
         <p class="hint">A window opens. Sign in once. It stays connected.</p>
+      </section>
+
+      <section class="card">
+        <h2>Social accounts</h2>
+        <div id="account-list" class="login-list"></div>
+        <form id="account-form" class="form">
+          <label>Platform
+            <select id="af-platform">
+              <option value="tiktok">TikTok</option>
+              <option value="instagram">Instagram</option>
+              <option value="facebook">Facebook</option>
+            </select>
+          </label>
+          <label>Username <span class="muted">(optional)</span>
+            <input id="af-username" type="text" placeholder="@yourhandle" />
+          </label>
+          <label>Cookies file
+            <input id="af-cookies" type="file" accept=".json,.txt" required />
+          </label>
+          <button class="btn primary" type="submit">Connect</button>
+          <p class="hint">Export cookies from browser (Cookie-Editor → Export JSON). FB: use "Export cookies JSON for Puppeteer".</p>
+        </form>
       </section>
     </aside>
 

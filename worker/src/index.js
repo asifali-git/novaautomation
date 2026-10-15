@@ -65,13 +65,14 @@ async function createTask(db, body) {
   if (!url) throw new Error('source_url required');
   const platform = body.platform || detectPlatform(url);
   const dest = body.dest_provider || 'youtube';
+  const destPlatforms = body.dest_platforms ? (Array.isArray(body.dest_platforms) ? body.dest_platforms.join(',') : String(body.dest_platforms)) : null;
   const loginId = body.login_id || null;
   const res = await db
     .prepare(
-      `INSERT INTO tasks (name, source_url, platform, dest_provider, login_id, status, created_at)
-       VALUES (?, ?, ?, ?, ?, 'active', ?)`
+      `INSERT INTO tasks (name, source_url, platform, dest_provider, dest_platforms, login_id, status, created_at)
+       VALUES (?, ?, ?, ?, ?, ?, 'active', ?)`
     )
-    .bind(body.name || platform, url, platform, dest, loginId, now())
+    .bind(body.name || platform, url, platform, dest, destPlatforms, loginId, now())
     .run();
   return getTask(db, res.meta?.last_row_id);
 }
@@ -86,6 +87,11 @@ async function patchTask(db, id, body) {
       fields.push(`${k} = ?`);
       vals.push(body[k]);
     }
+  }
+  if ('dest_platforms' in body) {
+    fields.push('dest_platforms = ?');
+    const dp = body.dest_platforms;
+    vals.push(dp == null ? null : (Array.isArray(dp) ? dp.join(',') : String(dp)));
   }
   if (!fields.length) return task;
   vals.push(id);
@@ -213,6 +219,50 @@ async function deleteLogin(db, id) {
   return res.meta?.changes > 0;
 }
 
+// --- Accounts (social media cookies) -----------------------------------------
+
+async function listAccounts(db) {
+  const res = await db.prepare('SELECT id, platform, username, status, created_at, updated_at FROM accounts ORDER BY id DESC').all();
+  return res.results || [];
+}
+
+async function getAccount(db, id) {
+  const r = await db.prepare('SELECT * FROM accounts WHERE id = ?').bind(id).first();
+  return r;
+}
+
+async function saveAccount(db, body) {
+  const platform = (body.platform || '').toLowerCase().trim();
+  if (!platform) throw new Error('platform required');
+  const cookies = body.cookies;
+  if (!cookies) throw new Error('cookies required');
+  const cookiesStr = typeof cookies === 'string' ? cookies : JSON.stringify(cookies);
+  const username = body.username || null;
+  const t = now();
+  // Upsert: one account per platform (replace existing)
+  const existing = await db.prepare('SELECT id FROM accounts WHERE platform = ?').bind(platform).first();
+  if (existing) {
+    await db.prepare('UPDATE accounts SET username = ?, cookies = ?, updated_at = ? WHERE id = ?')
+      .bind(username, cookiesStr, t, existing.id).run();
+    return getAccount(db, existing.id);
+  }
+  const res = await db.prepare('INSERT INTO accounts (platform, username, cookies, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)')
+    .bind(platform, username, cookiesStr, 'active', t, t).run();
+  return getAccount(db, res.meta?.last_row_id);
+}
+
+async function deleteAccount(db, id) {
+  const res = await db.prepare('DELETE FROM accounts WHERE id = ?').bind(id).run();
+  return res.meta?.changes > 0;
+}
+
+async function getAccountCookies(db, platform) {
+  const r = await db.prepare('SELECT cookies FROM accounts WHERE platform = ? AND status = ?')
+    .bind((platform || '').toLowerCase(), 'active').first();
+  if (!r) return null;
+  try { return JSON.parse(r.cookies); } catch { return r.cookies; }
+}
+
 // --- OAuth ------------------------------------------------------------------
 
 function googleAuthUrl(env, state, clientId) {
@@ -293,19 +343,39 @@ export default {
     try {
       // ---- Public API (frontend) ----
       if (path === '/api/state' && req.method === 'GET') {
-        const [tasks, videos, logins] = await Promise.all([
+        const [tasks, videos, logins, accounts] = await Promise.all([
           listTasks(env.DB),
           listVideos(env.DB, { limit: 200 }),
           listLogins(env.DB),
+          listAccounts(env.DB),
         ]);
         return withCors(
           json({
             tasks,
             videos,
             logins,
+            accounts,
             config: { has_client_id: !!env.YT_CLIENT_ID, has_client_secret: !!env.YT_CLIENT_SECRET },
           })
         );
+      }
+
+      // ---- Accounts (social cookies) ----
+      if (path === '/api/accounts' && req.method === 'GET') {
+        const accounts = await listAccounts(env.DB);
+        return withCors(json({ accounts }));
+      }
+
+      if (path === '/api/accounts' && req.method === 'POST') {
+        const body = await readBody(req);
+        const account = await saveAccount(env.DB, body);
+        return withCors(json({ account }, 201));
+      }
+
+      if (path.startsWith('/api/accounts/') && req.method === 'DELETE') {
+        const id = Number(path.split('/')[3]);
+        const ok = await deleteAccount(env.DB, id);
+        return withCors(json({ ok }));
       }
 
       if (path === '/api/health' && req.method === 'GET') {
@@ -438,6 +508,30 @@ export default {
               login_id: yt?.id || null,
             })
           );
+        }
+
+        if (path === '/api/internal/accounts/env' && req.method === 'GET') {
+          // Return all active social cookies for the pipeline runner.
+          const accounts = await listAccounts(env.DB);
+          const result = {};
+          for (const a of accounts) {
+            if (a.status !== 'active') continue;
+            const full = await getAccount(env.DB, a.id);
+            try {
+              result[a.platform] = { username: a.username, cookies: JSON.parse(full.cookies) };
+            } catch {
+              result[a.platform] = { username: a.username, cookies: full.cookies };
+            }
+          }
+          return withCors(json(result));
+        }
+
+        if (path === '/api/internal/accounts/cookies' && req.method === 'GET') {
+          // Return cookies for a specific platform.
+          const platform = url.searchParams.get('platform') || '';
+          const cookies = await getAccountCookies(env.DB, platform);
+          if (!cookies) return withCors(json({ error: 'no cookies for platform' }, 404));
+          return withCors(json({ platform, cookies }));
         }
       }
 

@@ -40,7 +40,6 @@ jobs:
           pip install -q -r pipeline/requirements.txt
 
       - name: Install Chrome (for social upload)
-        if: ${{ vars.UPLOAD_TIKTOK == 'true' || vars.UPLOAD_INSTAGRAM == 'true' || vars.UPLOAD_FACEBOOK == 'true' }}
         run: |
           wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
           echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
@@ -77,12 +76,6 @@ jobs:
           VOICEOVER: ${{ vars.VOICEOVER || 'true' }}
           MAX_SECS: ${{ vars.MAX_SECS || '30' }}
           PRIVACY: ${{ vars.PRIVACY || 'public' }}
-          UPLOAD_TIKTOK: ${{ vars.UPLOAD_TIKTOK || 'false' }}
-          UPLOAD_INSTAGRAM: ${{ vars.UPLOAD_INSTAGRAM || 'false' }}
-          UPLOAD_FACEBOOK: ${{ vars.UPLOAD_FACEBOOK || 'false' }}
-          TIKTOK_COOKIES_B64: ${{ secrets.TIKTOK_COOKIES_B64 }}
-          INSTAGRAM_COOKIES_B64: ${{ secrets.INSTAGRAM_COOKIES_B64 }}
-          FACEBOOK_COOKIES_B64: ${{ secrets.FACEBOOK_COOKIES_B64 }}
           FB_PAGE_URL: ${{ vars.FB_PAGE_URL || '' }}
         run: |
           ids="${{ inputs.video_ids }}"

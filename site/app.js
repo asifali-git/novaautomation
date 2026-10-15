@@ -2,7 +2,7 @@
 // >>> Set this to your worker URL after deploy <<<
 const API = 'https://novaautomation.asifaliasmr05.workers.dev';
 
-const state = { tasks: [], videos: [], logins: [], config: {} };
+const state = { tasks: [], videos: [], logins: [], accounts: [], config: {} };
 const REFRESH_MS = 6000;
 
 const $ = (id) => document.getElementById(id);
@@ -80,6 +80,30 @@ function renderLogins() {
     b.onclick = () => delLogin(b.dataset.delLogin));
 }
 
+const PLATFORM_ICONS = { tiktok: '♪', instagram: '📷', facebook: 'f' };
+
+function renderAccounts() {
+  const box = $('account-list');
+  box.innerHTML = '';
+  if (!state.accounts.length) {
+    box.innerHTML = '<div class="no-login">No social accounts connected.</div>';
+    return;
+  }
+  for (const a of state.accounts) {
+    const row = document.createElement('div');
+    row.className = 'login-row';
+    const icon = PLATFORM_ICONS[a.platform] || '•';
+    row.innerHTML = `
+      <span class="who"><span class="platform">${icon} ${esc(a.platform)}</span> ${esc(a.username || 'connected')}</span>
+      <span class="acts">
+        <button class="btn sm danger" data-del-acct="${a.id}">Remove</button>
+      </span>`;
+    box.appendChild(row);
+  }
+  box.querySelectorAll('[data-del-acct]').forEach((b) =>
+    b.onclick = () => delAccount(b.dataset.delAcct));
+}
+
 function renderTasks() {
   const tbody = $('tasks-table').querySelector('tbody');
   tbody.innerHTML = '';
@@ -143,8 +167,10 @@ async function load() {
     state.tasks = data.tasks || [];
     state.videos = data.videos || [];
     state.logins = data.logins || [];
+    state.accounts = data.accounts || [];
     state.config = data.config || {};
     renderLogins();
+    renderAccounts();
     renderTasks();
     renderVideos();
     setConn(true);
@@ -164,11 +190,26 @@ async function addTask(e) {
   const url = $('f-url').value.trim();
   const name = $('f-name').value.trim();
   const loginId = $('f-login').value || null;
+  const destPlatforms = [];
+  if ($('f-tiktok').checked) destPlatforms.push('tiktok');
+  if ($('f-instagram').checked) destPlatforms.push('instagram');
+  if ($('f-facebook').checked) destPlatforms.push('facebook');
   if (!url) return;
   try {
-    await api('/api/tasks', { method: 'POST', body: { source_url: url, name: name || undefined, login_id: loginId ? Number(loginId) : null } });
+    await api('/api/tasks', {
+      method: 'POST',
+      body: {
+        source_url: url,
+        name: name || undefined,
+        login_id: loginId ? Number(loginId) : null,
+        dest_platforms: destPlatforms.length ? destPlatforms : null,
+      },
+    });
     $('f-url').value = '';
     $('f-name').value = '';
+    $('f-tiktok').checked = false;
+    $('f-instagram').checked = false;
+    $('f-facebook').checked = false;
     toast('Source added', 'ok');
     load();
   } catch (e2) { toast(e2.message, 'err'); }
@@ -200,6 +241,51 @@ async function delLogin(id) {
     toast('Account removed', 'ok');
     load();
   } catch (e) { toast(e.message, 'err'); }
+}
+
+async function delAccount(id) {
+  if (!confirm('Disconnect this social account?')) return;
+  try {
+    await api(`/api/accounts/${id}`, { method: 'DELETE' });
+    toast('Account disconnected', 'ok');
+    load();
+  } catch (e) { toast(e.message, 'err'); }
+}
+
+async function connectAccount(e) {
+  e.preventDefault();
+  const platform = $('af-platform').value;
+  const username = $('af-username').value.trim() || null;
+  const file = $('af-cookies').files[0];
+  if (!file) return toast('Select a cookies file', 'err');
+
+  try {
+    const text = await file.text();
+    let cookies;
+    try {
+      cookies = JSON.parse(text);
+    } catch {
+      // Netscape .txt format — send raw string
+      cookies = text;
+    }
+    // For pickle .pkl files, send base64
+    if (file.name.endsWith('.pkl')) {
+      const buf = await file.arrayBuffer();
+      const bytes = new Uint8Array(buf);
+      let binary = '';
+      for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+      cookies = { __base64: btoa(binary), __format: 'pickle' };
+    }
+
+    await api('/api/accounts', {
+      method: 'POST',
+      body: { platform, username, cookies },
+    });
+    $('af-cookies').value = '';
+    $('af-username').value = '';
+    toast(platform + ' account connected', 'ok');
+    load();
+  } catch (e2) { toast(e2.message, 'err'); }
 }
 
 async function copyRefresh(id) {
@@ -244,6 +330,7 @@ function clock() {
 document.addEventListener('DOMContentLoaded', () => {
   $('add-form').addEventListener('submit', addTask);
   $('btn-login').addEventListener('click', startLogin);
+  $('account-form').addEventListener('submit', connectAccount);
   load();
   setInterval(load, REFRESH_MS);
   clock();

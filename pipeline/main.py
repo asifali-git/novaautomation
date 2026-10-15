@@ -257,6 +257,19 @@ def run():
     work = "work"
     os.makedirs(work, exist_ok=True)
 
+    # Fetch task's dest_platforms for social upload selection.
+    dest_platforms = ""
+    try:
+        task_data = worker_get(f"/api/internal/tasks")
+        tasks = task_data.get("tasks", [])
+        task = next((t for t in tasks if t["id"] == video.get("task_id")), None)
+        if task and task.get("dest_platforms"):
+            dest_platforms = task["dest_platforms"]
+    except Exception as e:
+        print(f"[warn] failed to fetch task dest_platforms: {e}", file=sys.stderr)
+    os.environ["VIDEO_DEST_PLATFORMS"] = dest_platforms
+    print(f"[social] dest platforms: {dest_platforms or '(none)'}")
+
     set_status(vid, status="downloading")
     src, info = dl.download(url, out_dir=work, max_secs=MAX_SECS)
     print(f"[download] {src} ({os.path.getsize(src)//1024} KB)")
@@ -313,7 +326,7 @@ def run():
 
     # 5b. Social media upload (TikTok / Instagram / Facebook via cookies).
     social_results = {}
-    if us.ENABLE_TIKTOK or us.ENABLE_INSTAGRAM or us.ENABLE_FACEBOOK:
+    if dest_platforms:
         set_status(vid, status="uploading", upload_ref=json.dumps(
             {"provider": "youtube", "id": video_id, "social": "pending"}))
         try:

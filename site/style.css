@@ -143,3 +143,9 @@ tr:hover td { background: rgba(255,255,255,.02); }
 .toast.ok { border-left-color: var(--ok); }
 .toast.err { border-left-color: var(--err); }
 @keyframes slide { from { transform: translateX(20px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* Checkbox group */
+.checkbox-group { display: block; font-size: 13px; color: var(--muted); margin-bottom: 4px; }
+.checks { display: flex; gap: 14px; margin-top: 6px; flex-wrap: wrap; }
+.check { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text); cursor: pointer; }
+.check input { accent-color: var(--accent); width: 16px; height: 16px; cursor: pointer; }

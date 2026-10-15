@@ -1,18 +1,15 @@
 """Social media upload via browser cookies (no API keys).
 
 Uploads the final edited video to TikTok, Instagram, and Facebook
-using Selenium + undetected-chromedriver with exported session cookies.
+using Selenium + undetected-chromedriver with cookies stored in Worker D1.
+
+Cookies are fetched from Worker API (/api/internal/accounts/env).
+Per-source platform selection comes from task's dest_platforms field.
 
 Env:
-  UPLOAD_TIKTOK=true|false     enable TikTok upload (default false)
-  UPLOAD_INSTAGRAM=true|false  enable Instagram upload (default false)
-  UPLOAD_FACEBOOK=true|false   enable Facebook upload (default false)
-
-  TIKTOK_COOKIES_B64      base64-encoded pickle cookies file
-  INSTAGRAM_COOKIES_B64   base64-encoded pickle cookies file
-  FACEBOOK_COOKIES_B64    base64-encoded JSON cookies file (Puppeteer format)
-
-  FB_PAGE_URL             Facebook page URL to post on (optional)
+  WORKER_URL, INTERNAL_TOKEN   worker API access
+  VIDEO_DEST_PLATFORMS         comma-separated: tiktok,instagram,facebook
+                               (from task.dest_platforms; empty = none)
 """
 import os
 import sys
@@ -23,9 +20,75 @@ import pickle
 import random
 import tempfile
 
-ENABLE_TIKTOK = os.getenv("UPLOAD_TIKTOK", "false").lower() in ("1", "true", "yes")
-ENABLE_INSTAGRAM = os.getenv("UPLOAD_INSTAGRAM", "false").lower() in ("1", "true", "yes")
-ENABLE_FACEBOOK = os.getenv("UPLOAD_FACEBOOK", "false").lower() in ("1", "true", "yes")
+import requests
+
+WORKER = os.getenv("WORKER_URL", "").rstrip("/")
+TOKEN = os.getenv("INTERNAL_TOKEN", "")
+
+# Cache for cookies fetched from worker
+_cookies_cache = None
+
+
+def _fetch_all_cookies():
+    """Fetch all social cookies from Worker."""
+    global _cookies_cache
+    if _cookies_cache is not None:
+        return _cookies_cache
+    if not WORKER or not TOKEN:
+        print("[social] WORKER_URL/INTERNAL_TOKEN not set")
+        _cookies_cache = {}
+        return _cookies_cache
+    try:
+        r = requests.get(
+            f"{WORKER}/api/internal/accounts/env",
+            headers={"x-token": TOKEN},
+            timeout=30,
+        )
+        r.raise_for_status()
+        _cookies_cache = r.json()
+    except Exception as e:
+        print(f"[social] failed to fetch cookies: {e}")
+        _cookies_cache = {}
+    return _cookies_cache
+
+
+def _get_cookies(platform):
+    """Get cookies for a specific platform from worker."""
+    all_cookies = _fetch_all_cookies()
+    entry = all_cookies.get(platform)
+    if not entry:
+        return None
+    return entry.get("cookies")
+
+
+def _get_enabled_platforms():
+    """Get platforms to upload to from env (set by pipeline from task.dest_platforms)."""
+    raw = os.getenv("VIDEO_DEST_PLATFORMS", "")
+    if not raw:
+        return []
+    return [p.strip().lower() for p in raw.split(",") if p.strip()]
+
+
+def _cookies_to_file(cookies, suffix):
+    """Write cookies to a temp file. Handles dict/list/str/base64-pickle."""
+    if isinstance(cookies, dict) and "__base64" in cookies:
+        # Base64-encoded pickle from frontend
+        data = base64.b64decode(cookies["__base64"])
+        fd, path = tempfile.mkstemp(suffix=".pkl")
+        with os.fdopen(fd, "wb") as f:
+            f.write(data)
+        return path
+    if isinstance(cookies, (dict, list)):
+        fd, path = tempfile.mkstemp(suffix=suffix)
+        with os.fdopen(fd, "w") as f:
+            json.dump(cookies, f)
+        return path
+    if isinstance(cookies, str):
+        fd, path = tempfile.mkstemp(suffix=suffix)
+        with os.fdopen(fd, "w") as f:
+            f.write(cookies)
+        return path
+    return None
 
 
 def _sleep(lo=1.0, hi=3.0):
@@ -73,10 +136,15 @@ def _make_driver(headless=True):
 # ─────────────────────────── TIKTOK ───────────────────────────
 
 def upload_tiktok(video_path, description):
-    """Upload video to TikTok using cookies.pkl."""
-    cookies_file = _decode_cookies_b64("TIKTOK_COOKIES_B64")
+    """Upload video to TikTok using cookies from worker."""
+    cookies = _get_cookies("tiktok")
+    if not cookies:
+        print("[tiktok] no cookies in worker; skipping")
+        return False
+
+    cookies_file = _cookies_to_file(cookies, ".pkl")
     if not cookies_file:
-        print("[tiktok] no cookies; skipping")
+        print("[tiktok] invalid cookies format")
         return False
 
     driver = _make_driver(headless=True)
@@ -84,12 +152,13 @@ def upload_tiktok(video_path, description):
         driver.get("https://www.tiktok.com/login")
         _spoof(driver)
         with open(cookies_file, "rb") as f:
-            cookies = pickle.load(f)
-        for c in cookies:
-            try:
-                driver.add_cookie(c)
-            except Exception:
-                pass
+            loaded = pickle.load(f)
+        if isinstance(loaded, list):
+            for c in loaded:
+                try:
+                    driver.add_cookie(c)
+                except Exception:
+                    pass
         driver.refresh()
         _sleep(2, 4)
 
@@ -184,10 +253,15 @@ def upload_tiktok(video_path, description):
 # ─────────────────────────── INSTAGRAM ───────────────────────────
 
 def upload_instagram(video_path, description):
-    """Upload reel to Instagram using cookies.pkl."""
-    cookies_file = _decode_cookies_b64("INSTAGRAM_COOKIES_B64")
+    """Upload reel to Instagram using cookies from worker."""
+    cookies = _get_cookies("instagram")
+    if not cookies:
+        print("[instagram] no cookies in worker; skipping")
+        return False
+
+    cookies_file = _cookies_to_file(cookies, ".pkl")
     if not cookies_file:
-        print("[instagram] no cookies; skipping")
+        print("[instagram] invalid cookies format")
         return False
 
     driver = _make_driver(headless=True)
@@ -195,12 +269,13 @@ def upload_instagram(video_path, description):
         driver.get("https://www.instagram.com/")
         _spoof(driver)
         with open(cookies_file, "rb") as f:
-            cookies = pickle.load(f)
-        for c in cookies:
-            try:
-                driver.add_cookie(c)
-            except Exception:
-                pass
+            loaded = pickle.load(f)
+        if isinstance(loaded, list):
+            for c in loaded:
+                try:
+                    driver.add_cookie(c)
+                except Exception:
+                    pass
         driver.refresh()
         _sleep(3, 5)
 
@@ -320,10 +395,15 @@ def upload_instagram(video_path, description):
 # ─────────────────────────── FACEBOOK ───────────────────────────
 
 def upload_facebook(video_path, description):
-    """Upload reel to Facebook using cookies.json (Puppeteer format)."""
-    cookies_file = _decode_cookies_b64("FACEBOOK_COOKIES_B64")
+    """Upload reel to Facebook using cookies from worker."""
+    cookies = _get_cookies("facebook")
+    if not cookies:
+        print("[facebook] no cookies in worker; skipping")
+        return False
+
+    cookies_file = _cookies_to_file(cookies, ".json")
     if not cookies_file:
-        print("[facebook] no cookies; skipping")
+        print("[facebook] invalid cookies format")
         return False
 
     page_url = os.getenv("FB_PAGE_URL", "")
@@ -332,10 +412,14 @@ def upload_facebook(video_path, description):
         driver.get("https://www.facebook.com/")
         _spoof(driver)
 
-        # Load Puppeteer-format cookies
+        # Load cookies (JSON format - Puppeteer or plain list)
         with open(cookies_file, "r") as f:
-            cookies = json.load(f)
-        for c in cookies:
+            loaded = json.load(f)
+
+        cookie_list = loaded if isinstance(loaded, list) else [loaded]
+        for c in cookie_list:
+            if not isinstance(c, dict) or "name" not in c:
+                continue
             ck = {
                 "name": c.get("name", ""),
                 "value": c.get("value", ""),
@@ -419,22 +503,25 @@ def upload_facebook(video_path, description):
 # ─────────────────────────── MAIN ───────────────────────────
 
 def upload_all(video_path, title, description):
-    """Upload to all enabled platforms. Returns dict of results."""
-    tags = ""
+    """Upload to selected platforms (from task.dest_platforms). Returns results."""
+    enabled = _get_enabled_platforms()
     results = {}
 
-    # Build a unified caption: title + description + hashtags
+    if not enabled:
+        print("[social] no platforms selected for this source")
+        return results
+
     caption = f"{title}\n\n{description}".strip()[:2200]
 
-    if ENABLE_TIKTOK:
+    if "tiktok" in enabled:
         print("[social] uploading to TikTok...")
         results["tiktok"] = upload_tiktok(video_path, caption)
 
-    if ENABLE_INSTAGRAM:
+    if "instagram" in enabled:
         print("[social] uploading to Instagram...")
         results["instagram"] = upload_instagram(video_path, caption)
 
-    if ENABLE_FACEBOOK:
+    if "facebook" in enabled:
         print("[social] uploading to Facebook...")
         results["facebook"] = upload_facebook(video_path, caption)
 
