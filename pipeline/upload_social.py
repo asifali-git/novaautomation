@@ -116,26 +116,129 @@ def _get_enabled_platforms():
     return result
 
 
-def _cookies_to_file(cookies, suffix):
-    """Write cookies to a temp file. Handles dict/list/str/base64-pickle."""
-    if isinstance(cookies, dict) and "__base64" in cookies:
-        # Base64-encoded pickle from frontend
-        data = base64.b64decode(cookies["__base64"])
-        fd, path = tempfile.mkstemp(suffix=".pkl")
-        with os.fdopen(fd, "wb") as f:
-            f.write(data)
-        return path
-    if isinstance(cookies, (dict, list)):
-        fd, path = tempfile.mkstemp(suffix=suffix)
-        with os.fdopen(fd, "w") as f:
-            json.dump(cookies, f)
-        return path
-    if isinstance(cookies, str):
-        fd, path = tempfile.mkstemp(suffix=suffix)
-        with os.fdopen(fd, "w") as f:
-            f.write(cookies)
-        return path
+def _parse_cookies_any(data):
+    """Parse cookies from any format: JSON list, JSON dict, Netscape txt, or pickle bytes.
+    Returns list of cookie dicts suitable for Selenium add_cookie()."""
+    # Already a list of dicts
+    if isinstance(data, list) and data and isinstance(data[0], dict):
+        return data
+    # Dict with __base64 pickle
+    if isinstance(data, dict) and "__base64" in data:
+        try:
+            raw = base64.b64decode(data["__base64"])
+            try:
+                loaded = pickle.loads(raw)
+                if isinstance(loaded, list):
+                    return loaded
+            except Exception:
+                pass
+            # Try JSON from base64
+            try:
+                loaded = json.loads(raw.decode("utf-8"))
+                if isinstance(loaded, list):
+                    return loaded
+            except Exception:
+                pass
+            # Try Netscape from base64
+            text = raw.decode("utf-8", errors="replace")
+            if "\t" in text:
+                return _parse_netscape(text)
+        except Exception:
+            pass
+        return None
+    # Dict (single cookie or wrapper)
+    if isinstance(data, dict):
+        # Could be {"cookies": [...]} or a single cookie dict
+        if "cookies" in data and isinstance(data["cookies"], list):
+            return data["cookies"]
+        # Single cookie dict with name/value
+        if "name" in data and "value" in data:
+            return [data]
+        return None
+    # String: JSON or Netscape
+    if isinstance(data, str):
+        s = data.strip()
+        if s.startswith("[") or s.startswith("{"):
+            try:
+                loaded = json.loads(s)
+                if isinstance(loaded, list):
+                    return loaded
+                if isinstance(loaded, dict) and "cookies" in loaded:
+                    return loaded["cookies"]
+            except Exception:
+                pass
+        if "\t" in s:
+            return _parse_netscape(s)
+    # Raw bytes: try pickle, then JSON, then Netscape
+    if isinstance(data, bytes):
+        try:
+            loaded = pickle.loads(data)
+            if isinstance(loaded, list):
+                return loaded
+        except Exception:
+            pass
+        try:
+            loaded = json.loads(data.decode("utf-8"))
+            if isinstance(loaded, list):
+                return loaded
+        except Exception:
+            pass
+        try:
+            text = data.decode("utf-8", errors="replace")
+            if "\t" in text:
+                return _parse_netscape(text)
+        except Exception:
+            pass
     return None
+
+
+def _parse_netscape(text):
+    """Parse Netscape cookie file format to list of Selenium cookie dicts."""
+    cookies = []
+    for line in text.splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        parts = line.split("\t")
+        if len(parts) < 7:
+            continue
+        domain, flag, path, secure, expiry, name, value = parts[:7]
+        c = {
+            "name": name,
+            "value": value,
+            "domain": domain.lstrip("."),
+            "path": path or "/",
+            "secure": secure.upper() == "TRUE",
+        }
+        try:
+            c["expiry"] = int(float(expiry))
+        except Exception:
+            pass
+        cookies.append(c)
+    return cookies if cookies else None
+
+
+def _load_cookies_for_driver(driver, cookies):
+    """Load any cookie format into Selenium driver. Returns count loaded."""
+    parsed = _parse_cookies_any(cookies)
+    if not parsed:
+        print("[social] could not parse cookies (unknown format)")
+        return 0
+    loaded = 0
+    for c in parsed:
+        try:
+            # Selenium needs clean dict — strip None values
+            clean = {k: v for k, v in c.items() if v is not None and k in (
+                "name", "value", "domain", "path", "secure", "expiry", "httpOnly"
+            )}
+            if "name" not in clean or "value" not in clean:
+                continue
+            driver.add_cookie(clean)
+            loaded += 1
+        except Exception:
+            pass
+    print(f"[social] loaded {loaded}/{len(parsed)} cookies into browser")
+    return loaded
 
 
 def _sleep(lo=1.0, hi=3.0):
@@ -189,31 +292,31 @@ def upload_tiktok(video_path, description, account_id=None):
         print("[tiktok] no cookies in worker; skipping")
         return False
 
-    cookies_file = _cookies_to_file(cookies, ".pkl")
-    if not cookies_file:
-        print("[tiktok] invalid cookies format")
-        return False
-
+    print(f"[tiktok] video: {video_path} ({os.path.getsize(video_path)//1024} KB)")
     driver = _make_driver(headless=True)
     try:
-        driver.get("https://www.tiktok.com/login")
+        # Load cookies on tiktok.com domain
+        driver.get("https://www.tiktok.com/")
         _spoof(driver)
-        with open(cookies_file, "rb") as f:
-            loaded = pickle.load(f)
-        if isinstance(loaded, list):
-            for c in loaded:
-                try:
-                    driver.add_cookie(c)
-                except Exception:
-                    pass
+        loaded = _load_cookies_for_driver(driver, cookies)
+        if loaded == 0:
+            print("[tiktok] zero cookies loaded; aborting")
+            return False
         driver.refresh()
-        _sleep(2, 4)
+        _sleep(3, 5)
+
+        # Verify login by checking cookies
+        all_c = driver.get_cookies()
+        has_session = any(c.get("name") in ("sessionid", "sid_tt", "sidguard") for c in all_c)
+        print(f"[tiktok] session cookies present: {has_session} (total cookies: {len(all_c)})")
+        if not has_session:
+            print("[tiktok] WARNING: no session cookie — may not be logged in")
 
         driver.get(
             "https://www.tiktok.com/tiktokstudio/upload?from=creator_center"
         )
         _spoof(driver)
-        _sleep(2, 4)
+        _sleep(3, 5)
 
         from selenium.webdriver.common.by import By
         from selenium.webdriver.support.ui import WebDriverWait
@@ -227,16 +330,18 @@ def upload_tiktok(video_path, description, account_id=None):
                 )
             )
             driver.switch_to.frame(iframe)
+            print("[tiktok] switched to upload iframe")
         except Exception:
-            pass
+            print("[tiktok] no iframe found; trying direct")
 
         file_input = WebDriverWait(driver, 15).until(
             EC.presence_of_element_located(
                 (By.XPATH, "//input[@type='file']")
             )
         )
-        file_input.send_keys(video_path)
-        _sleep(3, 6)
+        file_input.send_keys(os.path.abspath(video_path))
+        print("[tiktok] file input sent")
+        _sleep(5, 8)
 
         driver.switch_to.default_content()
         _sleep(2, 4)
@@ -257,41 +362,52 @@ def upload_tiktok(video_path, description, account_id=None):
             actions.send_keys(Keys.DELETE)
             actions.send_keys(description[:2200])
             actions.perform()
+            print("[tiktok] caption filled")
         except Exception as e:
             print(f"[tiktok] caption failed: {e}")
 
         _sleep(5, 10)
 
-        # Wait for upload complete
-        try:
-            WebDriverWait(driver, 120).until(
-                EC.presence_of_element_located(
-                    (By.XPATH, "//span[text()='Uploaded']")
+        # Wait for upload complete — try multiple selectors
+        uploaded = False
+        for xpath in ["//span[text()='Uploaded']", "//div[text()='Uploaded']",
+                      "//*[contains(text(),'uploaded')]"]:
+            try:
+                WebDriverWait(driver, 60).until(
+                    EC.presence_of_element_located((By.XPATH, xpath))
                 )
-            )
-        except Exception:
+                uploaded = True
+                print(f"[tiktok] upload complete indicator found: {xpath}")
+                break
+            except Exception:
+                continue
+        if not uploaded:
             print("[tiktok] upload wait timeout (may still succeed)")
 
-        # Click Post
-        try:
-            post_btn = WebDriverWait(driver, 15).until(
-                EC.element_to_be_clickable(
-                    (
-                        By.XPATH,
-                        "//button[contains(@class,'TUXButton') "
-                        "and .//div[text()='Post']]",
-                    )
+        # Click Post — try multiple selectors
+        post_selectors = [
+            "//button[contains(@class,'TUXButton') and .//div[text()='Post']]",
+            "//button[.//div[text()='Post']]",
+            "//button[contains(text(),'Post')]",
+            "//button[@data-e2e='post_video_button']",
+        ]
+        for sel in post_selectors:
+            try:
+                post_btn = WebDriverWait(driver, 10).until(
+                    EC.element_to_be_clickable((By.XPATH, sel))
                 )
-            )
-            post_btn.click()
-            _sleep(5, 10)
-            print("[tiktok] posted OK")
-            return True
-        except Exception as e:
-            print(f"[tiktok] post click failed: {e}")
-            return False
+                post_btn.click()
+                _sleep(5, 10)
+                print(f"[tiktok] posted OK (selector: {sel[:50]})")
+                return True
+            except Exception:
+                continue
+        print("[tiktok] no Post button found")
+        return False
     except Exception as e:
         print(f"[tiktok] error: {e}")
+        import traceback
+        traceback.print_exc()
         return False
     finally:
         driver.quit()
@@ -306,23 +422,15 @@ def upload_instagram(video_path, description, account_id=None):
         print("[instagram] no cookies in worker; skipping")
         return False
 
-    cookies_file = _cookies_to_file(cookies, ".pkl")
-    if not cookies_file:
-        print("[instagram] invalid cookies format")
-        return False
-
+    print(f"[instagram] video: {video_path} ({os.path.getsize(video_path)//1024} KB)")
     driver = _make_driver(headless=True)
     try:
         driver.get("https://www.instagram.com/")
         _spoof(driver)
-        with open(cookies_file, "rb") as f:
-            loaded = pickle.load(f)
-        if isinstance(loaded, list):
-            for c in loaded:
-                try:
-                    driver.add_cookie(c)
-                except Exception:
-                    pass
+        loaded = _load_cookies_for_driver(driver, cookies)
+        if loaded == 0:
+            print("[instagram] zero cookies loaded; aborting")
+            return False
         driver.refresh()
         _sleep(3, 5)
 
@@ -487,42 +595,17 @@ def upload_facebook(video_path, description, account_id=None):
         print("[facebook] no cookies in worker; skipping")
         return False
 
-    cookies_file = _cookies_to_file(cookies, ".json")
-    if not cookies_file:
-        print("[facebook] invalid cookies format")
-        return False
-
-    # Handle both JSON and Netscape formats
-    if isinstance(cookies, str):
-        # Raw string (Netscape) — write as .txt
-        import tempfile as _tf
-        fd, cookies_file = _tf.mkstemp(suffix=".txt")
-        with os.fdopen(fd, "w") as f:
-            f.write(cookies)
-
+    print(f"[facebook] video: {video_path} ({os.path.getsize(video_path)//1024} KB)")
     page_url = os.getenv("FB_PAGE_URL", "")
     driver = _make_driver(headless=True)
     try:
         driver.get("https://www.facebook.com/")
         _spoof(driver)
 
-        # Parse cookies (JSON or Netscape)
-        cookie_list = _parse_cookies_any_format(cookies_file)
-        print(f"[facebook] loaded {len(cookie_list)} cookies")
-
-        for c in cookie_list:
-            if not isinstance(c, dict) or "name" not in c:
-                continue
-            ck = {
-                "name": c.get("name", ""),
-                "value": c.get("value", ""),
-                "domain": c.get("domain", ".facebook.com"),
-                "path": c.get("path", "/"),
-            }
-            try:
-                driver.add_cookie(ck)
-            except Exception:
-                pass
+        loaded = _load_cookies_for_driver(driver, cookies)
+        if loaded == 0:
+            print("[facebook] zero cookies loaded; aborting")
+            return False
 
         driver.refresh()
         _sleep(3, 5)

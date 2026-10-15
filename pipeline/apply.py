@@ -19,6 +19,7 @@ FFMPEG = os.getenv("FFMPEG_BIN", "ffmpeg")
 THREADS = os.getenv("FFMPEG_THREADS", "2")
 FTHREADS = os.getenv("FFMPEG_FILTER_THREADS", "2")
 CRF = os.getenv("FFMPEG_CRF", "18")
+CRF_HIGH = os.getenv("FFMPEG_CRF_HIGH", "14")  # intermediate segments: near-lossless
 W, H = 1080, 1920
 
 
@@ -178,7 +179,8 @@ def _video_chain(seg, caption_crop_top=0.0, caption_crop_bottom=0.0, delogo_filt
         )
     else:
         # No zoom: scale cropped video to FILL frame (no black bars).
-        parts.append(f"scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H}")
+        # lanczos = best quality downscale/upscale (vs bilinear).
+        parts.append(f"scale={W}:{H}:force_original_aspect_ratio=increase:flags=lanczos,crop={W}:{H}")
 
     sharp = float(seg.get("sharpness", 0) or 0)
     if sharp > 0.01:
@@ -196,9 +198,8 @@ def _video_chain(seg, caption_crop_top=0.0, caption_crop_bottom=0.0, delogo_filt
     if abs(b) > 0.001 or abs(c - 1) > 0.001 or abs(s - 1) > 0.001:
         parts.append(f"eq=brightness={b:.3f}:contrast={c:.3f}:saturation={s:.3f}")
 
-    # Subtle film grain — breaks pixel-exact/perceptual-hash frame matching
-    # without being visibly distracting. Low value to preserve quality.
-    parts.append("noise=alls=2:allf=t")
+    # NO noise filter — was degrading quality significantly.
+    # Anti-fingerprint is already handled by: mirror + crop + speed + color + sharpness.
 
     parts.append("format=yuv420p")
     return ",".join(parts)
@@ -231,9 +232,11 @@ def render_segment(src, seg, out, has_audio=True, caption_crop_top=0.0, caption_
     else:
         cmd += ["-vf", vf, "-map", "0:v:0"]
 
-    cmd += ["-c:v", "libx264", "-preset", "medium", "-crf", CRF]
+    # Intermediate segments: near-lossless (CRF 14) so final re-encode after
+    # concat+captions still looks great. Final output re-encodes at CRF 18.
+    cmd += ["-c:v", "libx264", "-preset", "medium", "-crf", CRF_HIGH]
     if has_audio:
-        cmd += ["-c:a", "aac", "-b:a", "128k"]
+        cmd += ["-c:a", "aac", "-b:a", "192k"]
     cmd += ["-map_metadata", "-1", "-avoid_negative_ts", "make_zero", out]
     _run(cmd)
     return out
@@ -289,7 +292,6 @@ def apply_captions(src, plan, offsets, out):
             return src
     else:
         print(f"[captions] using font: {font}", file=__import__('sys').stderr)
-    fontsize = max(28, int(H * 0.05))
     work = os.path.dirname(out) or "."
     capdir = os.path.join(work, "captions")
     os.makedirs(capdir, exist_ok=True)
@@ -316,22 +318,31 @@ def apply_captions(src, plan, offsets, out):
         if end <= start + 0.01:
             continue
 
+        # Auto-shrink font to fit width (max 90% of frame width).
+        # DejaVu Bold: avg char width ≈ 0.55 * fontsize
+        text_len = len(text)
+        max_width_frac = 0.90
+        # Estimate: fontsize such that text_len * 0.55 * fontsize <= W * max_width_frac
+        fit_size = int((W * max_width_frac) / (text_len * 0.55)) if text_len > 0 else 60
+        fontsize = max(24, min(64, fit_size))
+
         tf_real = os.path.join(capdir, f"cap_{i}.txt")
         tf = tf_real.replace("\\", "/").replace(":", "\\:")
         with open(tf_real, "w", encoding="utf-8") as f:
             f.write(text)
 
-        y = {"top": "h*0.12", "center": "(h-text_h)/2", "bottom": "h*0.82"}[pos]
+        y = {"top": "h*0.10", "center": "(h-text_h)/2", "bottom": "h*0.82"}[pos]
+        # Use text_w so x is always centered and never overflows
         base = (
             f"drawtext=fontfile='{font}':textfile='{tf}':fontsize={fontsize}:"
             f"fontcolor=white:borderw=4:bordercolor=black@0.9:"
-            f"x=(w-text_w)/2:y={y}:"
+            f"x='min(max((w-text_w)/2,10),w-text_w-10)':y={y}:"
             f"enable='between(t,{start:.3f},{end:.3f})'"
         )
         if style == "box":
             base += ":box=1:boxcolor=black@0.55:boxborderw=14"
         chains.append(base)
-        print(f"[captions] seg {i}: '{text[:30]}' at {start:.1f}-{end:.1f}s pos={pos}")
+        print(f"[captions] seg {i}: '{text[:35]}' size={fontsize} at {start:.1f}-{end:.1f}s")
 
     print(f"[captions] total caption segments: {cap_count}")
     if not chains:
