@@ -11,5 +11,5 @@ PUBLIC_BASE_URL = "https://nova-hub.asubilla.workers.dev"
 
 [[d1_databases]]
 binding = "DB"
-database_name = "novahub"
-database_id = "REPLACE_WITH_YOUR_D1_ID"
+database_name = "novaautomation"
+database_id = "fa427fe6-1886-44d1-b408-d4bfe0467705"
