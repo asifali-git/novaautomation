@@ -230,16 +230,19 @@ def main():
     forced_id = os.getenv("MANUAL_JOB_ID", "")
 
     if forced_id:
-        # Fetch the specific job
-        data = worker_get(f"/api/internal/manual/next")  # This marks it processing
-        job = data.get("job")
-        if not job or str(job["id"]) != forced_id:
-            # Try to get by looking at all processing jobs
-            print(f"[manual] job {forced_id} not found in queue (may already be processing)")
-            # Continue with the job we got, or exit
-            if not job:
-                print("[manual] no jobs available")
-                return
+        # Fetch the specific job by id (fastpoll already marked it processing)
+        try:
+            data = worker_get(f"/api/internal/manual/{forced_id}")
+            job = data.get("job")
+        except Exception as e:
+            print(f"[manual] failed to fetch job {forced_id}: {e}")
+            return
+        if not job:
+            print(f"[manual] job {forced_id} not found")
+            return
+        if job["status"] == "queued":
+            worker_patch(f"/api/internal/manual/{job['id']}", {"status": "processing"})
+            job["status"] = "processing"
     else:
         print("[manual] checking for queued jobs...")
         data = worker_get("/api/internal/manual/next")

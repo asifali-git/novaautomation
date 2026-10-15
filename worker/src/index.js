@@ -579,6 +579,15 @@ export default {
           return withCors(json({ job: job || null }));
         }
 
+        // Fetch a specific manual job by id (no status change)
+        const manualGet = path.match(/^\/api\/internal\/manual\/(\d+)$/);
+        if (manualGet && req.method === 'GET') {
+          const id = Number(manualGet[1]);
+          const job = await env.DB.prepare('SELECT * FROM manual_jobs WHERE id = ?').bind(id).first();
+          if (!job) return withCors(json({ error: 'not found' }, 404));
+          return withCors(json({ job }));
+        }
+
         // Update manual job status
         const manualPatch = path.match(/^\/api\/internal\/manual\/(\d+)$/);
         if (manualPatch && req.method === 'PATCH') {

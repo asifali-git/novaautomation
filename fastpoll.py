@@ -129,30 +129,39 @@ def check_manual_jobs():
             return False
 
         log.info("MANUAL job %s: %s -> %s", job["id"], job["url"], job.get("dest_platforms"))
-        # Trigger GitHub Actions manual process
-        if GH_TOKEN and GH_REPO:
-            url = f"https://api.github.com/repos/{GH_REPO}/actions/workflows/process.yml/dispatches"
-            headers = {
-                "Authorization": f"token {GH_TOKEN}",
-                "Accept": "application/vnd.github+json",
-            }
-            payload = {
-                "ref": "master",
-                "inputs": {"manual_job_id": str(job["id"])},
-            }
+
+        def revert(reason):
+            log.error("manual job %s reverted to queued: %s", job["id"], reason)
             try:
-                r2 = requests.post(url, headers=headers, json=payload, timeout=15)
-                r2.raise_for_status()
-                log.info("triggered manual process for job %s", job["id"])
-            except Exception as e:
-                log.warning("failed to trigger manual process: %s", e)
-                # Revert job to queued
                 requests.patch(
                     f"{WORKER}/api/internal/manual/{job['id']}",
                     headers=_h(),
                     json={"status": "queued"},
                     timeout=15,
                 )
+            except Exception:
+                pass
+
+        # Trigger GitHub Actions manual process
+        if not GH_TOKEN or not GH_REPO:
+            revert("GH_TOKEN/GH_REPO not set in Render env")
+            return False
+        url = f"https://api.github.com/repos/{GH_REPO}/actions/workflows/process.yml/dispatches"
+        headers = {
+            "Authorization": f"token {GH_TOKEN}",
+            "Accept": "application/vnd.github+json",
+        }
+        payload = {
+            "ref": "master",
+            "inputs": {"manual_job_id": str(job["id"])},
+        }
+        try:
+            r2 = requests.post(url, headers=headers, json=payload, timeout=15)
+            r2.raise_for_status()
+            log.info("triggered manual process for job %s", job["id"])
+        except Exception as e:
+            revert(f"GH trigger failed: {e}")
+            return False
         return True
     except Exception as e:
         log.warning("manual job check failed: %s", e)

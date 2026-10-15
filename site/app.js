@@ -851,7 +851,7 @@ async function loadManualJobs() {
         <td>${esc(j.title || '—')}</td>
         <td>${dests}</td>
         <td>${badge}</td>
-        <td class="muted">${timeAgo(j.created_at * 1000)}</td>
+        <td class="muted">${timeAgo(j.created_at)}</td>
         <td>
           ${['queued','failed'].includes(j.status) ? `<button class="btn danger sm" onclick="delManualJob(${j.id})">✕</button>` : ''}
         </td>

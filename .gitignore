@@ -26,3 +26,6 @@ uploader-multi/
 cookies.pkl
 *_cookies.pkl
 *_cookies.json
+worker/package.json
+worker/package-lock.json
+manual_*/
