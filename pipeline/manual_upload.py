@@ -1,23 +1,27 @@
 """Manual upload pipeline — download, edit, generate metadata, upload.
 
-Called by Render fastpoll or GitHub Actions when a manual job is queued.
+Called by GitHub Actions when a manual job is queued (Quick Upload).
 
 Flow:
-  1. Pick up next queued manual job from worker
+  1. Claim job atomically (queued -> processing)
   2. Download best quality video via yt-dlp
   3. Edit based on destinations:
-     - YouTube selected → full AI pipeline (analyze + narrate + apply)
-     - TikTok/Insta/FB only → smart trim + vertical crop + captions
-  4. Generate metadata via OpenRouter (title, desc, tags, hashtags)
+     - YouTube selected  -> FULL AI pipeline (Nemotron analyze -> caption-region
+                            detection -> Kokoro voiceover -> fit segments ->
+                            ffmpeg apply: crop/speed/color/sharpness/captions/narration)
+     - Social only       -> simple fallback (smart.analyze_video: crop+speed+color+sharpness)
+  4. Metadata from AI plan (fallback: OpenRouter metadata.py)
   5. Upload to selected platforms
   6. Report results
 
 Env:
   WORKER_URL, INTERNAL_TOKEN    worker API
-  NVIDIA_API_KEY                AI edit planning (optional)
-  OPENROUTER_API_KEY            metadata generation (optional)
+  NVIDIA_API_KEY                Nemotron omni key (AI analysis)
+  OPENROUTER_API_KEY            metadata fallback + smart seeded plans
+  KOKORO_DIR                    kokoro model cache dir
   YT_*                          YouTube upload
   PRIVACY                       public|unlisted|private
+  MAX_SECS                      cap clip length (default 60)
 """
 import os
 import sys
@@ -27,6 +31,14 @@ import traceback
 import subprocess
 
 import requests
+
+import analyze as an
+import smart
+import apply as ap
+import voice as vc
+import metadata as md
+import ytauth as yt
+import upload_social as us
 
 WORKER = os.getenv("WORKER_URL", "").rstrip("/")
 TOKEN = os.getenv("INTERNAL_TOKEN", "")
@@ -68,12 +80,11 @@ def download_best(url, out_dir="work"):
         "outtmpl": os.path.join(out_dir, "%(id)s.%(ext)s"),
         "format": "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
         "merge_output_format": "mp4",
-        "max_filesize": 500 * 1024 * 1024,  # 500MB cap
+        "max_filesize": 500 * 1024 * 1024,
         "socket_timeout": 30,
         "retries": 3,
     }
 
-    # Use cookies if available
     cookies_file = os.getenv("COOKIES_FILE", "")
     if cookies_file and os.path.exists(cookies_file):
         opts["cookiefile"] = cookies_file
@@ -81,7 +92,6 @@ def download_best(url, out_dir="work"):
     with yt_dlp.YoutubeDL(opts) as ydl:
         info = ydl.extract_info(url, download=True)
         filepath = ydl.prepare_filename(info)
-        # Ensure mp4 extension after merge
         if not filepath.endswith(".mp4"):
             base = os.path.splitext(filepath)[0]
             if os.path.exists(base + ".mp4"):
@@ -90,134 +100,142 @@ def download_best(url, out_dir="work"):
     return filepath, info
 
 
-def generate_metadata(title_hint, description_hint, dest_platforms):
-    """Generate platform-specific metadata via OpenRouter."""
-    meta = {
-        "title": title_hint[:100] if title_hint else "Check this out!",
-        "description": description_hint[:500] if description_hint else "",
-        "tags": [],
-        "hashtags": [],
-    }
+# ── AI pipeline (YouTube) ──────────────────────────────────────────────────
 
-    if not OPENROUTER_KEY:
-        # Fallback: basic hashtags from title
-        words = [w for w in (title_hint or "").split() if len(w) > 2][:5]
-        meta["hashtags"] = [f"#{w.lower().replace(' ', '')}" for w in words]
-        meta["tags"] = words
-        return meta
-
+def make_plan(src, title_hint):
+    """Nemotron AI analysis -> fallback to smart simple plan."""
     try:
-        platforms_str = ", ".join(dest_platforms)
-        prompt = f"""Analyze this video metadata and generate optimized content for social media upload.
-
-Video title: {title_hint}
-Video description: {description_hint}
-Upload platforms: {platforms_str}
-
-Return a JSON object with:
-- "title": catchy, SEO-optimized title (max 100 chars)
-- "description": engaging description with line breaks (max 3000 chars for YouTube, 2200 for others)
-- "tags": array of 10-15 relevant SEO tags
-- "hashtags": array of 10-15 trending hashtags (with # prefix)
-
-Make it viral-worthy, use relevant trending hashtags. Return ONLY the JSON object."""
-
-        r = requests.post(
-            "https://openrouter.ai/api/v1/chat/completions",
-            headers={
-                "Authorization": f"Bearer {OPENROUTER_KEY}",
-                "Content-Type": "application/json",
-            },
-            json={
-                "model": "meta-llama/llama-3.1-8b-instruct:free",
-                "messages": [{"role": "user", "content": prompt}],
-                "max_tokens": 1000,
-                "temperature": 0.7,
-            },
-            timeout=30,
-        )
-        r.raise_for_status()
-        content = r.json()["choices"][0]["message"]["content"]
-
-        # Extract JSON from response
-        import re
-        json_match = re.search(r'\{[\s\S]*\}', content)
-        if json_match:
-            ai_meta = json.loads(json_match.group())
-            meta["title"] = ai_meta.get("title", meta["title"])[:100]
-            meta["description"] = ai_meta.get("description", meta["description"])[:3000]
-            meta["tags"] = ai_meta.get("tags", [])[:15]
-            meta["hashtags"] = ai_meta.get("hashtags", [])[:15]
+        plan = an.analyze_video(src, title_hint=title_hint)
+        print(f"[plan] AI: {len(plan['segments'])} segs, audio={plan.get('audio_type')}, "
+              f"mode={plan.get('audio_mode')}, style={plan.get('style')}")
+        return plan, True
     except Exception as e:
-        print(f"[meta] AI generation failed: {e}")
+        print(f"[plan] nemotron failed ({e}); using simple fallback", file=sys.stderr)
+        plan = smart.analyze_video(src, title_hint=title_hint)
+        print(f"[plan] simple: {len(plan['segments'])} segs, visual-only")
+        return plan, False
 
+
+def detect_captions(src, plan):
+    """Detect burned-in source captions/watermarks for removal."""
+    try:
+        regions = smart.detect_caption_regions(src)
+        plan["caption_regions"] = regions
+        print(f"[captions] detected {len(regions)} region(s): "
+              f"{[(r['band'], r['action']) for r in regions]}")
+    except Exception as e:
+        print(f"[captions] detection failed: {e}", file=sys.stderr)
+        plan["caption_regions"] = []
+
+
+def make_voices(plan, work, used_ai=True):
+    """Kokoro TTS narration. Only for AI path (fallback has no narration)."""
+    wavs = {}
+    if not used_ai:
+        return wavs
+    for seg in plan["segments"]:
+        text = (seg.get("narration") or "").strip()
+        if not text:
+            continue
+        try:
+            vs = seg.get("voice_style") or {}
+            speed = float(vs.get("speed", 1.0))
+            out = os.path.join(work, f"narr_{seg['index']:02d}.wav")
+            vc.synthesize(text, out_path=out, speed=speed)
+            wavs[seg["index"]] = out
+            print(f"[voice] seg {seg['index']} spd={speed}: {text[:55]}")
+        except Exception as e:
+            print(f"[warn] voice seg {seg['index']} failed: {e}", file=sys.stderr)
+    return wavs
+
+
+def fit_segments_to_voices(plan, voice_wavs, src_duration=None):
+    """Extend segment durations so narration plays at natural speed."""
+    if not voice_wavs:
+        return
+    ffprobe = os.getenv("FFPROBE_BIN", "ffprobe")
+    segs = plan["segments"]
+    if src_duration is None:
+        src_duration = max(float(s.get("end", 0)) for s in segs) if segs else 30.0
+
+    extensions = {}
+    for seg in segs:
+        idx = seg.get("index")
+        if idx not in voice_wavs:
+            continue
+        wav_path = voice_wavs[idx]
+        try:
+            r = subprocess.run(
+                [ffprobe, "-v", "error", "-show_entries", "format=duration",
+                 "-of", "default=noprint_wrappers=1:nokey=1", wav_path],
+                capture_output=True, text=True, timeout=10)
+            wav_dur = float(r.stdout.strip())
+        except Exception:
+            continue
+        speed = abs(float(seg.get("speed", 1.0)) or 1.0)
+        if speed < 0.01:
+            speed = 1.0
+        needed_src = (wav_dur + 0.15) * speed
+        current_src = float(seg["end"]) - float(seg["start"])
+        if needed_src > current_src:
+            extensions[idx] = min(needed_src, current_src * 2.2)
+
+    last_with_wav = max(
+        (s.get("index") for s in segs if s.get("index") in voice_wavs),
+        default=None)
+
+    t = 0.0
+    for seg in segs:
+        idx = seg.get("index")
+        current_src = float(seg["end"]) - float(seg["start"])
+        needed = extensions.get(idx, current_src)
+        remaining = src_duration - t
+        actual = min(needed, remaining)
+        if actual < 0.5:
+            actual = 0.5
+        seg["start"] = round(t, 3)
+        seg["end"] = round(t + actual, 3)
+        t = seg["end"]
+    print(f"[fit] total timeline: {t:.2f}s (source={src_duration:.2f}s)")
+
+
+def build_meta(plan, info):
+    """Build upload metadata from AI plan (fallback: OpenRouter)."""
+    meta = {
+        "title": (plan.get("title") or info.get("title") or "Short")[:95],
+        "description": (plan.get("description") or info.get("description") or ""),
+        "tags": plan.get("tags") or [],
+        "hashtags": plan.get("hashtags") or [],
+    }
+    # Append narration to description for context/SEO.
+    narrs = [s["narration"] for s in plan["segments"] if (s.get("narration") or "").strip()]
+    if narrs:
+        meta["description"] = (meta["description"] + "\n\n" + " ".join(narrs))[:4800]
+    if meta["hashtags"]:
+        meta["description"] = (meta["description"] + "\n\n" + " ".join(meta["hashtags"]))[:4800]
+    # If plan gave no title, use OpenRouter metadata.
+    if not plan.get("title") and OPENROUTER_KEY:
+        try:
+            m = md.make_metadata(meta["title"], info.get("description") or "", meta["tags"])
+            meta.update(m)
+        except Exception as e:
+            print(f"[warn] metadata fallback failed: {e}", file=sys.stderr)
     return meta
 
 
-def social_edit(src_path, out_path, target="vertical"):
-    """Simple edit for social media: crop to vertical, trim, add basic styling.
-    
-    Uses ffmpeg directly — no AI pipeline needed.
-    """
-    import subprocess
-
-    # Get duration
-    probe = subprocess.run(
-        ["ffprobe", "-v", "quiet", "-print_format", "json", "-show_format", src_path],
-        capture_output=True, text=True
-    )
-    duration = float(json.loads(probe.stdout).get("format", {}).get("duration", "30"))
-
-    # Trim to max length
-    trim_duration = min(duration, MAX_SECS)
-
-    if target == "vertical":
-        # Crop to 9:16 vertical, scale to 1080x1920
-        vf = (
-            "scale=1080:1920:force_original_aspect_ratio=increase,"
-            "crop=1080:1920,"
-            "setsar=1"
-        )
-    else:
-        # Keep original aspect, scale to 1080p
-        vf = "scale=1080:-2:force_original_aspect_ratio=decrease"
-
-    cmd = [
-        "ffmpeg", "-y",
-        "-i", src_path,
-        "-t", str(trim_duration),
-        "-vf", vf,
-        "-c:v", "libx264", "-preset", "fast", "-crf", "23",
-        "-c:a", "aac", "-b:a", "128k",
-        "-movflags", "+faststart",
-        out_path
-    ]
-
-    result = subprocess.run(cmd, capture_output=True, text=True)
-    if result.returncode != 0:
-        print(f"[edit] ffmpeg error: {result.stderr[:500]}")
-        # Fallback: just copy with trim
-        cmd2 = [
-            "ffmpeg", "-y",
-            "-i", src_path,
-            "-t", str(trim_duration),
-            "-c", "copy",
-            out_path
-        ]
-        subprocess.run(cmd2, capture_output=True)
-
-    return out_path
-
+# ── Upload ─────────────────────────────────────────────────────────────────
 
 def upload_youtube(video_path, meta):
     """Upload to YouTube via OAuth."""
-    import ytauth as yt
-
     access = yt.refresh_access_token()
+    hashtags = " ".join(meta.get("hashtags", [])[:10])
+    desc = meta["description"]
+    if hashtags and hashtags not in desc:
+        desc = desc + "\n\n" + hashtags
     video_id = yt.upload_video(
         video_path,
-        title=meta["title"],
-        description=meta["description"] + "\n\n" + " ".join(meta.get("hashtags", [])[:10]),
+        title=meta["title"][:100],
+        description=desc[:5000],
         tags=meta["tags"],
         privacy=PRIVACY,
         access_token=access,
@@ -225,18 +243,16 @@ def upload_youtube(video_path, meta):
     return f"https://youtube.com/watch?v={video_id}"
 
 
+# ── Main ───────────────────────────────────────────────────────────────────
+
 def main():
-    # Check if specific job ID is given via env
     forced_id = os.getenv("MANUAL_JOB_ID", "")
 
     if forced_id:
-        # Atomically claim: queued -> processing (only one runner wins)
         try:
             r = requests.post(
                 f"{WORKER}/api/internal/manual/{forced_id}/claim",
-                headers=_h(),
-                timeout=30,
-            )
+                headers=_h(), timeout=30)
             r.raise_for_status()
             data = r.json()
         except Exception as e:
@@ -244,7 +260,7 @@ def main():
             return
         if not data.get("claimed"):
             status = (data.get("job") or {}).get("status", "unknown")
-            print(f"[manual] job {forced_id} not claimable (status: {status}) — another runner has it or it's done")
+            print(f"[manual] job {forced_id} not claimable (status: {status})")
             return
         job = data.get("job")
     else:
@@ -254,12 +270,9 @@ def main():
         if not job:
             print("[manual] no queued jobs")
             return
-        # Claim it
         r = requests.post(
             f"{WORKER}/api/internal/manual/{job['id']}/claim",
-            headers=_h(),
-            timeout=30,
-        )
+            headers=_h(), timeout=30)
         r.raise_for_status()
         if not r.json().get("claimed"):
             print(f"[manual] job {job['id']} claimed by another runner; skipping")
@@ -282,59 +295,51 @@ def main():
         src_path, info = download_best(url, out_dir=work_dir)
         title_hint = info.get("title", "")
         desc_hint = info.get("description", "")
-        print(f"[download] {src_path} ({os.path.getsize(src_path) // 1024} KB)")
+        size_kb = os.path.getsize(src_path) // 1024
+        print(f"[download] {src_path} ({size_kb} KB)")
         print(f"[download] title: {title_hint}")
 
-        # 2. Determine edit mode
-        update_job(job_id, status="editing", title=title_hint)
-
+        # 2. Analyze -> edit plan
+        update_job(job_id, status="analyzing", title=title_hint[:200])
         needs_ai = "youtube" in dest_platforms
-        final_path = src_path
+        plan, used_ai = make_plan(src_path, title_hint)
 
-        if needs_ai:
-            # Full AI pipeline for YouTube
-            print("[edit] running AI pipeline for YouTube...")
-            try:
-                import analyze as an
-                import smart
-                import apply as ap
-                import voice as vc
+        # 2b. Detect burned-in captions for removal (crop/delogo).
+        detect_captions(src_path, plan)
 
-                plan, used_ai = an.make_plan(src_path, title_hint) if hasattr(an, 'make_plan') else (None, False)
-                if plan is None:
-                    # Use smart module
-                    plan = smart.make_plan(src_path, title_hint)
-                    used_ai = False
+        # 2c. Kokoro voiceover (AI path only).
+        voice_wavs = {}
+        if used_ai:
+            update_job(job_id, status="voiceover")
+            voice_wavs = make_voices(plan, work_dir, used_ai=used_ai)
+            # Extend segments so narration plays at natural speed.
+            if voice_wavs:
+                try:
+                    src_dur = an.probe_duration(src_path)
+                except Exception:
+                    src_dur = None
+                fit_segments_to_voices(plan, voice_wavs, src_duration=src_dur)
 
-                voice_wavs = {}
-                if used_ai and NVIDIA_KEY:
-                    try:
-                        voice_wavs = vc.make_voices(plan, work_dir)
-                    except Exception:
-                        pass
+        # 3. Apply edits via ffmpeg (crop/speed/color/sharpness/captions/narration).
+        update_job(job_id, status="editing")
+        print(f"[edit] applying plan ({len(plan['segments'])} segs, "
+              f"{len(voice_wavs)} voice tracks, "
+              f"{len(plan.get('caption_regions') or [])} caption regions)...")
+        final_path = ap.apply_plan(src_path, plan, workdir=work_dir, voice_wavs=voice_wavs)
+        final_kb = os.path.getsize(final_path) // 1024
+        print(f"[edit] done: {final_path} ({final_kb} KB)")
 
-                final_path = ap.apply_plan(src_path, plan, workdir=work_dir, voice_wavs=voice_wavs)
-                print(f"[edit] AI pipeline done: {final_path}")
-            except Exception as e:
-                print(f"[edit] AI pipeline failed, falling back to simple edit: {e}")
-                final_path = social_edit(src_path, os.path.join(work_dir, "output.mp4"), target="vertical")
-        else:
-            # Simple social edit for TikTok/Insta/FB
-            print("[edit] running social edit pipeline...")
-            final_path = social_edit(src_path, os.path.join(work_dir, "output.mp4"), target="vertical")
-            print(f"[edit] social edit done: {final_path}")
-
-        # 3. Generate metadata
+        # 4. Metadata from AI plan.
         update_job(job_id, status="generating_metadata")
-        meta = generate_metadata(title_hint, desc_hint, dest_platforms)
+        meta = build_meta(plan, info)
         print(f"[meta] title: {meta['title']}")
-        print(f"[meta] hashtags: {' '.join(meta['hashtags'][:5])}")
+        if meta.get("hashtags"):
+            print(f"[meta] hashtags: {' '.join(meta['hashtags'][:5])}")
 
-        # 4. Upload to platforms
+        # 5. Upload to platforms.
         update_job(job_id, status="uploading")
         results = {}
 
-        # YouTube
         if "youtube" in dest_platforms:
             try:
                 yt_url = upload_youtube(final_path, meta)
@@ -344,13 +349,11 @@ def main():
                 results["youtube"] = {"success": False, "error": str(e)}
                 print(f"[upload] youtube failed: {e}")
 
-        # Social platforms via cookies
         social_dests = [p for p in dest_platforms if p in ("tiktok", "instagram", "facebook")]
         if social_dests:
             os.environ["VIDEO_DEST_PLATFORMS"] = ",".join(social_dests)
             try:
-                import upload_social as us
-                caption = f"{meta['title']}\n\n{meta['description']}\n\n{' '.join(meta['hashtags'][:10])}"
+                caption = f"{meta['title']}\n\n{meta['description']}\n\n{' '.join(meta.get('hashtags', [])[:10])}"
                 social_results = us.upload_all(final_path, meta["title"], caption)
                 for plat, ok in social_results.items():
                     results[plat] = {"success": bool(ok)}
@@ -360,14 +363,14 @@ def main():
                 for p in social_dests:
                     results[p] = {"success": False, "error": str(e)}
 
-        # 5. Report
-        update_job(job_id, status="done", result=results, title=meta["title"])
+        # 6. Report.
+        update_job(job_id, status="done", result=results, title=meta["title"][:200])
         print(f"[manual] job {job_id} complete!")
         print(json.dumps(results, indent=2))
 
     except Exception as e:
         traceback.print_exc()
-        update_job(job_id, status="failed", error=str(e))
+        update_job(job_id, status="failed", error=str(e)[:500])
         print(f"[manual] job {job_id} failed: {e}")
         sys.exit(1)
 
