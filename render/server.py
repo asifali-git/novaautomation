@@ -185,6 +185,20 @@ def poll_loop():
         time.sleep(random.randint(POLL_MIN, POLL_MAX))
 
 
+def keepalive_loop():
+    """Ping self every 10-13 min so Render free tier doesn't sleep."""
+    port = os.getenv("PORT", "10000")
+    self_url = os.getenv("SELF_URL", f"http://127.0.0.1:{port}/health")
+    while True:
+        interval = random.randint(600, 780)  # 10-13 minutes
+        time.sleep(interval)
+        try:
+            requests.get(self_url, timeout=10)
+            log.info("keepalive ping sent (slept %ds)", interval)
+        except Exception as e:
+            log.warning("keepalive ping failed: %s", e)
+
+
 # Minimal HTTP server so Render keeps the instance alive (health check).
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -207,6 +221,8 @@ def main():
     port = int(os.getenv("PORT", "10000"))
     t = threading.Thread(target=poll_loop, daemon=True)
     t.start()
+    ka = threading.Thread(target=keepalive_loop, daemon=True)
+    ka.start()
     log.info("HTTP server on :%d", port)
     HTTPServer(("0.0.0.0", port), Handler).serve_forever()
 

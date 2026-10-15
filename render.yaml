@@ -17,3 +17,5 @@ services:
         value: 8
       - key: POLL_MAX
         value: 15
+      - key: SELF_URL
+        sync: false
