@@ -2,8 +2,9 @@ services:
   - type: web
     name: nova-fastpoll
     runtime: python
-    buildCommand: pip install -r render/requirements.txt
-    startCommand: python render/server.py
+    rootDir: render
+    buildCommand: pip install -r requirements.txt
+    startCommand: python server.py
     envVars:
       - key: WORKER_URL
         sync: false
