@@ -395,40 +395,95 @@ export default {
         return withCors(json({ ok: true, t: now() }));
       }
 
+      // ---- Manual upload jobs ----
+      if (path === '/api/manual/upload' && req.method === 'POST') {
+        const body = await readBody(req);
+        const url = (body.url || '').trim();
+        if (!url) return withCors(json({ error: 'url required' }, 400));
+        const dest = Array.isArray(body.dest_platforms) ? body.dest_platforms.join(',') : (body.dest_platforms || 'youtube');
+        const res = await env.DB
+          .prepare('INSERT INTO manual_jobs (url, title, dest_platforms, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)')
+          .bind(url, body.title || null, dest, 'queued', now(), now())
+          .run();
+        const job = await env.DB.prepare('SELECT * FROM manual_jobs WHERE id = ?').bind(res.meta?.last_row_id).first();
+        return withCors(json({ job }, 201));
+      }
+
+      if (path === '/api/manual/jobs' && req.method === 'GET') {
+        const res = await env.DB.prepare('SELECT * FROM manual_jobs ORDER BY id DESC LIMIT 50').all();
+        return withCors(json({ jobs: res.results || [] }));
+      }
+
+      if (path.startsWith('/api/manual/jobs/') && req.method === 'DELETE') {
+        const id = Number(path.split('/')[4]);
+        await env.DB.prepare('DELETE FROM manual_jobs WHERE id = ?').bind(id).run();
+        return withCors(json({ ok: true }));
+      }
+
       // ---- URL detection: platform + channel/page name ----
       if (path === '/api/detect' && req.method === 'GET') {
         const target = url.searchParams.get('url') || '';
         if (!target) return withCors(json({ error: 'url required' }, 400));
         const platform = detectPlatform(target);
         let name = '';
+
+        // Extract username/handle from URL path directly (works even when fetch fails)
+        try {
+          const u = new URL(target);
+          const parts = u.pathname.split('/').filter(Boolean);
+          if (platform === 'youtube') {
+            // /@handle, /channel/UC..., /c/name, /user/name
+            if (parts[0]?.startsWith('@')) name = parts[0].slice(1);
+            else if (parts[0] === 'channel' && parts[1]) name = parts[1];
+            else if ((parts[0] === 'c' || parts[0] === 'user') && parts[1]) name = parts[1];
+          } else if (platform === 'tiktok' && parts[0]) {
+            name = parts[0].replace(/^@/, '');
+          } else if (platform === 'instagram' && parts[0]) {
+            name = parts[0].replace(/^@/, '');
+          } else if (platform === 'facebook' && parts[0]) {
+            // facebook.com/pagename or facebook.com/profile.php?id=123
+            if (parts[0] === 'profile.php') {
+              name = u.searchParams.get('id') || '';
+            } else if (parts[0] !== 'watch' && parts[0] !== 'reel' && parts[0] !== 'video') {
+              name = parts[0];
+            }
+          }
+          name = name.replace(/_/g, ' ').trim();
+        } catch (_) {}
+
+        // Also try fetching page title for a nicer display name
         try {
           const resp = await fetch(target, {
             headers: {
               'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+              'accept': 'text/html,application/xhtml+xml',
               'accept-language': 'en-US,en;q=0.9',
             },
             redirect: 'follow',
-            signal: AbortSignal.timeout(8000),
+            signal: AbortSignal.timeout(6000),
           });
           const html = await resp.text();
-          // og:site_name
-          const ogSite = html.match(/<meta[^>]+property=["']og:site_name["'][^>]+content=["']([^"']+)["']/i)
-            || html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:site_name["']/i);
-          // og:title
           const ogTitle = html.match(/<meta[^>]+property=["']og:title["'][^>]+content=["']([^"']+)["']/i)
             || html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:title["']/i);
-          // <title>
           const titleTag = html.match(/<title[^>]*>([^<]+)<\/title>/i);
-          // YouTube channel name from link itemprop
-          const ytChannel = html.match(/<link[^>]+itemprop=["']name["'][^>]+content=["']([^"']+)["']/i)
-            || html.match(/<meta[^>]+itemprop=["']name["'][^>]+content=["']([^"']+)["']/i);
-          name = (ytChannel?.[1] || ogSite?.[1] || ogTitle?.[1] || titleTag?.[1] || '').trim();
-          // Clean YouTube suffix
-          name = name.replace(/\s*[-–|]\s*(YouTube|Facebook|Instagram|TikTok)\s*$/i, '').trim();
+          let fetched = (ogTitle?.[1] || titleTag?.[1] || '').trim();
+
+          // Clean generic/login titles
+          fetched = fetched
+            .replace(/\s*[-–|]\s*(YouTube|Facebook|Instagram|TikTok)\s*$/i, '')
+            .replace(/^(Log in|Sign up|Login|Welcome).*$/i, '')
+            .replace(/^(Facebook|Instagram|TikTok)\s*[-–|].*$/i, '')
+            .trim();
+
+          // Use fetched name if it looks like a real name, else keep URL-derived
+          if (fetched.length >= 2 && fetched.length <= 80 && !/^(log in|sign up|error|undefined|null)/i.test(fetched)) {
+            name = fetched;
+          }
           if (name.length > 80) name = name.slice(0, 80);
         } catch (e) {
-          // Fetch failed — return just platform
+          // Fetch failed — URL-derived name is enough
         }
+
         return withCors(json({ platform, name }));
       }
 
@@ -512,6 +567,37 @@ export default {
         if (path === '/api/internal/tasks' && req.method === 'GET') {
           const tasks = (await listTasks(env.DB)).filter((t) => t.status === 'active');
           return withCors(json({ tasks }));
+        }
+
+        // Manual jobs — pick up next queued job
+        if (path === '/api/internal/manual/next' && req.method === 'GET') {
+          const job = await env.DB.prepare('SELECT * FROM manual_jobs WHERE status = ? ORDER BY id ASC LIMIT 1').bind('queued').first();
+          if (job) {
+            // Mark as processing
+            await env.DB.prepare('UPDATE manual_jobs SET status = ?, updated_at = ? WHERE id = ?').bind('processing', now(), job.id).run();
+          }
+          return withCors(json({ job: job || null }));
+        }
+
+        // Update manual job status
+        const manualPatch = path.match(/^\/api\/internal\/manual\/(\d+)$/);
+        if (manualPatch && req.method === 'PATCH') {
+          const id = Number(manualPatch[1]);
+          const body = await readBody(req);
+          const fields = [];
+          const vals = [];
+          for (const k of ['status', 'result', 'error', 'title']) {
+            if (k in body) {
+              fields.push(`${k} = ?`);
+              vals.push(k === 'result' || k === 'error' ? JSON.stringify(body[k]) : body[k]);
+            }
+          }
+          if (fields.length) {
+            vals.push(now(), id);
+            await env.DB.prepare(`UPDATE manual_jobs SET ${fields.join(', ')}, updated_at = ? WHERE id = ?`).bind(...vals).run();
+          }
+          const job = await env.DB.prepare('SELECT * FROM manual_jobs WHERE id = ?').bind(id).first();
+          return withCors(json({ job }));
         }
 
         if (path === '/api/internal/videos/next' && req.method === 'GET') {

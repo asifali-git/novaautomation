@@ -11,8 +11,15 @@
 </head>
 <body>
 
+  <!-- Mobile top bar -->
+  <div class="mobile-bar">
+    <button class="hamburger" id="hamburger">☰</button>
+    <span class="mobile-brand">⚡ NOVA</span>
+  </div>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
   <!-- Sidebar -->
-  <nav class="sidebar">
+  <nav class="sidebar" id="sidebar">
     <div class="sidebar-brand">
       <div class="brand-icon">⚡</div>
       <span class="brand-name">NOVA</span>
@@ -30,6 +37,17 @@
       <button class="nav-item" data-view="activity">
         <span class="nav-icon">▤</span> Activity
         <span class="nav-badge" id="nav-video-count">0</span>
+      </button>
+    </div>
+
+    <div class="sidebar-section">
+      <span class="sidebar-label">Upload</span>
+      <button class="nav-item" data-view="quick">
+        <span class="nav-icon">⚡</span> Quick Upload
+      </button>
+      <button class="nav-item" data-view="manual">
+        <span class="nav-icon">⇪</span> Manual Jobs
+        <span class="nav-badge" id="nav-manual-count">0</span>
       </button>
     </div>
 
@@ -183,6 +201,127 @@
       </div>
     </section>
 
+    <!-- ===== QUICK UPLOAD ===== -->
+    <section class="view" id="view-quick">
+      <header class="view-header">
+        <div>
+          <h1>Quick Upload</h1>
+          <p class="subtitle">Paste any video link — download, edit, and upload automatically</p>
+        </div>
+      </header>
+
+      <div class="card">
+        <form id="quick-form" class="form pro-form">
+          <div class="form-group full">
+            <span class="form-label">Video URL</span>
+            <div class="input-with-status">
+              <input id="q-url" type="url" class="form-input" placeholder="https://youtube.com/watch?v=... or any video link" required />
+              <span class="input-status" id="q-url-status"></span>
+            </div>
+            <span class="form-hint" id="q-url-hint">Works with YouTube, TikTok, Instagram, Facebook, Twitter, and more</span>
+          </div>
+
+          <div class="form-group full" id="q-dest-group">
+            <span class="form-label">Upload To</span>
+            <div class="dest-selector" id="q-dest-selector">
+              <label class="dest-option">
+                <input type="checkbox" id="q-youtube" value="youtube" checked />
+                <span class="dest-icon yt">▶</span>
+                <span class="dest-name">YouTube</span>
+                <span class="dest-note">Full AI editing pipeline</span>
+              </label>
+              <label class="dest-option">
+                <input type="checkbox" id="q-tiktok" value="tiktok" />
+                <span class="dest-icon tt">♪</span>
+                <span class="dest-name">TikTok</span>
+                <select class="dest-account" id="q-acct-tiktok" disabled>
+                  <option value="">Select account…</option>
+                </select>
+              </label>
+              <label class="dest-option">
+                <input type="checkbox" id="q-instagram" value="instagram" />
+                <span class="dest-icon ig">📷</span>
+                <span class="dest-name">Instagram</span>
+                <select class="dest-account" id="q-acct-instagram" disabled>
+                  <option value="">Select account…</option>
+                </select>
+              </label>
+              <label class="dest-option">
+                <input type="checkbox" id="q-facebook" value="facebook" />
+                <span class="dest-icon fb">f</span>
+                <span class="dest-name">Facebook</span>
+                <select class="dest-account" id="q-acct-facebook" disabled>
+                  <option value="">Select account…</option>
+                </select>
+              </label>
+            </div>
+            <span class="form-hint">
+              <b>YouTube:</b> Full AI pipeline (analyze → narrate → edit → upload)<br>
+              <b>TikTok/Insta/FB:</b> Smart trim + vertical crop + AI metadata
+            </span>
+          </div>
+
+          <div class="form-group full">
+            <span class="form-label">Title Override <span class="muted">(optional — AI generates if empty)</span></span>
+            <input id="q-title" type="text" class="form-input" placeholder="Leave empty for AI-generated title" />
+          </div>
+
+          <div class="form-actions">
+            <button class="btn primary" type="submit" id="q-submit">⚡ Start Upload</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card" id="q-progress-card" style="display:none;">
+        <div class="card-header">
+          <h2>Processing</h2>
+          <span class="badge run" id="q-status-badge"><span class="badge-dot"></span> <span id="q-status-text">Queued</span></span>
+        </div>
+        <div class="progress-steps" id="q-progress-steps">
+          <div class="progress-step" data-step="queued">✓ Queued</div>
+          <div class="progress-step" data-step="downloading">⬇ Downloading</div>
+          <div class="progress-step" data-step="editing">✂ Editing</div>
+          <div class="progress-step" data-step="generating_metadata">✨ Generating Metadata</div>
+          <div class="progress-step" data-step="uploading">↑ Uploading</div>
+          <div class="progress-step" data-step="done">✓ Done</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== MANUAL JOBS ===== -->
+    <section class="view" id="view-manual">
+      <header class="view-header">
+        <div>
+          <h1>Manual Jobs</h1>
+          <p class="subtitle">Quick upload history and status</p>
+        </div>
+        <button class="btn primary" onclick="switchView('quick')">+ New Upload</button>
+      </header>
+
+      <div class="card">
+        <div class="table-wrap">
+          <table class="data-table" id="manual-table">
+            <thead>
+              <tr>
+                <th>URL</th>
+                <th>Title</th>
+                <th>Destinations</th>
+                <th>Status</th>
+                <th>Created</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          <div class="empty-state" id="manual-empty">
+            <div class="empty-icon">⇪</div>
+            <p>No manual jobs yet</p>
+            <button class="btn primary" onclick="switchView('quick')">Try Quick Upload</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ===== YOUTUBE ACCOUNT ===== -->
     <section class="view" id="view-youtube">
       <header class="view-header">
@@ -291,11 +430,11 @@
         <div class="form-group full" id="dest-group" style="display:none;">
           <span class="form-label">Upload Destinations</span>
           <div class="dest-selector" id="dest-selector">
-            <label class="dest-option always">
-              <input type="checkbox" checked disabled />
+            <label class="dest-option">
+              <input type="checkbox" id="f-youtube" value="youtube" checked />
               <span class="dest-icon yt">▶</span>
               <span class="dest-name">YouTube</span>
-              <span class="dest-badge">always</span>
+              <span class="dest-connected" id="yt-conn-badge"></span>
             </label>
             <label class="dest-option">
               <input type="checkbox" id="f-tiktok" value="tiktok" />
@@ -322,7 +461,7 @@
               </select>
             </label>
           </div>
-          <span class="form-hint">Select where to upload the processed videos. Accounts must be connected first.</span>
+          <span class="form-hint">Select where to upload the processed videos. YouTube uses OAuth; others use cookies.</span>
         </div>
 
         <div class="form-actions">

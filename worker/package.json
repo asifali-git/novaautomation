@@ -8,6 +8,6 @@
     "db:init": "wrangler d1 execute novahub --remote --file=./schema.sql"
   },
   "devDependencies": {
-    "wrangler": "^3.60.0"
+    "wrangler": "^3.114.17"
   }
 }

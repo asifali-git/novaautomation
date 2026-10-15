@@ -827,7 +827,65 @@ select.form-input {
 
 .connect-card { margin-top:8px; }
 
-/* ===== Modal ===== */
+/* ===== Progress steps ===== */
+.progress-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.progress-step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13.5px;
+  color: var(--text3);
+  transition: all .2s;
+}
+.progress-step:last-child { border: none; }
+
+.progress-step.active {
+  color: var(--accent2);
+  font-weight: 600;
+}
+.progress-step.active::before {
+  content: '';
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--accent2);
+  animation: pulse 1.5s infinite;
+}
+
+.progress-step.done {
+  color: var(--green);
+}
+.progress-step.done::before {
+  content: '✓';
+  font-weight: 700;
+  width: 18px;
+  text-align: center;
+}
+
+.progress-step.failed {
+  color: var(--red);
+}
+.progress-step.failed::before {
+  content: '✕';
+  font-weight: 700;
+  width: 18px;
+  text-align: center;
+}
+
+.dest-note {
+  margin-left: auto;
+  font-size: 11.5px;
+  color: var(--text3);
+  background: var(--bg4);
+  padding: 3px 10px;
+  border-radius: 5px;
+}
 .modal-overlay {
   position:fixed;
   inset:0;
@@ -910,14 +968,114 @@ select.form-input {
 }
 
 /* ===== Responsive ===== */
+.mobile-bar {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 52px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+  z-index: 200;
+}
+
+.hamburger {
+  width: 36px; height: 36px;
+  border: none;
+  background: var(--bg3);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hamburger:hover { background: var(--bg4); }
+
+.mobile-brand {
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 1px;
+}
+
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.5);
+  z-index: 150;
+}
+.sidebar-overlay.open { display: block; }
+
 @media (max-width: 900px) {
-  .sidebar { width:60px; }
-  .sidebar .brand-name, .sidebar-label, .nav-badge, .nav-dot, .sidebar-footer .conn-status span, .clock { display:none; }
-  .nav-item { justify-content:center; padding:10px; }
-  .nav-icon { width:auto; }
-  .main { margin-left:60px; padding:20px; }
-  .stats-grid { grid-template-columns:repeat(2,1fr); }
-  .dash-grid { grid-template-columns:1fr; }
-  .social-grid { grid-template-columns:1fr; }
-  .form-row { grid-template-columns:1fr; }
+  .mobile-bar { display: flex; }
+
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform .25s ease;
+    z-index: 200;
+    width: 260px;
+  }
+  .sidebar.open { transform: translateX(0); }
+
+  .sidebar .brand-name,
+  .sidebar-label,
+  .nav-badge,
+  .nav-dot,
+  .sidebar-footer .conn-status span,
+  .sidebar-footer .clock { display: revert; }
+
+  .nav-item {
+    justify-content: flex-start;
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+  .nav-icon { width: 20px; text-align: center; }
+
+  .main {
+    margin-left: 0;
+    padding: 68px 16px 24px;
+    max-width: 100%;
+  }
+
+  .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .stat-card { padding: 14px; }
+  .stat-value { font-size: 24px; }
+
+  .dash-grid { grid-template-columns: 1fr; }
+  .social-grid { grid-template-columns: 1fr; }
+
+  .form-row { grid-template-columns: 1fr; }
+
+  .view-header { flex-direction: column; gap: 12px; }
+
+  /* Tables → scrollable on mobile */
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .data-table { min-width: 600px; }
+
+  /* Modal full-width on mobile */
+  .modal-overlay { padding: 10px; align-items: flex-start; padding-top: 60px; }
+  .modal { max-height: calc(100vh - 80px); }
+
+  .filter-pills { flex-wrap: wrap; }
+
+  .dest-option { flex-wrap: wrap; }
+  .dest-account { width: 100%; margin-left: 42px; margin-top: 4px; max-width: none; }
+}
+
+@media (max-width: 480px) {
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .stat-value { font-size: 20px; }
+  .stat-label { font-size: 10px; }
+
+  .btn { padding: 8px 14px; font-size: 12.5px; }
+
+  .view-header h1 { font-size: 20px; }
+
+  .card { padding: 16px; }
+
+  .form-input { padding: 9px 12px; font-size: 13px; }
 }

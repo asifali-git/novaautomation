@@ -7,10 +7,19 @@ on:
         description: 'Comma-separated video ids (empty = next detected)'
         required: false
         default: ''
+      manual_job_id:
+        description: 'Manual upload job ID (from Quick Upload)'
+        required: false
+        default: ''
   workflow_call:
     inputs:
       video_ids:
         description: 'Comma-separated video ids'
+        required: false
+        type: string
+        default: ''
+      manual_job_id:
+        description: 'Manual upload job ID'
         required: false
         type: string
         default: ''
@@ -66,7 +75,21 @@ jobs:
           echo "YT_CLIENT_ID=$(echo "$resp" | python -c 'import sys,json;print(json.load(sys.stdin).get("YT_CLIENT_ID") or "")')" >> "$GITHUB_ENV"
           echo "YT_CLIENT_SECRET=$(echo "$resp" | python -c 'import sys,json;print(json.load(sys.stdin).get("YT_CLIENT_SECRET") or "")')" >> "$GITHUB_ENV"
 
+      - name: Process manual upload
+        if: ${{ inputs.manual_job_id != '' }}
+        env:
+          WORKER_URL: ${{ secrets.WORKER_URL }}
+          INTERNAL_TOKEN: ${{ secrets.INTERNAL_TOKEN }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          PRIVACY: ${{ vars.PRIVACY || 'public' }}
+          MAX_SECS: ${{ vars.MAX_SECS || '60' }}
+        run: |
+          echo "=== Processing manual job ${{ inputs.manual_job_id }} ==="
+          MANUAL_JOB_ID="${{ inputs.manual_job_id }}" python pipeline/manual_upload.py
+
       - name: Process videos
+        if: ${{ inputs.manual_job_id == '' }}
         env:
           WORKER_URL: ${{ secrets.WORKER_URL }}
           INTERNAL_TOKEN: ${{ secrets.INTERNAL_TOKEN }}

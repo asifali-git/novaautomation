@@ -46,3 +46,27 @@ CREATE TABLE IF NOT EXISTS logins (
 CREATE UNIQUE INDEX IF NOT EXISTS ux_videos_task_key ON videos(task_id, video_key);
 CREATE INDEX IF NOT EXISTS idx_videos_status ON videos(status);
 CREATE INDEX IF NOT EXISTS idx_tasks_status ON tasks(status);
+
+CREATE TABLE IF NOT EXISTS accounts (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  platform TEXT NOT NULL,
+  username TEXT,
+  cookies TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'active',
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS manual_jobs (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  url TEXT NOT NULL,
+  title TEXT,
+  dest_platforms TEXT NOT NULL DEFAULT 'youtube',
+  status TEXT NOT NULL DEFAULT 'queued',
+  result TEXT,
+  error TEXT,
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_manual_status ON manual_jobs(status);

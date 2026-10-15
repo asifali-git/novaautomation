@@ -25,22 +25,60 @@ function toast(msg, type = 'ok') {
 }
 
 /* ===== Navigation ===== */
+const sidebar = $('sidebar');
+const overlay = $('sidebar-overlay');
+
+$('hamburger')?.addEventListener('click', () => {
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('open');
+});
+overlay?.addEventListener('click', closeSidebar);
+function closeSidebar() {
+  sidebar.classList.remove('open');
+  overlay.classList.remove('open');
+}
+
 document.querySelectorAll('.nav-item').forEach(btn => {
-  btn.addEventListener('click', () => switchView(btn.dataset.view));
+  btn.addEventListener('click', () => {
+    switchView(btn.dataset.view);
+    closeSidebar();
+  });
 });
 
 document.querySelectorAll('[data-goto]').forEach(btn => {
-  btn.addEventListener('click', () => switchView(btn.dataset.goto));
+  btn.addEventListener('click', () => {
+    switchView(btn.dataset.goto);
+    closeSidebar();
+  });
 });
 
-function switchView(name) {
+// Hash-based routing for back/forward button support
+function switchView(name, skipHash = false) {
   document.querySelectorAll('.nav-item').forEach(b => b.classList.toggle('active', b.dataset.view === name));
   document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === `view-${name}`));
+  if (!skipHash) {
+    history.pushState({ view: name }, '', `#${name}`);
+  }
   if (name === 'dashboard') loadDashboard();
   if (name === 'sources') loadTasks();
   if (name === 'activity') loadVideos();
   if (name === 'youtube') loadYouTube();
   if (name === 'social') loadSocial();
+  if (name === 'quick') { populateQuickDropdowns(); $('q-progress-card').style.display = 'none'; $('q-submit').disabled = false; $('q-submit').textContent = '⚡ Start Upload'; }
+  if (name === 'manual') loadManualJobs();
+}
+
+// Handle browser back/forward
+window.addEventListener('popstate', (e) => {
+  const view = e.state?.view || location.hash.slice(1) || 'dashboard';
+  switchView(view, true);
+});
+
+// On load: restore view from hash
+function initRoute() {
+  const view = location.hash.slice(1) || 'dashboard';
+  const valid = ['dashboard', 'sources', 'activity', 'youtube', 'social', 'quick', 'manual'];
+  switchView(valid.includes(view) ? view : 'dashboard', true);
 }
 
 /* ===== Clock ===== */
@@ -208,6 +246,7 @@ function openModal() {
   $('name-group').style.display = 'none';
   $('platform-display').style.display = 'none';
   $('dest-group').style.display = 'none';
+  $('f-youtube').checked = true;
   ['tiktok', 'instagram', 'facebook'].forEach(p => {
     const cb = $(`f-${p}`);
     if (cb) { cb.checked = false; cb.onchange && cb.onchange(); }
@@ -495,8 +534,11 @@ async function loadYouTube() {
 
 $('btn-login')?.addEventListener('click', async () => {
   try {
-    const d = await api('/api/youtube/auth-url');
-    window.location.href = d.url;
+    const d = await api('/api/youtube/login/start', {
+      method: 'POST',
+      body: JSON.stringify({}),
+    });
+    window.location.href = d.auth_url;
   } catch (e) { toast(e.message, 'err'); }
 });
 
@@ -648,6 +690,187 @@ async function loadState() {
   }
 }
 
+/* ===== Quick Upload ===== */
+let qPollTimer = null;
+
+// Populate Quick Upload account dropdowns
+async function populateQuickDropdowns() {
+  try {
+    const d = await api('/api/accounts');
+    allAccounts = d.accounts || [];
+  } catch (_) { allAccounts = []; }
+
+  ['tiktok', 'instagram', 'facebook'].forEach(plat => {
+    const cb = $(`q-${plat}`);
+    const sel = $(`q-acct-${plat}`);
+    if (!cb || !sel) return;
+
+    const accounts = allAccounts.filter(a => a.platform === plat);
+    sel.innerHTML = '<option value="">Select account…</option>';
+    accounts.forEach(a => {
+      const opt = document.createElement('option');
+      opt.value = a.id;
+      opt.textContent = a.username || a.id;
+      sel.appendChild(opt);
+    });
+    if (accounts.length === 0) {
+      sel.innerHTML = '<option value="">No accounts connected</option>';
+    }
+
+    cb.onchange = () => {
+      sel.disabled = !cb.checked;
+      if (cb.checked && accounts.length === 1) sel.value = accounts[0].id;
+    };
+  });
+}
+
+// Quick Upload form submit
+$('quick-form')?.addEventListener('submit', async e => {
+  e.preventDefault();
+  const url = $('q-url').value.trim();
+  const title = $('q-title').value.trim() || null;
+
+  const dest = [];
+  if ($('q-youtube')?.checked) dest.push('youtube');
+  ['tiktok', 'instagram', 'facebook'].forEach(p => {
+    if ($(`q-${p}`)?.checked) {
+      const acctId = $(`q-acct-${p}`)?.value;
+      dest.push(acctId ? `${p}:${acctId}` : p);
+    }
+  });
+
+  if (dest.length === 0) return toast('Select at least one destination', 'err');
+
+  try {
+    $('q-submit').disabled = true;
+    $('q-submit').textContent = '⏳ Submitting...';
+
+    const d = await api('/api/manual/upload', {
+      method: 'POST',
+      body: JSON.stringify({ url, title, dest_platforms: dest }),
+    });
+
+    toast('Job queued! Processing will start shortly.');
+    $('q-progress-card').style.display = '';
+    updateProgressUI('queued');
+    startQuickPoll(d.job.id);
+
+    $('q-url').value = '';
+    $('q-title').value = '';
+  } catch (e2) {
+    toast(e2.message, 'err');
+    $('q-submit').disabled = false;
+    $('q-submit').textContent = '⚡ Start Upload';
+  }
+});
+
+function startQuickPoll(jobId) {
+  clearInterval(qPollTimer);
+  qPollTimer = setInterval(async () => {
+    try {
+      const d = await api('/api/manual/jobs');
+      const job = (d.jobs || []).find(j => j.id === jobId);
+      if (job) {
+        updateProgressUI(job.status, job.error);
+        if (['done', 'failed'].includes(job.status)) {
+          clearInterval(qPollTimer);
+          $('q-submit').disabled = false;
+          $('q-submit').textContent = '⚡ Start Upload';
+          if (job.status === 'done') toast('Upload complete!');
+          if (job.status === 'failed') toast('Upload failed: ' + (job.error || 'unknown'), 'err');
+        }
+      }
+    } catch (_) {}
+  }, 3000);
+}
+
+function updateProgressUI(status, error) {
+  const steps = document.querySelectorAll('#q-progress-steps .progress-step');
+  const order = ['queued', 'downloading', 'editing', 'generating_metadata', 'uploading', 'done'];
+  const currentIdx = order.indexOf(status);
+
+  steps.forEach((el, i) => {
+    el.classList.remove('active', 'done', 'failed');
+    if (status === 'failed' && i === currentIdx) {
+      el.classList.add('failed');
+    } else if (i < currentIdx || (status === 'done' && i <= order.indexOf('done'))) {
+      el.classList.add('done');
+    } else if (i === currentIdx) {
+      el.classList.add('active');
+    }
+  });
+
+  const badge = $('q-status-badge');
+  const text = $('q-status-text');
+  if (badge && text) {
+    text.textContent = status.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    badge.className = 'badge ' + (status === 'done' ? 'ok' : status === 'failed' ? 'err' : 'run');
+    if (status === 'done') badge.innerHTML = '<span class="badge-dot"></span> Done';
+    else if (status === 'failed') badge.innerHTML = '<span class="badge-dot"></span> Failed: ' + esc(error || '');
+    else badge.innerHTML = `<span class="badge-dot"></span> ${text.textContent}`;
+  }
+}
+
+// Load Manual Jobs list
+async function loadManualJobs() {
+  try {
+    const d = await api('/api/manual/jobs');
+    const jobs = d.jobs || [];
+    $('nav-manual-count').textContent = jobs.filter(j => j.status === 'queued' || j.status === 'processing').length;
+
+    const tbody = document.querySelector('#manual-table tbody');
+    const empty = $('manual-empty');
+
+    if (jobs.length === 0) {
+      tbody.innerHTML = '';
+      empty.style.display = '';
+      document.querySelector('#manual-table').style.display = 'none';
+      return;
+    }
+    empty.style.display = 'none';
+    document.querySelector('#manual-table').style.display = '';
+
+    tbody.innerHTML = jobs.map(j => {
+      const dests = (j.dest_platforms || '').split(',').map(d2 => {
+        const [plat] = d2.split(':');
+        const m = PLATFORM_META[plat];
+        return m ? `<span class="plat-pill ${m.cls}">${m.icon} ${m.label}</span>` : '';
+      }).join(' ');
+
+      const badge = j.status === 'done' ? '<span class="badge ok"><span class="badge-dot"></span> Done</span>'
+        : j.status === 'failed' ? `<span class="badge err" title="${esc(j.error)}"><span class="badge-dot"></span> Failed</span>`
+        : j.status === 'processing' || j.status === 'downloading' || j.status === 'editing' || j.status === 'uploading' || j.status === 'generating_metadata'
+        ? `<span class="badge run"><span class="badge-dot"></span> ${j.status.replace(/_/g,' ')}</span>`
+        : '<span class="badge idle">Queued</span>';
+
+      return `<tr>
+        <td>
+          <div class="cell-title">${esc(j.title || j.url)}</div>
+          <div class="cell-sub">${esc(j.url)}</div>
+        </td>
+        <td>${esc(j.title || '—')}</td>
+        <td>${dests}</td>
+        <td>${badge}</td>
+        <td class="muted">${timeAgo(j.created_at * 1000)}</td>
+        <td>
+          ${['queued','failed'].includes(j.status) ? `<button class="btn danger sm" onclick="delManualJob(${j.id})">✕</button>` : ''}
+        </td>
+      </tr>`;
+    }).join('');
+  } catch (e) {
+    console.error('loadManualJobs:', e);
+  }
+}
+
+async function delManualJob(id) {
+  if (!confirm('Delete this job?')) return;
+  try {
+    await api(`/api/manual/jobs/${id}`, { method: 'DELETE' });
+    toast('Job deleted');
+    loadManualJobs();
+  } catch (e) { toast(e.message, 'err'); }
+}
+
 /* ===== Helpers ===== */
 function esc(s) {
   return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -665,7 +888,7 @@ function timeAgo(ts) {
 /* ===== Init ===== */
 (async function init() {
   loadState();
-  loadDashboard();
+  initRoute();
 
   // Handle OAuth callback
   const params = new URLSearchParams(window.location.search);
@@ -685,5 +908,6 @@ function timeAgo(ts) {
     if (active === 'view-dashboard') loadDashboard();
     if (active === 'view-sources') loadTasks();
     if (active === 'view-activity') loadVideos();
+    if (active === 'view-manual') loadManualJobs();
   }, 30000);
 })();

@@ -117,6 +117,48 @@ def trigger_process(video_ids):
         log.warning("failed to trigger process: %s", e)
 
 
+def check_manual_jobs():
+    """Check for queued manual upload jobs and trigger processing."""
+    if not WORKER or not TOKEN:
+        return False
+    try:
+        r = requests.get(f"{WORKER}/api/internal/manual/next", headers=_h(), timeout=15)
+        r.raise_for_status()
+        job = r.json().get("job")
+        if not job:
+            return False
+
+        log.info("MANUAL job %s: %s -> %s", job["id"], job["url"], job.get("dest_platforms"))
+        # Trigger GitHub Actions manual process
+        if GH_TOKEN and GH_REPO:
+            url = f"https://api.github.com/repos/{GH_REPO}/actions/workflows/process.yml/dispatches"
+            headers = {
+                "Authorization": f"token {GH_TOKEN}",
+                "Accept": "application/vnd.github+json",
+            }
+            payload = {
+                "ref": "master",
+                "inputs": {"manual_job_id": str(job["id"])},
+            }
+            try:
+                r2 = requests.post(url, headers=headers, json=payload, timeout=15)
+                r2.raise_for_status()
+                log.info("triggered manual process for job %s", job["id"])
+            except Exception as e:
+                log.warning("failed to trigger manual process: %s", e)
+                # Revert job to queued
+                requests.patch(
+                    f"{WORKER}/api/internal/manual/{job['id']}",
+                    headers=_h(),
+                    json={"status": "queued"},
+                    timeout=15,
+                )
+        return True
+    except Exception as e:
+        log.warning("manual job check failed: %s", e)
+        return False
+
+
 def poll_once():
     """Single poll pass across all active tasks. Returns new video IDs."""
     if not WORKER or not TOKEN:
@@ -177,6 +219,9 @@ def poll_loop():
     log.info("fastpoll started — interval %d-%ds", POLL_MIN, POLL_MAX)
     while True:
         try:
+            # Check manual jobs first
+            check_manual_jobs()
+            # Then check for new videos from tasks
             new = poll_once()
             if new:
                 log.info("found %d new video(s)", len(new))
