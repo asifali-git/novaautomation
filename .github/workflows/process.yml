@@ -1,0 +1,85 @@
+name: process
+
+on:
+  workflow_dispatch:
+    inputs:
+      video_ids:
+        description: 'Comma-separated video ids (empty = next detected)'
+        required: false
+        default: ''
+  workflow_call:
+    inputs:
+      video_ids:
+        description: 'Comma-separated video ids'
+        required: false
+        type: string
+        default: ''
+
+concurrency:
+  group: process
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install deps
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          pip install -q -r pipeline/requirements.txt
+
+      - name: Decode cookies
+        if: ${{ secrets.COOKIE_B64 != '' }}
+        env:
+          COOKIE_B64: ${{ secrets.COOKIE_B64 }}
+        run: |
+          if [ -n "$COOKIE_B64" ]; then
+            echo "$COOKIE_B64" | base64 -d > cookies.txt
+            echo "COOKIES_FILE=cookies.txt" >> "$GITHUB_ENV"
+          fi
+
+      - name: Fetch channel auth from hub
+        env:
+          WORKER_URL: ${{ secrets.WORKER_URL }}
+          INTERNAL_TOKEN: ${{ secrets.INTERNAL_TOKEN }}
+        run: |
+          resp=$(curl -s -H "x-token: $INTERNAL_TOKEN" "$WORKER_URL/api/internal/logins/env")
+          echo "YT_REFRESH_TOKEN=$(echo "$resp" | python -c 'import sys,json;print(json.load(sys.stdin).get("YT_REFRESH_TOKEN") or "")')" >> "$GITHUB_ENV"
+          echo "YT_CLIENT_ID=$(echo "$resp" | python -c 'import sys,json;print(json.load(sys.stdin).get("YT_CLIENT_ID") or "")')" >> "$GITHUB_ENV"
+          echo "YT_CLIENT_SECRET=$(echo "$resp" | python -c 'import sys,json;print(json.load(sys.stdin).get("YT_CLIENT_SECRET") or "")')" >> "$GITHUB_ENV"
+
+      - name: Process videos
+        env:
+          WORKER_URL: ${{ secrets.WORKER_URL }}
+          INTERNAL_TOKEN: ${{ secrets.INTERNAL_TOKEN }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          ANALYZE: ${{ vars.ANALYZE || 'true' }}
+          VOICEOVER: ${{ vars.VOICEOVER || 'true' }}
+          MAX_SECS: ${{ vars.MAX_SECS || '30' }}
+          PRIVACY: ${{ vars.PRIVACY || 'public' }}
+        run: |
+          ids="${{ inputs.video_ids }}"
+          if [ -z "$ids" ]; then
+            echo "No ids given; processing next detected video."
+            python pipeline/main.py
+          else
+            IFS=',' read -ra arr <<< "$ids"
+            for id in "${arr[@]}"; do
+              id=$(echo "$id" | xargs)
+              [ -z "$id" ] && continue
+              echo "=== Processing video $id ==="
+              VIDEO_ID="$id" python pipeline/main.py || echo "video $id failed (continuing)"
+            done
+          fi

@@ -1,0 +1,60 @@
+name: poll
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'   # every 5 min (Actions minimum)
+  workflow_dispatch: {}
+
+concurrency:
+  group: poll
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    outputs:
+      new_count: ${{ steps.detect.outputs.new_count }}
+      video_ids: ${{ steps.detect.outputs.video_ids }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install deps
+        run: pip install -q yt-dlp requests
+
+      - name: Decode cookies
+        if: ${{ secrets.COOKIE_B64 != '' }}
+        env:
+          COOKIE_B64: ${{ secrets.COOKIE_B64 }}
+        run: |
+          if [ -n "$COOKIE_B64" ]; then
+            echo "$COOKIE_B64" | base64 -d > cookies.txt
+            echo "COOKIES_FILE=cookies.txt" >> "$GITHUB_ENV"
+          fi
+
+      - name: Detect new videos
+        id: detect
+        env:
+          WORKER_URL: ${{ secrets.WORKER_URL }}
+          INTERNAL_TOKEN: ${{ secrets.INTERNAL_TOKEN }}
+        run: python pipeline/poll.py
+
+  dispatch:
+    needs: detect
+    if: needs.detect.outputs.new_count != '0'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Trigger processor
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run process.yml \
+            -f video_ids="${{ needs.detect.outputs.video_ids }}"

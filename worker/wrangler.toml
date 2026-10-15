@@ -1,0 +1,15 @@
+name = "nova-hub"
+main = "src/index.js"
+compatibility_date = "2024-12-01"
+
+[vars]
+ENVIRONMENT = "production"
+# Frontend origin allowed to call the public API
+ALLOWED_ORIGIN = "https://nova-hub.pages.dev"
+# Set after creating the D1 DB: npx wrangler d1 create novahub
+PUBLIC_BASE_URL = "https://nova-hub.asubilla.workers.dev"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "novahub"
+database_id = "REPLACE_WITH_YOUR_D1_ID"

@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nova</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128302;</text></svg>" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">◆</span>
+      <span class="name">NOVA</span>
+    </div>
+    <div class="topbar-right">
+      <span id="conn" class="conn offline">connecting…</span>
+      <span id="clock" class="clock"></span>
+    </div>
+  </header>
+
+  <main class="layout">
+    <!-- Left panel: add source + connect account -->
+    <aside class="panel side">
+      <section class="card">
+        <h2>Add source</h2>
+        <form id="add-form" class="form">
+          <label>Link
+            <input id="f-url" type="url" placeholder="https://…" required />
+          </label>
+          <label>Name <span class="muted">(optional)</span>
+            <input id="f-name" type="text" placeholder="My channel" />
+          </label>
+          <label>Send to
+            <select id="f-dest">
+              <option value="youtube">YouTube</option>
+            </select>
+          </label>
+          <label>Account
+            <select id="f-login"></select>
+          </label>
+          <button class="btn primary" type="submit">Add</button>
+          <p class="hint">Paste a channel, playlist, or post link. New posts are picked up automatically.</p>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2>Connected account</h2>
+        <div id="login-list" class="login-list"></div>
+        <button id="btn-login" class="btn google" type="button">
+          <span class="g">▶</span> Login with Google
+        </button>
+        <p class="hint">A window opens. Sign in once. It stays connected.</p>
+      </section>
+    </aside>
+
+    <!-- Right: sources + videos -->
+    <section class="panel main">
+      <section class="card">
+        <div class="card-head">
+          <h2>Sources</h2>
+          <span id="task-count" class="pill">0</span>
+        </div>
+        <div class="table-wrap">
+          <table id="tasks-table">
+            <thead>
+              <tr>
+                <th>Source</th>
+                <th>Platform</th>
+                <th>Status</th>
+                <th>Last seen</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          <div id="tasks-empty" class="empty">No sources yet. Add one on the left.</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h2>Activity</h2>
+          <span id="video-count" class="pill">0</span>
+        </div>
+        <div class="table-wrap">
+          <table id="videos-table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Platform</th>
+                <th>State</th>
+                <th>Updated</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          <div id="videos-empty" class="empty">Nothing here yet.</div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <div id="toasts" class="toasts"></div>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+node_modules/
+.env
+.env.local
+.env.production
+out/
+.next/
+.wrangler/
+dist/
+*.log
+.DS_Store
+Thumbs.db
+cf api.txt
+google api.txt
+nvidia api key.txt
+playwright-mcp
+cookies.txt
+work/
+kokoro/
+__pycache__/
+*.pyc
+github api.txt
+firebase_service_account.json
+.playwright-mcp/
