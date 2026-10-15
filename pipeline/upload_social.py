@@ -52,21 +52,68 @@ def _fetch_all_cookies():
     return _cookies_cache
 
 
-def _get_cookies(platform):
-    """Get cookies for a specific platform from worker."""
+def _get_cookies(platform, account_id=None):
+    """Get cookies for a specific platform from worker.
+    If account_id is given, fetch that specific account's cookies.
+    Otherwise return the first active account's cookies for the platform."""
+    if account_id and WORKER and TOKEN:
+        try:
+            r = requests.get(
+                f"{WORKER}/api/internal/accounts/{account_id}/cookies",
+                headers={"x-token": TOKEN},
+                timeout=30,
+            )
+            r.raise_for_status()
+            return r.json().get("cookies")
+        except Exception as e:
+            print(f"[social] failed to fetch account {account_id} cookies: {e}")
+            return None
+
     all_cookies = _fetch_all_cookies()
     entry = all_cookies.get(platform)
     if not entry:
         return None
-    return entry.get("cookies")
+    # New format: list of accounts
+    if isinstance(entry, list):
+        if not entry:
+            return None
+        return entry[0].get("cookies")
+    # Old format: single dict
+    if isinstance(entry, dict):
+        return entry.get("cookies")
+    return None
+
+
+def _get_accounts_for_platform(platform):
+    """Get list of accounts for a platform from worker env endpoint."""
+    all_cookies = _fetch_all_cookies()
+    entry = all_cookies.get(platform)
+    if not entry:
+        return []
+    if isinstance(entry, list):
+        return entry
+    if isinstance(entry, dict):
+        return [entry]
+    return []
 
 
 def _get_enabled_platforms():
-    """Get platforms to upload to from env (set by pipeline from task.dest_platforms)."""
+    """Get platforms to upload to from env (set by pipeline from task.dest_platforms).
+    Returns list of (platform, account_id_or_None) tuples."""
     raw = os.getenv("VIDEO_DEST_PLATFORMS", "")
     if not raw:
         return []
-    return [p.strip().lower() for p in raw.split(",") if p.strip()]
+    result = []
+    for part in raw.split(","):
+        part = part.strip().lower()
+        if not part:
+            continue
+        if ":" in part:
+            plat, acct = part.split(":", 1)
+            result.append((plat, acct or None))
+        else:
+            result.append((part, None))
+    return result
 
 
 def _cookies_to_file(cookies, suffix):
@@ -135,9 +182,9 @@ def _make_driver(headless=True):
 
 # ─────────────────────────── TIKTOK ───────────────────────────
 
-def upload_tiktok(video_path, description):
+def upload_tiktok(video_path, description, account_id=None):
     """Upload video to TikTok using cookies from worker."""
-    cookies = _get_cookies("tiktok")
+    cookies = _get_cookies("tiktok", account_id=account_id)
     if not cookies:
         print("[tiktok] no cookies in worker; skipping")
         return False
@@ -252,9 +299,9 @@ def upload_tiktok(video_path, description):
 
 # ─────────────────────────── INSTAGRAM ───────────────────────────
 
-def upload_instagram(video_path, description):
+def upload_instagram(video_path, description, account_id=None):
     """Upload reel to Instagram using cookies from worker."""
-    cookies = _get_cookies("instagram")
+    cookies = _get_cookies("instagram", account_id=account_id)
     if not cookies:
         print("[instagram] no cookies in worker; skipping")
         return False
@@ -433,9 +480,9 @@ def _parse_cookies_any_format(cookies_file):
     return cookies
 
 
-def upload_facebook(video_path, description):
+def upload_facebook(video_path, description, account_id=None):
     """Upload reel to Facebook using cookies from worker."""
-    cookies = _get_cookies("facebook")
+    cookies = _get_cookies("facebook", account_id=account_id)
     if not cookies:
         print("[facebook] no cookies in worker; skipping")
         return False
@@ -549,7 +596,9 @@ def upload_facebook(video_path, description):
 # ─────────────────────────── MAIN ───────────────────────────
 
 def upload_all(video_path, title, description):
-    """Upload to selected platforms (from task.dest_platforms). Returns results."""
+    """Upload to selected platforms (from task.dest_platforms). Returns results.
+    dest_platforms format: "youtube,tiktok:3,instagram:5,facebook"
+    where ":3" is optional account ID."""
     enabled = _get_enabled_platforms()
     results = {}
 
@@ -559,17 +608,16 @@ def upload_all(video_path, title, description):
 
     caption = f"{title}\n\n{description}".strip()[:2200]
 
-    if "tiktok" in enabled:
-        print("[social] uploading to TikTok...")
-        results["tiktok"] = upload_tiktok(video_path, caption)
-
-    if "instagram" in enabled:
-        print("[social] uploading to Instagram...")
-        results["instagram"] = upload_instagram(video_path, caption)
-
-    if "facebook" in enabled:
-        print("[social] uploading to Facebook...")
-        results["facebook"] = upload_facebook(video_path, caption)
+    for plat, acct_id in enabled:
+        if plat == "tiktok":
+            print(f"[social] uploading to TikTok{f' (account {acct_id})' if acct_id else ''}...")
+            results["tiktok"] = upload_tiktok(video_path, caption, account_id=acct_id)
+        elif plat == "instagram":
+            print(f"[social] uploading to Instagram{f' (account {acct_id})' if acct_id else ''}...")
+            results["instagram"] = upload_instagram(video_path, caption, account_id=acct_id)
+        elif plat == "facebook":
+            print(f"[social] uploading to Facebook{f' (account {acct_id})' if acct_id else ''}...")
+            results["facebook"] = upload_facebook(video_path, caption, account_id=acct_id)
 
     return results
 

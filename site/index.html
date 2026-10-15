@@ -3,138 +3,335 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Nova</title>
+  <title>NOVA — Automation Hub</title>
   <link rel="stylesheet" href="style.css" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128302;</text></svg>" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand">
-      <span class="logo">◆</span>
-      <span class="name">NOVA</span>
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon">⚡</div>
+      <span class="brand-name">NOVA</span>
     </div>
-    <div class="topbar-right">
-      <span id="conn" class="conn offline">connecting…</span>
-      <span id="clock" class="clock"></span>
+
+    <div class="sidebar-section">
+      <span class="sidebar-label">Overview</span>
+      <button class="nav-item active" data-view="dashboard">
+        <span class="nav-icon">◉</span> Dashboard
+      </button>
+      <button class="nav-item" data-view="sources">
+        <span class="nav-icon">⊕</span> Sources
+        <span class="nav-badge" id="nav-task-count">0</span>
+      </button>
+      <button class="nav-item" data-view="activity">
+        <span class="nav-icon">▤</span> Activity
+        <span class="nav-badge" id="nav-video-count">0</span>
+      </button>
     </div>
-  </header>
 
-  <main class="layout">
-    <!-- Left panel: add source + connect account -->
-    <aside class="panel side">
-      <section class="card">
-        <h2>Add source</h2>
-        <form id="add-form" class="form">
-          <label>Link
-            <input id="f-url" type="url" placeholder="https://…" required />
-          </label>
-          <label>Name <span class="muted">(optional)</span>
-            <input id="f-name" type="text" placeholder="My channel" />
-          </label>
-          <label>Send to
-            <select id="f-dest">
-              <option value="youtube">YouTube</option>
-            </select>
-          </label>
-          <label class="checkbox-group">
-            Upload also to
-            <div class="checks">
-              <label class="check"><input type="checkbox" id="f-tiktok" value="tiktok" /> TikTok</label>
-              <label class="check"><input type="checkbox" id="f-instagram" value="instagram" /> Instagram</label>
-              <label class="check"><input type="checkbox" id="f-facebook" value="facebook" /> Facebook</label>
-            </div>
-          </label>
-          <label>Account
-            <select id="f-login"></select>
-          </label>
-          <button class="btn primary" type="submit">Add</button>
-          <p class="hint">Paste a channel, playlist, or post link. New posts are picked up automatically.</p>
-        </form>
-      </section>
+    <div class="sidebar-section">
+      <span class="sidebar-label">Accounts</span>
+      <button class="nav-item" data-view="youtube">
+        <span class="nav-icon yt">▶</span> YouTube
+        <span class="nav-dot" id="nav-yt-status"></span>
+      </button>
+      <button class="nav-item" data-view="social">
+        <span class="nav-icon">◐</span> Social
+        <span class="nav-dot" id="nav-social-status"></span>
+      </button>
+    </div>
 
-      <section class="card">
-        <h2>YouTube account</h2>
-        <div id="login-list" class="login-list"></div>
-        <button id="btn-login" class="btn google" type="button">
-          <span class="g">▶</span> Login with Google
-        </button>
-        <p class="hint">A window opens. Sign in once. It stays connected.</p>
-      </section>
+    <div class="sidebar-footer">
+      <div class="conn-status">
+        <span class="conn-dot" id="conn"></span>
+        <span id="conn-text">connecting…</span>
+      </div>
+      <div class="clock" id="clock">--:--:--</div>
+    </div>
+  </nav>
 
-      <section class="card">
-        <h2>Social accounts</h2>
-        <div id="account-list" class="login-list"></div>
-        <form id="account-form" class="form">
-          <label>Platform
-            <select id="af-platform">
-              <option value="tiktok">TikTok</option>
-              <option value="instagram">Instagram</option>
-              <option value="facebook">Facebook</option>
-            </select>
-          </label>
-          <label>Username <span class="muted">(optional)</span>
-            <input id="af-username" type="text" placeholder="@yourhandle" />
-          </label>
-          <label>Cookies file <span class="muted">(.json / .txt / .pkl)</span>
-            <input id="af-cookies" type="file" accept=".json,.txt,.pkl" required />
-          </label>
-          <button class="btn primary" type="submit">Connect</button>
-          <p class="hint">
-            <b>TikTok/Instagram:</b> Cookie-Editor extension → Export → "Export as JSON"<br>
-            <b>Facebook:</b> "Export cookies JSON for Puppeteer" extension → Export (JSON)<br>
-            <b>Netscape .txt</b> bhi chalega (Get cookies.txt extension)
-          </p>
-        </form>
-      </section>
-    </aside>
+  <!-- Main content -->
+  <main class="main">
 
-    <!-- Right: sources + videos -->
-    <section class="panel main">
-      <section class="card">
-        <div class="card-head">
-          <h2>Sources</h2>
-          <span id="task-count" class="pill">0</span>
+    <!-- ===== DASHBOARD ===== -->
+    <section class="view active" id="view-dashboard">
+      <header class="view-header">
+        <div>
+          <h1>Dashboard</h1>
+          <p class="subtitle">Automation overview</p>
         </div>
+        <button class="btn primary" id="btn-quick-add">+ New Source</button>
+      </header>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-label">Active Sources</span>
+          <span class="stat-value" id="stat-sources">0</span>
+          <span class="stat-trend neutral">watching</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Total Videos</span>
+          <span class="stat-value" id="stat-videos">0</span>
+          <span class="stat-trend neutral">processed</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Uploaded</span>
+          <span class="stat-value" id="stat-uploaded">0</span>
+          <span class="stat-trend up" id="stat-upload-rate">—</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Failed</span>
+          <span class="stat-value" id="stat-failed">0</span>
+          <span class="stat-trend down" id="stat-fail-rate">—</span>
+        </div>
+      </div>
+
+      <div class="dash-grid">
+        <div class="card">
+          <div class="card-header">
+            <h2>Recent Activity</h2>
+            <button class="btn ghost sm" data-goto="activity">View all →</button>
+          </div>
+          <div class="feed" id="dash-activity">
+            <div class="empty-state">No activity yet</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h2>Connected Accounts</h2>
+            <button class="btn ghost sm" data-goto="social">Manage →</button>
+          </div>
+          <div class="account-mini-list" id="dash-accounts">
+            <div class="empty-state">No accounts connected</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SOURCES ===== -->
+    <section class="view" id="view-sources">
+      <header class="view-header">
+        <div>
+          <h1>Sources</h1>
+          <p class="subtitle">Channels, playlists & posts being monitored</p>
+        </div>
+        <button class="btn primary" id="btn-add-source">+ Add Source</button>
+      </header>
+
+      <div class="card">
         <div class="table-wrap">
-          <table id="tasks-table">
+          <table class="data-table" id="tasks-table">
             <thead>
               <tr>
                 <th>Source</th>
                 <th>Platform</th>
+                <th>Upload To</th>
                 <th>Status</th>
-                <th>Last seen</th>
+                <th>Last Seen</th>
                 <th></th>
               </tr>
             </thead>
             <tbody></tbody>
           </table>
-          <div id="tasks-empty" class="empty">No sources yet. Add one on the left.</div>
+          <div class="empty-state" id="tasks-empty">
+            <div class="empty-icon">⊕</div>
+            <p>No sources yet</p>
+            <button class="btn primary" id="btn-empty-add">Add your first source</button>
+          </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section class="card">
-        <div class="card-head">
-          <h2>Activity</h2>
-          <span id="video-count" class="pill">0</span>
+    <!-- ===== ACTIVITY ===== -->
+    <section class="view" id="view-activity">
+      <header class="view-header">
+        <div>
+          <h1>Activity</h1>
+          <p class="subtitle">Video processing pipeline status</p>
         </div>
+        <div class="filter-pills">
+          <button class="pill active" data-filter="all">All</button>
+          <button class="pill" data-filter="uploaded">Uploaded</button>
+          <button class="pill" data-filter="processing">Processing</button>
+          <button class="pill" data-filter="failed">Failed</button>
+        </div>
+      </header>
+
+      <div class="card">
         <div class="table-wrap">
-          <table id="videos-table">
+          <table class="data-table" id="videos-table">
             <thead>
               <tr>
-                <th>Title</th>
-                <th>Platform</th>
-                <th>State</th>
+                <th>Video</th>
+                <th>Source</th>
+                <th>Status</th>
                 <th>Updated</th>
                 <th></th>
               </tr>
             </thead>
             <tbody></tbody>
           </table>
-          <div id="videos-empty" class="empty">Nothing here yet.</div>
+          <div class="empty-state" id="videos-empty">
+            <div class="empty-icon">▤</div>
+            <p>Nothing here yet</p>
+          </div>
         </div>
-      </section>
+      </div>
+    </section>
+
+    <!-- ===== YOUTUBE ACCOUNT ===== -->
+    <section class="view" id="view-youtube">
+      <header class="view-header">
+        <div>
+          <h1>YouTube Account</h1>
+          <p class="subtitle">OAuth connection for video uploads</p>
+        </div>
+      </header>
+
+      <div class="card">
+        <div class="account-hero">
+          <div class="account-avatar yt-avatar">▶</div>
+          <div class="account-info">
+            <h3 id="yt-channel-name">No channel connected</h3>
+            <p class="muted" id="yt-channel-meta">Connect your YouTube channel for automatic uploads</p>
+          </div>
+          <button class="btn google" id="btn-login">
+            <span class="g">▶</span> Connect YouTube
+          </button>
+        </div>
+        <div class="account-list" id="login-list"></div>
+      </div>
+    </section>
+
+    <!-- ===== SOCIAL ACCOUNTS ===== -->
+    <section class="view" id="view-social">
+      <header class="view-header">
+        <div>
+          <h1>Social Accounts</h1>
+          <p class="subtitle">Cookie-based connections for TikTok, Instagram & Facebook</p>
+        </div>
+      </header>
+
+      <div class="social-grid" id="social-grid">
+        <!-- Populated dynamically -->
+      </div>
+
+      <div class="card connect-card">
+        <div class="card-header">
+          <h2>Connect New Account</h2>
+        </div>
+        <form id="account-form" class="form pro-form">
+          <div class="form-row">
+            <label class="form-group">
+              <span class="form-label">Platform</span>
+              <select id="af-platform" class="form-input">
+                <option value="tiktok">🎵 TikTok</option>
+                <option value="instagram">📷 Instagram</option>
+                <option value="facebook">🔵 Facebook</option>
+              </select>
+            </label>
+            <label class="form-group">
+              <span class="form-label">Username <span class="muted">(optional)</span></span>
+              <input id="af-username" type="text" class="form-input" placeholder="@yourhandle" />
+            </label>
+            <label class="form-group">
+              <span class="form-label">Cookies File</span>
+              <div class="file-upload" id="file-drop">
+                <input id="af-cookies" type="file" accept=".json,.txt,.pkl" required />
+                <span class="file-upload-text" id="file-text">Drop file or click to browse</span>
+                <span class="file-upload-hint">.json / .txt auto-detected</span>
+              </div>
+            </label>
+          </div>
+          <div class="form-actions">
+            <button class="btn primary" type="submit">Connect Account</button>
+            <p class="hint">
+              <b>How to export:</b> Install <a href="https://chromewebstore.google.com/detail/cookie-editor/hlkenndednhfkekhgcdicdfddnkalmdm" target="_blank">Cookie-Editor</a> extension →
+              Login to the platform → Click extension → <b>Export → Export as JSON</b> → Upload here.
+              Format is auto-detected.
+            </p>
+          </div>
+        </form>
+      </div>
     </section>
   </main>
+
+  <!-- ===== ADD SOURCE MODAL ===== -->
+  <div class="modal-overlay" id="modal-add">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Add Source</h2>
+        <button class="modal-close" id="modal-close">&times;</button>
+      </div>
+      <form id="add-form" class="form pro-form">
+        <div class="form-group full">
+          <span class="form-label">Source URL</span>
+          <div class="input-with-status">
+            <input id="f-url" type="url" class="form-input" placeholder="https://youtube.com/@channel..." required />
+            <span class="input-status" id="url-status"></span>
+          </div>
+          <span class="form-hint" id="url-hint">Paste a channel, playlist, or video link</span>
+        </div>
+
+        <div class="form-group full" id="name-group" style="display:none;">
+          <span class="form-label">Channel / Page Name</span>
+          <input id="f-name" type="text" class="form-input" placeholder="Auto-detected..." />
+          <span class="form-hint">Auto-filled from the URL. Edit if needed.</span>
+        </div>
+
+        <div class="form-group full" id="platform-display" style="display:none;">
+          <span class="form-label">Detected Platform</span>
+          <div class="detected-platform" id="detected-platform-badge"></div>
+        </div>
+
+        <div class="form-group full" id="dest-group" style="display:none;">
+          <span class="form-label">Upload Destinations</span>
+          <div class="dest-selector" id="dest-selector">
+            <label class="dest-option always">
+              <input type="checkbox" checked disabled />
+              <span class="dest-icon yt">▶</span>
+              <span class="dest-name">YouTube</span>
+              <span class="dest-badge">always</span>
+            </label>
+            <label class="dest-option">
+              <input type="checkbox" id="f-tiktok" value="tiktok" />
+              <span class="dest-icon tt">♪</span>
+              <span class="dest-name">TikTok</span>
+              <select class="dest-account" id="acct-tiktok" disabled>
+                <option value="">Select account…</option>
+              </select>
+            </label>
+            <label class="dest-option">
+              <input type="checkbox" id="f-instagram" value="instagram" />
+              <span class="dest-icon ig">📷</span>
+              <span class="dest-name">Instagram</span>
+              <select class="dest-account" id="acct-instagram" disabled>
+                <option value="">Select account…</option>
+              </select>
+            </label>
+            <label class="dest-option">
+              <input type="checkbox" id="f-facebook" value="facebook" />
+              <span class="dest-icon fb">f</span>
+              <span class="dest-name">Facebook</span>
+              <select class="dest-account" id="acct-facebook" disabled>
+                <option value="">Select account…</option>
+              </select>
+            </label>
+          </div>
+          <span class="form-hint">Select where to upload the processed videos. Accounts must be connected first.</span>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn ghost" type="button" id="btn-cancel-add">Cancel</button>
+          <button class="btn primary" type="submit">Add Source</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <div id="toasts" class="toasts"></div>
   <script src="app.js"></script>

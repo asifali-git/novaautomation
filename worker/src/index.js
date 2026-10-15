@@ -36,7 +36,7 @@ function corsHeaders(origin, env) {
   return {
     'access-control-allow-origin': ok ? origin : (allowed && allowed !== '*' ? allowed : '*'),
     'access-control-allow-methods': 'GET,POST,PATCH,DELETE,OPTIONS',
-    'access-control-allow-headers': 'content-type,x-token',
+    'access-control-allow-headers': 'content-type,authorization,x-token',
     'access-control-max-age': '86400',
   };
 }
@@ -108,12 +108,23 @@ async function deleteTask(db, id) {
 async function listVideos(db, { status, limit = 100 } = {}) {
   if (status) {
     const res = await db
-      .prepare('SELECT * FROM videos WHERE status = ? ORDER BY id DESC LIMIT ?')
+      .prepare(
+        `SELECT v.*, t.name AS source_name, t.source_url AS source
+         FROM videos v LEFT JOIN tasks t ON v.task_id = t.id
+         WHERE v.status = ? ORDER BY v.id DESC LIMIT ?`
+      )
       .bind(status, limit)
       .all();
     return res.results || [];
   }
-  const res = await db.prepare('SELECT * FROM videos ORDER BY id DESC LIMIT ?').bind(limit).all();
+  const res = await db
+    .prepare(
+      `SELECT v.*, t.name AS source_name, t.source_url AS source
+       FROM videos v LEFT JOIN tasks t ON v.task_id = t.id
+       ORDER BY v.id DESC LIMIT ?`
+    )
+    .bind(limit)
+    .all();
   return res.results || [];
 }
 
@@ -227,7 +238,7 @@ async function listAccounts(db) {
 }
 
 async function getAccount(db, id) {
-  const r = await db.prepare('SELECT * FROM accounts WHERE id = ?').bind(id).first();
+  const r = await db.prepare('SELECT id, platform, username, status, created_at, updated_at FROM accounts WHERE id = ?').bind(id).first();
   return r;
 }
 
@@ -239,8 +250,10 @@ async function saveAccount(db, body) {
   const cookiesStr = typeof cookies === 'string' ? cookies : JSON.stringify(cookies);
   const username = body.username || null;
   const t = now();
-  // Upsert: one account per platform (replace existing)
-  const existing = await db.prepare('SELECT id FROM accounts WHERE platform = ?').bind(platform).first();
+  // Upsert: per platform + username (allows multiple accounts per platform)
+  const existing = username
+    ? await db.prepare('SELECT id FROM accounts WHERE platform = ? AND username = ?').bind(platform, username).first()
+    : await db.prepare('SELECT id FROM accounts WHERE platform = ? AND (username IS NULL OR username = ?)').bind(platform, '').first();
   if (existing) {
     await db.prepare('UPDATE accounts SET username = ?, cookies = ?, updated_at = ? WHERE id = ?')
       .bind(username, cookiesStr, t, existing.id).run();
@@ -382,6 +395,43 @@ export default {
         return withCors(json({ ok: true, t: now() }));
       }
 
+      // ---- URL detection: platform + channel/page name ----
+      if (path === '/api/detect' && req.method === 'GET') {
+        const target = url.searchParams.get('url') || '';
+        if (!target) return withCors(json({ error: 'url required' }, 400));
+        const platform = detectPlatform(target);
+        let name = '';
+        try {
+          const resp = await fetch(target, {
+            headers: {
+              'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+              'accept-language': 'en-US,en;q=0.9',
+            },
+            redirect: 'follow',
+            signal: AbortSignal.timeout(8000),
+          });
+          const html = await resp.text();
+          // og:site_name
+          const ogSite = html.match(/<meta[^>]+property=["']og:site_name["'][^>]+content=["']([^"']+)["']/i)
+            || html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:site_name["']/i);
+          // og:title
+          const ogTitle = html.match(/<meta[^>]+property=["']og:title["'][^>]+content=["']([^"']+)["']/i)
+            || html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:title["']/i);
+          // <title>
+          const titleTag = html.match(/<title[^>]*>([^<]+)<\/title>/i);
+          // YouTube channel name from link itemprop
+          const ytChannel = html.match(/<link[^>]+itemprop=["']name["'][^>]+content=["']([^"']+)["']/i)
+            || html.match(/<meta[^>]+itemprop=["']name["'][^>]+content=["']([^"']+)["']/i);
+          name = (ytChannel?.[1] || ogSite?.[1] || ogTitle?.[1] || titleTag?.[1] || '').trim();
+          // Clean YouTube suffix
+          name = name.replace(/\s*[-–|]\s*(YouTube|Facebook|Instagram|TikTok)\s*$/i, '').trim();
+          if (name.length > 80) name = name.slice(0, 80);
+        } catch (e) {
+          // Fetch failed — return just platform
+        }
+        return withCors(json({ platform, name }));
+      }
+
       if (path === '/api/tasks' && req.method === 'POST') {
         const body = await readBody(req);
         const task = await createTask(env.DB, body);
@@ -516,12 +566,12 @@ export default {
           const result = {};
           for (const a of accounts) {
             if (a.status !== 'active') continue;
-            const full = await getAccount(env.DB, a.id);
-            try {
-              result[a.platform] = { username: a.username, cookies: JSON.parse(full.cookies) };
-            } catch {
-              result[a.platform] = { username: a.username, cookies: full.cookies };
-            }
+            const row = await env.DB.prepare('SELECT cookies FROM accounts WHERE id = ?').bind(a.id).first();
+            if (!row) continue;
+            if (!result[a.platform]) result[a.platform] = [];
+            let cookies;
+            try { cookies = JSON.parse(row.cookies); } catch { cookies = row.cookies; }
+            result[a.platform].push({ id: a.id, username: a.username, cookies });
           }
           return withCors(json(result));
         }
@@ -532,6 +582,17 @@ export default {
           const cookies = await getAccountCookies(env.DB, platform);
           if (!cookies) return withCors(json({ error: 'no cookies for platform' }, 404));
           return withCors(json({ platform, cookies }));
+        }
+
+        // Cookies by specific account ID
+        const acctCookiesMatch = path.match(/^\/api\/internal\/accounts\/(\d+)\/cookies$/);
+        if (acctCookiesMatch && req.method === 'GET') {
+          const acctId = Number(acctCookiesMatch[1]);
+          const row = await env.DB.prepare('SELECT cookies FROM accounts WHERE id = ?').bind(acctId).first();
+          if (!row) return withCors(json({ error: 'account not found' }, 404));
+          let cookies;
+          try { cookies = JSON.parse(row.cookies); } catch { cookies = row.cookies; }
+          return withCors(json({ id: acctId, cookies }));
         }
       }
 
