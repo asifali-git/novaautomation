@@ -1,6 +1,6 @@
 // Nova frontend logic. Talks to the worker API.
 // >>> Set this to your worker URL after deploy <<<
-const API = 'https://nova-hub.asubilla.workers.dev';
+const API = 'https://novaautomation.asifaliasmr05.workers.dev';
 
 const state = { tasks: [], videos: [], logins: [], config: {} };
 const REFRESH_MS = 6000;
