@@ -30,6 +30,7 @@ import ytauth as yt
 import analyze as an
 import smart
 import apply as ap
+import upload_social as us
 
 WORKER = os.getenv("WORKER_URL", "").rstrip("/")
 TOKEN = os.getenv("INTERNAL_TOKEN", "")
@@ -310,11 +311,28 @@ def run():
     )
     print(f"[upload] youtube id {video_id}")
 
+    # 5b. Social media upload (TikTok / Instagram / Facebook via cookies).
+    social_results = {}
+    if us.ENABLE_TIKTOK or us.ENABLE_INSTAGRAM or us.ENABLE_FACEBOOK:
+        set_status(vid, status="uploading", upload_ref=json.dumps(
+            {"provider": "youtube", "id": video_id, "social": "pending"}))
+        try:
+            social_results = us.upload_all(
+                out_path, meta["title"], meta["description"])
+            print(f"[social] results: {social_results}")
+        except Exception as e:
+            print(f"[social] upload failed: {e}", file=sys.stderr)
+            social_results = {"error": str(e)}
+
+    upload_ref = {"provider": "youtube", "id": video_id}
+    if social_results:
+        upload_ref["social"] = social_results
+
     set_status(
         vid,
         status="uploaded",
         meta=json.dumps(meta),
-        upload_ref=json.dumps({"provider": "youtube", "id": video_id}),
+        upload_ref=json.dumps(upload_ref),
         duration=ed.probe_duration(out_path),
     )
     print("[done] success")

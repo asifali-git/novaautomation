@@ -21,3 +21,8 @@ __pycache__/
 github api.txt
 firebase_service_account.json
 .playwright-mcp/
+uploader-fb/
+uploader-multi/
+cookies.pkl
+*_cookies.pkl
+*_cookies.json

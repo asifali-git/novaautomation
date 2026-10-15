@@ -4,3 +4,5 @@ onnxruntime>=1.18.0
 numpy>=1.26.0
 soundfile>=0.12.1
 requests>=2.31.0
+selenium>=4.20.0
+undetected-chromedriver>=3.5.5
