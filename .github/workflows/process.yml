@@ -56,7 +56,6 @@ jobs:
           sudo apt-get install -y -qq google-chrome-stable
 
       - name: Decode cookies
-        if: ${{ secrets.COOKIE_B64 != '' }}
         env:
           COOKIE_B64: ${{ secrets.COOKIE_B64 }}
         run: |

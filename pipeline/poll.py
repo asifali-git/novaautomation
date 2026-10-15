@@ -93,12 +93,26 @@ def main():
         patch_task(tid, last_seen_key=key)
 
     print(f"[poll] {new_count} new video(s): {new_ids}")
+
+    # Check for queued manual upload jobs (Quick Upload) — read-only peek.
+    manual_id = ""
+    try:
+        r = requests.get(f"{WORKER}/api/internal/manual/next", headers=_h(), timeout=15)
+        r.raise_for_status()
+        job = r.json().get("job")
+        if job:
+            manual_id = str(job["id"])
+            print(f"[poll] queued manual job: {manual_id} -> {job['url']}")
+    except Exception as e:
+        print(f"[poll] manual job check failed: {e}", file=sys.stderr)
+
     # Emit for the workflow (GITHUB_OUTPUT).
     out = os.getenv("GITHUB_OUTPUT")
     if out:
         with open(out, "a") as f:
             f.write(f"new_count={new_count}\n")
             f.write(f"video_ids={','.join(map(str, new_ids))}\n")
+            f.write(f"manual_job_id={manual_id}\n")
 
 
 if __name__ == "__main__":

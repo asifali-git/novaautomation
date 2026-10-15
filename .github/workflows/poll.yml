@@ -19,6 +19,7 @@ jobs:
     outputs:
       new_count: ${{ steps.detect.outputs.new_count }}
       video_ids: ${{ steps.detect.outputs.video_ids }}
+      manual_job_id: ${{ steps.detect.outputs.manual_job_id }}
     steps:
       - uses: actions/checkout@v4
 
@@ -30,7 +31,6 @@ jobs:
         run: pip install -q yt-dlp requests
 
       - name: Decode cookies
-        if: ${{ secrets.COOKIE_B64 != '' }}
         env:
           COOKIE_B64: ${{ secrets.COOKIE_B64 }}
         run: |
@@ -39,7 +39,7 @@ jobs:
             echo "COOKIES_FILE=cookies.txt" >> "$GITHUB_ENV"
           fi
 
-      - name: Detect new videos
+      - name: Detect new videos + manual jobs
         id: detect
         env:
           WORKER_URL: ${{ secrets.WORKER_URL }}
@@ -48,7 +48,7 @@ jobs:
 
   dispatch:
     needs: detect
-    if: needs.detect.outputs.new_count != '0'
+    if: needs.detect.outputs.new_count != '0' || needs.detect.outputs.manual_job_id != ''
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -56,5 +56,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh workflow run process.yml \
-            -f video_ids="${{ needs.detect.outputs.video_ids }}"
+          manual="${{ needs.detect.outputs.manual_job_id }}"
+          if [ -n "$manual" ]; then
+            echo "Dispatching manual job $manual"
+            gh workflow run process.yml -f manual_job_id="$manual"
+          else
+            echo "Dispatching videos ${{ needs.detect.outputs.video_ids }}"
+            gh workflow run process.yml -f video_ids="${{ needs.detect.outputs.video_ids }}"
+          fi

@@ -130,21 +130,9 @@ def check_manual_jobs():
 
         log.info("MANUAL job %s: %s -> %s", job["id"], job["url"], job.get("dest_platforms"))
 
-        def revert(reason):
-            log.error("manual job %s reverted to queued: %s", job["id"], reason)
-            try:
-                requests.patch(
-                    f"{WORKER}/api/internal/manual/{job['id']}",
-                    headers=_h(),
-                    json={"status": "queued"},
-                    timeout=15,
-                )
-            except Exception:
-                pass
-
-        # Trigger GitHub Actions manual process
+        # Trigger GitHub Actions manual process (runner claims the job atomically).
         if not GH_TOKEN or not GH_REPO:
-            revert("GH_TOKEN/GH_REPO not set in Render env")
+            log.error("GH_TOKEN/GH_REPO not set — cannot dispatch manual job %s (stays queued)", job["id"])
             return False
         url = f"https://api.github.com/repos/{GH_REPO}/actions/workflows/process.yml/dispatches"
         headers = {
@@ -160,7 +148,7 @@ def check_manual_jobs():
             r2.raise_for_status()
             log.info("triggered manual process for job %s", job["id"])
         except Exception as e:
-            revert(f"GH trigger failed: {e}")
+            log.warning("failed to trigger manual process for job %s: %s (stays queued, will retry)", job["id"], e)
             return False
         return True
     except Exception as e:

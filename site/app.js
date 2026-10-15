@@ -175,15 +175,21 @@ $('f-url')?.addEventListener('input', () => {
   if (url.startsWith('http')) {
     status.textContent = '…';
     status.className = 'input-status load';
+    const isFbMedia = /facebook\.com\/(reel|watch|video|share)\//i.test(url);
     detectTimer = setTimeout(async () => {
       try {
         const d = await api(`/api/detect?url=${encodeURIComponent(url)}`);
+        $('name-group').style.display = '';
         if (d.name) {
           $('f-name').value = d.name;
-          $('name-group').style.display = '';
+          $('f-name').placeholder = 'Auto-detected — edit if needed';
+          document.querySelector('#name-group .form-hint').textContent = 'Auto-filled from the URL. Edit if needed.';
+        } else if (isFbMedia) {
+          $('f-name').placeholder = 'Page name (e.g. "MrBeast")';
+          document.querySelector('#name-group .form-hint').textContent = 'Reel/video link — page name can\'t be auto-detected, type it manually (optional).';
         } else {
-          $('name-group').style.display = '';
           $('f-name').placeholder = 'Enter channel name manually…';
+          document.querySelector('#name-group .form-hint').textContent = 'Couldn\'t auto-detect — type it manually (optional).';
         }
         status.textContent = '✓';
         status.className = 'input-status ok';

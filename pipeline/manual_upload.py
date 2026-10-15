@@ -230,25 +230,39 @@ def main():
     forced_id = os.getenv("MANUAL_JOB_ID", "")
 
     if forced_id:
-        # Fetch the specific job by id (fastpoll already marked it processing)
+        # Atomically claim: queued -> processing (only one runner wins)
         try:
-            data = worker_get(f"/api/internal/manual/{forced_id}")
-            job = data.get("job")
+            r = requests.post(
+                f"{WORKER}/api/internal/manual/{forced_id}/claim",
+                headers=_h(),
+                timeout=30,
+            )
+            r.raise_for_status()
+            data = r.json()
         except Exception as e:
-            print(f"[manual] failed to fetch job {forced_id}: {e}")
+            print(f"[manual] failed to claim job {forced_id}: {e}")
             return
-        if not job:
-            print(f"[manual] job {forced_id} not found")
+        if not data.get("claimed"):
+            status = (data.get("job") or {}).get("status", "unknown")
+            print(f"[manual] job {forced_id} not claimable (status: {status}) — another runner has it or it's done")
             return
-        if job["status"] == "queued":
-            worker_patch(f"/api/internal/manual/{job['id']}", {"status": "processing"})
-            job["status"] = "processing"
+        job = data.get("job")
     else:
         print("[manual] checking for queued jobs...")
         data = worker_get("/api/internal/manual/next")
         job = data.get("job")
         if not job:
             print("[manual] no queued jobs")
+            return
+        # Claim it
+        r = requests.post(
+            f"{WORKER}/api/internal/manual/{job['id']}/claim",
+            headers=_h(),
+            timeout=30,
+        )
+        r.raise_for_status()
+        if not r.json().get("claimed"):
+            print(f"[manual] job {job['id']} claimed by another runner; skipping")
             return
 
     job_id = job["id"]

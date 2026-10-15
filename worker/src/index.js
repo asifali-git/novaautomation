@@ -453,20 +453,49 @@ export default {
 
         // Also try fetching page title for a nicer display name
         try {
+          const isFbMedia = platform === 'facebook' && ['reel', 'watch', 'video', 'share'].some(k => url.pathname.includes(`/${k}/`));
           const resp = await fetch(target, {
             headers: {
               'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
-              'accept': 'text/html,application/xhtml+xml',
+              'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
               'accept-language': 'en-US,en;q=0.9',
+              'sec-fetch-dest': 'document',
+              'sec-fetch-mode': 'navigate',
+              'sec-fetch-site': 'none',
+              'upgrade-insecure-requests': '1',
             },
             redirect: 'follow',
-            signal: AbortSignal.timeout(6000),
+            signal: AbortSignal.timeout(8000),
           });
           const html = await resp.text();
+
+          // Facebook media pages embed page name in JSON — try those first
+          if (!name && isFbMedia) {
+            const patterns = [
+              /"pageName":"([^"]{2,80})"/,
+              /&quot;pageName&quot;:&quot;([^&]{2,80})&quot;/,
+              /"username":"([^"]{2,80})"/,
+              /"author":"([^"]{2,80})"/,
+            ];
+            for (const p of patterns) {
+              const m = html.match(p);
+              if (m && m[1] && !/^(login|guest|user|undefined)/i.test(m[1])) {
+                name = m[1].replace(/_/g, ' ').trim();
+                break;
+              }
+            }
+          }
+
           const ogTitle = html.match(/<meta[^>]+property=["']og:title["'][^>]+content=["']([^"']+)["']/i)
             || html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:title["']/i);
           const titleTag = html.match(/<title[^>]*>([^<]+)<\/title>/i);
           let fetched = (ogTitle?.[1] || titleTag?.[1] || '').trim();
+
+          // Facebook og:title looks like "PageName posted a video..." / "PageName - Home | Facebook"
+          if (!name && platform === 'facebook' && fetched) {
+            const m = fetched.match(/^(.{2,80}?)\s+(posted|is on|home|home\s*\|)/i);
+            if (m) name = m[1].trim();
+          }
 
           // Clean generic/login titles
           fetched = fetched
@@ -476,7 +505,8 @@ export default {
             .trim();
 
           // Use fetched name if it looks like a real name, else keep URL-derived
-          if (fetched.length >= 2 && fetched.length <= 80 && !/^(log in|sign up|error|undefined|null)/i.test(fetched)) {
+          // Only use fetched title if we don't already have a name (URL/pageName)
+          if (!name && fetched.length >= 2 && fetched.length <= 80 && !/^(log in|sign up|error|undefined|null)/i.test(fetched)) {
             name = fetched;
           }
           if (name.length > 80) name = name.slice(0, 80);
@@ -533,16 +563,16 @@ export default {
         const clientId = url.searchParams.get('client_id') || null;
         const clientSecret = url.searchParams.get('client_secret') || null;
 
-        const html = (msg) =>
-          new Response(
-            `<!doctype html><html><head><meta charset="utf-8"><title>Nova</title>
-             <style>body{font-family:system-ui;background:#0b0f17;color:#e6edf3;display:flex;align-items:center;justify-content:center;height:100vh;margin:0}
-             .c{text-align:center}h1{font-size:20px}a{color:#4da3ff}</style></head>
-             <body><div class="c"><h1>${msg}</h1><p>Window will close shortly.</p></div></body></html>`,
-            { headers: { 'content-type': 'text/html; charset=utf-8' } }
-          );
+        // Redirect back to the app (same tab flow) instead of dead-end HTML.
+        const appBase = (env.ALLOWED_ORIGIN && env.ALLOWED_ORIGIN !== '*')
+          ? env.ALLOWED_ORIGIN
+          : 'https://novaautomation.pages.dev';
+        const redirectTo = (params, hash = 'youtube') =>
+          Response.redirect(`${appBase}/?${params}#${hash}`, 302);
 
-        if (err || !code) return html(`Login failed: ${err || 'no code'}`);
+        if (err || !code) {
+          return redirectTo(`yt=error&msg=${encodeURIComponent(err || 'no code')}`);
+        }
         try {
           const token = await exchangeCode(env, code, clientId, clientSecret);
           const channel = token.access_token ? await fetchChannelTitle(token.access_token) : null;
@@ -552,11 +582,10 @@ export default {
             channel_title: channel,
             token,
           });
-          // Signal the polling popup (via BroadcastChannel it can't use; instead the
-          // frontend polls /api/state for a new login, so just confirm here).
-          return html(`Login saved${channel ? ` — ${channel}` : ''} (id ${login.id})`);
+          const ch = channel ? encodeURIComponent(channel) : '';
+          return redirectTo(`yt=connected&channel=${ch}&id=${login.id}`);
         } catch (e) {
-          return html(`Token exchange error: ${e.message}`);
+          return redirectTo(`yt=error&msg=${encodeURIComponent(e.message)}`);
         }
       }
 
@@ -569,14 +598,23 @@ export default {
           return withCors(json({ tasks }));
         }
 
-        // Manual jobs — pick up next queued job
+        // Manual jobs — peek at next queued job (no status change; runner claims via POST claim)
         if (path === '/api/internal/manual/next' && req.method === 'GET') {
           const job = await env.DB.prepare('SELECT * FROM manual_jobs WHERE status = ? ORDER BY id ASC LIMIT 1').bind('queued').first();
-          if (job) {
-            // Mark as processing
-            await env.DB.prepare('UPDATE manual_jobs SET status = ?, updated_at = ? WHERE id = ?').bind('processing', now(), job.id).run();
-          }
           return withCors(json({ job: job || null }));
+        }
+
+        // Atomic claim: queued -> processing (only one runner wins)
+        const manualClaim = path.match(/^\/api\/internal\/manual\/(\d+)\/claim$/);
+        if (manualClaim && req.method === 'POST') {
+          const id = Number(manualClaim[1]);
+          const res = await env.DB
+            .prepare("UPDATE manual_jobs SET status = 'processing', updated_at = ? WHERE id = ? AND status = 'queued'")
+            .bind(now(), id)
+            .run();
+          const claimed = (res.meta?.changes || 0) > 0;
+          const job = await env.DB.prepare('SELECT * FROM manual_jobs WHERE id = ?').bind(id).first();
+          return withCors(json({ claimed, job: job || null }));
         }
 
         // Fetch a specific manual job by id (no status change)
