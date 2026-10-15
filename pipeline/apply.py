@@ -7,7 +7,7 @@ Pipeline per plan:
   4. Mix Kokoro narration wavs at their offsets (duck original audio if planned).
   5. Apply intro/ending effects.
 
-Low-RAM: ultrafast, 1 thread, bilinear scale — same levers as edit.py.
+Low-RAM: medium, 2 threads, bilinear scale — same levers as edit.py.
 """
 import os
 import subprocess
@@ -16,9 +16,9 @@ import shlex
 import analyze
 
 FFMPEG = os.getenv("FFMPEG_BIN", "ffmpeg")
-THREADS = os.getenv("FFMPEG_THREADS", "1")
-FTHREADS = os.getenv("FFMPEG_FILTER_THREADS", "1")
-CRF = os.getenv("FFMPEG_CRF", "23")
+THREADS = os.getenv("FFMPEG_THREADS", "2")
+FTHREADS = os.getenv("FFMPEG_FILTER_THREADS", "2")
+CRF = os.getenv("FFMPEG_CRF", "18")
 W, H = 1080, 1920
 
 
@@ -197,8 +197,8 @@ def _video_chain(seg, caption_crop_top=0.0, caption_crop_bottom=0.0, delogo_filt
         parts.append(f"eq=brightness={b:.3f}:contrast={c:.3f}:saturation={s:.3f}")
 
     # Subtle film grain — breaks pixel-exact/perceptual-hash frame matching
-    # without being visibly distracting.
-    parts.append("noise=alls=4:allf=t")
+    # without being visibly distracting. Low value to preserve quality.
+    parts.append("noise=alls=2:allf=t")
 
     parts.append("format=yuv420p")
     return ",".join(parts)
@@ -231,7 +231,7 @@ def render_segment(src, seg, out, has_audio=True, caption_crop_top=0.0, caption_
     else:
         cmd += ["-vf", vf, "-map", "0:v:0"]
 
-    cmd += ["-c:v", "libx264", "-preset", "ultrafast", "-crf", CRF]
+    cmd += ["-c:v", "libx264", "-preset", "medium", "-crf", CRF]
     if has_audio:
         cmd += ["-c:a", "aac", "-b:a", "128k"]
     cmd += ["-map_metadata", "-1", "-avoid_negative_ts", "make_zero", out]
@@ -256,7 +256,7 @@ def concat_segments(seg_paths, out):
     except RuntimeError:
         # Re-encode fallback if stream copy fails on mismatched params.
         cmd = [FFMPEG, "-y", "-f", "concat", "-safe", "0", "-i", listfile,
-               "-c:v", "libx264", "-preset", "ultrafast", "-crf", CRF,
+               "-c:v", "libx264", "-preset", "medium", "-crf", CRF,
                "-c:a", "aac", "-b:a", "128k", "-map_metadata", "-1", out]
         _run(cmd)
     return out
@@ -276,19 +276,33 @@ def apply_captions(src, plan, offsets, out):
     """Burn captions via drawtext using textfile= (avoids all escaping issues)."""
     font = _font_esc()
     if not font:
-        return src
-    fontsize = max(24, int(H * 0.045))
+        print("[captions] NO FONT FOUND — skipping caption burn!", file=__import__('sys').stderr)
+        # Try to find any TTF font as last resort
+        import glob
+        for pattern in ["/usr/share/fonts/**/*.ttf", "/usr/share/fonts/**/*.otf"]:
+            found = glob.glob(pattern, recursive=True)
+            if found:
+                font = found[0].replace("\\", "/").replace(":", "\\:")
+                print(f"[captions] fallback font: {found[0]}", file=__import__('sys').stderr)
+                break
+        if not font:
+            return src
+    else:
+        print(f"[captions] using font: {font}", file=__import__('sys').stderr)
+    fontsize = max(28, int(H * 0.05))
     work = os.path.dirname(out) or "."
     capdir = os.path.join(work, "captions")
     os.makedirs(capdir, exist_ok=True)
 
     chains = []
     segs = plan["segments"]
+    cap_count = 0
     for i, (seg, off) in enumerate(zip(segs, offsets)):
         cap = seg.get("caption") or {}
         text = (cap.get("text") or "").strip()
         if not text:
             continue
+        cap_count += 1
         pos = cap.get("position", "bottom")
         style = cap.get("style", "outline")
         start = off
@@ -307,26 +321,29 @@ def apply_captions(src, plan, offsets, out):
         with open(tf_real, "w", encoding="utf-8") as f:
             f.write(text)
 
-        y = {"top": "h*0.12", "center": "(h-text_h)/2", "bottom": "h*0.80"}[pos]
+        y = {"top": "h*0.12", "center": "(h-text_h)/2", "bottom": "h*0.82"}[pos]
         base = (
             f"drawtext=fontfile='{font}':textfile='{tf}':fontsize={fontsize}:"
-            f"fontcolor=white:x=(w-text_w)/2:y={y}:"
+            f"fontcolor=white:borderw=4:bordercolor=black@0.9:"
+            f"x=(w-text_w)/2:y={y}:"
             f"enable='between(t,{start:.3f},{end:.3f})'"
         )
         if style == "box":
-            base += ":box=1:boxcolor=black@0.45:boxborderw=12"
-        else:
-            base += ":borderw=3:bordercolor=black"
+            base += ":box=1:boxcolor=black@0.55:boxborderw=14"
         chains.append(base)
+        print(f"[captions] seg {i}: '{text[:30]}' at {start:.1f}-{end:.1f}s pos={pos}")
 
+    print(f"[captions] total caption segments: {cap_count}")
     if not chains:
+        print("[captions] no caption text in plan; skipping burn")
         return src
 
     cmd = [FFMPEG, "-y", "-i", src]
     cmd += _thread_flags()
-    cmd += ["-vf", ",".join(chains), "-c:v", "libx264", "-preset", "ultrafast", "-crf", CRF,
+    cmd += ["-vf", ",".join(chains), "-c:v", "libx264", "-preset", "medium", "-crf", CRF,
             "-c:a", "copy", "-map_metadata", "-1", out]
     _run(cmd)
+    print(f"[captions] burned {cap_count} captions -> {out}")
     return out
 
 
@@ -337,14 +354,19 @@ def mix_narration(src, plan, offsets, voice_wavs, out):
     it never cuts mid-word. Output duration = video duration (duration=first)."""
     usable = {i: p for i, p in (voice_wavs or {}).items() if p and os.path.exists(p)}
     if not usable:
+        print("[voice-mix] no usable voice wavs; skipping narration mix", file=__import__('sys').stderr)
         return src
 
     g = plan.get("global") or {}
     vgain = float(g.get("voice_gain", 1.0))
-    # Original audio NEVER muted: force at least 55% (legacy plans may carry 0.0).
-    orig_vol = float(plan.get("audio_volume", 0.55) or 0.0)
+    # Boost voiceover to be clearly audible over original audio.
+    vgain = max(vgain, 1.8)
+    # Original audio NEVER muted: force at least 40% (legacy plans may carry 0.0).
+    orig_vol = float(plan.get("audio_volume", 0.40) or 0.0)
     if orig_vol <= 0.01:
-        orig_vol = 0.55
+        orig_vol = 0.40
+
+    print(f"[voice-mix] mixing {len(usable)} tracks, voice_gain={vgain:.2f}, orig_vol={orig_vol:.2f}")
 
     cmd = [FFMPEG, "-y", "-i", src]
     wavs = []
@@ -377,6 +399,7 @@ def mix_narration(src, plan, offsets, voice_wavs, out):
             f"volume={vgain:.2f},adelay={delay_ms}|{delay_ms}[a{n}]"
         )
         mix_inputs.append(f"[a{n}]")
+        print(f"[voice-mix] seg {i}: wav={wav_dur:.2f}s target={target:.2f}s delay={delay_ms}ms")
 
     fc.append("".join(mix_inputs) + f"amix=inputs={len(mix_inputs)}:duration=first:dropout_transition=0:normalize=0[aout]")
 
@@ -390,6 +413,7 @@ def mix_narration(src, plan, offsets, voice_wavs, out):
             "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-map_metadata", "-1",
             "-shortest", out]
     _run(cmd)
+    print(f"[voice-mix] narration mixed -> {out}")
     return out
 
 
@@ -408,16 +432,17 @@ def apply_effects(src, plan, out):
         pass
 
     filters = []
-    if intro == "fade":
-        filters.append("fade=t=in:st=0:d=0.4")
+    # NO intro fade — makes start look dark/blurry. Keep only short ending fade.
     if ending == "fade" and dur:
-        filters.append(f"fade=t=out:st={max(0.0, dur-0.5):.3f}:d=0.5")
+        filters.append(f"fade=t=out:st={max(0.0, dur-0.3):.3f}:d=0.3")
     if not filters:
+        print("[effects] no effects to apply (intro fade removed for quality)")
         return src
 
+    print(f"[effects] applying: {filters}")
     cmd = [FFMPEG, "-y", "-i", src]
     cmd += _thread_flags()
-    cmd += ["-vf", ",".join(filters), "-c:v", "libx264", "-preset", "ultrafast",
+    cmd += ["-vf", ",".join(filters), "-c:v", "libx264", "-preset", "medium",
             "-crf", CRF, "-c:a", "copy", "-map_metadata", "-1", out]
     _run(cmd)
     return out

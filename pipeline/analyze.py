@@ -426,19 +426,19 @@ def _normalize(plan, duration):
     if audio_type not in ("vocal", "asmr", "music", "sfx", "silent"):
         audio_type = "vocal" if plan.get("has_speech") else "music"
     plan["audio_type"] = audio_type
-    # Original audio is NEVER muted: ASMR 35%, everything else 55%.
+    # Original audio is NEVER muted: ASMR 40%, everything else 55%.
     plan["audio_mode"] = "lower"
-    plan["audio_volume"] = 0.35 if audio_type == "asmr" else 0.55
+    plan["audio_volume"] = 0.40 if audio_type == "asmr" else 0.55
     plan["has_speech"] = audio_type == "vocal"
     plan["caption_regions"] = []
 
     g = plan.get("global") or {}
     if audio_type == "asmr":
-        # ASMR: voiceover at 100% (1.0), original audio at 35%.
+        # ASMR: voiceover at 100% (1.0), original audio at 40%.
         vgain = 1.0
     else:
-        # Non-ASMR: original stays at 55%, voiceover boosted to stay audible over it.
-        vgain = min(2.0, max(1.3, float(g.get("voice_gain", 1.4))))
+        # Non-ASMR: original stays at 55%, voiceover boosted to stay clearly audible.
+        vgain = min(2.5, max(1.8, float(g.get("voice_gain", 2.0))))
     plan["global"] = {
         "intro_effect": g.get("intro_effect", "fade"),
         "ending_effect": g.get("ending_effect", "fade"),
