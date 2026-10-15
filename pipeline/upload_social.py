@@ -394,6 +394,45 @@ def upload_instagram(video_path, description):
 
 # ─────────────────────────── FACEBOOK ───────────────────────────
 
+def _parse_cookies_any_format(cookies_file):
+    """Parse cookies from JSON (Puppeteer) or Netscape (.txt) format.
+    Returns list of dicts with name/value/domain/path."""
+    # Try JSON first
+    try:
+        with open(cookies_file, "r") as f:
+            loaded = json.load(f)
+        if isinstance(loaded, list):
+            return loaded
+        if isinstance(loaded, dict):
+            return [loaded]
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        pass
+
+    # Try Netscape format
+    cookies = []
+    with open(cookies_file, "r") as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("#"):
+                # Netscape header comment lines, skip
+                if line.startswith("#HttpOnly_"):
+                    line = line[len("#HttpOnly_"):]
+                else:
+                    continue
+            parts = line.split("\t")
+            if len(parts) >= 7:
+                domain, _, path, secure, expires, name, value = parts[:7]
+                cookies.append({
+                    "name": name,
+                    "value": value,
+                    "domain": domain,
+                    "path": path,
+                    "secure": secure.upper() == "TRUE",
+                    "expires": int(expires) if expires.isdigit() else -1,
+                })
+    return cookies
+
+
 def upload_facebook(video_path, description):
     """Upload reel to Facebook using cookies from worker."""
     cookies = _get_cookies("facebook")
@@ -406,17 +445,24 @@ def upload_facebook(video_path, description):
         print("[facebook] invalid cookies format")
         return False
 
+    # Handle both JSON and Netscape formats
+    if isinstance(cookies, str):
+        # Raw string (Netscape) — write as .txt
+        import tempfile as _tf
+        fd, cookies_file = _tf.mkstemp(suffix=".txt")
+        with os.fdopen(fd, "w") as f:
+            f.write(cookies)
+
     page_url = os.getenv("FB_PAGE_URL", "")
     driver = _make_driver(headless=True)
     try:
         driver.get("https://www.facebook.com/")
         _spoof(driver)
 
-        # Load cookies (JSON format - Puppeteer or plain list)
-        with open(cookies_file, "r") as f:
-            loaded = json.load(f)
+        # Parse cookies (JSON or Netscape)
+        cookie_list = _parse_cookies_any_format(cookies_file)
+        print(f"[facebook] loaded {len(cookie_list)} cookies")
 
-        cookie_list = loaded if isinstance(loaded, list) else [loaded]
         for c in cookie_list:
             if not isinstance(c, dict) or "name" not in c:
                 continue

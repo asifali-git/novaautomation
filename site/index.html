@@ -75,11 +75,15 @@
           <label>Username <span class="muted">(optional)</span>
             <input id="af-username" type="text" placeholder="@yourhandle" />
           </label>
-          <label>Cookies file
-            <input id="af-cookies" type="file" accept=".json,.txt" required />
+          <label>Cookies file <span class="muted">(.json / .txt / .pkl)</span>
+            <input id="af-cookies" type="file" accept=".json,.txt,.pkl" required />
           </label>
           <button class="btn primary" type="submit">Connect</button>
-          <p class="hint">Export cookies from browser (Cookie-Editor → Export JSON). FB: use "Export cookies JSON for Puppeteer".</p>
+          <p class="hint">
+            <b>TikTok/Instagram:</b> Cookie-Editor extension → Export → "Export as JSON"<br>
+            <b>Facebook:</b> "Export cookies JSON for Puppeteer" extension → Export (JSON)<br>
+            <b>Netscape .txt</b> bhi chalega (Get cookies.txt extension)
+          </p>
         </form>
       </section>
     </aside>
