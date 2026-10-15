@@ -346,23 +346,65 @@ def upload_tiktok(video_path, description, account_id=None):
         driver.switch_to.default_content()
         _sleep(2, 4)
 
+        # Dismiss any modal/popup overlays that block clicks
+        for attempt in range(3):
+            try:
+                # Try pressing ESC to close modals
+                from selenium.webdriver.common.keys import Keys
+                from selenium.webdriver.common.action_chains import ActionChains
+                ActionChains(driver).send_keys(Keys.ESCAPE).perform()
+                _sleep(1, 2)
+                # Try clicking close buttons on modals
+                for sel in [
+                    "//div[contains(@class,'TUXModal')]//button[contains(@class,'close')]",
+                    "//div[contains(@class,'modal')]//button[@aria-label='Close']",
+                    "//div[contains(@class,'Modal')]//*[name()='svg' and contains(@aria-label,'close')]",
+                    "//button[@aria-label='Close']",
+                ]:
+                    try:
+                        close_btn = driver.find_element(
+                            __import__('selenium.webdriver.common.by', fromlist=['By']).By.XPATH, sel)
+                        if close_btn.is_displayed():
+                            close_btn.click()
+                            print(f"[tiktok] dismissed modal via {sel[:40]}")
+                            _sleep(1, 2)
+                    except Exception:
+                        pass
+                # Check if overlay is gone
+                overlays = driver.find_elements(
+                    __import__('selenium.webdriver.common.by', fromlist=['By']).By.CSS_SELECTOR,
+                    ".TUXModal-overlay, .modal-overlay, [class*='Modal-overlay']"
+                )
+                visible_overlays = [o for o in overlays if o.is_displayed()]
+                if not visible_overlays:
+                    print(f"[tiktok] overlays cleared after {attempt+1} attempts")
+                    break
+                print(f"[tiktok] {len(visible_overlays)} overlay(s) still visible; retrying...")
+            except Exception as e:
+                print(f"[tiktok] modal dismiss attempt {attempt+1} failed: {e}")
+            _sleep(1, 2)
+
         # Fill caption
         try:
+            from selenium.webdriver.common.by import By
             editable = WebDriverWait(driver, 15).until(
                 EC.element_to_be_clickable(
                     (By.CSS_SELECTOR, "div[contenteditable='true']")
                 )
             )
-            editable.click()
+            # Scroll into view and click via JS to avoid overlay interception
+            driver.execute_script("arguments[0].scrollIntoView({block:'center'});", editable)
+            _sleep(0.5, 1)
+            driver.execute_script("arguments[0].click();", editable)
+            _sleep(0.5, 1)
             from selenium.webdriver.common.keys import Keys
             from selenium.webdriver.common.action_chains import ActionChains
             actions = ActionChains(driver)
-            actions.move_to_element(editable).click().perform()
-            actions.key_down(Keys.CONTROL).send_keys("a").key_up(Keys.CONTROL)
+            actions.send_keys(Keys.CONTROL + "a")
             actions.send_keys(Keys.DELETE)
             actions.send_keys(description[:2200])
             actions.perform()
-            print("[tiktok] caption filled")
+            print("[tiktok] caption filled via JS click")
         except Exception as e:
             print(f"[tiktok] caption failed: {e}")
 
@@ -384,7 +426,7 @@ def upload_tiktok(video_path, description, account_id=None):
         if not uploaded:
             print("[tiktok] upload wait timeout (may still succeed)")
 
-        # Click Post — try multiple selectors
+        # Click Post — try multiple selectors with JS click fallback
         post_selectors = [
             "//button[contains(@class,'TUXButton') and .//div[text()='Post']]",
             "//button[.//div[text()='Post']]",
@@ -396,11 +438,15 @@ def upload_tiktok(video_path, description, account_id=None):
                 post_btn = WebDriverWait(driver, 10).until(
                     EC.element_to_be_clickable((By.XPATH, sel))
                 )
-                post_btn.click()
+                # JS click avoids overlay interception
+                driver.execute_script("arguments[0].scrollIntoView({block:'center'});", post_btn)
+                _sleep(0.5, 1)
+                driver.execute_script("arguments[0].click();", post_btn)
                 _sleep(5, 10)
                 print(f"[tiktok] posted OK (selector: {sel[:50]})")
                 return True
-            except Exception:
+            except Exception as e:
+                print(f"[tiktok] post selector failed: {sel[:40]}: {e}")
                 continue
         print("[tiktok] no Post button found")
         return False
