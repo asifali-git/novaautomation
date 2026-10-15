@@ -575,6 +575,9 @@ export default {
         }
         try {
           const token = await exchangeCode(env, code, clientId, clientSecret);
+          // Persist client creds with the login so runners don't depend on worker env fallback.
+          token.client_id = clientId || env.YT_CLIENT_ID;
+          token.client_secret = clientSecret || env.YT_CLIENT_SECRET;
           const channel = token.access_token ? await fetchChannelTitle(token.access_token) : null;
           const login = await saveLogin(env.DB, {
             provider: 'youtube',
@@ -604,13 +607,17 @@ export default {
           return withCors(json({ job: job || null }));
         }
 
-        // Atomic claim: queued -> processing (only one runner wins)
+        // Atomic claim: queued -> processing (only one runner wins).
+        // Also recovers stale processing jobs (stuck > 30 min, e.g. old fastpoll or dead runner).
         const manualClaim = path.match(/^\/api\/internal\/manual\/(\d+)\/claim$/);
         if (manualClaim && req.method === 'POST') {
           const id = Number(manualClaim[1]);
+          const staleCutoff = now() - 30 * 60 * 1000;
           const res = await env.DB
-            .prepare("UPDATE manual_jobs SET status = 'processing', updated_at = ? WHERE id = ? AND status = 'queued'")
-            .bind(now(), id)
+            .prepare(
+              "UPDATE manual_jobs SET status = 'processing', updated_at = ? WHERE id = ? AND (status = 'queued' OR (status = 'processing' AND updated_at < ?))"
+            )
+            .bind(now(), id, staleCutoff)
             .run();
           const claimed = (res.meta?.changes || 0) > 0;
           const job = await env.DB.prepare('SELECT * FROM manual_jobs WHERE id = ?').bind(id).first();
@@ -672,13 +679,6 @@ export default {
           return withCors(json({ video }));
         }
 
-        if (path.startsWith('/api/internal/logins/') && req.method === 'GET') {
-          const id = Number(path.split('/')[4]);
-          const login = await getLogin(env.DB, id, { withTokens: true });
-          if (!login) return withCors(json({ error: 'not found' }, 404));
-          return withCors(json({ login }));
-        }
-
         if (path === '/api/internal/logins/env' && req.method === 'GET') {
           // Return first usable YouTube login as YT_* env for the runner.
           const logins = await listLogins(env.DB, { withTokens: true });
@@ -691,6 +691,13 @@ export default {
               login_id: yt?.id || null,
             })
           );
+        }
+
+        if (/^\/api\/internal\/logins\/\d+$/.test(path) && req.method === 'GET') {
+          const id = Number(path.split('/')[4]);
+          const login = await getLogin(env.DB, id, { withTokens: true });
+          if (!login) return withCors(json({ error: 'not found' }, 404));
+          return withCors(json({ login }));
         }
 
         if (path === '/api/internal/accounts/env' && req.method === 'GET') {
