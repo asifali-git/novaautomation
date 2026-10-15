@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: nova-fastpoll
+    runtime: python
+    buildCommand: pip install -r render/requirements.txt
+    startCommand: python render/server.py
+    envVars:
+      - key: WORKER_URL
+        sync: false
+      - key: INTERNAL_TOKEN
+        sync: false
+      - key: GH_TOKEN
+        sync: false
+      - key: GH_REPO
+        value: asifali-git/novaautomation
+      - key: POLL_MIN
+        value: 8
+      - key: POLL_MAX
+        value: 15
