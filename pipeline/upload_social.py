@@ -892,32 +892,30 @@ def upload_facebook(video_path, description, account_id=None):
         _sleep(2, 4)
 
         # Facebook Reels is a multi-step wizard: Upload → Next → Share
-        def _find_button(text_contains):
-            """Find visible enabled div/button whose text or aria-label contains text."""
+        def _find_button_exact(labels):
+            """Find visible enabled button whose EXACT text/aria-label matches one of labels (priority order)."""
             try:
-                btns = driver.find_elements(
-                    By.XPATH,
-                    "//div[@role='button'] | //button",
-                )
+                btns = driver.find_elements(By.XPATH, "//div[@role='button'] | //button")
             except Exception:
                 btns = []
-            text_contains = text_contains.lower()
-            chosen = None
-            for b in btns:
-                try:
-                    if not b.is_displayed():
-                        continue
-                    if b.get_attribute("aria-disabled") == "true":
-                        continue
-                    t = ((b.text or "") + " " + (b.get_attribute("aria-label") or "")).lower()
-                    if text_contains in t:
-                        chosen = b
-                except Exception:
-                    pass
-            return chosen
+            for label in labels:
+                low = label.lower()
+                for b in btns:
+                    try:
+                        if not b.is_displayed():
+                            continue
+                        if b.get_attribute("aria-disabled") == "true":
+                            continue
+                        t = (b.text or "").strip().lower()
+                        a = (b.get_attribute("aria-label") or "").strip().lower()
+                        if t == low or a == low:
+                            return b
+                    except Exception:
+                        pass
+            return None
 
         # Step: click "Next" if present (wizard step 1 → 2)
-        next_btn = _find_button("next")
+        next_btn = _find_button_exact(["next"])
         if next_btn:
             driver.execute_script("arguments[0].scrollIntoView({block:'center'});", next_btn)
             _sleep(0.5, 1)
@@ -957,26 +955,22 @@ def upload_facebook(video_path, description, account_id=None):
         except Exception as e:
             print(f"[facebook] button dump failed: {e}")
 
-        # Step: click Share / Publish / Share reel
-        publish_btn = (
-            _find_button("share reel")
-            or _find_button("share")
-            or _find_button("publish")
-            or _find_button("post")
-        )
+        # Step: click Share / Publish / Share reel — exact matches only
+        publish_btn = _find_button_exact(["share reel", "post", "publish", "share"])
         if publish_btn:
             driver.execute_script("arguments[0].scrollIntoView({block:'center'});", publish_btn)
             _sleep(0.5, 1)
             driver.execute_script("arguments[0].click();", publish_btn)
             print(f"[facebook] clicked publish: {(publish_btn.text or '')[:40]!r}")
             # Verify success: toast/dialog/URL change
-            for j in range(6):
+            for j in range(8):
                 _sleep(3, 4)
                 try:
                     state = driver.execute_script("""
                         const b = document.body.innerText;
                         const url = location.href;
-                        const ok = /shared|Your reel|Reel (is|was) shared|Posting|Posted/i.test(b);
+                        const ok = /shared|Your reel|Reel (is|was) shared|Posting|Posted/i.test(b)
+                                   || !/reels\\/create/.test(url);
                         return JSON.stringify({ok: ok, url: url.slice(0,120)});
                     """)
                     print(f"[facebook] post-click check {j+1}: {state}")
