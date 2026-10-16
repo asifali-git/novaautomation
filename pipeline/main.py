@@ -329,18 +329,22 @@ def run():
                 print(f"[warn] yt login {part} failed ({e}); using default", file=sys.stderr)
             break
     if not pinned and task_uid:
-        # Plain "youtube" dest → use this task owner's YouTube login.
+        # Plain "youtube" dest → this task owner's login only (never another user's channel).
         try:
             e = worker_get(f"/api/internal/logins/env?user_id={task_uid}")
-            if e.get("YT_REFRESH_TOKEN"):
-                os.environ["YT_REFRESH_TOKEN"] = e["YT_REFRESH_TOKEN"]
-                if e.get("YT_CLIENT_ID"):
-                    os.environ["YT_CLIENT_ID"] = e["YT_CLIENT_ID"]
-                if e.get("YT_CLIENT_SECRET"):
-                    os.environ["YT_CLIENT_SECRET"] = e["YT_CLIENT_SECRET"]
-                print(f"[yt] using login {e.get('login_id')} for user {task_uid}")
+            has_rt = bool(e.get("YT_REFRESH_TOKEN"))
         except Exception as e:
             print(f"[warn] yt env for user {task_uid} failed ({e}); using default", file=sys.stderr)
+            has_rt = None  # fetch failed → keep default env
+        if has_rt:
+            os.environ["YT_REFRESH_TOKEN"] = e["YT_REFRESH_TOKEN"]
+            if e.get("YT_CLIENT_ID"):
+                os.environ["YT_CLIENT_ID"] = e["YT_CLIENT_ID"]
+            if e.get("YT_CLIENT_SECRET"):
+                os.environ["YT_CLIENT_SECRET"] = e["YT_CLIENT_SECRET"]
+            print(f"[yt] using login {e.get('login_id')} for user {task_uid}")
+        elif has_rt is False:
+            raise RuntimeError("no YouTube account connected for this user")
     access = yt.refresh_access_token()
     video_id = yt.upload_video(
         out_path,
