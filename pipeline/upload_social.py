@@ -983,13 +983,27 @@ def upload_tiktok(video_path, description, account_id=None):
             _sleep(0.5, 1)
             driver.execute_script("arguments[0].click();", editable)
             _sleep(0.5, 1)
-            from selenium.webdriver.common.keys import Keys
-            from selenium.webdriver.common.action_chains import ActionChains
-            actions = ActionChains(driver)
-            actions.send_keys(Keys.CONTROL + "a")
-            actions.send_keys(Keys.DELETE)
-            actions.send_keys(description[:2200])
-            actions.perform()
+            # Clean replace via execCommand (Ctrl+A/DELETE left stray text).
+            filled = False
+            try:
+                driver.execute_script("""
+                    const el = arguments[0];
+                    el.focus();
+                    document.execCommand('selectAll', false, null);
+                    document.execCommand('delete', false, null);
+                    document.execCommand('insertText', false, arguments[1]);
+                """, editable, description[:2200])
+                filled = True
+            except Exception:
+                pass
+            if not filled:
+                from selenium.webdriver.common.keys import Keys
+                from selenium.webdriver.common.action_chains import ActionChains
+                actions = ActionChains(driver)
+                actions.send_keys(Keys.CONTROL + "a")
+                actions.send_keys(Keys.DELETE)
+                actions.send_keys(description[:2200])
+                actions.perform()
             print("[tiktok] caption filled via JS click")
         except Exception as e:
             print(f"[tiktok] caption failed: {e}")
@@ -997,25 +1011,45 @@ def upload_tiktok(video_path, description, account_id=None):
 
         _sleep(5, 10)
 
-        # Wait for upload complete — poll any indicator (59MB+ files on GH
-        # runners upload slowly; 8 minutes gives them a real chance).
+        # Wait for upload complete — poll any indicator. TikTok shows
+        # "Uploaded(53.67MB)" (not bare "Uploaded"), so use contains().
         uploaded = False
         _up_xpaths = [
-            "//span[text()='Uploaded']",
-            "//div[text()='Uploaded']",
+            "//*[contains(text(),'Uploaded')]",
             "//*[contains(text(),'uploaded')]",
             "//*[contains(text(),'Upload complete')]",
             "//*[contains(text(),'upload complete')]",
         ]
         try:
-            WebDriverWait(driver, 480).until(
+            WebDriverWait(driver, 120).until(
                 lambda d: any(d.find_elements(By.XPATH, x) for x in _up_xpaths)
             )
             uploaded = True
             print("[tiktok] upload complete indicator found")
         except Exception:
-            print("[tiktok] upload wait timeout (480s, may still be processing)")
+            print("[tiktok] upload wait timeout (120s, may still be processing)")
         print(f"[tiktok] page@post-attempt: {_page_hint(driver)}")
+
+        # TikTok pops "Turn on automatic content checks?" after upload — it
+        # blocks the Post button (click interception) so the post never lands.
+        # Decline it (Cancel / Not now); accept only as last resort.
+        for xp in [
+            "//button[.//div[text()='Cancel']]",
+            "//button[contains(text(),'Cancel')]",
+            "//button[.//div[text()='Not now']]",
+            "//button[contains(text(),'Not now')]",
+            "//div[contains(@class,'TUXModal')]//button[contains(@class,'close')]",
+            "//button[.//div[text()='Turn on']]",
+        ]:
+            try:
+                visible = [b for b in driver.find_elements(By.XPATH, xp) if b.is_displayed()]
+                if visible:
+                    driver.execute_script("arguments[0].click();", visible[0])
+                    print(f"[tiktok] content-check dialog handled via {xp[:60]}")
+                    _sleep(1, 2)
+                    break
+            except Exception:
+                pass
 
         # Hide leftover overlays/guides that can intercept the Post click.
         try:
