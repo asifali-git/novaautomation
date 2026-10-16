@@ -1079,3 +1079,45 @@ select.form-input {
 
   .form-input { padding: 9px 12px; font-size: 13px; }
 }
+
+/* ===== Upload Analytics (per platform / per account) ===== */
+.analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 14px;
+}
+.stat-platform {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+}
+.stat-platform-title {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+.stat-platform-title .muted { font-weight: 400; font-size: 12px; }
+.stat-row {
+  border-top: 1px solid var(--border);
+  padding: 10px 0 4px;
+}
+.stat-row:first-of-type { border-top: 0; }
+.stat-account {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13.5px;
+  flex-wrap: wrap;
+}
+.stat-nums {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  margin: 5px 0;
+  align-items: center;
+}
+.stat-ok { color: var(--green); }
+.stat-bad { color: var(--red); }
+.stat-links { display: flex; flex-wrap: wrap; gap: 5px; }
+.stat-links .plat-pill { text-decoration: none; }

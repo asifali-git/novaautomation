@@ -52,6 +52,8 @@ CREATE TABLE IF NOT EXISTS accounts (
   platform TEXT NOT NULL,
   username TEXT,
   cookies TEXT NOT NULL,
+  proxy TEXT NOT NULL DEFAULT '',
+  country TEXT NOT NULL DEFAULT '',
   status TEXT NOT NULL DEFAULT 'active',
   created_at INTEGER NOT NULL,
   updated_at INTEGER NOT NULL

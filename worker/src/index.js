@@ -233,12 +233,12 @@ async function deleteLogin(db, id) {
 // --- Accounts (social media cookies) -----------------------------------------
 
 async function listAccounts(db) {
-  const res = await db.prepare('SELECT id, platform, username, status, created_at, updated_at FROM accounts ORDER BY id DESC').all();
+  const res = await db.prepare('SELECT id, platform, username, proxy, country, status, created_at, updated_at FROM accounts ORDER BY id DESC').all();
   return res.results || [];
 }
 
 async function getAccount(db, id) {
-  const r = await db.prepare('SELECT id, platform, username, status, created_at, updated_at FROM accounts WHERE id = ?').bind(id).first();
+  const r = await db.prepare('SELECT id, platform, username, proxy, country, status, created_at, updated_at FROM accounts WHERE id = ?').bind(id).first();
   return r;
 }
 
@@ -249,18 +249,20 @@ async function saveAccount(db, body) {
   if (!cookies) throw new Error('cookies required');
   const cookiesStr = typeof cookies === 'string' ? cookies : JSON.stringify(cookies);
   const username = body.username || null;
+  const proxy = (body.proxy || '').trim();
+  const country = (body.country || '').trim();
   const t = now();
   // Upsert: per platform + username (allows multiple accounts per platform)
   const existing = username
     ? await db.prepare('SELECT id FROM accounts WHERE platform = ? AND username = ?').bind(platform, username).first()
     : await db.prepare('SELECT id FROM accounts WHERE platform = ? AND (username IS NULL OR username = ?)').bind(platform, '').first();
   if (existing) {
-    await db.prepare('UPDATE accounts SET username = ?, cookies = ?, updated_at = ? WHERE id = ?')
-      .bind(username, cookiesStr, t, existing.id).run();
+    await db.prepare('UPDATE accounts SET username = ?, cookies = ?, proxy = ?, country = ?, updated_at = ? WHERE id = ?')
+      .bind(username, cookiesStr, proxy, country, t, existing.id).run();
     return getAccount(db, existing.id);
   }
-  const res = await db.prepare('INSERT INTO accounts (platform, username, cookies, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)')
-    .bind(platform, username, cookiesStr, 'active', t, t).run();
+  const res = await db.prepare('INSERT INTO accounts (platform, username, cookies, proxy, country, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)')
+    .bind(platform, username, cookiesStr, proxy, country, 'active', t, t).run();
   return getAccount(db, res.meta?.last_row_id);
 }
 
@@ -711,7 +713,7 @@ export default {
             if (!result[a.platform]) result[a.platform] = [];
             let cookies;
             try { cookies = JSON.parse(row.cookies); } catch { cookies = row.cookies; }
-            result[a.platform].push({ id: a.id, username: a.username, cookies });
+            result[a.platform].push({ id: a.id, username: a.username, proxy: a.proxy || '', country: a.country || '', cookies });
           }
           return withCors(json(result));
         }
@@ -728,11 +730,11 @@ export default {
         const acctCookiesMatch = path.match(/^\/api\/internal\/accounts\/(\d+)\/cookies$/);
         if (acctCookiesMatch && req.method === 'GET') {
           const acctId = Number(acctCookiesMatch[1]);
-          const row = await env.DB.prepare('SELECT cookies FROM accounts WHERE id = ?').bind(acctId).first();
+          const row = await env.DB.prepare('SELECT cookies, username, proxy, country FROM accounts WHERE id = ?').bind(acctId).first();
           if (!row) return withCors(json({ error: 'account not found' }, 404));
           let cookies;
           try { cookies = JSON.parse(row.cookies); } catch { cookies = row.cookies; }
-          return withCors(json({ id: acctId, cookies }));
+          return withCors(json({ id: acctId, cookies, username: row.username || '', proxy: row.proxy || '', country: row.country || '' }));
         }
       }
 

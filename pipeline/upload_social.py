@@ -116,6 +116,286 @@ def _get_enabled_platforms():
     return result
 
 
+def _up(success, url=None, error=None, account_id=None):
+    """Uniform uploader return value: {success, url, account, error?}."""
+    r = {"success": bool(success), "url": url or None, "account": account_id}
+    if error:
+        r["error"] = str(error)[:300]
+    return r
+
+
+_account_meta_cache = {}
+
+
+def _account_meta(account_id):
+    """Fetch username/proxy/country for a specific account (cached, best-effort)."""
+    if not account_id:
+        return {}
+    key = str(account_id)
+    if key in _account_meta_cache:
+        return _account_meta_cache[key]
+    meta = {}
+    if WORKER and TOKEN:
+        try:
+            r = requests.get(
+                f"{WORKER}/api/internal/accounts/{account_id}/cookies",
+                headers={"x-token": TOKEN},
+                timeout=30,
+            )
+            r.raise_for_status()
+            data = r.json() or {}
+            meta = {k: data.get(k) for k in ("username", "proxy", "country") if data.get(k)}
+        except Exception as e:
+            print(f"[social] failed to fetch account {account_id} meta: {e}")
+    _account_meta_cache[key] = meta
+    return meta
+
+
+# ─────────────────── PROXY + COUNTRY FINGERPRINT ───────────────────
+
+# country code/alias -> browser profile (timezone, language, geolocation)
+COUNTRY_PROFILES = {
+    "GB": {"tz": "Europe/London", "lang": "en-GB", "accept": "en-GB,en;q=0.9",
+           "geo": (51.5072, -0.1276), "languages": ["en-GB", "en"]},
+    "DE": {"tz": "Europe/Berlin", "lang": "de-DE", "accept": "de-DE,de;q=0.9,en;q=0.5",
+           "geo": (52.5200, 13.4050), "languages": ["de-DE", "de", "en"]},
+    "IT": {"tz": "Europe/Rome", "lang": "it-IT", "accept": "it-IT,it;q=0.9,en;q=0.5",
+           "geo": (41.9028, 12.4964), "languages": ["it-IT", "it", "en"]},
+    "FR": {"tz": "Europe/Paris", "lang": "fr-FR", "accept": "fr-FR,fr;q=0.9,en;q=0.5",
+           "geo": (48.8566, 2.3522), "languages": ["fr-FR", "fr", "en"]},
+    "US": {"tz": "America/New_York", "lang": "en-US", "accept": "en-US,en;q=0.9",
+           "geo": (40.7128, -74.0060), "languages": ["en-US", "en"]},
+    "NL": {"tz": "Europe/Amsterdam", "lang": "nl-NL", "accept": "nl-NL,nl;q=0.9,en;q=0.5",
+           "geo": (52.3676, 4.9041), "languages": ["nl-NL", "nl", "en"]},
+    "ES": {"tz": "Europe/Madrid", "lang": "es-ES", "accept": "es-ES,es;q=0.9,en;q=0.5",
+           "geo": (40.4168, -3.7038), "languages": ["es-ES", "es", "en"]},
+    "IN": {"tz": "Asia/Kolkata", "lang": "en-IN", "accept": "en-IN,en;q=0.9",
+           "geo": (19.0760, 72.8777), "languages": ["en-IN", "en"]},
+}
+
+_COUNTRY_ALIASES = {
+    "uk": "GB", "united kingdom": "GB", "great britain": "GB", "england": "GB",
+    "germany": "DE", "deutschland": "DE",
+    "italy": "IT", "italia": "IT",
+    "france": "FR",
+    "usa": "US", "united states": "US", "america": "US",
+    "netherlands": "NL", "holland": "NL",
+    "spain": "ES", "espana": "ES",
+    "india": "IN",
+}
+
+
+def _country_profile(country):
+    """Resolve a country string (code or name) to a COUNTRY_PROFILES entry."""
+    if not country:
+        return None
+    c = str(country).strip()
+    key = c.upper() if len(c) == 2 and c.isalpha() else c.lower()
+    code = key if key in COUNTRY_PROFILES else _COUNTRY_ALIASES.get(key)
+    if not code:
+        # try alias for 2-letter input too
+        code = _COUNTRY_ALIASES.get(key.lower())
+    return COUNTRY_PROFILES.get(code) if code else None
+
+
+def _normalize_proxy(proxy):
+    """Parse proxy string -> (chrome_proxy_server, (user, pass) or None).
+
+    Accepts: host:port | user:pass@host:port | http://user:pass@host:port |
+    socks5://host:port
+    """
+    if not proxy or not str(proxy).strip():
+        return None, None
+    from urllib.parse import urlparse
+
+    p = str(proxy).strip()
+    if "://" not in p:
+        p = "http://" + p
+    try:
+        u = urlparse(p)
+    except Exception:
+        return None, None
+    if not u.hostname:
+        return None, None
+    auth = (u.username, u.password) if u.username else None
+    scheme = u.scheme if u.scheme in ("http", "https", "socks5", "socks4") else "http"
+    port = u.port or (443 if scheme == "https" else 80)
+    return f"{scheme}://{u.hostname}:{port}", auth
+
+
+class _ProxyRelay:
+    """Local proxy relay: Chrome connects here (no auth) and we forward to the
+    upstream authenticated proxy. Chrome cannot send proxy credentials itself."""
+
+    def __init__(self, upstream_server, auth):
+        import threading
+        from urllib.parse import urlparse
+
+        self.upstream = urlparse(upstream_server)
+        self.auth = auth
+        self._sock = None
+        self._stop = False
+        self._thread = threading.Thread(target=self._serve, daemon=True)
+        self.port = None
+
+    def start(self):
+        import socket
+
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        s.bind(("127.0.0.1", 0))
+        s.listen(64)
+        self._sock = s
+        self.port = s.getsockname()[1]
+        self._thread.start()
+        return self.port
+
+    def stop(self):
+        self._stop = True
+        try:
+            if self._sock:
+                self._sock.close()
+        except Exception:
+            pass
+
+    @property
+    def chrome_url(self):
+        return f"http://127.0.0.1:{self.port}"
+
+    def _proxy_auth_header(self):
+        if not self.auth:
+            return ""
+        import base64
+
+        cred = base64.b64encode(
+            f"{self.auth[0]}:{self.auth[1] or ''}".encode()
+        ).decode()
+        return f"Proxy-Authorization: Basic {cred}\r\n"
+
+    def _serve(self):
+        import socket
+        import threading
+
+        while not self._stop:
+            try:
+                client, _ = self._sock.accept()
+            except Exception:
+                break
+            threading.Thread(
+                target=self._handle_client, args=(client,), daemon=True
+            ).start()
+
+    def _handle_client(self, client):
+        import socket
+
+        try:
+            client.settimeout(60)
+            data = b""
+            while b"\r\n\r\n" not in data:
+                chunk = client.recv(65536)
+                if not chunk:
+                    client.close()
+                    return
+                data += chunk
+                if len(data) > 65536:
+                    client.close()
+                    return
+            head, _, rest = data.partition(b"\r\n\r\n")
+            lines = head.split(b"\r\n")
+            request_line = lines[0].decode("latin-1", "replace")
+            parts = request_line.split(" ")
+            if len(parts) < 3:
+                client.close()
+                return
+            method, target = parts[0], parts[1]
+
+            upstream = socket.create_connection(
+                (self.upstream.hostname, self.upstream.port or 8080), timeout=30
+            )
+            upstream.settimeout(60)
+
+            if method == "CONNECT":
+                auth = self._proxy_auth_header()
+                upstream.sendall(
+                    f"CONNECT {target} HTTP/1.1\r\nHost: {target}\r\n{auth}\r\n".encode()
+                )
+                resp = b""
+                while b"\r\n\r\n" not in resp:
+                    chunk = upstream.recv(4096)
+                    if not chunk:
+                        break
+                    resp += chunk
+                status = resp.split(b" ", 2)[1] if len(resp.split(b" ", 2)) > 2 else b"000"
+                if not status.startswith(b"2"):
+                    client.sendall(b"HTTP/1.1 502 Bad Gateway\r\n\r\n")
+                    client.close()
+                    upstream.close()
+                    return
+                head_end = resp.find(b"\r\n\r\n")
+                client.sendall(b"HTTP/1.1 200 Connection established\r\n\r\n")
+                leftover = resp[head_end + 4:] if head_end >= 0 else b""
+                if leftover:
+                    client.sendall(leftover)
+                self._pump(client, upstream)
+            else:
+                # Plain HTTP — forward to upstream proxy with absolute URI.
+                host_hdr = ""
+                for ln in lines[1:]:
+                    if ln.lower().startswith(b"host:"):
+                        host_hdr = ln.decode("latin-1", "replace")
+                auth = self._proxy_auth_header()
+                out = [request_line]
+                skip = {b"proxy-authorization", b"proxy-connection"}
+                for ln in lines[1:]:
+                    if ln.split(b":")[0].lower() in skip:
+                        continue
+                    out.append(ln.decode("latin-1", "replace"))
+                if auth:
+                    out.append(auth.strip())
+                req = ("\r\n".join(out) + "\r\n\r\n").encode() + rest
+                upstream.sendall(req)
+                while True:
+                    chunk = upstream.recv(65536)
+                    if not chunk:
+                        break
+                    client.sendall(chunk)
+                upstream.close()
+                client.close()
+        except Exception:
+            pass
+        finally:
+            try:
+                client.close()
+            except Exception:
+                pass
+
+    @staticmethod
+    def _pump(a, b):
+        import select
+        import socket
+
+        sockets = [a, b]
+        try:
+            while True:
+                r, _, x = select.select(sockets, [], sockets, 60)
+                if x or not r:
+                    break
+                for s in r:
+                    data = s.recv(65536)
+                    if not data:
+                        return
+                    (b if s is a else a).sendall(data)
+        except Exception:
+            pass
+        finally:
+            for s in (a, b):
+                try:
+                    s.close()
+                except Exception:
+                    pass
+
+
+
 def _parse_cookies_any(data):
     """Parse cookies from any format: JSON list, JSON dict, Netscape txt, or pickle bytes.
     Returns list of cookie dicts suitable for Selenium add_cookie()."""
@@ -267,7 +547,9 @@ def _sleep(lo=1.0, hi=3.0):
     time.sleep(random.uniform(lo, hi))
 
 
-def _spoof(driver):
+def _spoof(driver, languages=None):
+    langs = languages or ["en-US", "en"]
+    langs_js = json.dumps(langs)
     driver.execute_script(
         "Object.defineProperty(navigator,'webdriver',{get:()=>undefined})"
     )
@@ -275,7 +557,7 @@ def _spoof(driver):
         "Object.defineProperty(navigator,'plugins',{get:()=>[1,2,3]})"
     )
     driver.execute_script(
-        "Object.defineProperty(navigator,'languages',{get:()=>['en-US','en']})"
+        f"Object.defineProperty(navigator,'languages',{{get:()=>{langs_js}}})"
     )
 
 
@@ -292,8 +574,14 @@ def _decode_cookies_b64(env_name):
     return path
 
 
-def _make_driver(headless=True):
+def _make_driver(headless=True, proxy=None, country=None):
+    """Create driver. proxy: raw proxy string (may include user:pass).
+    country: code/name — sets timezone/locale/geolocation/UA-language."""
     import undetected_chromedriver as uc
+
+    profile = _country_profile(country)
+    server, auth = _normalize_proxy(proxy)
+    relay = None
 
     opts = uc.ChromeOptions()
     if headless:
@@ -302,28 +590,172 @@ def _make_driver(headless=True):
     opts.add_argument("--disable-dev-shm-usage")
     opts.add_argument("--disable-gpu")
     opts.add_argument("--window-size=1280,900")
-    return uc.Chrome(options=opts)
+
+    if profile:
+        opts.add_argument(f"--lang={profile['lang']}")
+        # WebRTC must never leak the real IP when a proxy is in use.
+        opts.add_argument("--force-webrtc-ip-handling-policy=disable_non_proxied_udp")
+        opts.add_argument("--webrtc-ip-handling-policy=disable_non_proxied_udp")
+
+    if server:
+        if auth:
+            # Chrome cannot authenticate to a proxy itself — run a local relay.
+            relay = _ProxyRelay(server, auth)
+            relay.start()
+            opts.add_argument(f"--proxy-server={relay.chrome_url}")
+            print(f"[social] proxy relay on {relay.chrome_url} -> {server}")
+        else:
+            opts.add_argument(f"--proxy-server={server}")
+            print(f"[social] using proxy {server}")
+        # Never bypass the proxy for anything (avoid IP leaks).
+        opts.add_argument("--proxy-bypass-list=<-loopback>")
+
+    driver = uc.Chrome(options=opts)
+    if relay:
+        driver._nova_proxy_relay = relay
+
+    # CDP overrides: timezone, locale, geolocation, Accept-Language.
+    if profile:
+        try:
+            driver.execute_cdp_cmd(
+                "Emulation.setTimezoneOverride", {"timezoneId": profile["tz"]}
+            )
+            print(f"[social] timezone -> {profile['tz']}")
+        except Exception as e:
+            print(f"[social] timezone override failed: {e}")
+        try:
+            driver.execute_cdp_cmd(
+                "Emulation.setLocaleOverride", {"locale": profile["lang"]}
+            )
+        except Exception as e:
+            print(f"[social] locale override failed: {e}")
+        try:
+            lat, lon = profile["geo"]
+            driver.execute_cdp_cmd(
+                "Emulation.setGeolocationOverride",
+                {"latitude": lat, "longitude": lon, "accuracy": 50},
+            )
+            driver.execute_cdp_cmd(
+                "Browser.grantPermissions",
+                {"permissions": ["geolocation"]},
+            )
+        except Exception as e:
+            print(f"[social] geolocation override failed: {e}")
+        try:
+            driver.execute_cdp_cmd(
+                "Network.setUserAgentOverride",
+                {"acceptLanguage": profile["accept"]},
+            )
+        except Exception as e:
+            print(f"[social] UA language override failed: {e}")
+    return driver
+
+
+def _quit(driver):
+    """Quit driver and stop any local proxy relay attached to it."""
+    try:
+        relay = getattr(driver, "_nova_proxy_relay", None)
+        if relay:
+            relay.stop()
+    except Exception:
+        pass
+    try:
+        driver.quit()
+    except Exception:
+        pass
 
 
 # ─────────────────────────── TIKTOK ───────────────────────────
+
+def _harvest_url_js(driver, pattern):
+    """Return first anchor href on page matching regex pattern.
+    Fallback: regex over raw innerHTML (handles dialogs rendered from JS data)."""
+    import re
+
+    rx = re.compile(pattern, re.I)
+    try:
+        hrefs = driver.execute_script(
+            """
+            const out = [];
+            document.querySelectorAll('a[href]').forEach(a => {
+                try { out.push(a.href); } catch(e) {}
+            });
+            return out;
+            """,
+        )
+    except Exception:
+        hrefs = None
+    seen = set()
+    for h in hrefs or []:
+        if h in seen:
+            continue
+        seen.add(h)
+        if rx.search(h):
+            return h
+    try:
+        html = driver.execute_script("return document.documentElement.innerHTML") or ""
+        m = rx.search(html)
+        if m:
+            found = m.group(0)
+            if found.startswith("/"):
+                parts = driver.current_url.split("/")
+                found = f"{parts[0]}//{parts[2]}" + found
+            return found
+    except Exception:
+        pass
+    return None
+
+
+def _harvest_profile_url(driver, pattern, url, timeout=45):
+    """Navigate to profile page and return first anchor href matching pattern."""
+    import re
+
+    try:
+        driver.get(url)
+        _sleep(4, 6)
+        deadline = time.time() + timeout
+        rx = re.compile(pattern, re.I)
+        while time.time() < deadline:
+            try:
+                hrefs = driver.execute_script(
+                    "return [...document.querySelectorAll('a[href]')].map(a=>a.href)"
+                ) or []
+                for h in hrefs:
+                    if rx.search(h):
+                        return h
+            except Exception:
+                pass
+            _sleep(2, 3)
+    except Exception as e:
+        print(f"[social] profile harvest failed: {e}")
+    return None
+
 
 def upload_tiktok(video_path, description, account_id=None):
     """Upload video to TikTok using cookies from worker."""
     cookies = _get_cookies("tiktok", account_id=account_id)
     if not cookies:
         print("[tiktok] no cookies in worker; skipping")
-        return False
+        return _up(False, error="no cookies", account_id=account_id)
+
+    meta = _account_meta(account_id)
+    profile = _country_profile(meta.get("country"))
+    if meta.get("proxy"):
+        print(f"[tiktok] account {account_id} proxy: {meta['proxy']} "
+              f"(country: {meta.get('country') or '-'})")
 
     print(f"[tiktok] video: {video_path} ({os.path.getsize(video_path)//1024} KB)")
-    driver = _make_driver(headless=True)
+    driver = _make_driver(
+        headless=True, proxy=meta.get("proxy"), country=meta.get("country")
+    )
     try:
         # Load cookies on tiktok.com domain
         driver.get("https://www.tiktok.com/")
-        _spoof(driver)
+        _spoof(driver, languages=(profile or {}).get("languages"))
         loaded = _load_cookies_for_driver(driver, cookies)
         if loaded == 0:
             print("[tiktok] zero cookies loaded; aborting")
-            return False
+            return _up(False, error="zero cookies loaded", account_id=account_id)
         driver.refresh()
         _sleep(3, 5)
 
@@ -337,7 +769,7 @@ def upload_tiktok(video_path, description, account_id=None):
         driver.get(
             "https://www.tiktok.com/tiktokstudio/upload?from=creator_center"
         )
-        _spoof(driver)
+        _spoof(driver, languages=(profile or {}).get("languages"))
         _sleep(3, 5)
 
         from selenium.webdriver.common.by import By
@@ -466,19 +898,34 @@ def upload_tiktok(video_path, description, account_id=None):
                 driver.execute_script("arguments[0].click();", post_btn)
                 _sleep(5, 10)
                 print(f"[tiktok] posted OK (selector: {sel[:50]})")
-                return True
+                # Capture the published URL (success dialog "View post" / profile).
+                pub_url = None
+                for _ in range(6):
+                    pub_url = _harvest_url_js(
+                        driver, r"/@[\w.-]+/(video|photo)/\d+"
+                    )
+                    if pub_url:
+                        break
+                    _sleep(3, 5)
+                if not pub_url and meta.get("username"):
+                    pub_url = _harvest_profile_url(
+                        driver, r"/@[\w.-]+/video/\d+",
+                        f"https://www.tiktok.com/@{meta['username']}",
+                    )
+                print(f"[tiktok] published URL: {pub_url or '(not found)'}")
+                return _up(True, url=pub_url, account_id=account_id)
             except Exception as e:
                 print(f"[tiktok] post selector failed: {sel[:40]}: {e}")
                 continue
         print("[tiktok] no Post button found")
-        return False
+        return _up(False, error="no Post button", account_id=account_id)
     except Exception as e:
         print(f"[tiktok] error: {e}")
         import traceback
         traceback.print_exc()
-        return False
+        return _up(False, error=str(e), account_id=account_id)
     finally:
-        driver.quit()
+        _quit(driver)
 
 
 # ─────────────────────────── INSTAGRAM ───────────────────────────
@@ -488,8 +935,9 @@ def upload_instagram(video_path, description, account_id=None):
     cookies = _get_cookies("instagram", account_id=account_id)
     if not cookies:
         print("[instagram] no cookies in worker; skipping")
-        return False
+        return _up(False, error="no cookies", account_id=account_id)
 
+    meta = _account_meta(account_id)
     print(f"[instagram] video: {video_path} ({os.path.getsize(video_path)//1024} KB)")
     driver = _make_driver(headless=True)
     try:
@@ -498,7 +946,7 @@ def upload_instagram(video_path, description, account_id=None):
         loaded = _load_cookies_for_driver(driver, cookies)
         if loaded == 0:
             print("[instagram] zero cookies loaded; aborting")
-            return False
+            return _up(False, error="zero cookies loaded", account_id=account_id)
         driver.refresh()
         _sleep(3, 5)
 
@@ -604,15 +1052,29 @@ def upload_instagram(video_path, description, account_id=None):
                 )
             )
             print("[instagram] reel shared OK")
-            return True
+            pub_url = _harvest_url_js(driver, r"/(reel|p)/[\w-]+")
+            if not pub_url and meta.get("username"):
+                pub_url = _harvest_profile_url(
+                    driver, r"/(reel|p)/[\w-]+",
+                    f"https://www.instagram.com/{meta['username']}/",
+                )
+            print(f"[instagram] published URL: {pub_url or '(not found)'}")
+            return _up(True, url=pub_url, account_id=account_id)
         except Exception:
             print("[instagram] success message timeout (may still succeed)")
-            return True
+            pub_url = _harvest_url_js(driver, r"/(reel|p)/[\w-]+")
+            if not pub_url and meta.get("username"):
+                pub_url = _harvest_profile_url(
+                    driver, r"/(reel|p)/[\w-]+",
+                    f"https://www.instagram.com/{meta['username']}/",
+                    timeout=20,
+                )
+            return _up(True, url=pub_url, account_id=account_id)
     except Exception as e:
         print(f"[instagram] error: {e}")
-        return False
+        return _up(False, error=str(e), account_id=account_id)
     finally:
-        driver.quit()
+        _quit(driver)
 
 
 # ─────────────────────────── FACEBOOK ───────────────────────────
@@ -656,12 +1118,55 @@ def _parse_cookies_any_format(cookies_file):
     return cookies
 
 
+def _harvest_facebook_url(driver, timeout=30):
+    """Capture the published reel URL from the success dialog / page links.
+
+    Priority: links inside the dialog (success modal) with "View reel" text,
+    then any /reel/ anchor — never a /reels/create link."""
+    import re
+
+    rx = re.compile(r"/reel/\d{6,}", re.I)
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        try:
+            cands = driver.execute_script(r"""
+                const out = [];
+                const add = (a, tag) => {
+                    try { out.push({h: a.href || '', t: (a.innerText || '').trim().slice(0, 50), tag}); } catch(e) {}
+                };
+                const dlg = document.querySelector('[role="dialog"]');
+                if (dlg) dlg.querySelectorAll('a[href]').forEach(a => add(a, 'dialog'));
+                document.querySelectorAll('a[href*="/reel/"]').forEach(a => add(a, 'page'));
+                return JSON.stringify(out);
+            """)
+            items = json.loads(cands or "[]")
+        except Exception:
+            items = []
+        # Pass 1: dialog links (success modal) or explicit "view reel" anchors.
+        for it in items:
+            h = it.get("h") or ""
+            if not rx.search(h) or "reels/create" in h:
+                continue
+            if it.get("tag") == "dialog" or re.search(r"view\s*reel", it.get("t") or "", re.I):
+                return h.split("?")[0]
+        # Pass 2: raw HTML scan for an absolute reel URL (last resort).
+        try:
+            html = driver.execute_script("return document.documentElement.innerHTML") or ""
+            m = re.search(r"https?://(?:www\.)?facebook\.com/reel/(\d{6,})", html)
+            if m:
+                return m.group(0).split("?")[0]
+        except Exception:
+            pass
+        _sleep(3, 4)
+    return None
+
+
 def upload_facebook(video_path, description, account_id=None):
     """Upload reel to Facebook using cookies from worker."""
     cookies = _get_cookies("facebook", account_id=account_id)
     if not cookies:
         print("[facebook] no cookies in worker; skipping")
-        return False
+        return _up(False, error="no cookies", account_id=account_id)
 
     abs_path = os.path.abspath(video_path)
     print(f"[facebook] video: {abs_path} ({os.path.getsize(abs_path)//1024} KB)")
@@ -673,7 +1178,7 @@ def upload_facebook(video_path, description, account_id=None):
         loaded = _load_cookies_for_driver(driver, cookies)
         if loaded == 0:
             print("[facebook] zero cookies loaded; aborting")
-            return False
+            return _up(False, error="zero cookies loaded", account_id=account_id)
 
         driver.refresh()
         _sleep(4, 6)
@@ -851,7 +1356,7 @@ def upload_facebook(video_path, description, account_id=None):
 
         if not file_input:
             print(f"[facebook] still no file input. Final URL: {driver.current_url}")
-            return False
+            return _up(False, error="no file input on create page", account_id=account_id)
 
         # Upload video
         file_input.send_keys(abs_path)
@@ -962,30 +1467,60 @@ def upload_facebook(video_path, description, account_id=None):
             _sleep(0.5, 1)
             driver.execute_script("arguments[0].click();", publish_btn)
             print(f"[facebook] clicked publish: {(publish_btn.text or '')[:40]!r}")
-            # Verify success: toast/dialog/URL change
-            for j in range(8):
+
+            # Verify with DEFINITIVE signals only — "Posting" or a bare URL change
+            # is not enough (dead session redirects to /login/, duplicate dialog,
+            # error toasts all look like "success" to the old check).
+            _VERIFY_JS = """
+                const b = document.body.innerText;
+                const url = location.href;
+                const badUrl = /\\/login|checkpoint|recover|zerooptin|\\/security\\//.test(url);
+                const err = /didn'?t work|couldn'?t share|unable to share|something went wrong|try again later|duplicate|violat|not allowed|support standards|upload failed|failed to share/i.test(b);
+                const successText = /Your reel has been shared|reel has been shared|View reel|shared to your feed|reel was published/i.test(b);
+                const leftCreate = !/reels\\/create/.test(url);
+                const ok = (successText || (leftCreate && !badUrl)) && !err;
+                return JSON.stringify({ok: ok, err: err, badUrl: badUrl, url: url.slice(0,140)});
+            """
+            verified = False
+            for j in range(15):
                 _sleep(3, 4)
                 try:
-                    state = driver.execute_script("""
-                        const b = document.body.innerText;
-                        const url = location.href;
-                        const ok = /shared|Your reel|Reel (is|was) shared|Posting|Posted/i.test(b)
-                                   || !/reels\\/create/.test(url);
-                        return JSON.stringify({ok: ok, url: url.slice(0,120)});
-                    """)
+                    state = driver.execute_script(_VERIFY_JS)
                     print(f"[facebook] post-click check {j+1}: {state}")
+                    s = {}
                     try:
-                        if state and json.loads(state).get("ok"):
-                            print("[facebook] reel published OK")
-                            return True
+                        s = json.loads(state or "{}")
                     except Exception:
-                        if state and '"ok":true' in state.replace(" ", ""):
-                            print("[facebook] reel published OK")
-                            return True
+                        pass
+                    if s.get("err"):
+                        # Confirm the error dialog is really there (not transient text).
+                        _sleep(4, 5)
+                        s2 = {}
+                        try:
+                            s2 = json.loads(driver.execute_script(_VERIFY_JS) or "{}")
+                        except Exception:
+                            pass
+                        if s2.get("err"):
+                            print(f"[facebook] publish FAILED (error dialog) url={s2.get('url')}")
+                            return _up(
+                                False,
+                                error="facebook showed an error after publish",
+                                account_id=account_id,
+                            )
+                        continue
+                    if s.get("ok"):
+                        verified = True
+                        break
                 except Exception:
                     pass
-            print("[facebook] clicked but could not verify success")
-            return False
+            if not verified:
+                print("[facebook] clicked but could not verify success")
+                return _up(False, error="unverified after publish click", account_id=account_id)
+
+            _sleep(3, 5)
+            pub_url = _harvest_facebook_url(driver, timeout=25)
+            print(f"[facebook] reel published OK: {pub_url or '(url not found)'}")
+            return _up(True, url=pub_url, account_id=account_id)
 
         # Check if already published (success message)
         try:
@@ -995,17 +1530,18 @@ def upload_facebook(video_path, description, account_id=None):
                 )
             )
             print("[facebook] success message found")
-            return True
+            pub_url = _harvest_facebook_url(driver, timeout=20)
+            return _up(True, url=pub_url, account_id=account_id)
         except Exception:
             pass
 
         print("[facebook] no publish button found")
-        return False
+        return _up(False, error="no publish button found", account_id=account_id)
     except Exception as e:
         print(f"[facebook] error: {type(e).__name__}: {e}")
-        return False
+        return _up(False, error=str(e), account_id=account_id)
     finally:
-        driver.quit()
+        _quit(driver)
 
 
 # ─────────────────────────── MAIN ───────────────────────────

@@ -586,6 +586,8 @@ async function loadSocial() {
       <div class="social-conn">
         <span class="social-conn-dot on"></span>
         <span>${esc(a.username || 'Connected')}</span>
+        ${a.country ? `<span class="badge idle" title="Fingerprint country">${esc(a.country)}</span>` : ''}
+        ${a.proxy ? `<span class="badge idle" title="${esc(a.proxy)}">proxy</span>` : ''}
         <button class="btn danger sm" style="margin-left:auto" onclick="delAccount('${a.id}')">✕</button>
       </div>
     `).join('');
@@ -608,6 +610,126 @@ async function loadSocial() {
       </div>
     </div>`;
   }).join('');
+
+  loadAnalytics();
+}
+
+/* ===== Upload Analytics — per platform, per account ===== */
+async function loadAnalytics() {
+  const grid = $('analytics-grid');
+  if (!grid) return;
+  try {
+    const [dj, ds] = await Promise.all([
+      api('/api/manual/jobs'),
+      api('/api/state'),
+    ]);
+    const jobs = dj.jobs || [];
+    const accounts = ds.accounts || [];
+    const logins = ds.logins || [];
+    const videos = ds.videos || [];
+    const accById = {};
+    accounts.forEach(a => { accById[String(a.id)] = a; });
+
+    // Upload events: {plat, acctKey, ok, url, ts}
+    const events = [];
+    const parse = s => {
+      if (!s) return null;
+      if (typeof s === 'object') return s;
+      try { return JSON.parse(s); } catch { return null; }
+    };
+
+    jobs.forEach(j => {
+      const res = parse(j.result);
+      if (!res) return;
+      (j.dest_platforms || '').split(',').forEach(d2 => {
+        const d3 = d2.trim();
+        if (!d3) return;
+        const [plat, acctId] = d3.split(':');
+        const r = res[plat];
+        if (!PLATFORM_META[plat] || !r || typeof r !== 'object') return;
+        events.push({
+          plat,
+          acctKey: acctId ? String(acctId) : 'default',
+          ok: !!r.success,
+          url: r.url || null,
+          ts: r.uploaded_at || j.updated_at,
+        });
+      });
+    });
+
+    // Automation videos: upload_ref.social = {plat: {success,url,account}}
+    videos.forEach(v => {
+      const ref = parse(v.upload_ref);
+      const soc = ref && ref.social;
+      if (!soc || typeof soc !== 'object') return;
+      Object.entries(soc).forEach(([plat, r]) => {
+        if (!PLATFORM_META[plat] || !r || typeof r !== 'object') return;
+        events.push({
+          plat,
+          acctKey: r.account ? String(r.account) : 'default',
+          ok: !!r.success,
+          url: r.url || null,
+          ts: v.updated_at,
+        });
+      });
+    });
+
+    let html = '';
+    ['youtube', 'tiktok', 'instagram', 'facebook'].forEach(plat => {
+      const m = PLATFORM_META[plat];
+      const evs = events.filter(e => e.plat === plat);
+      const keys = new Set(evs.map(e => e.acctKey));
+      if (plat !== 'youtube') {
+        accounts.filter(a => a.platform === plat).forEach(a => keys.add(String(a.id)));
+      }
+      if (evs.length === 0 && keys.size === 0) return;
+
+      const rows = [...keys].map(k => {
+        const mine = evs.filter(e => e.acctKey === k);
+        const okN = mine.filter(e => e.ok).length;
+        const failN = mine.length - okN;
+        const acct = accById[k];
+        let name;
+        if (plat === 'youtube') {
+          name = logins[0]?.channel_title || 'YouTube channel';
+        } else {
+          name = acct ? (acct.username || `account #${k}`) : (k === 'default' ? 'Default account' : `#${k}`);
+        }
+        const badges = [
+          acct?.country ? `<span class="badge idle" title="Fingerprint country">${esc(acct.country)}</span>` : '',
+          acct?.proxy ? `<span class="badge idle" title="${esc(acct.proxy)}">proxy</span>` : '',
+        ].join(' ');
+        const last = mine.map(e => e.ts).filter(Boolean).sort((a, b) => b - a)[0];
+        const links = mine.filter(e => e.ok && e.url).slice(0, 8).map(e =>
+          `<a href="${esc(e.url)}" target="_blank" rel="noopener" class="plat-pill ${m.cls}">${m.icon} view</a>`
+        ).join(' ');
+        return `<div class="stat-row">
+          <div class="stat-account">
+            <span class="platform-dot ${m.cls}">${m.icon}</span>
+            <b>${esc(name)}</b> ${badges}
+          </div>
+          <div class="stat-nums">
+            <span class="stat-ok">${okN} success</span>
+            <span class="stat-bad">${failN} failed</span>
+            <span class="muted">last: ${last ? timeAgo(last) : '—'}</span>
+          </div>
+          <div class="stat-links">${links || '<span class="muted">no published links</span>'}</div>
+        </div>`;
+      }).join('');
+
+      html += `<div class="stat-platform ${m.cls}">
+        <div class="stat-platform-title">${m.icon} ${m.label}
+          <span class="muted">· ${evs.length} upload${evs.length === 1 ? '' : 's'}</span>
+        </div>
+        ${rows || '<div class="muted">No accounts connected</div>'}
+      </div>`;
+    });
+
+    grid.innerHTML = html || '<div class="empty-state">No upload data yet</div>';
+  } catch (e) {
+    console.error('loadAnalytics:', e);
+    grid.innerHTML = '<div class="empty-state">Failed to load analytics</div>';
+  }
 }
 
 async function delAccount(id) {
@@ -638,6 +760,8 @@ $('account-form')?.addEventListener('submit', async e => {
   e.preventDefault();
   const platform = $('af-platform').value;
   const username = $('af-username').value.trim() || null;
+  const proxy = $('af-proxy')?.value.trim() || '';
+  const country = $('af-country')?.value || '';
   const file = $('af-cookies').files[0];
   if (!file) return toast('Select a cookies file', 'err');
 
@@ -662,11 +786,13 @@ $('account-form')?.addEventListener('submit', async e => {
 
     await api('/api/accounts', {
       method: 'POST',
-      body: JSON.stringify({ platform, username, cookies }),
+      body: JSON.stringify({ platform, username, cookies, proxy, country }),
     });
 
     $('af-cookies').value = '';
     $('af-username').value = '';
+    if ($('af-proxy')) $('af-proxy').value = '';
+    if ($('af-country')) $('af-country').value = '';
     $('file-drop').classList.remove('has-file');
     $('file-text').textContent = 'Drop file or click to browse';
     toast(`${PLATFORM_META[platform]?.label || platform} account connected`);
@@ -820,8 +946,15 @@ function updateProgressUI(status, error) {
 // Load Manual Jobs list
 async function loadManualJobs() {
   try {
-    const d = await api('/api/manual/jobs');
+    const [d, da] = await Promise.all([
+      api('/api/manual/jobs'),
+      api('/api/accounts').catch(() => ({ accounts: [] })),
+    ]);
     const jobs = d.jobs || [];
+    const accounts = da.accounts || [];
+    const accById = {};
+    accounts.forEach(a => { accById[String(a.id)] = a; });
+
     $('nav-manual-count').textContent = jobs.filter(j => j.status === 'queued' || j.status === 'processing').length;
 
     const tbody = document.querySelector('#manual-table tbody');
@@ -836,28 +969,78 @@ async function loadManualJobs() {
     empty.style.display = 'none';
     document.querySelector('#manual-table').style.display = '';
 
+    const parseResult = r => {
+      if (!r) return null;
+      if (typeof r === 'object') return r;
+      try { return JSON.parse(r); } catch { return null; }
+    };
+    const fmtTime = ts => {
+      if (!ts) return '—';
+      const dt = new Date(Number(ts));
+      if (isNaN(dt.getTime())) return '—';
+      const same = dt.toDateString() === new Date().toDateString();
+      const hm = `${String(dt.getHours()).padStart(2, '0')}:${String(dt.getMinutes()).padStart(2, '0')}`;
+      return same ? hm : `${dt.getDate()}/${dt.getMonth() + 1} ${hm}`;
+    };
+    const shortUrl = u => {
+      try {
+        const x = new URL(u);
+        const s = (x.hostname.replace(/^www\./, '') + x.pathname).replace(/\/$/, '');
+        return s.length > 48 ? s.slice(0, 47) + '…' : s;
+      } catch { return String(u || '').slice(0, 48); }
+    };
+
     tbody.innerHTML = jobs.map(j => {
+      const result = parseResult(j.result);
+
+      // Destinations with account names
       const dests = (j.dest_platforms || '').split(',').map(d2 => {
-        const [plat] = d2.split(':');
+        const [plat, acctId] = d2.split(':');
         const m = PLATFORM_META[plat];
-        return m ? `<span class="plat-pill ${m.cls}">${m.icon} ${m.label}</span>` : '';
+        if (!m) return '';
+        const acc = acctId ? accById[acctId] : null;
+        const who = acc ? (acc.username || `#${acctId}`) : (plat === 'youtube' ? 'YouTube' : m.label);
+        return `<span class="plat-pill ${m.cls}">${m.icon} ${esc(who)}</span>`;
       }).join(' ');
+
+      // Timing: downloaded → uploaded
+      const dl = result?.downloaded_at;
+      const ul = result?.uploaded_at;
+      const timing = (dl || ul)
+        ? `<div class="cell-sub">⬇ ${fmtTime(dl)} &nbsp;→&nbsp; ⬆ ${fmtTime(ul)}</div>`
+        : `<span class="muted">—</span>`;
+
+      // Published links per platform
+      const links = [];
+      if (result) {
+        for (const [plat, r] of Object.entries(result)) {
+          const m = PLATFORM_META[plat];
+          if (!m || !r || typeof r !== 'object') continue;
+          if (r.success && r.url) {
+            links.push(`<a class="plat-pill ${m.cls}" href="${esc(r.url)}" target="_blank" rel="noopener" title="${esc(r.url)}">${m.icon} view</a>`);
+          } else if (r.success) {
+            links.push(`<span class="plat-pill ${m.cls}" title="uploaded (URL not captured)">${m.icon} ✓</span>`);
+          } else if (r.error) {
+            links.push(`<span class="plat-pill ${m.cls}" style="opacity:.55" title="${esc(r.error)}">${m.icon} ✕</span>`);
+          }
+        }
+      }
 
       const badge = j.status === 'done' ? '<span class="badge ok"><span class="badge-dot"></span> Done</span>'
         : j.status === 'failed' ? `<span class="badge err" title="${esc(j.error)}"><span class="badge-dot"></span> Failed</span>`
-        : j.status === 'processing' || j.status === 'downloading' || j.status === 'editing' || j.status === 'uploading' || j.status === 'generating_metadata'
+        : ['processing', 'downloading', 'editing', 'uploading', 'generating_metadata'].includes(j.status)
         ? `<span class="badge run"><span class="badge-dot"></span> ${j.status.replace(/_/g,' ')}</span>`
         : '<span class="badge idle">Queued</span>';
 
       return `<tr>
         <td>
-          <div class="cell-title">${esc(j.title || j.url)}</div>
-          <div class="cell-sub">${esc(j.url)}</div>
+          <div class="cell-title">${esc(j.title || shortUrl(j.url))}</div>
+          <div class="cell-sub"><a href="${esc(j.url)}" target="_blank" rel="noopener">${esc(shortUrl(j.url))}</a> · ${timeAgo(j.created_at)}</div>
         </td>
-        <td>${esc(j.title || '—')}</td>
-        <td>${dests}</td>
+        <td>${dests || '—'}</td>
         <td>${badge}</td>
-        <td class="muted">${timeAgo(j.created_at)}</td>
+        <td>${timing}</td>
+        <td>${links.join(' ') || '<span class="muted">—</span>'}</td>
         <td>
           ${['queued','failed'].includes(j.status) ? `<button class="btn danger sm" onclick="delManualJob(${j.id})">✕</button>` : ''}
         </td>

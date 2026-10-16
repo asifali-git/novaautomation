@@ -303,11 +303,11 @@
           <table class="data-table" id="manual-table">
             <thead>
               <tr>
-                <th>URL</th>
-                <th>Title</th>
+                <th>Source</th>
                 <th>Destinations</th>
                 <th>Status</th>
-                <th>Created</th>
+                <th>Timing</th>
+                <th>Published</th>
                 <th></th>
               </tr>
             </thead>
@@ -359,6 +359,16 @@
         <!-- Populated dynamically -->
       </div>
 
+      <div class="card">
+        <div class="card-header">
+          <h2>Upload Analytics</h2>
+          <p class="muted">Per-platform, account-wise breakdown</p>
+        </div>
+        <div id="analytics-grid" class="analytics-grid">
+          <div class="empty-state">Loading…</div>
+        </div>
+      </div>
+
       <div class="card connect-card">
         <div class="card-header">
           <h2>Connect New Account</h2>
@@ -384,6 +394,26 @@
                 <span class="file-upload-text" id="file-text">Drop file or click to browse</span>
                 <span class="file-upload-hint">.json / .txt auto-detected</span>
               </div>
+            </label>
+          </div>
+          <div class="form-row">
+            <label class="form-group">
+              <span class="form-label">Proxy <span class="muted">(optional — used for TikTok uploads)</span></span>
+              <input id="af-proxy" type="text" class="form-input" placeholder="user:pass@host:port or host:port" />
+            </label>
+            <label class="form-group">
+              <span class="form-label">Country <span class="muted">(matches proxy region)</span></span>
+              <select id="af-country" class="form-input">
+                <option value="">— none —</option>
+                <option value="GB">🇬🇧 United Kingdom</option>
+                <option value="DE">🇩🇪 Germany</option>
+                <option value="IT">🇮🇹 Italy</option>
+                <option value="FR">🇫🇷 France</option>
+                <option value="US">🇺🇸 United States</option>
+                <option value="NL">🇳🇱 Netherlands</option>
+                <option value="ES">🇪🇸 Spain</option>
+                <option value="IN">🇮🇳 India</option>
+              </select>
             </label>
           </div>
           <div class="form-actions">

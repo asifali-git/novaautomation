@@ -283,6 +283,16 @@ def main():
     dest_str = job.get("dest_platforms", "youtube")
     dest_platforms = [p.strip() for p in dest_str.split(",") if p.strip()]
 
+    # Parse "platform:account_id" pairs (e.g. "facebook:3" -> ("facebook", "3")).
+    dest_pairs = []
+    for p in dest_platforms:
+        if ":" in p:
+            plat, acct = p.split(":", 1)
+            dest_pairs.append((plat.strip(), acct.strip() or None))
+        else:
+            dest_pairs.append((p, None))
+    plats = [p for p, _ in dest_pairs]
+
     print(f"[manual] job {job_id}: {url}")
     print(f"[manual] destinations: {dest_platforms}")
 
@@ -296,12 +306,13 @@ def main():
         title_hint = info.get("title", "")
         desc_hint = info.get("description", "")
         size_kb = os.path.getsize(src_path) // 1024
+        downloaded_at = int(time.time() * 1000)
         print(f"[download] {src_path} ({size_kb} KB)")
         print(f"[download] title: {title_hint}")
 
         # 2. Analyze -> edit plan
         update_job(job_id, status="analyzing", title=title_hint[:200])
-        needs_ai = "youtube" in dest_platforms
+        needs_ai = "youtube" in plats
         plan, used_ai = make_plan(src_path, title_hint)
 
         # 2b. Detect burned-in captions for removal (crop/delogo).
@@ -338,32 +349,59 @@ def main():
 
         # 5. Upload to platforms.
         update_job(job_id, status="uploading")
-        results = {}
+        results = {
+            "source": url,
+            "downloaded_at": downloaded_at,
+        }
 
-        if "youtube" in dest_platforms:
+        for plat, acct in dest_pairs:
+            if plat != "youtube":
+                continue
             try:
                 yt_url = upload_youtube(final_path, meta)
-                results["youtube"] = {"success": True, "url": yt_url}
+                results["youtube"] = {
+                    "success": True, "url": yt_url, "account": acct,
+                    "uploaded_at": int(time.time() * 1000),
+                }
                 print(f"[upload] youtube: {yt_url}")
             except Exception as e:
-                results["youtube"] = {"success": False, "error": str(e)}
+                results["youtube"] = {"success": False, "error": str(e), "account": acct}
                 print(f"[upload] youtube failed: {e}")
 
-        social_dests = [p for p in dest_platforms if p in ("tiktok", "instagram", "facebook")]
+        # Keep "platform:account" suffix so upload_all can route per-account.
+        social_dests = [
+            f"{p}:{a}" if a else p
+            for p, a in dest_pairs
+            if p in ("tiktok", "instagram", "facebook")
+        ]
         if social_dests:
             os.environ["VIDEO_DEST_PLATFORMS"] = ",".join(social_dests)
             try:
                 caption = f"{meta['title']}\n\n{meta['description']}\n\n{' '.join(meta.get('hashtags', [])[:10])}"
                 social_results = us.upload_all(final_path, meta["title"], caption)
                 for plat, ok in social_results.items():
-                    results[plat] = {"success": bool(ok)}
-                    print(f"[upload] {plat}: {'ok' if ok else 'failed'}")
+                    if isinstance(ok, dict):
+                        entry = {
+                            "success": bool(ok.get("success")),
+                            "url": ok.get("url") or None,
+                            "account": ok.get("account"),
+                        }
+                        if ok.get("error"):
+                            entry["error"] = ok["error"]
+                        if entry["success"]:
+                            entry["uploaded_at"] = int(time.time() * 1000)
+                    else:
+                        entry = {"success": bool(ok)}
+                    results[plat] = entry
+                    print(f"[upload] {plat}: "
+                          f"{'ok ' + str(entry.get('url') or '') if entry['success'] else 'failed'}")
             except Exception as e:
                 print(f"[upload] social failed: {e}")
                 for p in social_dests:
-                    results[p] = {"success": False, "error": str(e)}
+                    results[p.split(":")[0]] = {"success": False, "error": str(e)}
 
         # 6. Report.
+        results["uploaded_at"] = int(time.time() * 1000)
         update_job(job_id, status="done", result=results, title=meta["title"][:200])
         print(f"[manual] job {job_id} complete!")
         print(json.dumps(results, indent=2))
