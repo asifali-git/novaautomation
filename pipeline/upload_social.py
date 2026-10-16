@@ -690,7 +690,7 @@ def upload_facebook(video_path, description, account_id=None):
             try:
                 print(f"[facebook] trying: {url}")
                 driver.get(url)
-                _sleep(4, 6)
+                _sleep(6, 8)
 
                 # Also dismiss popups on create page
                 for sel in [
@@ -707,7 +707,10 @@ def upload_facebook(video_path, description, account_id=None):
                     except Exception:
                         pass
 
-                # Wait for file input
+                # Wait for page to fully load
+                _sleep(3, 5)
+
+                # Try multiple ways to find file input
                 try:
                     file_input = WebDriverWait(driver, 10).until(
                         EC.presence_of_element_located(
@@ -718,24 +721,92 @@ def upload_facebook(video_path, description, account_id=None):
                         print(f"[facebook] found file input at {url}")
                         break
                 except Exception:
-                    # Try JS to find hidden file input
-                    file_input = driver.execute_script("""
-                        const inputs = document.querySelectorAll('input[type=file]');
-                        for (const inp of inputs) {
-                            if (inp.accept && inp.accept.includes('video')) return inp;
+                    pass
+
+                # Try JS - search all inputs including hidden
+                file_input = driver.execute_script("""
+                    // Search in main document
+                    let inputs = document.querySelectorAll('input[type=file]');
+                    for (const inp of inputs) {
+                        if (inp.accept && inp.accept.includes('video')) return inp;
+                    }
+                    if (inputs.length > 0) return inputs[0];
+
+                    // Search in iframes
+                    const iframes = document.querySelectorAll('iframe');
+                    for (const iframe of iframes) {
+                        try {
+                            const doc = iframe.contentDocument || iframe.contentWindow.document;
+                            const finputs = doc.querySelectorAll('input[type=file]');
+                            for (const inp of finputs) {
+                                if (inp.accept && inp.accept.includes('video')) return inp;
+                            }
+                            if (finputs.length > 0) return finputs[0];
+                        } catch(e) {}
+                    }
+
+                    // Search in shadow DOM
+                    const allEls = document.querySelectorAll('*');
+                    for (const el of allEls) {
+                        if (el.shadowRoot) {
+                            const sinp = el.shadowRoot.querySelectorAll('input[type=file]');
+                            if (sinp.length > 0) return sinp[0];
                         }
-                        if (inputs.length > 0) return inputs[0];
-                        return null;
-                    """)
-                    if file_input:
-                        print(f"[facebook] found file input via JS at {url}")
-                        break
+                    }
+                    return null;
+                """)
+                if file_input:
+                    print(f"[facebook] found file input via JS at {url}")
+                    break
+
+                # Debug: dump what inputs exist
+                debug = driver.execute_script("""
+                    const inputs = document.querySelectorAll('input');
+                    const result = [];
+                    inputs.forEach(i => result.push({type: i.type, accept: i.accept, id: i.id, name: i.name}));
+                    return JSON.stringify(result);
+                """)
+                print(f"[facebook] page inputs: {debug}")
+
             except Exception as e:
                 print(f"[facebook] {url} failed: {e}")
 
         if not file_input:
             print(f"[facebook] no file input found. URL: {driver.current_url}")
             print(f"[facebook] page title: {driver.title}")
+            # Try alternative: click "Create" button first
+            try:
+                for sel in [
+                    "//div[@role='button' and contains(.,'Create')]",
+                    "//button[contains(.,'Create')]",
+                    "//a[contains(.,'Create')]",
+                    "//div[@role='link' and contains(.,'Create')]",
+                ]:
+                    try:
+                        create_btn = driver.find_element(By.XPATH, sel)
+                        if create_btn.is_displayed():
+                            create_btn.click()
+                            print(f"[facebook] clicked Create: {sel[:50]}")
+                            _sleep(3, 5)
+                            # Now look for file input again
+                            file_input = driver.execute_script("""
+                                const inputs = document.querySelectorAll('input[type=file]');
+                                for (const inp of inputs) {
+                                    if (inp.accept && inp.accept.includes('video')) return inp;
+                                }
+                                if (inputs.length > 0) return inputs[0];
+                                return null;
+                            """)
+                            if file_input:
+                                print("[facebook] found file input after Create click")
+                                break
+                    except Exception:
+                        pass
+            except Exception:
+                pass
+
+        if not file_input:
+            print(f"[facebook] still no file input. Final URL: {driver.current_url}")
             return False
 
         # Upload video
