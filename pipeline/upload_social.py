@@ -891,6 +891,57 @@ def upload_facebook(video_path, description, account_id=None):
 
         _sleep(2, 4)
 
+        # Facebook Reels is a multi-step wizard: Upload → Next → Share
+        def _find_button(text_contains):
+            """Find visible enabled div/button whose text or aria-label contains text."""
+            try:
+                btns = driver.find_elements(
+                    By.XPATH,
+                    "//div[@role='button'] | //button",
+                )
+            except Exception:
+                btns = []
+            text_contains = text_contains.lower()
+            chosen = None
+            for b in btns:
+                try:
+                    if not b.is_displayed():
+                        continue
+                    if b.get_attribute("aria-disabled") == "true":
+                        continue
+                    t = ((b.text or "") + " " + (b.get_attribute("aria-label") or "")).lower()
+                    if text_contains in t:
+                        chosen = b
+                except Exception:
+                    pass
+            return chosen
+
+        # Step: click "Next" if present (wizard step 1 → 2)
+        next_btn = _find_button("next")
+        if next_btn:
+            driver.execute_script("arguments[0].scrollIntoView({block:'center'});", next_btn)
+            _sleep(0.5, 1)
+            driver.execute_script("arguments[0].click();", next_btn)
+            print("[facebook] clicked Next (wizard step)")
+            _sleep(3, 5)
+
+            # Fill description on step 2 if a fresh editor appeared
+            try:
+                desc_box = WebDriverWait(driver, 8).until(
+                    EC.element_to_be_clickable(
+                        (By.XPATH, "//div[@contenteditable='true'] | //div[@role='textbox']")
+                    )
+                )
+                existing = desc_box.text or ""
+                if len(existing.strip()) < 10:
+                    desc_box.click()
+                    _sleep(0.5, 1)
+                    desc_box.send_keys(description[:5000])
+                    print("[facebook] description filled on step 2")
+            except Exception:
+                pass
+            _sleep(1, 2)
+
         # Dump all button-like elements for debugging
         try:
             btn_dump = driver.execute_script("""
@@ -906,58 +957,36 @@ def upload_facebook(video_path, description, account_id=None):
         except Exception as e:
             print(f"[facebook] button dump failed: {e}")
 
-        # Click Publish / Share reel — only text/label-matched selectors (never blind clicks)
-        publish_selectors = [
-            "//div[@role='button' and (contains(translate(normalize-space(.),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'share reel') or normalize-space()='Publish' or normalize-space()='Post')]",
-            "//button[contains(translate(normalize-space(.),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'share reel') or normalize-space()='Publish' or normalize-space()='Post']",
-            "//div[@role='button' and contains(translate(@aria-label,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'share')]",
-            "//button[contains(translate(@aria-label,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'share')]",
-            "//div[@role='button' and contains(translate(normalize-space(.),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'share')]",
-            "//button[contains(translate(normalize-space(.),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'share')]",
-            "//div[@role='button' and contains(translate(normalize-space(.),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'publish')]",
-            "//button[contains(translate(normalize-space(.),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'publish')]",
-        ]
-        for sel in publish_selectors:
-            try:
-                publish_btns = WebDriverWait(driver, 10).until(
-                    EC.presence_of_all_elements_located((By.XPATH, sel))
-                )
-                # Pick last visible enabled one (usually the primary CTA)
-                chosen = None
-                for b in publish_btns:
-                    try:
-                        if b.is_displayed() and (b.get_attribute("aria-disabled") != "true"):
-                            chosen = b
-                    except Exception:
-                        pass
-                if not chosen:
-                    continue
-                driver.execute_script("arguments[0].scrollIntoView({block:'center'});", chosen)
-                _sleep(0.5, 1)
-                driver.execute_script("arguments[0].click();", chosen)
-                print(f"[facebook] clicked publish: {(chosen.text or '')[:40]!r}")
-                # Verify success: toast/dialog/URL change
-                for j in range(6):
-                    _sleep(3, 4)
-                    try:
-                        state = driver.execute_script("""
-                            const b = document.body.innerText;
-                            const url = location.href;
-                            const ok = /shared|Your reel|Reel (is|was) shared|Posting|Posted/i.test(b);
-                            return JSON.stringify({ok: ok, url: url.slice(0,120)});
-                        """)
-                        print(f"[facebook] post-click check {j+1}: {state}")
-                        if state and '"ok": true' in state:
-                            print("[facebook] reel published OK")
-                            return True
-                    except Exception:
-                        pass
-                # If we clicked but can't verify, report as failure with context
-                print("[facebook] clicked but could not verify success")
-                return False
-            except Exception as e:
-                print(f"[facebook] publish selector failed: {sel[:50]}: {e}")
-                continue
+        # Step: click Share / Publish / Share reel
+        publish_btn = (
+            _find_button("share reel")
+            or _find_button("share")
+            or _find_button("publish")
+            or _find_button("post")
+        )
+        if publish_btn:
+            driver.execute_script("arguments[0].scrollIntoView({block:'center'});", publish_btn)
+            _sleep(0.5, 1)
+            driver.execute_script("arguments[0].click();", publish_btn)
+            print(f"[facebook] clicked publish: {(publish_btn.text or '')[:40]!r}")
+            # Verify success: toast/dialog/URL change
+            for j in range(6):
+                _sleep(3, 4)
+                try:
+                    state = driver.execute_script("""
+                        const b = document.body.innerText;
+                        const url = location.href;
+                        const ok = /shared|Your reel|Reel (is|was) shared|Posting|Posted/i.test(b);
+                        return JSON.stringify({ok: ok, url: url.slice(0,120)});
+                    """)
+                    print(f"[facebook] post-click check {j+1}: {state}")
+                    if state and '"ok": true' in state:
+                        print("[facebook] reel published OK")
+                        return True
+                except Exception:
+                    pass
+            print("[facebook] clicked but could not verify success")
+            return False
 
         # Check if already published (success message)
         try:
