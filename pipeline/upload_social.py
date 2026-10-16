@@ -1219,6 +1219,24 @@ def upload_tiktok(video_path, description, account_id=None):
                 print(f"[tiktok] post selector failed: {sel[:40]}: {e}")
                 continue
         if not posted:
+            # Surface TikTok's real server reason (e.g. community-guideline
+            # posting block) instead of a generic failure.
+            reason = ""
+            try:
+                _net = driver.execute_script("return JSON.stringify(window.__nova_net || [])") or "[]"
+                import json as _json
+                for item in _json.loads(_net):
+                    body = item.get("body") or ""
+                    m = _re.search(r'"status_msg":\s*"([^"]+)"', body)
+                    if m:
+                        reason = m.group(1)
+                        break
+            except Exception:
+                pass
+            if reason:
+                print(f"[tiktok] rejected by TikTok API: {reason}")
+                return _up(False, error=f"rejected by TikTok: {reason}"[:300],
+                           account_id=account_id)
             print("[tiktok] Post never produced a success signal")
             return _up(False, error="post click did not publish (no success dialog)",
                        account_id=account_id)
