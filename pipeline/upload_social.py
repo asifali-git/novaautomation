@@ -929,6 +929,26 @@ def upload_tiktok(video_path, description, account_id=None):
         _sleep(5, 8)
         print(f"[tiktok] page@uploaded-file: {_page_hint(driver)}")
 
+        # Dismiss "Turn on automatic content checks?" EARLY — it blocks every
+        # later click, and blindly ESC-ing this dialog can reset the panel.
+        for xp in [
+            "//button[.//div[text()='Cancel']]",
+            "//button[contains(text(),'Cancel')]",
+            "//button[.//div[text()='Not now']]",
+            "//button[contains(text(),'Not now')]",
+            "//div[contains(@class,'TUXModal')]//button[contains(@class,'close')]",
+            "//button[.//div[text()='Turn on']]",
+        ]:
+            try:
+                visible = [b for b in driver.find_elements(By.XPATH, xp) if b.is_displayed()]
+                if visible:
+                    driver.execute_script("arguments[0].click();", visible[0])
+                    print(f"[tiktok] content-check dialog handled EARLY via {xp[:60]}")
+                    _sleep(1, 2)
+                    break
+            except Exception:
+                pass
+
         driver.switch_to.default_content()
         _sleep(2, 4)
 
@@ -983,31 +1003,60 @@ def upload_tiktok(video_path, description, account_id=None):
             _sleep(0.5, 1)
             driver.execute_script("arguments[0].click();", editable)
             _sleep(0.5, 1)
-            # Clean replace via execCommand (Ctrl+A/DELETE left stray text).
-            filled = False
-            try:
-                driver.execute_script("""
-                    const el = arguments[0];
-                    el.focus();
-                    document.execCommand('selectAll', false, null);
-                    document.execCommand('delete', false, null);
-                    document.execCommand('insertText', false, arguments[1]);
-                """, editable, description[:2200])
-                filled = True
-            except Exception:
-                pass
-            if not filled:
-                from selenium.webdriver.common.keys import Keys
-                from selenium.webdriver.common.action_chains import ActionChains
-                actions = ActionChains(driver)
-                actions.send_keys(Keys.CONTROL + "a")
-                actions.send_keys(Keys.DELETE)
-                actions.send_keys(description[:2200])
-                actions.perform()
+            # Clear the pre-filled filename via JS, then type with ActionChains
+            # (execCommand insertText once crashed the studio panel).
+            driver.execute_script("""
+                const el = arguments[0];
+                el.focus();
+                el.textContent = '';
+                el.dispatchEvent(new Event('input', {bubbles: true}));
+            """, editable)
+            _sleep(0.5, 1)
+            from selenium.webdriver.common.keys import Keys
+            from selenium.webdriver.common.action_chains import ActionChains
+            ActionChains(driver).send_keys(description[:2200]).perform()
             print("[tiktok] caption filled via JS click")
         except Exception as e:
             print(f"[tiktok] caption failed: {e}")
         print(f"[tiktok] page@caption: {_page_hint(driver)}")
+
+        # Studio sometimes resets to "Something went wrong" mid-flow — hit
+        # Retry once and rebuild the form (re-send file + caption).
+        try:
+            _body_txt = driver.execute_script("return document.body.innerText") or ""
+        except Exception:
+            _body_txt = ""
+        if "Something went wrong" in _body_txt:
+            print("[tiktok] studio error page detected — recovering via Retry")
+            try:
+                rb = [b for b in driver.find_elements(By.XPATH, "//button[contains(text(),'Retry')]") if b.is_displayed()]
+                if rb:
+                    driver.execute_script("arguments[0].click();", rb[0])
+                    _sleep(5, 8)
+                fi = driver.find_elements(By.XPATH, "//input[@type='file']")
+                if fi:
+                    fi[0].send_keys(os.path.abspath(video_path))
+                    print("[tiktok] re-sent file after retry")
+                    _sleep(5, 8)
+                for xp2 in ["//button[.//div[text()='Cancel']]", "//button[contains(text(),'Not now')]"]:
+                    vis = [b for b in driver.find_elements(By.XPATH, xp2) if b.is_displayed()]
+                    if vis:
+                        driver.execute_script("arguments[0].click();", vis[0])
+                        _sleep(1, 2)
+                        break
+                ed2 = [e for e in driver.find_elements(By.CSS_SELECTOR, "div[contenteditable='true']") if e.is_displayed()]
+                if ed2:
+                    driver.execute_script("arguments[0].click();", ed2[0])
+                    _sleep(0.5, 1)
+                    driver.execute_script(
+                        "const el=arguments[0]; el.focus(); el.textContent=''; "
+                        "el.dispatchEvent(new Event('input',{bubbles:true}));", ed2[0])
+                    _sleep(0.5, 1)
+                    from selenium.webdriver.common.action_chains import ActionChains as _AC2
+                    _AC2(driver).send_keys(description[:2200]).perform()
+                    print("[tiktok] caption re-filled after retry")
+            except Exception as e:
+                print(f"[tiktok] studio recovery failed: {e}")
 
         _sleep(5, 10)
 
