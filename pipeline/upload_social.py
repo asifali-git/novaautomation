@@ -19,6 +19,7 @@ import base64
 import pickle
 import random
 import tempfile
+import atexit
 
 import requests
 
@@ -574,9 +575,67 @@ def _decode_cookies_b64(env_name):
     return path
 
 
+_xvfb_proc = None
+
+
+def _start_xvfb():
+    """Start a virtual X display (Xvfb) on Linux so Chrome runs HEADED.
+
+    Headless Chrome is detectable (permissions/notification API fingerprints) —
+    a headed browser on a virtual display looks like a real user session.
+    Returns the DISPLAY string, or None to fall back to --headless."""
+    global _xvfb_proc
+    if sys.platform != "linux":
+        return None
+    if os.environ.get("DISPLAY"):
+        return os.environ["DISPLAY"]
+    import shutil
+    import subprocess
+
+    if _xvfb_proc is not None and _xvfb_proc.poll() is None:
+        return os.environ.get("DISPLAY")
+    if not shutil.which("Xvfb"):
+        print("[social] Xvfb not installed; falling back to headless")
+        return None
+    for disp in (":99", ":98", ":97"):
+        try:
+            proc = subprocess.Popen(
+                ["Xvfb", disp, "-screen", "0", "1280x900x24", "-nolisten", "tcp"],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+        except Exception as e:
+            print(f"[social] Xvfb spawn failed: {e}")
+            continue
+        time.sleep(1.0)
+        if proc.poll() is None:
+            _xvfb_proc = proc
+            os.environ["DISPLAY"] = disp
+            print(f"[social] Xvfb virtual display up (DISPLAY={disp}) — headed Chrome")
+            return disp
+    print("[social] Xvfb could not grab a display; falling back to headless")
+    return None
+
+
+def _stop_xvfb():
+    global _xvfb_proc
+    if _xvfb_proc is not None:
+        try:
+            _xvfb_proc.terminate()
+        except Exception:
+            pass
+        _xvfb_proc = None
+    os.environ.pop("DISPLAY", None)
+
+
+atexit.register(_stop_xvfb)
+
+
 def _make_driver(headless=True, proxy=None, country=None):
     """Create driver. proxy: raw proxy string (may include user:pass).
-    country: code/name — sets timezone/locale/geolocation/UA-language."""
+    country: code/name — sets timezone/locale/geolocation/UA-language.
+    headless=True tries Xvfb first (headed on virtual display); real
+    --headless only as fallback."""
     import undetected_chromedriver as uc
 
     profile = _country_profile(country)
@@ -584,8 +643,9 @@ def _make_driver(headless=True, proxy=None, country=None):
     relay = None
 
     opts = uc.ChromeOptions()
-    if headless:
+    if headless and not _start_xvfb():
         opts.add_argument("--headless=new")
+        print("[social] Chrome: --headless=new (Xvfb unavailable)")
     opts.add_argument("--no-sandbox")
     opts.add_argument("--disable-dev-shm-usage")
     opts.add_argument("--disable-gpu")
