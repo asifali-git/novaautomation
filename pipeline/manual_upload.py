@@ -293,6 +293,11 @@ def main():
             dest_pairs.append((p, None))
     plats = [p for p, _ in dest_pairs]
 
+    # Scope cookie/YouTube credential fallbacks to this job's owner (multi-user).
+    job_uid = int(job.get("user_id") or 0)
+    if job_uid:
+        os.environ["PIPELINE_USER_ID"] = str(job_uid)
+
     print(f"[manual] job {job_id}: {url}")
     print(f"[manual] destinations: {dest_platforms}")
 
@@ -364,6 +369,19 @@ def main():
                         yt.use_login(acct, WORKER, TOKEN)
                     except Exception as ee:
                         print(f"[upload] yt login {acct} failed ({ee}); using default")
+                elif job_uid:
+                    # Plain "youtube" dest → use this job owner's login.
+                    try:
+                        e = worker_get(f"/api/internal/logins/env?user_id={job_uid}")
+                        if e.get("YT_REFRESH_TOKEN"):
+                            os.environ["YT_REFRESH_TOKEN"] = e["YT_REFRESH_TOKEN"]
+                            if e.get("YT_CLIENT_ID"):
+                                os.environ["YT_CLIENT_ID"] = e["YT_CLIENT_ID"]
+                            if e.get("YT_CLIENT_SECRET"):
+                                os.environ["YT_CLIENT_SECRET"] = e["YT_CLIENT_SECRET"]
+                            print(f"[upload] yt login {e.get('login_id')} (user {job_uid})")
+                    except Exception as ee:
+                        print(f"[upload] yt env for user {job_uid} failed ({ee}); using default")
                 yt_url = upload_youtube(final_path, meta)
                 results["youtube"] = {
                     "success": True, "url": yt_url, "account": acct,

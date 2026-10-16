@@ -31,7 +31,7 @@ _cookies_cache = None
 
 
 def _fetch_all_cookies():
-    """Fetch all social cookies from Worker."""
+    """Fetch all social cookies from Worker (scoped to PIPELINE_USER_ID if set)."""
     global _cookies_cache
     if _cookies_cache is not None:
         return _cookies_cache
@@ -40,8 +40,10 @@ def _fetch_all_cookies():
         _cookies_cache = {}
         return _cookies_cache
     try:
+        uid = os.getenv("PIPELINE_USER_ID", "").strip()
+        params = f"?user_id={uid}" if uid else ""
         r = requests.get(
-            f"{WORKER}/api/internal/accounts/env",
+            f"{WORKER}/api/internal/accounts/env{params}",
             headers={"x-token": TOKEN},
             timeout=30,
         )

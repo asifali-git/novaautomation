@@ -35,13 +35,13 @@ def add_video(task_id, video_key, url, title):
 
 
 def patch_task(task_id, **fields):
+    # Internal route (x-token) — public /api/tasks now requires a user session.
     r = requests.patch(
-        f"{WORKER}/api/internal/tasks/{task_id}" if False else f"{WORKER}/api/tasks/{task_id}",
+        f"{WORKER}/api/internal/tasks/{task_id}",
         headers=_h(),
         json=fields,
         timeout=30,
     )
-    # task patch is public route; internal token not needed but harmless.
     try:
         r.raise_for_status()
     except Exception:

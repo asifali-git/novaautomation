@@ -259,14 +259,19 @@ def run():
 
     # Fetch task's dest_platforms for social upload selection.
     dest_platforms = ""
+    task_uid = 0
     try:
         task_data = worker_get(f"/api/internal/tasks")
         tasks = task_data.get("tasks", [])
         task = next((t for t in tasks if t["id"] == video.get("task_id")), None)
         if task and task.get("dest_platforms"):
             dest_platforms = task["dest_platforms"]
+        if task and task.get("user_id"):
+            task_uid = int(task["user_id"])
     except Exception as e:
         print(f"[warn] failed to fetch task dest_platforms: {e}", file=sys.stderr)
+    if task_uid:
+        os.environ["PIPELINE_USER_ID"] = str(task_uid)
     os.environ["VIDEO_DEST_PLATFORMS"] = dest_platforms
     print(f"[social] dest platforms: {dest_platforms or '(none)'}")
 
@@ -313,14 +318,29 @@ def run():
 
     # 5. Upload (dest may pin a channel: "youtube:<login_id>").
     set_status(vid, status="uploading")
+    pinned = False
     for part in (dest_platforms or "").split(","):
         part = part.strip()
         if part.startswith("youtube:"):
             try:
                 yt.use_login(part.split(":", 1)[1], WORKER, TOKEN)
+                pinned = True
             except Exception as e:
                 print(f"[warn] yt login {part} failed ({e}); using default", file=sys.stderr)
             break
+    if not pinned and task_uid:
+        # Plain "youtube" dest → use this task owner's YouTube login.
+        try:
+            e = worker_get(f"/api/internal/logins/env?user_id={task_uid}")
+            if e.get("YT_REFRESH_TOKEN"):
+                os.environ["YT_REFRESH_TOKEN"] = e["YT_REFRESH_TOKEN"]
+                if e.get("YT_CLIENT_ID"):
+                    os.environ["YT_CLIENT_ID"] = e["YT_CLIENT_ID"]
+                if e.get("YT_CLIENT_SECRET"):
+                    os.environ["YT_CLIENT_SECRET"] = e["YT_CLIENT_SECRET"]
+                print(f"[yt] using login {e.get('login_id')} for user {task_uid}")
+        except Exception as e:
+            print(f"[warn] yt env for user {task_uid} failed ({e}); using default", file=sys.stderr)
     access = yt.refresh_access_token()
     video_id = yt.upload_video(
         out_path,

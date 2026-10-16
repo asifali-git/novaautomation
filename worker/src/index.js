@@ -51,8 +51,13 @@ async function readBody(req) {
 
 // --- DB helpers -------------------------------------------------------------
 
-async function listTasks(db) {
-  const res = await db.prepare('SELECT * FROM tasks ORDER BY id DESC').all();
+async function listTasks(db, user) {
+  const res = user
+    ? await db
+        .prepare('SELECT * FROM tasks WHERE (? = 1 OR user_id = ?) ORDER BY id DESC')
+        .bind(user.is_admin ? 1 : 0, user.id)
+        .all()
+    : await db.prepare('SELECT * FROM tasks ORDER BY id DESC').all();
   return res.results || [];
 }
 
@@ -67,19 +72,20 @@ async function createTask(db, body) {
   const dest = body.dest_provider || 'youtube';
   const destPlatforms = body.dest_platforms ? (Array.isArray(body.dest_platforms) ? body.dest_platforms.join(',') : String(body.dest_platforms)) : null;
   const loginId = body.login_id || null;
+  const userId = body.user_id || 0;
   const res = await db
     .prepare(
-      `INSERT INTO tasks (name, source_url, platform, dest_provider, dest_platforms, login_id, status, created_at)
-       VALUES (?, ?, ?, ?, ?, ?, 'active', ?)`
+      `INSERT INTO tasks (name, source_url, platform, dest_provider, dest_platforms, login_id, user_id, status, created_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, 'active', ?)`
     )
-    .bind(body.name || platform, url, platform, dest, destPlatforms, loginId, now())
+    .bind(body.name || platform, url, platform, dest, destPlatforms, loginId, userId, now())
     .run();
   return getTask(db, res.meta?.last_row_id);
 }
 
 async function patchTask(db, id, body) {
   const task = await getTask(db, id);
-  if (!task) throw new Error('task not found');
+  if (!task) return null;
   const fields = [];
   const vals = [];
   for (const k of ['name', 'status', 'dest_provider', 'login_id', 'baseline_key', 'last_seen_key']) {
@@ -105,15 +111,17 @@ async function deleteTask(db, id) {
   return res.meta?.changes > 0;
 }
 
-async function listVideos(db, { status, limit = 100 } = {}) {
+async function listVideos(db, { status, limit = 100, user } = {}) {
+  const scope = user ? ` AND (? = 1 OR v.user_id = ?)` : '';
+  const scopeVals = user ? [user.is_admin ? 1 : 0, user.id] : [];
   if (status) {
     const res = await db
       .prepare(
         `SELECT v.*, t.name AS source_name, t.source_url AS source
          FROM videos v LEFT JOIN tasks t ON v.task_id = t.id
-         WHERE v.status = ? ORDER BY v.id DESC LIMIT ?`
+         WHERE v.status = ?${scope} ORDER BY v.id DESC LIMIT ?`
       )
-      .bind(status, limit)
+      .bind(status, ...scopeVals, limit)
       .all();
     return res.results || [];
   }
@@ -121,9 +129,9 @@ async function listVideos(db, { status, limit = 100 } = {}) {
     .prepare(
       `SELECT v.*, t.name AS source_name, t.source_url AS source
        FROM videos v LEFT JOIN tasks t ON v.task_id = t.id
-       ORDER BY v.id DESC LIMIT ?`
+       WHERE 1=1${scope} ORDER BY v.id DESC LIMIT ?`
     )
-    .bind(limit)
+    .bind(...scopeVals, limit)
     .all();
   return res.results || [];
 }
@@ -142,13 +150,19 @@ async function addVideo(db, body) {
     .bind(taskId, key)
     .first();
   if (existing) return { video: existing, created: false };
+  // Inherit ownership from the task so video lists are per-user.
+  let userId = body.user_id;
+  if (userId == null) {
+    const trow = await db.prepare('SELECT user_id FROM tasks WHERE id = ?').bind(taskId).first();
+    userId = trow?.user_id || 0;
+  }
   const t = now();
   const res = await db
     .prepare(
-      `INSERT INTO videos (task_id, video_key, url, title, status, created_at, updated_at)
-       VALUES (?, ?, ?, ?, 'detected', ?, ?)`
+      `INSERT INTO videos (task_id, video_key, url, title, status, user_id, created_at, updated_at)
+       VALUES (?, ?, ?, ?, 'detected', ?, ?, ?)`
     )
-    .bind(taskId, key, url, body.title || null, t, t)
+    .bind(taskId, key, url, body.title || null, userId, t, t)
     .run();
   return { video: await getVideo(db, res.meta?.last_row_id), created: true };
 }
@@ -183,11 +197,16 @@ async function nextPendingVideo(db) {
   return res;
 }
 
-async function listLogins(db, { withTokens = false } = {}) {
-  const res = await db.prepare('SELECT * FROM logins ORDER BY id DESC').all();
+async function listLogins(db, { withTokens = false, user = null } = {}) {
+  const res = user
+    ? await db
+        .prepare('SELECT * FROM logins WHERE (? = 1 OR user_id = ?) ORDER BY id DESC')
+        .bind(user.is_admin ? 1 : 0, user.id)
+        .all()
+    : await db.prepare('SELECT * FROM logins ORDER BY id DESC').all();
   const rows = res.results || [];
   return rows.map((r) => {
-    const o = { id: r.id, provider: r.provider, label: r.label, channel_title: r.channel_title, created_at: r.created_at };
+    const o = { id: r.id, provider: r.provider, label: r.label, channel_title: r.channel_title, user_id: r.user_id, created_at: r.created_at };
     if (withTokens) {
       try {
         o.token = JSON.parse(r.token_json);
@@ -202,7 +221,7 @@ async function listLogins(db, { withTokens = false } = {}) {
 async function getLogin(db, id, { withTokens = false } = {}) {
   const r = await db.prepare('SELECT * FROM logins WHERE id = ?').bind(id).first();
   if (!r) return null;
-  const o = { id: r.id, provider: r.provider, label: r.label, channel_title: r.channel_title, created_at: r.created_at };
+  const o = { id: r.id, provider: r.provider, label: r.label, channel_title: r.channel_title, user_id: r.user_id, created_at: r.created_at };
   if (withTokens) {
     try {
       o.token = JSON.parse(r.token_json);
@@ -217,10 +236,10 @@ async function saveLogin(db, body) {
   const tokenJson = JSON.stringify(body.token || {});
   const res = await db
     .prepare(
-      `INSERT INTO logins (provider, label, channel_title, token_json, created_at)
-       VALUES (?, ?, ?, ?, ?)`
+      `INSERT INTO logins (provider, label, channel_title, token_json, user_id, created_at)
+       VALUES (?, ?, ?, ?, ?, ?)`
     )
-    .bind(body.provider || 'youtube', body.label || null, body.channel_title || null, tokenJson, now())
+    .bind(body.provider || 'youtube', body.label || null, body.channel_title || null, tokenJson, body.user_id || 0, now())
     .run();
   return getLogin(db, res.meta?.last_row_id, { withTokens: true });
 }
@@ -232,13 +251,22 @@ async function deleteLogin(db, id) {
 
 // --- Accounts (social media cookies) -----------------------------------------
 
-async function listAccounts(db) {
-  const res = await db.prepare('SELECT id, platform, username, proxy, country, status, created_at, updated_at FROM accounts ORDER BY id DESC').all();
+async function listAccounts(db, user) {
+  const res = user
+    ? await db
+        .prepare(
+          'SELECT id, platform, username, proxy, country, status, user_id, created_at, updated_at FROM accounts WHERE (? = 1 OR user_id = ?) ORDER BY id DESC'
+        )
+        .bind(user.is_admin ? 1 : 0, user.id)
+        .all()
+    : await db
+        .prepare('SELECT id, platform, username, proxy, country, status, user_id, created_at, updated_at FROM accounts ORDER BY id DESC')
+        .all();
   return res.results || [];
 }
 
 async function getAccount(db, id) {
-  const r = await db.prepare('SELECT id, platform, username, proxy, country, status, created_at, updated_at FROM accounts WHERE id = ?').bind(id).first();
+  const r = await db.prepare('SELECT id, platform, username, proxy, country, status, user_id, created_at, updated_at FROM accounts WHERE id = ?').bind(id).first();
   return r;
 }
 
@@ -251,18 +279,19 @@ async function saveAccount(db, body) {
   const username = body.username || null;
   const proxy = (body.proxy || '').trim();
   const country = (body.country || '').trim();
+  const userId = body.user_id || 0;
   const t = now();
-  // Upsert: per platform + username (allows multiple accounts per platform)
+  // Upsert: per user + platform + username (multiple accounts per platform, isolated per user)
   const existing = username
-    ? await db.prepare('SELECT id FROM accounts WHERE platform = ? AND username = ?').bind(platform, username).first()
-    : await db.prepare('SELECT id FROM accounts WHERE platform = ? AND (username IS NULL OR username = ?)').bind(platform, '').first();
+    ? await db.prepare('SELECT id FROM accounts WHERE platform = ? AND username = ? AND user_id = ?').bind(platform, username, userId).first()
+    : await db.prepare('SELECT id FROM accounts WHERE platform = ? AND (username IS NULL OR username = ?) AND user_id = ?').bind(platform, '', userId).first();
   if (existing) {
     await db.prepare('UPDATE accounts SET username = ?, cookies = ?, proxy = ?, country = ?, updated_at = ? WHERE id = ?')
       .bind(username, cookiesStr, proxy, country, t, existing.id).run();
     return getAccount(db, existing.id);
   }
-  const res = await db.prepare('INSERT INTO accounts (platform, username, cookies, proxy, country, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)')
-    .bind(platform, username, cookiesStr, proxy, country, 'active', t, t).run();
+  const res = await db.prepare('INSERT INTO accounts (platform, username, cookies, proxy, country, status, user_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)')
+    .bind(platform, username, cookiesStr, proxy, country, 'active', userId, t, t).run();
   return getAccount(db, res.meta?.last_row_id);
 }
 
@@ -407,12 +436,12 @@ async function userFromRequest(req, env) {
   if (!token) return null;
   const row = await env.DB
     .prepare(
-      'SELECT u.id, u.username, u.email, u.created_at, s.expires_at FROM sessions s JOIN users u ON u.id = s.user_id WHERE s.token = ?'
+      'SELECT u.id, u.username, u.email, u.is_admin, u.created_at, s.expires_at FROM sessions s JOIN users u ON u.id = s.user_id WHERE s.token = ?'
     )
     .bind(token)
     .first();
   if (!row || row.expires_at < now()) return null;
-  return { id: row.id, username: row.username, email: row.email, created_at: row.created_at };
+  return { id: row.id, username: row.username, email: row.email, is_admin: !!row.is_admin, created_at: row.created_at };
 }
 
 // --- Router -----------------------------------------------------------------
@@ -441,9 +470,10 @@ export default {
         path.startsWith('/api/auth/') ||
         path === '/api/youtube/callback' ||
         path.startsWith('/api/internal/');
+      let gateUser = null;
       if (!isPublic) {
-        const user = await userFromRequest(req, env);
-        if (!user) return withCors(json({ error: 'auth required' }, 401));
+        gateUser = await userFromRequest(req, env);
+        if (!gateUser) return withCors(json({ error: 'auth required' }, 401));
       }
 
       // ---- Auth (register / login / session) ----
@@ -467,11 +497,14 @@ export default {
           .first();
         if (dupe) return withCors(json({ error: 'Username or email already registered' }, 409));
         const pwHash = await hashPassword(password);
+        // First registered user becomes admin (sees all data).
+        const cnt = await env.DB.prepare('SELECT COUNT(*) AS c FROM users').first();
+        const isAdmin = (cnt?.c || 0) === 0 ? 1 : 0;
         const res = await env.DB
-          .prepare('INSERT INTO users (username, email, password_hash, created_at) VALUES (?, ?, ?, ?)')
-          .bind(username, email, pwHash, now())
+          .prepare('INSERT INTO users (username, email, password_hash, is_admin, created_at) VALUES (?, ?, ?, ?, ?)')
+          .bind(username, email, pwHash, isAdmin, now())
           .run();
-        const user = { id: res.meta?.last_row_id, username, email };
+        const user = { id: res.meta?.last_row_id, username, email, is_admin: !!isAdmin };
         const token = await createSession(env.DB, user.id);
         return withCors(json({ token, user }, 201));
       }
@@ -485,7 +518,10 @@ export default {
         if (!ok) return withCors(json({ error: 'Invalid credentials' }, 401));
         const token = await createSession(env.DB, user.id);
         return withCors(
-          json({ token, user: { id: user.id, username: user.username, email: user.email } })
+          json({
+            token,
+            user: { id: user.id, username: user.username, email: user.email, is_admin: !!user.is_admin },
+          })
         );
       }
 
@@ -505,10 +541,10 @@ export default {
       // ---- Public API (frontend) ----
       if (path === '/api/state' && req.method === 'GET') {
         const [tasks, videos, logins, accounts] = await Promise.all([
-          listTasks(env.DB),
-          listVideos(env.DB, { limit: 200 }),
-          listLogins(env.DB),
-          listAccounts(env.DB),
+          listTasks(env.DB, gateUser),
+          listVideos(env.DB, { limit: 200, user: gateUser }),
+          listLogins(env.DB, { user: gateUser }),
+          listAccounts(env.DB, gateUser),
         ]);
         return withCors(
           json({
@@ -516,6 +552,7 @@ export default {
             videos,
             logins,
             accounts,
+            me: gateUser ? { id: gateUser.id, username: gateUser.username, is_admin: gateUser.is_admin } : null,
             config: { has_client_id: !!env.YT_CLIENT_ID, has_client_secret: !!env.YT_CLIENT_SECRET },
           })
         );
@@ -523,26 +560,38 @@ export default {
 
       // ---- Accounts (social cookies) ----
       if (path === '/api/accounts' && req.method === 'GET') {
-        const accounts = await listAccounts(env.DB);
+        const accounts = await listAccounts(env.DB, gateUser);
         return withCors(json({ accounts }));
       }
 
       if (path === '/api/accounts' && req.method === 'POST') {
         const body = await readBody(req);
+        body.user_id = gateUser.id;
         const account = await saveAccount(env.DB, body);
         return withCors(json({ account }, 201));
       }
 
       if (path.startsWith('/api/accounts/') && req.method === 'DELETE') {
         const id = Number(path.split('/')[3]);
+        const row = await getAccount(env.DB, id);
+        if (!row) return withCors(json({ ok: true }));
+        if (!gateUser.is_admin && row.user_id !== gateUser.id) {
+          return withCors(json({ error: 'forbidden' }, 403));
+        }
         const ok = await deleteAccount(env.DB, id);
         return withCors(json({ ok }));
       }
 
       // ---- YouTube logins (no tokens exposed) ----
       if (path === '/api/logins' && req.method === 'GET') {
-        const logins = await listLogins(env.DB);
+        const logins = await listLogins(env.DB, { user: gateUser });
         return withCors(json({ logins }));
+      }
+
+      // ---- Videos (scoped) ----
+      if (path === '/api/videos' && req.method === 'GET') {
+        const videos = await listVideos(env.DB, { limit: 200, user: gateUser });
+        return withCors(json({ videos }));
       }
 
       if (path === '/api/health' && req.method === 'GET') {
@@ -556,20 +605,27 @@ export default {
         if (!url) return withCors(json({ error: 'url required' }, 400));
         const dest = Array.isArray(body.dest_platforms) ? body.dest_platforms.join(',') : (body.dest_platforms || 'youtube');
         const res = await env.DB
-          .prepare('INSERT INTO manual_jobs (url, title, dest_platforms, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)')
-          .bind(url, body.title || null, dest, 'queued', now(), now())
+          .prepare('INSERT INTO manual_jobs (url, title, dest_platforms, status, user_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)')
+          .bind(url, body.title || null, dest, 'queued', gateUser.id, now(), now())
           .run();
         const job = await env.DB.prepare('SELECT * FROM manual_jobs WHERE id = ?').bind(res.meta?.last_row_id).first();
         return withCors(json({ job }, 201));
       }
 
       if (path === '/api/manual/jobs' && req.method === 'GET') {
-        const res = await env.DB.prepare('SELECT * FROM manual_jobs ORDER BY id DESC LIMIT 50').all();
+        const res = await env.DB
+          .prepare('SELECT * FROM manual_jobs WHERE (? = 1 OR user_id = ?) ORDER BY id DESC LIMIT 50')
+          .bind(gateUser.is_admin ? 1 : 0, gateUser.id)
+          .all();
         return withCors(json({ jobs: res.results || [] }));
       }
 
       if (path.startsWith('/api/manual/jobs/') && req.method === 'DELETE') {
         const id = Number(path.split('/')[4]);
+        const row = await env.DB.prepare('SELECT user_id FROM manual_jobs WHERE id = ?').bind(id).first();
+        if (row && !gateUser.is_admin && row.user_id !== gateUser.id) {
+          return withCors(json({ error: 'forbidden' }, 403));
+        }
         await env.DB.prepare('DELETE FROM manual_jobs WHERE id = ?').bind(id).run();
         return withCors(json({ ok: true }));
       }
@@ -671,21 +727,36 @@ export default {
         return withCors(json({ platform, name }));
       }
 
+      if (path === '/api/tasks' && req.method === 'GET') {
+        const tasks = await listTasks(env.DB, gateUser);
+        return withCors(json({ tasks }));
+      }
+
       if (path === '/api/tasks' && req.method === 'POST') {
         const body = await readBody(req);
+        body.user_id = gateUser.id;
         const task = await createTask(env.DB, body);
         return withCors(json({ task }, 201));
       }
 
       if (path.startsWith('/api/tasks/') && req.method === 'PATCH') {
         const id = Number(path.split('/')[3]);
+        const row = await getTask(env.DB, id);
+        if (row && !gateUser.is_admin && row.user_id !== gateUser.id) {
+          return withCors(json({ error: 'forbidden' }, 403));
+        }
         const body = await readBody(req);
         const task = await patchTask(env.DB, id, body);
+        if (!task) return withCors(json({ error: 'not found' }, 404));
         return withCors(json({ task }));
       }
 
       if (path.startsWith('/api/tasks/') && req.method === 'DELETE') {
         const id = Number(path.split('/')[3]);
+        const row = await getTask(env.DB, id);
+        if (row && !gateUser.is_admin && row.user_id !== gateUser.id) {
+          return withCors(json({ error: 'forbidden' }, 403));
+        }
         const ok = await deleteTask(env.DB, id);
         return withCors(json({ ok }));
       }
@@ -694,11 +765,18 @@ export default {
         const id = Number(path.split('/')[3]);
         const login = await getLogin(env.DB, id, { withTokens: true });
         if (!login) return withCors(json({ error: 'not found' }, 404));
+        if (!gateUser.is_admin && login.user_id !== gateUser.id) {
+          return withCors(json({ error: 'forbidden' }, 403));
+        }
         return withCors(json({ refresh_token: login.token?.refresh_token || null }));
       }
 
       if (path.startsWith('/api/logins/') && req.method === 'DELETE') {
         const id = Number(path.split('/')[3]);
+        const login = await getLogin(env.DB, id);
+        if (login && !gateUser.is_admin && login.user_id !== gateUser.id) {
+          return withCors(json({ error: 'forbidden' }, 403));
+        }
         const ok = await deleteLogin(env.DB, id);
         return withCors(json({ ok }));
       }
@@ -706,6 +784,12 @@ export default {
       if (path === '/api/youtube/login/start' && req.method === 'POST') {
         const body = await readBody(req);
         const state = crypto.randomUUID();
+        // Remember who initiated so the public callback can attribute the login.
+        await env.DB
+          .prepare('INSERT OR REPLACE INTO oauth_states (state, user_id, created_at) VALUES (?, ?, ?)')
+          .bind(state, gateUser.id, now())
+          .run();
+        env.DB.prepare('DELETE FROM oauth_states WHERE created_at < ?').bind(now() - 60 * 60 * 1000).run().catch(() => {});
         const auth_url = googleAuthUrl(env, state, body.client_id);
         return withCors(json({ auth_url, state }));
       }
@@ -727,6 +811,12 @@ export default {
         if (err || !code) {
           return redirectTo(`yt=error&msg=${encodeURIComponent(err || 'no code')}`);
         }
+        // Attribute the new login to the user who started the flow.
+        const srow = await env.DB.prepare('SELECT user_id FROM oauth_states WHERE state = ?').bind(state).first();
+        if (!srow) {
+          return redirectTo('yt=error&msg=expired%20or%20unknown%20state');
+        }
+        env.DB.prepare('DELETE FROM oauth_states WHERE state = ?').bind(state).run().catch(() => {});
         try {
           const token = await exchangeCode(env, code, clientId, clientSecret);
           // Persist client creds with the login so runners don't depend on worker env fallback.
@@ -738,6 +828,7 @@ export default {
             label: channel || 'YouTube channel',
             channel_title: channel,
             token,
+            user_id: srow.user_id,
           });
           const ch = channel ? encodeURIComponent(channel) : '';
           return redirectTo(`yt=connected&channel=${ch}&id=${login.id}`);
@@ -753,6 +844,16 @@ export default {
         if (path === '/api/internal/tasks' && req.method === 'GET') {
           const tasks = (await listTasks(env.DB)).filter((t) => t.status === 'active');
           return withCors(json({ tasks }));
+        }
+
+        // Internal task PATCH — pollers (poll.py / fastpoll.py) run with x-token only.
+        const itaskPatch = path.match(/^\/api\/internal\/tasks\/(\d+)$/);
+        if (itaskPatch && req.method === 'PATCH') {
+          const id = Number(itaskPatch[1]);
+          const body = await readBody(req);
+          const task = await patchTask(env.DB, id, body);
+          if (!task) return withCors(json({ error: 'not found' }, 404));
+          return withCors(json({ task }));
         }
 
         // Manual jobs — peek at next queued job (no status change; runner claims via POST claim)
@@ -834,8 +935,20 @@ export default {
         }
 
         if (path === '/api/internal/logins/env' && req.method === 'GET') {
-          // Return first usable YouTube login as YT_* env for the runner.
-          const logins = await listLogins(env.DB, { withTokens: true });
+          // Return usable YouTube login as YT_* env for the runner.
+          // ?user_id=N → that user's login; otherwise prefer an admin-owned login.
+          const uid = url.searchParams.get('user_id');
+          let logins = await listLogins(env.DB, { withTokens: true });
+          if (uid) {
+            logins = logins.filter((l) => l.user_id === Number(uid));
+          } else {
+            try {
+              const admins = await env.DB.prepare('SELECT id FROM users WHERE is_admin = 1').all();
+              const adminIds = new Set((admins.results || []).map((r) => r.id));
+              const adminLogin = logins.find((l) => adminIds.has(l.user_id));
+              if (adminLogin) logins = [adminLogin, ...logins.filter((l) => l !== adminLogin)];
+            } catch { /* keep order */ }
+          }
           const yt = logins.find((l) => l.provider === 'youtube' && l.token?.refresh_token);
           return withCors(
             json({
@@ -855,8 +968,9 @@ export default {
         }
 
         if (path === '/api/internal/accounts/env' && req.method === 'GET') {
-          // Return all active social cookies for the pipeline runner.
-          const accounts = await listAccounts(env.DB);
+          // Return active social cookies for the pipeline runner (?user_id=N to scope).
+          const uid = url.searchParams.get('user_id');
+          const accounts = await listAccounts(env.DB, uid ? { id: Number(uid), is_admin: 0 } : null);
           const result = {};
           for (const a of accounts) {
             if (a.status !== 'active') continue;
@@ -871,9 +985,19 @@ export default {
         }
 
         if (path === '/api/internal/accounts/cookies' && req.method === 'GET') {
-          // Return cookies for a specific platform.
+          // Return cookies for a specific platform (?user_id=N to scope).
           const platform = url.searchParams.get('platform') || '';
-          const cookies = await getAccountCookies(env.DB, platform);
+          const uid = url.searchParams.get('user_id');
+          let cookies = null;
+          if (uid) {
+            const row = await env.DB
+              .prepare("SELECT cookies FROM accounts WHERE platform = ? AND status = 'active' AND user_id = ? ORDER BY id DESC LIMIT 1")
+              .bind(platform, Number(uid))
+              .first();
+            if (row) { try { cookies = JSON.parse(row.cookies); } catch { cookies = row.cookies; } }
+          } else {
+            cookies = await getAccountCookies(env.DB, platform);
+          }
           if (!cookies) return withCors(json({ error: 'no cookies for platform' }, 404));
           return withCors(json({ platform, cookies }));
         }

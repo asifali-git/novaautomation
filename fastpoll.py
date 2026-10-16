@@ -52,9 +52,10 @@ def add_video(task_id, video_key, url, title):
 
 
 def patch_task(task_id, **fields):
+    # Internal route (x-token) — public /api/tasks now requires a user session.
     try:
         requests.patch(
-            f"{WORKER}/api/tasks/{task_id}",
+            f"{WORKER}/api/internal/tasks/{task_id}",
             headers=_h(),
             json=fields,
             timeout=30,
