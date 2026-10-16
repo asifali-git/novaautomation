@@ -1003,10 +1003,19 @@ def upload_tiktok(video_path, description, account_id=None):
             _sleep(0.5, 1)
             driver.execute_script("arguments[0].click();", editable)
             _sleep(0.5, 1)
+            # Select-all via JS Range (Ctrl+A left "final_edit" remnants).
+            driver.execute_script("""
+                const el = arguments[0];
+                const r = document.createRange();
+                r.selectNodeContents(el);
+                const s = window.getSelection();
+                s.removeAllRanges();
+                s.addRange(r);
+            """, editable)
+            _sleep(0.3, 0.5)
             from selenium.webdriver.common.keys import Keys
             from selenium.webdriver.common.action_chains import ActionChains
             actions = ActionChains(driver)
-            actions.send_keys(Keys.CONTROL + "a")
             actions.send_keys(Keys.DELETE)
             actions.send_keys(description[:2200])
             actions.perform()
@@ -1108,6 +1117,38 @@ def upload_tiktok(video_path, description, account_id=None):
         # Click Post — trusted click first (JS click silently does nothing on
         # this button); treat as posted ONLY on real success signals
         # ("View post" dialog / navigation off the upload page).
+        # Capture publish API calls so failures show their real server error.
+        try:
+            driver.execute_script("""
+                window.__nova_net = [];
+                const of = window.fetch;
+                window.fetch = async (...a) => {
+                  const r = await of(...a);
+                  try {
+                    const url = typeof a[0] === 'string' ? a[0] : (a[0] && a[0].url) || '';
+                    if (/upload|publish|video|post|item/i.test(url)) {
+                      const t = await r.clone().text().catch(() => '');
+                      window.__nova_net.push({url: url.slice(0, 140), status: r.status, body: t.slice(0, 250)});
+                    }
+                  } catch (e) {}
+                  return r;
+                };
+                const oxs = XMLHttpRequest.prototype.send;
+                XMLHttpRequest.prototype.send = function (...a) {
+                  this.addEventListener('loadend', () => {
+                    try {
+                      const u = this.responseURL || '';
+                      if (/upload|publish|video|post|item/i.test(u)) {
+                        window.__nova_net.push({url: u.slice(0, 140), status: this.status, body: (this.responseText || '').slice(0, 250)});
+                      }
+                    } catch (e) {}
+                  });
+                  return oxs.apply(this, a);
+                };
+            """)
+        except Exception:
+            pass
+
         post_selectors = [
             "//button[@data-e2e='post_video_button']",
             "//button[contains(@class,'TUXButton') and .//div[text()='Post']]",
@@ -1137,9 +1178,22 @@ def upload_tiktok(video_path, description, account_id=None):
                     post_btn.click()          # trusted events (isTrusted=true)
                 except Exception:
                     driver.execute_script("arguments[0].click();", post_btn)
-                # Wait up to ~45s for a REAL success signal.
-                for _ in range(15):
-                    _sleep(2, 3)
+                # Wait up to ~60s for a REAL success signal; catch brief toasts.
+                seen_toasts = set()
+                for _ in range(120):
+                    _sleep(0.5, 0.5)
+                    try:
+                        _toasts = driver.execute_script("""
+                            return [...document.querySelectorAll(
+                              '[class*="Toast"],[role="alert"],[class*="Snackbar"],[class*="notification" i]'
+                            )].map(e => (e.innerText || '').replace(/\\s+/g, ' ').trim()).filter(Boolean);
+                        """) or []
+                        for _t2 in _toasts:
+                            if _t2 not in seen_toasts:
+                                seen_toasts.add(_t2)
+                                print(f"[tiktok] toast: {_t2[:160]}")
+                    except Exception:
+                        pass
                     try:
                         _body = driver.execute_script("return document.body.innerText") or ""
                     except Exception:
@@ -1155,6 +1209,11 @@ def upload_tiktok(video_path, description, account_id=None):
                         break
                 if posted:
                     break
+                try:
+                    _net = driver.execute_script("return JSON.stringify(window.__nova_net || [])") or "[]"
+                    print(f"[tiktok] net after click: {_net[:900]}")
+                except Exception:
+                    pass
                 print(f"[tiktok] click had no effect (still on upload page): {sel[:50]}")
             except Exception as e:
                 print(f"[tiktok] post selector failed: {sel[:40]}: {e}")
