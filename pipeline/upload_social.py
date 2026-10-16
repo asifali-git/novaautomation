@@ -974,9 +974,14 @@ def upload_facebook(video_path, description, account_id=None):
                         return JSON.stringify({ok: ok, url: url.slice(0,120)});
                     """)
                     print(f"[facebook] post-click check {j+1}: {state}")
-                    if state and '"ok": true' in state:
-                        print("[facebook] reel published OK")
-                        return True
+                    try:
+                        if state and json.loads(state).get("ok"):
+                            print("[facebook] reel published OK")
+                            return True
+                    except Exception:
+                        if state and '"ok":true' in state.replace(" ", ""):
+                            print("[facebook] reel published OK")
+                            return True
                 except Exception:
                     pass
             print("[facebook] clicked but could not verify success")
