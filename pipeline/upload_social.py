@@ -227,16 +227,38 @@ def _load_cookies_for_driver(driver, cookies):
     loaded = 0
     for c in parsed:
         try:
-            # Selenium needs clean dict — strip None values
-            clean = {k: v for k, v in c.items() if v is not None and k in (
-                "name", "value", "domain", "path", "secure", "expiry", "httpOnly"
-            )}
+            # Normalize field names for Selenium
+            clean = {}
+            for k in ("name", "value", "domain", "path", "secure", "httpOnly"):
+                if k in c and c[k] is not None:
+                    clean[k] = c[k]
+            # expiry: Selenium expects "expiry" (seconds since epoch)
+            if "expiry" in c and c["expiry"] is not None:
+                try:
+                    clean["expiry"] = int(float(c["expiry"]))
+                except Exception:
+                    pass
+            elif "expires" in c and c["expires"] is not None:
+                try:
+                    exp = int(float(c["expires"]))
+                    if exp > 0:
+                        clean["expiry"] = exp
+                except Exception:
+                    pass
+            # sameSite: Selenium expects "same_site" with lowercase values
+            ss = c.get("sameSite") or c.get("same_site")
+            if ss:
+                ss_lower = str(ss).lower()
+                if ss_lower in ("strict", "lax", "none"):
+                    clean["same_site"] = ss_lower
             if "name" not in clean or "value" not in clean:
                 continue
             driver.add_cookie(clean)
             loaded += 1
-        except Exception:
-            pass
+        except Exception as e:
+            # Debug: show which cookie failed
+            cname = c.get("name", "?")
+            print(f"[social] cookie '{cname}' failed: {e}")
     print(f"[social] loaded {loaded}/{len(parsed)} cookies into browser")
     return loaded
 
@@ -656,6 +678,14 @@ def upload_facebook(video_path, description, account_id=None):
         driver.refresh()
         _sleep(4, 6)
 
+        # Verify login cookies
+        all_c = driver.get_cookies()
+        has_auth = any(c.get("name") in ("c_user", "xs", "fr") for c in all_c)
+        cookie_names = [c.get("name") for c in all_c]
+        print(f"[facebook] auth cookies present: {has_auth} (total: {len(all_c)}, names: {cookie_names[:15]})")
+        if not has_auth:
+            print("[facebook] WARNING: no auth cookies — may not be logged in")
+
         from selenium.webdriver.common.by import By
         from selenium.webdriver.support.ui import WebDriverWait
         from selenium.webdriver.support import expected_conditions as EC
@@ -709,6 +739,20 @@ def upload_facebook(video_path, description, account_id=None):
 
                 # Wait for page to fully load
                 _sleep(3, 5)
+
+                # Check if we're on login page
+                page_inputs = driver.execute_script("""
+                    const inputs = document.querySelectorAll('input');
+                    const result = [];
+                    inputs.forEach(i => result.push({type: i.type, name: i.name}));
+                    return result;
+                """)
+                has_login = any(i.get("name") in ("email", "pass", "password") for i in page_inputs if isinstance(i, dict))
+                if has_login:
+                    print(f"[facebook] LOGIN FORM DETECTED on {url} — cookies not accepted!")
+                    print(f"[facebook] page URL: {driver.current_url}")
+                    # Try to fill login form with cookie session - skip, just report
+                    continue
 
                 # Try multiple ways to find file input
                 try:
