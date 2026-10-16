@@ -858,16 +858,22 @@ def upload_facebook(video_path, description, account_id=None):
         print("[facebook] uploading video file...")
         _sleep(15, 25)
 
-        # Wait for video processing indicator to appear/disappear
-        try:
-            WebDriverWait(driver, 30).until(
-                EC.presence_of_element_located(
-                    (By.XPATH, "//*[contains(text(),'Video') or contains(text(),'Processing') or contains(text(),'Ready')]")
-                )
-            )
-            print("[facebook] video processing detected")
-        except Exception:
-            print("[facebook] no processing indicator (may still work)")
+        # Wait for video processing to complete (poll up to ~90s)
+        print("[facebook] waiting for video processing...")
+        processing = True
+        for i in range(18):
+            _sleep(4, 6)
+            try:
+                still_processing = driver.execute_script("""
+                    const body = document.body.innerText;
+                    return /Processing|Uploading|Preparing|Do not close/i.test(body);
+                """)
+                if not still_processing:
+                    processing = False
+                    break
+            except Exception:
+                pass
+        print(f"[facebook] processing done={not processing} after polling")
 
         # Fill description
         try:
@@ -885,25 +891,70 @@ def upload_facebook(video_path, description, account_id=None):
 
         _sleep(2, 4)
 
-        # Click Publish / Share reel — try multiple selectors with JS fallback
+        # Dump all button-like elements for debugging
+        try:
+            btn_dump = driver.execute_script("""
+                const els = document.querySelectorAll('div[role=button], button, input[type=submit], a[role=button]');
+                const out = [];
+                els.forEach(e => {
+                    const t = (e.innerText || e.value || e.getAttribute('aria-label') || '').trim().slice(0,60);
+                    if (t) out.push({tag: e.tagName, role: e.getAttribute('role'), text: t, disabled: e.getAttribute('aria-disabled') || e.disabled || false});
+                });
+                return JSON.stringify(out.slice(0, 40));
+            """)
+            print(f"[facebook] page buttons: {btn_dump}")
+        except Exception as e:
+            print(f"[facebook] button dump failed: {e}")
+
+        # Click Publish / Share reel — only text/label-matched selectors (never blind clicks)
         publish_selectors = [
-            "//div[@role='button' and (normalize-space()='Share reel' or normalize-space()='Publish' or normalize-space()='Share')]",
-            "//button[normalize-space()='Share reel' or normalize-space()='Publish' or normalize-space()='Share']",
-            "//div[@role='button' and contains(.,'Share')]",
-            "//button[contains(.,'Share')]",
-            "//div[@aria-label='Share reel' or @aria-label='Publish']",
+            "//div[@role='button' and (contains(translate(normalize-space(.),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'share reel') or normalize-space()='Publish' or normalize-space()='Post')]",
+            "//button[contains(translate(normalize-space(.),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'share reel') or normalize-space()='Publish' or normalize-space()='Post']",
+            "//div[@role='button' and contains(translate(@aria-label,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'share')]",
+            "//button[contains(translate(@aria-label,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'share')]",
+            "//div[@role='button' and contains(translate(normalize-space(.),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'share')]",
+            "//button[contains(translate(normalize-space(.),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'share')]",
+            "//div[@role='button' and contains(translate(normalize-space(.),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'publish')]",
+            "//button[contains(translate(normalize-space(.),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'publish')]",
         ]
         for sel in publish_selectors:
             try:
-                publish_btn = WebDriverWait(driver, 8).until(
-                    EC.element_to_be_clickable((By.XPATH, sel))
+                publish_btns = WebDriverWait(driver, 10).until(
+                    EC.presence_of_all_elements_located((By.XPATH, sel))
                 )
-                driver.execute_script("arguments[0].scrollIntoView({block:'center'});", publish_btn)
+                # Pick last visible enabled one (usually the primary CTA)
+                chosen = None
+                for b in publish_btns:
+                    try:
+                        if b.is_displayed() and (b.get_attribute("aria-disabled") != "true"):
+                            chosen = b
+                    except Exception:
+                        pass
+                if not chosen:
+                    continue
+                driver.execute_script("arguments[0].scrollIntoView({block:'center'});", chosen)
                 _sleep(0.5, 1)
-                driver.execute_script("arguments[0].click();", publish_btn)
-                _sleep(8, 12)
-                print(f"[facebook] reel published OK (selector: {sel[:60]})")
-                return True
+                driver.execute_script("arguments[0].click();", chosen)
+                print(f"[facebook] clicked publish: {(chosen.text or '')[:40]!r}")
+                # Verify success: toast/dialog/URL change
+                for j in range(6):
+                    _sleep(3, 4)
+                    try:
+                        state = driver.execute_script("""
+                            const b = document.body.innerText;
+                            const url = location.href;
+                            const ok = /shared|Your reel|Reel (is|was) shared|Posting|Posted/i.test(b);
+                            return JSON.stringify({ok: ok, url: url.slice(0,120)});
+                        """)
+                        print(f"[facebook] post-click check {j+1}: {state}")
+                        if state and '"ok": true' in state:
+                            print("[facebook] reel published OK")
+                            return True
+                    except Exception:
+                        pass
+                # If we clicked but can't verify, report as failure with context
+                print("[facebook] clicked but could not verify success")
+                return False
             except Exception as e:
                 print(f"[facebook] publish selector failed: {sel[:50]}: {e}")
                 continue
