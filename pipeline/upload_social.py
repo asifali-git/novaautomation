@@ -1003,18 +1003,13 @@ def upload_tiktok(video_path, description, account_id=None):
             _sleep(0.5, 1)
             driver.execute_script("arguments[0].click();", editable)
             _sleep(0.5, 1)
-            # Clear the pre-filled filename via JS, then type with ActionChains
-            # (execCommand insertText once crashed the studio panel).
-            driver.execute_script("""
-                const el = arguments[0];
-                el.focus();
-                el.textContent = '';
-                el.dispatchEvent(new Event('input', {bubbles: true}));
-            """, editable)
-            _sleep(0.5, 1)
             from selenium.webdriver.common.keys import Keys
             from selenium.webdriver.common.action_chains import ActionChains
-            ActionChains(driver).send_keys(description[:2200]).perform()
+            actions = ActionChains(driver)
+            actions.send_keys(Keys.CONTROL + "a")
+            actions.send_keys(Keys.DELETE)
+            actions.send_keys(description[:2200])
+            actions.perform()
             print("[tiktok] caption filled via JS click")
         except Exception as e:
             print(f"[tiktok] caption failed: {e}")
@@ -1110,14 +1105,17 @@ def upload_tiktok(video_path, description, account_id=None):
         except Exception:
             pass
 
-        # Click Post — try multiple selectors with JS click fallback
+        # Click Post — trusted click first (JS click silently does nothing on
+        # this button); treat as posted ONLY on real success signals
+        # ("View post" dialog / navigation off the upload page).
         post_selectors = [
+            "//button[@data-e2e='post_video_button']",
             "//button[contains(@class,'TUXButton') and .//div[text()='Post']]",
             "//button[.//div[text()='Post']]",
             "//button[contains(text(),'Post')]",
-            "//button[@data-e2e='post_video_button']",
         ]
         posted = False
+        pub_url = None
         for sel in post_selectors:
             try:
                 post_btn = WebDriverWait(driver, 10).until(
@@ -1128,21 +1126,42 @@ def upload_tiktok(video_path, description, account_id=None):
                     print("[tiktok] Post disabled — waiting up to 240s for upload to finish")
                     WebDriverWait(driver, 240).until(EC.element_to_be_clickable((By.XPATH, sel)))
                     post_btn = driver.find_element(By.XPATH, sel)
-                # JS click avoids overlay interception
+                try:
+                    print("[tiktok] post btn html:",
+                          driver.execute_script("return arguments[0].outerHTML.slice(0,180);", post_btn))
+                except Exception:
+                    pass
                 driver.execute_script("arguments[0].scrollIntoView({block:'center'});", post_btn)
                 _sleep(0.5, 1)
-                driver.execute_script("arguments[0].click();", post_btn)
-                _sleep(5, 10)
-                print(f"[tiktok] posted OK (selector: {sel[:50]})")
-                print(f"[tiktok] page@posted: {_page_hint(driver)}")
-                posted = True
-                break
+                try:
+                    post_btn.click()          # trusted events (isTrusted=true)
+                except Exception:
+                    driver.execute_script("arguments[0].click();", post_btn)
+                # Wait up to ~45s for a REAL success signal.
+                for _ in range(15):
+                    _sleep(2, 3)
+                    try:
+                        _body = driver.execute_script("return document.body.innerText") or ""
+                    except Exception:
+                        _body = ""
+                    _url = driver.current_url or ""
+                    _low = _body.lower()
+                    if ("view post" in _low or "video has been" in _low
+                            or ("/upload" not in _url and "tiktokstudio" not in _url)):
+                        pub_url = _harvest_url_js(driver, r"/@[\w.-]+/(?:video|photo)/\d+")
+                        print(f"[tiktok] posted OK (selector: {sel[:50]}) url={pub_url or '-'}")
+                        print(f"[tiktok] page@posted: {_page_hint(driver)}")
+                        posted = True
+                        break
+                if posted:
+                    break
+                print(f"[tiktok] click had no effect (still on upload page): {sel[:50]}")
             except Exception as e:
                 print(f"[tiktok] post selector failed: {sel[:40]}: {e}")
                 continue
         if not posted:
-            print("[tiktok] no Post button found")
-            return _up(False, error="post button unavailable/disabled - upload incomplete",
+            print("[tiktok] Post never produced a success signal")
+            return _up(False, error="post click did not publish (no success dialog)",
                        account_id=account_id)
 
         # Verify the NEW video actually landed — success dialog first, then a
