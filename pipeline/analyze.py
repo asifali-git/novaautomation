@@ -161,7 +161,8 @@ Rules:
 - 8 to 16 short segments.
 - speed: 1.0=normal, >1=faster. Vary per segment (1.08-1.15 typical).
 - EVERY segment: zoom=none (MANDATORY), fixed crop (top 0.08, bottom 0.06, left 0.04, right 0.04),
-  non-none color grade, speed != 1.0, sharpness >= 0.12. This is mandatory for copyright safety.
+  non-none color grade, speed != 1.0, sharpness 0.06-0.12 (subtle, never harsh).
+  This is mandatory for copyright safety.
 - crop: ALWAYS use exactly {"top": 0.08, "bottom": 0.06, "left": 0.04, "right": 0.04}.
 - caption.text: <=5 words, ONE per segment, different wording each.
 - narration: clean natural spoken line. Empty string = silent segment.
@@ -172,8 +173,9 @@ Rules:
   middle, or bottom; the position is NEVER fixed. Report each distinct text
   band visible in MOST sampled frames as its vertical extent:
   "top"/"bottom" = frame fractions (0.0 = very top, 1.0 = very bottom),
-  padded ~0.01 beyond the text edges. OUR new captions are added later — you
-  only locate the source's own text. Ignore moving objects, subtitles that are
+  TIGHT bounds hugging the text (~0.005 padding only — never overestimate,
+  the video is cropped exactly to these values). OUR new captions are added
+  later — you only locate the source's own text. Ignore moving objects, subtitles that are
   part of a scene shot (e.g. movie dialogue burned by the same uploader counts
   ONLY if it is clearly a persistent overlay band). [] if nothing is burned in.
   Example: a two-line white credit at the lower area -> [{"top": 0.84, "bottom": 0.91, "kind": "text"}]
@@ -331,8 +333,8 @@ def _transform_floor(seg, idx):
         seg["color"]["saturation"] = 1.12
     if seg["color"]["contrast"] < 1.03:
         seg["color"]["contrast"] = 1.06
-    if seg["sharpness"] < 0.08:
-        seg["sharpness"] = 0.10
+    if seg["sharpness"] < 0.06:
+        seg["sharpness"] = 0.08
 
 
 def _fallback_plan(duration, title_hint=""):

@@ -1202,3 +1202,27 @@ select.form-input {
   font-family: var(--font);
 }
 .btn-logout:hover { text-decoration: underline; }
+
+/* ===== Manual jobs table footer / pagination ===== */
+.table-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap;
+  padding: 10px 14px; border-top: 1px solid var(--border);
+}
+.pager-controls { display: flex; align-items: center; gap: 10px; }
+.page-size {
+  height: 30px; padding: 0 8px; border-radius: 8px;
+  border: 1px solid var(--border); background: var(--bg); color: var(--text);
+  font-size: 12.5px; cursor: pointer;
+}
+.page-nums { display: flex; align-items: center; gap: 5px; }
+.pg-btn {
+  min-width: 30px; height: 30px; padding: 0 8px;
+  border: 1px solid var(--border); border-radius: 8px;
+  background: transparent; color: var(--text);
+  font-size: 12.5px; cursor: pointer; transition: all .15s;
+}
+.pg-btn:hover:not(:disabled):not(.active) { border-color: var(--accent); color: var(--accent); }
+.pg-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+.pg-btn:disabled { opacity: .35; cursor: default; }
+.pg-ellipsis { padding: 0 2px; opacity: .55; font-size: 12.5px; }

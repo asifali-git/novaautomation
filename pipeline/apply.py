@@ -125,13 +125,12 @@ def _delogo_chain(regions, sw=None, sh=None):
     return ",".join(chains)
 
 
-def _video_chain(seg, caption_crop_top=0.0, caption_crop_bottom=0.0, delogo_filter="", mirror=False):
+def _video_chain(seg, caption_crop_top=0.0, caption_crop_bottom=0.0, delogo_filter="", mirror=False, gcolor=None):
     """Build the video filter chain (no audio) for one segment.
     caption_crop_top/bottom are fractions of source height to crop first (burned-in captions).
     delogo_filter: pre-built delogo filter chain string for mid-band captions.
-    mirror: hflip the source frame FIRST — breaks horizontal frame-hash
-    fingerprints (reuse detection). Crop/delogo are symmetric/full-width so
-    they still land correctly after the flip.
+    mirror: hflip (OFF — natural orientation requested).
+    gcolor: one shared color grade for the whole video (overrides per-seg color).
     """
     parts = []
     # Mirror first (on source frame) — strongest cheap anti-fingerprint transform.
@@ -184,11 +183,11 @@ def _video_chain(seg, caption_crop_top=0.0, caption_crop_bottom=0.0, delogo_filt
 
     sharp = float(seg.get("sharpness", 0) or 0)
     if sharp > 0.01:
-        # Subtle: 0.18 -> ~0.57, 0.35 -> ~0.64 (was 1.2 multiplier = over-sharpened).
-        luma = round(0.3 + sharp * 0.5, 2)
+        # Subtle (user: "sharpness thoda kam"): 0.10 -> ~0.16, 0.40 -> ~0.26.
+        luma = round(0.12 + sharp * 0.35, 2)
         parts.append(f"unsharp=5:5:{luma}:5:5:0")
 
-    color = seg.get("color") or {}
+    color = gcolor if gcolor is not None else (seg.get("color") or {})
     preset = COLOR_PRESETS.get(color.get("preset", "none"), "")
     if preset:
         parts.append(preset)
@@ -205,10 +204,10 @@ def _video_chain(seg, caption_crop_top=0.0, caption_crop_bottom=0.0, delogo_filt
     return ",".join(parts)
 
 
-def render_segment(src, seg, out, has_audio=True, caption_crop_top=0.0, caption_crop_bottom=0.0, delogo_filter="", mirror=False):
+def render_segment(src, seg, out, has_audio=True, caption_crop_top=0.0, caption_crop_bottom=0.0, delogo_filter="", mirror=False, gcolor=None):
     speed = _speed_of(seg)
     dur = seg["end"] - seg["start"]
-    vf = _video_chain(seg, caption_crop_top, caption_crop_bottom, delogo_filter, mirror=mirror)
+    vf = _video_chain(seg, caption_crop_top, caption_crop_bottom, delogo_filter, mirror=mirror, gcolor=gcolor)
 
     cmd = [FFMPEG, "-y", "-ss", f"{seg['start']:.3f}", "-t", f"{dur:.3f}", "-i", src]
     cmd += _thread_flags()
@@ -520,9 +519,12 @@ def apply_plan(src, plan, workdir="work", voice_wavs=None, out_name="final_edit.
         pass
     delogo_filter = _delogo_chain(delogo_regions, src_w, src_h)
 
-    # Anti-reuse: mirror EVERY segment (consistent flip = natural look, but
-    # horizontal perceptual hash of the whole video no longer matches source).
-    mirror = True
+    # Anti-reuse mirror OFF — natural orientation requested (no hflip).
+    mirror = False
+
+    # ONE gentle color grade for the WHOLE video — per-segment grades made
+    # colors jump at every cut and looked bad (user complaint).
+    gcolor = {"preset": "none", "brightness": 0.0, "contrast": 1.05, "saturation": 1.10}
 
     # Detect audio presence once.
     has_audio = True
@@ -543,7 +545,8 @@ def apply_plan(src, plan, workdir="work", voice_wavs=None, out_name="final_edit.
                        caption_crop_top=caption_crop_top,
                        caption_crop_bottom=caption_crop_bottom,
                        delogo_filter=delogo_filter,
-                       mirror=mirror)
+                       mirror=mirror,
+                       gcolor=gcolor)
         seg_paths.append(p)
 
     # 2. Concat.

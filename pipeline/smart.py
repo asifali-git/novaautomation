@@ -183,41 +183,40 @@ def normalize_source_captions(raw):
 
 
 def merge_caption_regions(ai_regions, cv_regions):
-    """Union AI-observed + CV-detected source-text bands (position-agnostic).
+    """AI + CV source-text bands. Precise CV rows WIN on overlap — crop only
+    what the old caption actually covers (no over-crop). AI-only bands (CV
+    missed, e.g. stylized/logo text) are kept as-is."""
+    def _iv(items):
+        out = []
+        for r in items or []:
+            try:
+                t = float(r.get("top_frac"))
+                b = float(r.get("bottom_frac"))
+            except Exception:
+                continue
+            if b > t:
+                out.append([t, b])
+        return sorted(out)
 
-    Overlapping/near bands merge into one so the WHOLE text block is removed;
-    the union never shrinks (a slightly wider crop beats leftover text).
-    """
-    intervals = []
-    for r in list(ai_regions or []) + list(cv_regions or []):
-        try:
-            t = float(r.get("top_frac"))
-            b = float(r.get("bottom_frac"))
-        except Exception:
-            continue
-        if b <= t:
-            continue
-        intervals.append([t, b])
-    if not intervals:
-        return []
-    intervals.sort()
-    merged = [intervals[0]]
-    for t, b in intervals[1:]:
-        if t <= merged[-1][1] + 0.02:      # overlap or tiny gap -> union
-            merged[-1][1] = max(merged[-1][1], b)
-        else:
-            merged.append([t, b])
-    out = []
-    for t, b in merged[:3]:
+    cv = _iv(cv_regions)
+    out_iv = list(cv)
+    for t, b in _iv(ai_regions):
+        if any(t < cb + 0.02 and b > ct - 0.02 for ct, cb in cv):
+            continue               # overlaps CV -> precise CV already covers it
+        out_iv.append([t, b])      # AI-only -> CV missed it, keep
+    out_iv.sort()
+
+    regions = []
+    for t, b in out_iv[:3]:
         band = _band_for(t, b)
-        out.append({
+        regions.append({
             "band": band,
             "top_frac": round(t, 4),
             "bottom_frac": round(b, 4),
             "action": "delogo" if band == "mid" else "crop",
             "confidence": 0.95,
         })
-    return out
+    return regions
 
 
 def _features(path):

@@ -948,7 +948,15 @@ function updateProgressUI(status, error) {
   }
 }
 
-// Load Manual Jobs list
+// Load Manual Jobs list (client-side pagination: page numbers + size dropdown)
+let manualPage = 1;
+let manualPageSize = 25;
+
+function manualGoto(p) {
+  manualPage = p;
+  loadManualJobs();
+}
+
 async function loadManualJobs() {
   try {
     const [d, da] = await Promise.all([
@@ -962,17 +970,43 @@ async function loadManualJobs() {
 
     $('nav-manual-count').textContent = jobs.filter(j => j.status === 'queued' || j.status === 'processing').length;
 
+    // --- pagination ---
+    manualPageSize = Number($('manual-pagesize')?.value) || 25;
+    const total = jobs.length;
+    const pages = Math.max(1, Math.ceil(total / manualPageSize));
+    if (manualPage > pages) manualPage = pages;
+    if (manualPage < 1) manualPage = 1;
+    const pageJobs = jobs.slice((manualPage - 1) * manualPageSize, manualPage * manualPageSize);
+
     const tbody = document.querySelector('#manual-table tbody');
     const empty = $('manual-empty');
+    const pager = $('manual-pager');
 
-    if (jobs.length === 0) {
+    if (total === 0) {
       tbody.innerHTML = '';
       empty.style.display = '';
+      pager.style.display = 'none';
       document.querySelector('#manual-table').style.display = 'none';
       return;
     }
     empty.style.display = 'none';
     document.querySelector('#manual-table').style.display = '';
+
+    // Pager controls: count + «page X/Y» + numbered buttons + prev/next
+    pager.style.display = '';
+    $('manual-count').textContent = `${total} job${total === 1 ? '' : 's'}`;
+    const wanted = [];
+    for (let p = 1; p <= pages; p++) {
+      if (p === 1 || p === pages || Math.abs(p - manualPage) <= 2) wanted.push(p);
+      else if (wanted[wanted.length - 1] !== '…') wanted.push('…');
+    }
+    $('manual-pagenums').innerHTML =
+      `<button class="pg-btn" ${manualPage <= 1 ? 'disabled' : ''} onclick="manualGoto(${manualPage - 1})" title="Previous page">‹</button>` +
+      wanted.map(p => p === '…'
+        ? '<span class="pg-ellipsis">…</span>'
+        : `<button class="pg-btn ${p === manualPage ? 'active' : ''}" onclick="manualGoto(${p})">${p}</button>`
+      ).join('') +
+      `<button class="pg-btn" ${manualPage >= pages ? 'disabled' : ''} onclick="manualGoto(${manualPage + 1})" title="Next page">›</button>`;
 
     const parseResult = r => {
       if (!r) return null;
@@ -995,7 +1029,7 @@ async function loadManualJobs() {
       } catch { return String(u || '').slice(0, 48); }
     };
 
-    tbody.innerHTML = jobs.map(j => {
+    tbody.innerHTML = pageJobs.map(j => {
       const result = parseResult(j.result);
 
       // Destinations with account names

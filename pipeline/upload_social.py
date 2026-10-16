@@ -806,6 +806,17 @@ def _find_profile_url(driver, meta):
                 return f"https://www.tiktok.com/@{m.group(1)}"
     except Exception:
         pass
+    # Avatar links are often JS-rendered; scan raw HTML for any /@handle.
+    try:
+        html = driver.execute_script("return document.documentElement.innerHTML") or ""
+        for m in re.finditer(r"/@([\w.-]{2,24})", html):
+            handle = m.group(1)
+            ctx = html[max(0, m.start() - 100):m.start()]
+            if handle.lower() == "tiktokstudio" or "/video/" in ctx or "/photo/" in ctx:
+                continue
+            return f"https://www.tiktok.com/@{handle}"
+    except Exception:
+        pass
     uname = str((meta or {}).get("username") or "").strip().lstrip("@")
     if re.fullmatch(r"[\w.]{2,24}", uname):
         return f"https://www.tiktok.com/@{uname}"
@@ -849,7 +860,14 @@ def upload_tiktok(video_path, description, account_id=None):
 
         # Baseline: newest profile video BEFORE posting, so after posting we can
         # prove a NEW video appeared (never report a stale/pinned URL).
+        # Detect the handle from the STUDIO page (avatar link) — the homepage
+        # often has none, and stored usernames can be display names ("queen zoya").
         import re as _re
+        studio_url = "https://www.tiktok.com/tiktokstudio/upload?from=creator_center"
+        driver.get(studio_url)
+        _spoof(driver, languages=(profile or {}).get("languages"))
+        _sleep(3, 5)
+
         profile_url = _find_profile_url(driver, meta)
         baseline_id = None
         if profile_url:
@@ -859,14 +877,12 @@ def upload_tiktok(video_path, description, account_id=None):
             m0 = _re.search(r"/(?:video|photo)/(\d+)", u0 or "")
             baseline_id = m0.group(1) if m0 else None
             print(f"[tiktok] profile: {profile_url} baseline newest id: {baseline_id or 'none'}")
+            # Harvest navigated away — back to the upload page.
+            driver.get(studio_url)
+            _spoof(driver, languages=(profile or {}).get("languages"))
+            _sleep(3, 5)
         else:
             print("[tiktok] profile url unknown; post-verify will rely on success dialog")
-
-        driver.get(
-            "https://www.tiktok.com/tiktokstudio/upload?from=creator_center"
-        )
-        _spoof(driver, languages=(profile or {}).get("languages"))
-        _sleep(3, 5)
 
         from selenium.webdriver.common.by import By
         from selenium.webdriver.support.ui import WebDriverWait
@@ -960,7 +976,8 @@ def upload_tiktok(video_path, description, account_id=None):
 
         _sleep(5, 10)
 
-        # Wait for upload complete — poll any indicator (60MB files need time).
+        # Wait for upload complete — poll any indicator (59MB+ files on GH
+        # runners upload slowly; 8 minutes gives them a real chance).
         uploaded = False
         _up_xpaths = [
             "//span[text()='Uploaded']",
@@ -970,13 +987,23 @@ def upload_tiktok(video_path, description, account_id=None):
             "//*[contains(text(),'upload complete')]",
         ]
         try:
-            WebDriverWait(driver, 240).until(
+            WebDriverWait(driver, 480).until(
                 lambda d: any(d.find_elements(By.XPATH, x) for x in _up_xpaths)
             )
             uploaded = True
             print("[tiktok] upload complete indicator found")
         except Exception:
-            print("[tiktok] upload wait timeout (240s, may still be processing)")
+            print("[tiktok] upload wait timeout (480s, may still be processing)")
+
+        # Hide leftover overlays/guides that can intercept the Post click.
+        try:
+            driver.execute_script("""
+                document.querySelectorAll(
+                  '.TUXModal-overlay,.modal-overlay,[class*="Modal-overlay"],[class*="Guide"]'
+                ).forEach(e => { e.style.display = 'none'; });
+            """)
+        except Exception:
+            pass
 
         # Click Post — try multiple selectors with JS click fallback
         post_selectors = [
@@ -991,6 +1018,11 @@ def upload_tiktok(video_path, description, account_id=None):
                 post_btn = WebDriverWait(driver, 10).until(
                     EC.element_to_be_clickable((By.XPATH, sel))
                 )
+                if not post_btn.is_enabled():
+                    # Upload still in progress — wait for the button to enable.
+                    print("[tiktok] Post disabled — waiting up to 240s for upload to finish")
+                    WebDriverWait(driver, 240).until(EC.element_to_be_clickable((By.XPATH, sel)))
+                    post_btn = driver.find_element(By.XPATH, sel)
                 # JS click avoids overlay interception
                 driver.execute_script("arguments[0].scrollIntoView({block:'center'});", post_btn)
                 _sleep(0.5, 1)
@@ -1004,7 +1036,8 @@ def upload_tiktok(video_path, description, account_id=None):
                 continue
         if not posted:
             print("[tiktok] no Post button found")
-            return _up(False, error="no Post button", account_id=account_id)
+            return _up(False, error="post button unavailable/disabled - upload incomplete",
+                       account_id=account_id)
 
         # Verify the NEW video actually landed — success dialog first, then a
         # profile poll for a video id NEWER than the baseline. A stale/pinned

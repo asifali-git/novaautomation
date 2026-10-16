@@ -319,6 +319,18 @@
             </thead>
             <tbody></tbody>
           </table>
+          <div class="table-footer" id="manual-pager" style="display:none">
+            <span class="muted" id="manual-count"></span>
+            <div class="pager-controls">
+              <select id="manual-pagesize" class="page-size" onchange="manualPage=1;loadManualJobs()">
+                <option value="10">10 / page</option>
+                <option value="25" selected>25 / page</option>
+                <option value="50">50 / page</option>
+                <option value="100">100 / page</option>
+              </select>
+              <div id="manual-pagenums" class="page-nums"></div>
+            </div>
+          </div>
           <div class="empty-state" id="manual-empty">
             <div class="empty-icon">⇪</div>
             <p>No manual jobs yet</p>
