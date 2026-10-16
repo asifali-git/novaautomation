@@ -336,6 +336,85 @@ function checkInternal(req, env) {
   return token && token === env.INTERNAL_TOKEN;
 }
 
+// --- User auth (PBKDF2 passwords + DB sessions) -----------------------------
+
+function hexToBytes(hex) {
+  const out = new Uint8Array(hex.length / 2);
+  for (let i = 0; i < out.length; i++) out[i] = parseInt(hex.slice(i * 2, i * 2 + 2), 16);
+  return out;
+}
+
+function bytesToHex(bytes) {
+  return [...bytes].map((b) => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function derivePassword(password, saltHex, iterations) {
+  const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveBits']);
+  const bits = await crypto.subtle.deriveBits(
+    { name: 'PBKDF2', salt: hexToBytes(saltHex), iterations, hash: 'SHA-256' },
+    key,
+    256
+  );
+  return bytesToHex(new Uint8Array(bits));
+}
+
+async function hashPassword(password) {
+  // Cloudflare Workers Web Crypto caps PBKDF2 iterations at 100000.
+  const iterations = 100000;
+  const salt = bytesToHex(crypto.getRandomValues(new Uint8Array(16)));
+  const hash = await derivePassword(password, salt, iterations);
+  return `pbkdf2$${iterations}$${salt}$${hash}`;
+}
+
+async function verifyPassword(password, stored) {
+  try {
+    const [algo, iterStr, salt, hash] = String(stored).split('$');
+    if (algo !== 'pbkdf2') return false;
+    const calc = await derivePassword(password, salt, parseInt(iterStr, 10));
+    if (calc.length !== hash.length) return false;
+    let diff = 0;
+    for (let i = 0; i < calc.length; i++) diff |= calc.charCodeAt(i) ^ hash.charCodeAt(i);
+    return diff === 0;
+  } catch {
+    return false;
+  }
+}
+
+async function findUserByIdentity(db, identity) {
+  const id = String(identity || '').trim().toLowerCase();
+  if (!id) return null;
+  return db
+    .prepare('SELECT * FROM users WHERE lower(email) = ? OR lower(username) = ?')
+    .bind(id, id)
+    .first();
+}
+
+async function createSession(db, userId) {
+  const token = bytesToHex(crypto.getRandomValues(new Uint8Array(32)));
+  const t = now();
+  await db
+    .prepare('INSERT INTO sessions (token, user_id, created_at, expires_at) VALUES (?, ?, ?, ?)')
+    .bind(token, userId, t, t + 30 * 24 * 60 * 60 * 1000)
+    .run();
+  db.prepare('DELETE FROM sessions WHERE expires_at < ?').bind(t).run().catch(() => {});
+  return token;
+}
+
+async function userFromRequest(req, env) {
+  const h = req.headers.get('authorization') || '';
+  if (!h.toLowerCase().startsWith('bearer ')) return null;
+  const token = h.slice(7).trim();
+  if (!token) return null;
+  const row = await env.DB
+    .prepare(
+      'SELECT u.id, u.username, u.email, u.created_at, s.expires_at FROM sessions s JOIN users u ON u.id = s.user_id WHERE s.token = ?'
+    )
+    .bind(token)
+    .first();
+  if (!row || row.expires_at < now()) return null;
+  return { id: row.id, username: row.username, email: row.email, created_at: row.created_at };
+}
+
 // --- Router -----------------------------------------------------------------
 
 export default {
@@ -356,6 +435,73 @@ export default {
     };
 
     try {
+      // ---- Auth gate: every app API needs a logged-in user ----
+      const isPublic =
+        path === '/api/health' ||
+        path.startsWith('/api/auth/') ||
+        path === '/api/youtube/callback' ||
+        path.startsWith('/api/internal/');
+      if (!isPublic) {
+        const user = await userFromRequest(req, env);
+        if (!user) return withCors(json({ error: 'auth required' }, 401));
+      }
+
+      // ---- Auth (register / login / session) ----
+      if (path === '/api/auth/register' && req.method === 'POST') {
+        const body = await readBody(req);
+        const username = String(body.username || '').trim();
+        const email = String(body.email || '').trim();
+        const password = String(body.password || '');
+        if (!/^[a-zA-Z0-9_.-]{3,30}$/.test(username)) {
+          return withCors(json({ error: 'Username: 3-30 chars (letters, digits, _ . -)' }, 400));
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          return withCors(json({ error: 'Enter a valid email' }, 400));
+        }
+        if (password.length < 6) {
+          return withCors(json({ error: 'Password must be at least 6 characters' }, 400));
+        }
+        const dupe = await env.DB
+          .prepare('SELECT id FROM users WHERE lower(username) = ? OR lower(email) = ?')
+          .bind(username.toLowerCase(), email.toLowerCase())
+          .first();
+        if (dupe) return withCors(json({ error: 'Username or email already registered' }, 409));
+        const pwHash = await hashPassword(password);
+        const res = await env.DB
+          .prepare('INSERT INTO users (username, email, password_hash, created_at) VALUES (?, ?, ?, ?)')
+          .bind(username, email, pwHash, now())
+          .run();
+        const user = { id: res.meta?.last_row_id, username, email };
+        const token = await createSession(env.DB, user.id);
+        return withCors(json({ token, user }, 201));
+      }
+
+      if (path === '/api/auth/login' && req.method === 'POST') {
+        const body = await readBody(req);
+        const identity = String(body.identity || '').trim();
+        const password = String(body.password || '');
+        const user = await findUserByIdentity(env.DB, identity);
+        const ok = user && (await verifyPassword(password, user.password_hash));
+        if (!ok) return withCors(json({ error: 'Invalid credentials' }, 401));
+        const token = await createSession(env.DB, user.id);
+        return withCors(
+          json({ token, user: { id: user.id, username: user.username, email: user.email } })
+        );
+      }
+
+      if (path === '/api/auth/logout' && req.method === 'POST') {
+        const h = req.headers.get('authorization') || '';
+        const token = h.toLowerCase().startsWith('bearer ') ? h.slice(7).trim() : '';
+        if (token) await env.DB.prepare('DELETE FROM sessions WHERE token = ?').bind(token).run();
+        return withCors(json({ ok: true }));
+      }
+
+      if (path === '/api/auth/me' && req.method === 'GET') {
+        const user = await userFromRequest(req, env);
+        if (!user) return withCors(json({ error: 'auth required' }, 401));
+        return withCors(json({ user }));
+      }
+
       // ---- Public API (frontend) ----
       if (path === '/api/state' && req.method === 'GET') {
         const [tasks, videos, logins, accounts] = await Promise.all([
@@ -391,6 +537,12 @@ export default {
         const id = Number(path.split('/')[3]);
         const ok = await deleteAccount(env.DB, id);
         return withCors(json({ ok }));
+      }
+
+      // ---- YouTube logins (no tokens exposed) ----
+      if (path === '/api/logins' && req.method === 'GET') {
+        const logins = await listLogins(env.DB);
+        return withCors(json({ logins }));
       }
 
       if (path === '/api/health' && req.method === 'GET') {

@@ -358,6 +358,12 @@ def main():
             if plat != "youtube":
                 continue
             try:
+                if acct:
+                    # Multi-account: switch YT_* creds to this login first.
+                    try:
+                        yt.use_login(acct, WORKER, TOKEN)
+                    except Exception as ee:
+                        print(f"[upload] yt login {acct} failed ({ee}); using default")
                 yt_url = upload_youtube(final_path, meta)
                 results["youtube"] = {
                     "success": True, "url": yt_url, "account": acct,

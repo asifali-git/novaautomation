@@ -311,8 +311,16 @@ def run():
     meta = build_meta(plan, info)
     print(f"[meta] {meta['title']}")
 
-    # 5. Upload.
+    # 5. Upload (dest may pin a channel: "youtube:<login_id>").
     set_status(vid, status="uploading")
+    for part in (dest_platforms or "").split(","):
+        part = part.strip()
+        if part.startswith("youtube:"):
+            try:
+                yt.use_login(part.split(":", 1)[1], WORKER, TOKEN)
+            except Exception as e:
+                print(f"[warn] yt login {part} failed ({e}); using default", file=sys.stderr)
+            break
     access = yt.refresh_access_token()
     video_id = yt.upload_video(
         out_path,

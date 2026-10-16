@@ -6,7 +6,14 @@ const $ = id => document.getElementById(id);
 /* ===== API ===== */
 async function api(path, opts = {}) {
   const headers = { 'Content-Type': 'application/json' };
+  const token = localStorage.getItem('nova_session');
+  if (token) headers['Authorization'] = 'Bearer ' + token;
   const resp = await fetch(WORKER + path, { ...opts, headers });
+  if (resp.status === 401 && !path.startsWith('/api/auth/')) {
+    localStorage.removeItem('nova_session');
+    showAuth();
+    throw new Error('Session expired — please log in again');
+  }
   if (!resp.ok) {
     const body = await resp.json().catch(() => ({}));
     throw new Error(body.error || `HTTP ${resp.status}`);
@@ -205,20 +212,26 @@ $('f-url')?.addEventListener('input', () => {
 /* ===== Account dropdowns ===== */
 let allAccounts = [];
 
-async function populateAccountDropdowns() {
+async function fillDestDropdowns(idPrefix, acctPrefix) {
+  // idPrefix: 'f-' (Add Source) or 'q-' (Quick Upload)
+  // acctPrefix: 'acct-' or 'q-acct-'
+  const lists = { youtube: [] };
   try {
-    const d = await api('/api/accounts');
-    allAccounts = d.accounts || [];
-  } catch (_) { allAccounts = []; }
+    const d = await api('/api/logins');
+    lists.youtube = (d.logins || [])
+      .filter(l => l.provider === 'youtube')
+      .map(l => ({ id: l.id, username: l.channel_title || l.label || `Channel #${l.id}` }));
+  } catch (_) { lists.youtube = []; }
+  ['tiktok', 'instagram', 'facebook'].forEach(p => {
+    lists[p] = allAccounts.filter(a => a.platform === p);
+  });
 
-  ['tiktok', 'instagram', 'facebook'].forEach(plat => {
-    const cb = $(`f-${plat}`);
-    const sel = $(`acct-${plat}`);
+  ['youtube', 'tiktok', 'instagram', 'facebook'].forEach(plat => {
+    const cb = $(`${idPrefix}${plat}`);
+    const sel = $(`${acctPrefix}${plat}`);
     if (!cb || !sel) return;
 
-    const accounts = allAccounts.filter(a => a.platform === plat);
-
-    // Rebuild options
+    const accounts = lists[plat];
     sel.innerHTML = '<option value="">Select account…</option>';
     accounts.forEach(a => {
       const opt = document.createElement('option');
@@ -226,19 +239,25 @@ async function populateAccountDropdowns() {
       opt.textContent = a.username || a.id;
       sel.appendChild(opt);
     });
-
     if (accounts.length === 0) {
       sel.innerHTML = '<option value="">No accounts connected</option>';
     }
 
-    // Toggle account select when checkbox changes
     cb.onchange = () => {
       sel.disabled = !cb.checked;
-      if (cb.checked && accounts.length === 1) {
-        sel.value = accounts[0].id;
-      }
+      if (cb.checked && accounts.length === 1) sel.value = String(accounts[0].id);
     };
+    // Apply current checkbox state immediately (YT starts checked)
+    cb.onchange();
   });
+}
+
+async function populateAccountDropdowns() {
+  try {
+    const d = await api('/api/accounts');
+    allAccounts = d.accounts || [];
+  } catch (_) { allAccounts = []; }
+  await fillDestDropdowns('f-', 'acct-');
 }
 
 /* ===== Add Source modal ===== */
@@ -279,7 +298,11 @@ $('add-form')?.addEventListener('submit', async e => {
   const name = $('f-name').value.trim() || null;
   const platform = detectPlatformClient(url) || 'youtube';
 
-  const dest = ['youtube'];
+  const dest = [];
+  if ($('f-youtube')?.checked) {
+    const ytAcct = $('acct-youtube')?.value;
+    dest.push(ytAcct ? `youtube:${ytAcct}` : 'youtube');
+  }
   ['tiktok', 'instagram', 'facebook'].forEach(p => {
     if ($(`f-${p}`)?.checked) {
       const acctId = $(`acct-${p}`)?.value;
@@ -287,6 +310,7 @@ $('add-form')?.addEventListener('submit', async e => {
       dest.push(acctId ? `${p}:${acctId}` : p);
     }
   });
+  if (dest.length === 0) return toast('Select at least one destination', 'err');
 
   try {
     await api('/api/tasks', {
@@ -831,29 +855,7 @@ async function populateQuickDropdowns() {
     const d = await api('/api/accounts');
     allAccounts = d.accounts || [];
   } catch (_) { allAccounts = []; }
-
-  ['tiktok', 'instagram', 'facebook'].forEach(plat => {
-    const cb = $(`q-${plat}`);
-    const sel = $(`q-acct-${plat}`);
-    if (!cb || !sel) return;
-
-    const accounts = allAccounts.filter(a => a.platform === plat);
-    sel.innerHTML = '<option value="">Select account…</option>';
-    accounts.forEach(a => {
-      const opt = document.createElement('option');
-      opt.value = a.id;
-      opt.textContent = a.username || a.id;
-      sel.appendChild(opt);
-    });
-    if (accounts.length === 0) {
-      sel.innerHTML = '<option value="">No accounts connected</option>';
-    }
-
-    cb.onchange = () => {
-      sel.disabled = !cb.checked;
-      if (cb.checked && accounts.length === 1) sel.value = accounts[0].id;
-    };
-  });
+  await fillDestDropdowns('q-', 'q-acct-');
 }
 
 // Quick Upload form submit
@@ -863,7 +865,10 @@ $('quick-form')?.addEventListener('submit', async e => {
   const title = $('q-title').value.trim() || null;
 
   const dest = [];
-  if ($('q-youtube')?.checked) dest.push('youtube');
+  if ($('q-youtube')?.checked) {
+    const ytAcct = $('q-acct-youtube')?.value;
+    dest.push(ytAcct ? `youtube:${ytAcct}` : 'youtube');
+  }
   ['tiktok', 'instagram', 'facebook'].forEach(p => {
     if ($(`q-${p}`)?.checked) {
       const acctId = $(`q-acct-${p}`)?.value;
@@ -1074,8 +1079,95 @@ function timeAgo(ts) {
   return `${Math.floor(diff / 86400)}d ago`;
 }
 
+/* ===== Auth (login / signup / logout) ===== */
+const authScreen = $('auth-screen');
+
+function showAuth() { if (authScreen) authScreen.style.display = 'flex'; }
+function hideAuth() { if (authScreen) authScreen.style.display = 'none'; }
+function setAuthError(msg) { const el = $('auth-error'); if (el) el.textContent = msg || ''; }
+
+function authTab(which) {
+  const isLogin = which === 'login';
+  $('auth-tab-login')?.classList.toggle('active', isLogin);
+  $('auth-tab-register')?.classList.toggle('active', !isLogin);
+  const lf = $('auth-login-form'); if (lf) lf.style.display = isLogin ? '' : 'none';
+  const rf = $('auth-register-form'); if (rf) rf.style.display = isLogin ? 'none' : '';
+  setAuthError('');
+}
+$('auth-tab-login')?.addEventListener('click', () => authTab('login'));
+$('auth-tab-register')?.addEventListener('click', () => authTab('register'));
+
+function afterLogin(d) {
+  localStorage.setItem('nova_session', d.token);
+  hideAuth();
+  if (appStarted) {
+    toast(`Welcome back, ${d.user.username}!`);
+    loadState();
+    initRoute();
+  } else {
+    startApp(d.user);
+  }
+}
+
+$('auth-login-form')?.addEventListener('submit', async e => {
+  e.preventDefault();
+  setAuthError('');
+  const btn = $('au-login-btn');
+  btn.disabled = true; btn.textContent = 'Logging in…';
+  try {
+    const d = await api('/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({
+        identity: $('au-identity').value.trim(),
+        password: $('au-login-pass').value,
+      }),
+    });
+    afterLogin(d);
+  } catch (e2) {
+    setAuthError(e2.message);
+  } finally {
+    btn.disabled = false; btn.textContent = 'Log in';
+  }
+});
+
+$('auth-register-form')?.addEventListener('submit', async e => {
+  e.preventDefault();
+  setAuthError('');
+  const btn = $('au-register-btn');
+  btn.disabled = true; btn.textContent = 'Creating…';
+  try {
+    const d = await api('/api/auth/register', {
+      method: 'POST',
+      body: JSON.stringify({
+        username: $('au-user').value.trim(),
+        email: $('au-email').value.trim(),
+        password: $('au-register-pass').value,
+      }),
+    });
+    toast(`Account created — welcome, ${d.user.username}!`);
+    afterLogin(d);
+  } catch (e2) {
+    setAuthError(e2.message);
+  } finally {
+    btn.disabled = false; btn.textContent = 'Create account';
+  }
+});
+
+$('btn-logout')?.addEventListener('click', async () => {
+  try { await api('/api/auth/logout', { method: 'POST' }); } catch (_) {}
+  localStorage.removeItem('nova_session');
+  location.reload();
+});
+
 /* ===== Init ===== */
-(async function init() {
+let appStarted = false;
+
+async function startApp(user) {
+  if (appStarted) return;
+  appStarted = true;
+  $('auth-username').textContent = user?.username ? `@${user.username}` : '';
+  hideAuth();
+
   loadState();
   initRoute();
 
@@ -1099,4 +1191,18 @@ function timeAgo(ts) {
     if (active === 'view-activity') loadVideos();
     if (active === 'view-manual') loadManualJobs();
   }, 30000);
+}
+
+(async () => {
+  const token = localStorage.getItem('nova_session');
+  if (token) {
+    try {
+      const d = await api('/api/auth/me');
+      await startApp(d.user);
+      return;
+    } catch (_) {
+      localStorage.removeItem('nova_session');
+    }
+  }
+  showAuth();
 })();

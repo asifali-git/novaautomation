@@ -16,6 +16,24 @@ def _client_creds():
     return cid, sec
 
 
+def use_login(login_id, base_url, x_token):
+    """Point YT_* env at a specific worker login (multi-account uploads)."""
+    r = requests.get(
+        f"{str(base_url).rstrip('/')}/api/internal/logins/{login_id}",
+        headers={"x-token": x_token},
+        timeout=30,
+    )
+    r.raise_for_status()
+    tok = ((r.json().get("login") or {}).get("token")) or {}
+    if tok.get("refresh_token"):
+        os.environ["YT_REFRESH_TOKEN"] = tok["refresh_token"]
+    if tok.get("client_id"):
+        os.environ["YT_CLIENT_ID"] = tok["client_id"]
+    if tok.get("client_secret"):
+        os.environ["YT_CLIENT_SECRET"] = tok["client_secret"]
+    print(f"[yt] using YouTube login {login_id}")
+
+
 def refresh_access_token():
     cid, sec = _client_creds()
     refresh = os.getenv("YT_REFRESH_TOKEN")

@@ -69,6 +69,10 @@
         <span id="conn-text">connecting…</span>
       </div>
       <div class="clock" id="clock">--:--:--</div>
+      <div class="auth-user-row">
+        <span class="auth-username" id="auth-username"></span>
+        <button class="btn-logout" id="btn-logout" type="button">Log out</button>
+      </div>
     </div>
   </nav>
 
@@ -228,7 +232,9 @@
                 <input type="checkbox" id="q-youtube" value="youtube" checked />
                 <span class="dest-icon yt">▶</span>
                 <span class="dest-name">YouTube</span>
-                <span class="dest-note">Full AI editing pipeline</span>
+                <select class="dest-account" id="q-acct-youtube" disabled>
+                  <option value="">Select account…</option>
+                </select>
               </label>
               <label class="dest-option">
                 <input type="checkbox" id="q-tiktok" value="tiktok" />
@@ -464,7 +470,9 @@
               <input type="checkbox" id="f-youtube" value="youtube" checked />
               <span class="dest-icon yt">▶</span>
               <span class="dest-name">YouTube</span>
-              <span class="dest-connected" id="yt-conn-badge"></span>
+              <select class="dest-account" id="acct-youtube" disabled>
+                <option value="">Select account…</option>
+              </select>
             </label>
             <label class="dest-option">
               <input type="checkbox" id="f-tiktok" value="tiktok" />
@@ -499,6 +507,57 @@
           <button class="btn primary" type="submit">Add Source</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- ===== AUTH SCREEN ===== -->
+  <div id="auth-screen" class="auth-screen" style="display:none;">
+    <div class="card auth-card">
+      <div class="auth-brand">
+        <div class="brand-icon">⚡</div>
+        <span class="brand-name">NOVA</span>
+      </div>
+
+      <div class="auth-tabs">
+        <button type="button" class="auth-tab active" id="auth-tab-login">Log in</button>
+        <button type="button" class="auth-tab" id="auth-tab-register">Sign up</button>
+      </div>
+
+      <form id="auth-login-form" class="form">
+        <div class="form-group full">
+          <span class="form-label">Email or Username</span>
+          <input id="au-identity" type="text" class="form-input" autocomplete="username" required />
+        </div>
+        <div class="form-group full">
+          <span class="form-label">Password</span>
+          <input id="au-login-pass" type="password" class="form-input" autocomplete="current-password" required />
+        </div>
+        <div class="form-actions">
+          <button class="btn primary" type="submit" id="au-login-btn">Log in</button>
+        </div>
+      </form>
+
+      <form id="auth-register-form" class="form" style="display:none;">
+        <div class="form-group full">
+          <span class="form-label">Username</span>
+          <input id="au-user" type="text" class="form-input" autocomplete="username" minlength="3" maxlength="30" required />
+          <span class="form-hint">3–30 chars: letters, digits, _ . -</span>
+        </div>
+        <div class="form-group full">
+          <span class="form-label">Email</span>
+          <input id="au-email" type="email" class="form-input" autocomplete="email" required />
+        </div>
+        <div class="form-group full">
+          <span class="form-label">Password</span>
+          <input id="au-register-pass" type="password" class="form-input" autocomplete="new-password" minlength="6" required />
+          <span class="form-hint">At least 6 characters</span>
+        </div>
+        <div class="form-actions">
+          <button class="btn primary" type="submit" id="au-register-btn">Create account</button>
+        </div>
+      </form>
+
+      <div class="auth-error" id="auth-error"></div>
     </div>
   </div>
 
