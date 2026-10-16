@@ -968,9 +968,10 @@ def upload_tiktok(video_path, description, account_id=None):
                         break
                     _sleep(3, 5)
                 if not pub_url and meta.get("username"):
+                    uname = str(meta["username"]).lstrip("@")
                     pub_url = _harvest_profile_url(
                         driver, r"/@[\w.-]+/video/\d+",
-                        f"https://www.tiktok.com/@{meta['username']}",
+                        f"https://www.tiktok.com/@{uname}",
                     )
                 print(f"[tiktok] published URL: {pub_url or '(not found)'}")
                 return _up(True, url=pub_url, account_id=account_id)
@@ -1114,9 +1115,10 @@ def upload_instagram(video_path, description, account_id=None):
             print("[instagram] reel shared OK")
             pub_url = _harvest_url_js(driver, r"/(reel|p)/[\w-]+")
             if not pub_url and meta.get("username"):
+                uname = str(meta["username"]).lstrip("@")
                 pub_url = _harvest_profile_url(
                     driver, r"/(reel|p)/[\w-]+",
-                    f"https://www.instagram.com/{meta['username']}/",
+                    f"https://www.instagram.com/{uname}/",
                 )
             print(f"[instagram] published URL: {pub_url or '(not found)'}")
             return _up(True, url=pub_url, account_id=account_id)
@@ -1124,9 +1126,10 @@ def upload_instagram(video_path, description, account_id=None):
             print("[instagram] success message timeout (may still succeed)")
             pub_url = _harvest_url_js(driver, r"/(reel|p)/[\w-]+")
             if not pub_url and meta.get("username"):
+                uname = str(meta["username"]).lstrip("@")
                 pub_url = _harvest_profile_url(
                     driver, r"/(reel|p)/[\w-]+",
-                    f"https://www.instagram.com/{meta['username']}/",
+                    f"https://www.instagram.com/{uname}/",
                     timeout=20,
                 )
             return _up(True, url=pub_url, account_id=account_id)
@@ -1179,44 +1182,80 @@ def _parse_cookies_any_format(cookies_file):
 
 
 def _harvest_facebook_url(driver, timeout=30):
-    """Capture the published reel URL from the success dialog / page links.
+    """Capture the just-published reel URL.
 
-    Priority: links inside the dialog (success modal) with "View reel" text,
-    then any /reel/ anchor — never a /reels/create link."""
+    Priority:
+      1. anchors inside the success dialog ("View reel") — page-wide scan skipped
+         because the home feed is full of OTHER people's reels (stale-link source).
+      2. notifications flow (deterministic): newest "Your reel has been published"
+         notification carries a base64 content_id "S:<page>:<story>:<story>";
+         story.php?story_fbid=<story>&id=<page> redirects to the canonical
+         /reel/<id> permalink. Recency-filtered by notif_id (epoch ms)."""
+    import base64 as _b64
     import re
+    from urllib.parse import parse_qs, urlparse
 
     rx = re.compile(r"/reel/\d{6,}", re.I)
-    deadline = time.time() + timeout
+    now = time.time()
+    deadline = now + timeout
     while time.time() < deadline:
+        # Pass 1: success-dialog links only
         try:
             cands = driver.execute_script(r"""
                 const out = [];
-                const add = (a, tag) => {
-                    try { out.push({h: a.href || '', t: (a.innerText || '').trim().slice(0, 50), tag}); } catch(e) {}
-                };
                 const dlg = document.querySelector('[role="dialog"]');
-                if (dlg) dlg.querySelectorAll('a[href]').forEach(a => add(a, 'dialog'));
-                document.querySelectorAll('a[href*="/reel/"]').forEach(a => add(a, 'page'));
+                if (dlg) {
+                    dlg.querySelectorAll('a[href]').forEach(a => {
+                        out.push({h: a.href || '', t: (a.innerText || '').trim().slice(0, 50)});
+                    });
+                }
                 return JSON.stringify(out);
             """)
-            items = json.loads(cands or "[]")
-        except Exception:
-            items = []
-        # Pass 1: dialog links (success modal) or explicit "view reel" anchors.
-        for it in items:
-            h = it.get("h") or ""
-            if not rx.search(h) or "reels/create" in h:
-                continue
-            if it.get("tag") == "dialog" or re.search(r"view\s*reel", it.get("t") or "", re.I):
-                return h.split("?")[0]
-        # Pass 2: raw HTML scan for an absolute reel URL (last resort).
-        try:
-            html = driver.execute_script("return document.documentElement.innerHTML") or ""
-            m = re.search(r"https?://(?:www\.)?facebook\.com/reel/(\d{6,})", html)
-            if m:
-                return m.group(0).split("?")[0]
+            for it in json.loads(cands or "[]"):
+                h = it.get("h") or ""
+                if rx.search(h) and "reels/create" not in h and "/reel/?s=" not in h:
+                    return h.split("?")[0]
         except Exception:
             pass
+
+        # Pass 2: notifications -> story.php redirect -> canonical permalink
+        try:
+            driver.get("https://www.facebook.com/notifications/")
+            _sleep(5, 7)
+            hrefs = json.loads(driver.execute_script(r"""
+                const s = new Set();
+                document.querySelectorAll('a[href*="content_id"]').forEach(a => s.add(a.href));
+                return JSON.stringify([...s]);
+            """) or "[]")
+            best = None  # (notif_time, story_url)
+            for href in hrefs:
+                q = parse_qs(urlparse(href).query)
+                enc = (q.get("content_id") or [""])[0]
+                nid = (q.get("notif_id") or [""])[0]
+                if not enc:
+                    continue
+                # Recency: notif_id ≈ epoch seconds (+fraction); reject stale ones
+                try:
+                    t = int(nid) / 1000.0
+                except Exception:
+                    continue
+                if not (now - 1800 <= t <= time.time() + 60):
+                    continue
+                try:
+                    parts = _b64.b64decode(enc).decode().split(":")
+                    page, story = parts[1].lstrip("_I"), parts[2]
+                except Exception:
+                    continue
+                if best is None or t > best[0]:
+                    best = (t, f"https://www.facebook.com/story.php?story_fbid={story}&id={page}")
+            if best:
+                driver.get(best[1])
+                _sleep(5, 7)
+                m = rx.search(driver.current_url.split("?")[0])
+                if m:
+                    return f"https://www.facebook.com{m.group(0)}"
+        except Exception as e:
+            print(f"[facebook] notification harvest: {e}")
         _sleep(3, 4)
     return None
 
@@ -1440,19 +1479,44 @@ def upload_facebook(video_path, description, account_id=None):
                 pass
         print(f"[facebook] processing done={not processing} after polling")
 
-        # Fill description
-        try:
-            desc_box = WebDriverWait(driver, 15).until(
-                EC.element_to_be_clickable(
-                    (By.XPATH, "//div[@contenteditable='true'] | //div[@role='textbox']")
+        # Fill description (JS click bypasses overlay interception — native
+        # click got intercepted in job25 and the reel published with no caption)
+        def _fill_editor(text, wait_s=15):
+            try:
+                box = WebDriverWait(driver, wait_s).until(
+                    EC.element_to_be_clickable(
+                        (By.XPATH, "//div[@contenteditable='true'] | //div[@role='textbox']")
+                    )
                 )
-            )
-            desc_box.click()
-            _sleep(0.5, 1)
-            desc_box.send_keys(description[:5000])
-            print("[facebook] description filled")
-        except Exception as e:
-            print(f"[facebook] description failed: {e}")
+                driver.execute_script("arguments[0].scrollIntoView({block:'center'});", box)
+                _sleep(0.5, 1)
+                driver.execute_script("arguments[0].click();", box)
+                _sleep(0.3, 0.6)
+                box.send_keys(text[:5000])
+                _sleep(1, 1.5)
+                val = driver.execute_script("return arguments[0].innerText || ''", box) or ""
+                if len(val.strip()) < 10:
+                    # Lexical-compatible fallback: execCommand insertText
+                    driver.execute_script(
+                        """
+                        const el = arguments[0], t = arguments[1];
+                        el.focus();
+                        document.execCommand('selectAll', false, null);
+                        document.execCommand('insertText', false, t);
+                        """,
+                        box,
+                        text[:5000],
+                    )
+                    _sleep(1, 1.5)
+                    val = driver.execute_script("return arguments[0].innerText || ''", box) or ""
+                ok = len(val.strip()) >= 10
+                print(f"[facebook] description {'filled' if ok else 'FAILED'} ({len(val.strip())} chars)")
+                return ok
+            except Exception as e:
+                print(f"[facebook] description failed: {e}")
+                return False
+
+        _fill_editor(description)
 
         _sleep(2, 4)
 
@@ -1488,21 +1552,20 @@ def upload_facebook(video_path, description, account_id=None):
             print("[facebook] clicked Next (wizard step)")
             _sleep(3, 5)
 
-            # Fill description on step 2 if a fresh editor appeared
+            # Fill description on step 2 if it didn't carry over / first fill failed
             try:
-                desc_box = WebDriverWait(driver, 8).until(
-                    EC.element_to_be_clickable(
+                cur = WebDriverWait(driver, 12).until(
+                    EC.presence_of_element_located(
                         (By.XPATH, "//div[@contenteditable='true'] | //div[@role='textbox']")
                     )
                 )
-                existing = desc_box.text or ""
+                existing = cur.text or ""
                 if len(existing.strip()) < 10:
-                    desc_box.click()
-                    _sleep(0.5, 1)
-                    desc_box.send_keys(description[:5000])
-                    print("[facebook] description filled on step 2")
-            except Exception:
-                pass
+                    _fill_editor(description, wait_s=12)
+                else:
+                    print(f"[facebook] description carried over ({len(existing.strip())} chars)")
+            except Exception as e:
+                print(f"[facebook] step2 description check failed: {e}")
             _sleep(1, 2)
 
         # Dump all button-like elements for debugging
@@ -1578,7 +1641,7 @@ def upload_facebook(video_path, description, account_id=None):
                 return _up(False, error="unverified after publish click", account_id=account_id)
 
             _sleep(3, 5)
-            pub_url = _harvest_facebook_url(driver, timeout=25)
+            pub_url = _harvest_facebook_url(driver, timeout=50)
             print(f"[facebook] reel published OK: {pub_url or '(url not found)'}")
             return _up(True, url=pub_url, account_id=account_id)
 
@@ -1590,7 +1653,7 @@ def upload_facebook(video_path, description, account_id=None):
                 )
             )
             print("[facebook] success message found")
-            pub_url = _harvest_facebook_url(driver, timeout=20)
+            pub_url = _harvest_facebook_url(driver, timeout=45)
             return _up(True, url=pub_url, account_id=account_id)
         except Exception:
             pass
