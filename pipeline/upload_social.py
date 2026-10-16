@@ -641,8 +641,8 @@ def upload_facebook(video_path, description, account_id=None):
         print("[facebook] no cookies in worker; skipping")
         return False
 
-    print(f"[facebook] video: {video_path} ({os.path.getsize(video_path)//1024} KB)")
-    page_url = os.getenv("FB_PAGE_URL", "")
+    abs_path = os.path.abspath(video_path)
+    print(f"[facebook] video: {abs_path} ({os.path.getsize(abs_path)//1024} KB)")
     driver = _make_driver(headless=True)
     try:
         driver.get("https://www.facebook.com/")
@@ -654,69 +654,161 @@ def upload_facebook(video_path, description, account_id=None):
             return False
 
         driver.refresh()
-        _sleep(3, 5)
+        _sleep(4, 6)
 
         from selenium.webdriver.common.by import By
         from selenium.webdriver.support.ui import WebDriverWait
         from selenium.webdriver.support import expected_conditions as EC
+        from selenium.webdriver.common.keys import Keys
 
-        # Go to Reels create page
-        driver.get("https://www.facebook.com/reels/create")
-        _sleep(3, 5)
+        # Dismiss cookie consent / popups
+        for sel in [
+            "//div[@role='dialog']//div[@aria-label='Close']",
+            "//div[@role='dialog']//button[@aria-label='Close']",
+            "//span[text()='Allow all cookies']/ancestor::div[@role='button']",
+            "//div[@aria-label='Allow all cookies']",
+            "//button[contains(text(),'Allow all')]",
+            "//div[@role='button' and contains(.,'Allow all')]",
+        ]:
+            try:
+                btn = driver.find_element(By.XPATH, sel)
+                if btn.is_displayed():
+                    btn.click()
+                    print(f"[facebook] dismissed popup: {sel[:50]}")
+                    _sleep(1, 2)
+            except Exception:
+                pass
+
+        # Try multiple reels create URLs
+        create_urls = [
+            "https://www.facebook.com/reels/create/",
+            "https://www.facebook.com/reels/",
+            "https://www.facebook.com/create/reel/",
+        ]
+        file_input = None
+        for url in create_urls:
+            try:
+                print(f"[facebook] trying: {url}")
+                driver.get(url)
+                _sleep(4, 6)
+
+                # Also dismiss popups on create page
+                for sel in [
+                    "//div[@role='dialog']//div[@aria-label='Close']",
+                    "//div[@role='dialog']//button[@aria-label='Close']",
+                    "//span[text()='Not now']/ancestor::div[@role='button']",
+                    "//div[@role='button' and contains(.,'Not now')]",
+                ]:
+                    try:
+                        btn = driver.find_element(By.XPATH, sel)
+                        if btn.is_displayed():
+                            btn.click()
+                            _sleep(1, 2)
+                    except Exception:
+                        pass
+
+                # Wait for file input
+                try:
+                    file_input = WebDriverWait(driver, 10).until(
+                        EC.presence_of_element_located(
+                            (By.XPATH, "//input[@type='file']")
+                        )
+                    )
+                    if file_input:
+                        print(f"[facebook] found file input at {url}")
+                        break
+                except Exception:
+                    # Try JS to find hidden file input
+                    file_input = driver.execute_script("""
+                        const inputs = document.querySelectorAll('input[type=file]');
+                        for (const inp of inputs) {
+                            if (inp.accept && inp.accept.includes('video')) return inp;
+                        }
+                        if (inputs.length > 0) return inputs[0];
+                        return null;
+                    """)
+                    if file_input:
+                        print(f"[facebook] found file input via JS at {url}")
+                        break
+            except Exception as e:
+                print(f"[facebook] {url} failed: {e}")
+
+        if not file_input:
+            print(f"[facebook] no file input found. URL: {driver.current_url}")
+            print(f"[facebook] page title: {driver.title}")
+            return False
 
         # Upload video
-        file_input = WebDriverWait(driver, 20).until(
-            EC.presence_of_element_located(
-                (By.XPATH, "//input[@type='file' and contains(@accept,'video')]")
-            )
-        )
-        file_input.send_keys(video_path)
+        file_input.send_keys(abs_path)
         print("[facebook] uploading video file...")
-        _sleep(10, 20)
+        _sleep(15, 25)
+
+        # Wait for video processing indicator to appear/disappear
+        try:
+            WebDriverWait(driver, 30).until(
+                EC.presence_of_element_located(
+                    (By.XPATH, "//*[contains(text(),'Video') or contains(text(),'Processing') or contains(text(),'Ready')]")
+                )
+            )
+            print("[facebook] video processing detected")
+        except Exception:
+            print("[facebook] no processing indicator (may still work)")
 
         # Fill description
         try:
-            desc_box = WebDriverWait(driver, 20).until(
+            desc_box = WebDriverWait(driver, 15).until(
                 EC.element_to_be_clickable(
-                    (
-                        By.XPATH,
-                        "//div[@contenteditable='true' or @role='textbox']",
-                    )
+                    (By.XPATH, "//div[@contenteditable='true'] | //div[@role='textbox']")
                 )
             )
             desc_box.click()
+            _sleep(0.5, 1)
             desc_box.send_keys(description[:5000])
+            print("[facebook] description filled")
         except Exception as e:
             print(f"[facebook] description failed: {e}")
 
         _sleep(2, 4)
 
-        # Click Publish / Share reel
+        # Click Publish / Share reel — try multiple selectors with JS fallback
+        publish_selectors = [
+            "//div[@role='button' and (normalize-space()='Share reel' or normalize-space()='Publish' or normalize-space()='Share')]",
+            "//button[normalize-space()='Share reel' or normalize-space()='Publish' or normalize-space()='Share']",
+            "//div[@role='button' and contains(.,'Share')]",
+            "//button[contains(.,'Share')]",
+            "//div[@aria-label='Share reel' or @aria-label='Publish']",
+        ]
+        for sel in publish_selectors:
+            try:
+                publish_btn = WebDriverWait(driver, 8).until(
+                    EC.element_to_be_clickable((By.XPATH, sel))
+                )
+                driver.execute_script("arguments[0].scrollIntoView({block:'center'});", publish_btn)
+                _sleep(0.5, 1)
+                driver.execute_script("arguments[0].click();", publish_btn)
+                _sleep(8, 12)
+                print(f"[facebook] reel published OK (selector: {sel[:60]})")
+                return True
+            except Exception as e:
+                print(f"[facebook] publish selector failed: {sel[:50]}: {e}")
+                continue
+
+        # Check if already published (success message)
         try:
-            publish_btn = WebDriverWait(driver, 15).until(
-                EC.element_to_be_clickable(
-                    (
-                        By.XPATH,
-                        "//div[@role='button' and ("
-                        "normalize-space()='Share reel' or "
-                        "normalize-space()='Publish' or "
-                        "normalize-space()='Share' or "
-                        "normalize-space()='Đăng')] | "
-                        "//button[normalize-space()='Share reel' or "
-                        "normalize-space()='Publish' or "
-                        "normalize-space()='Share']",
-                    )
+            WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located(
+                    (By.XPATH, "//*[contains(text(),'Your reel') or contains(text(),'has been shared') or contains(text(),'published')]")
                 )
             )
-            publish_btn.click()
-            _sleep(8, 12)
-            print("[facebook] reel published OK")
+            print("[facebook] success message found")
             return True
-        except Exception as e:
-            print(f"[facebook] publish click failed: {e}")
-            return False
+        except Exception:
+            pass
+
+        print("[facebook] no publish button found")
+        return False
     except Exception as e:
-        print(f"[facebook] error: {e}")
+        print(f"[facebook] error: {type(e).__name__}: {e}")
         return False
     finally:
         driver.quit()
