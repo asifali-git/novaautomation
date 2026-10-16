@@ -793,6 +793,24 @@ def _harvest_profile_url(driver, pattern, url, timeout=45):
     return None
 
 
+def _page_hint(driver):
+    """Compact on-page diagnosis: upload %, visible overlays, body text head."""
+    try:
+        return driver.execute_script("""
+            const body = (document.body && document.body.innerText || '').replace(/\\s+/g, ' ').trim();
+            const pct = [...document.querySelectorAll('div,span,p')]
+              .map(e => (e.childElementCount === 0 ? (e.textContent || '') : '').trim())
+              .find(s => /^\\d{1,3}%$/.test(s)) || '';
+            const ov = [...document.querySelectorAll('[class*="overlay" i],[class*="Overlay"],[class*="Modal"],[class*="Dialog"]')]
+              .filter(e => { const s = getComputedStyle(e); return s.display !== 'none' && s.visibility !== 'hidden' && e.offsetParent !== null; })
+              .map(e => (e.innerText || '').replace(/\\s+/g, ' ').trim().slice(0, 100))
+              .filter(Boolean).slice(0, 3);
+            return JSON.stringify({pct, ov, body: body.slice(0, 350)});
+        """) or "{}"
+    except Exception as e:
+        return f'{{"hint_err": "{str(e)[:80]}"}}'
+
+
 def _find_profile_url(driver, meta):
     """Best-effort public profile URL for the logged-in TikTok account."""
     import re
@@ -883,6 +901,7 @@ def upload_tiktok(video_path, description, account_id=None):
             _sleep(3, 5)
         else:
             print("[tiktok] profile url unknown; post-verify will rely on success dialog")
+        print(f"[tiktok] page@studio: {_page_hint(driver)}")
 
         from selenium.webdriver.common.by import By
         from selenium.webdriver.support.ui import WebDriverWait
@@ -908,6 +927,7 @@ def upload_tiktok(video_path, description, account_id=None):
         file_input.send_keys(os.path.abspath(video_path))
         print("[tiktok] file input sent")
         _sleep(5, 8)
+        print(f"[tiktok] page@uploaded-file: {_page_hint(driver)}")
 
         driver.switch_to.default_content()
         _sleep(2, 4)
@@ -973,6 +993,7 @@ def upload_tiktok(video_path, description, account_id=None):
             print("[tiktok] caption filled via JS click")
         except Exception as e:
             print(f"[tiktok] caption failed: {e}")
+        print(f"[tiktok] page@caption: {_page_hint(driver)}")
 
         _sleep(5, 10)
 
@@ -994,6 +1015,7 @@ def upload_tiktok(video_path, description, account_id=None):
             print("[tiktok] upload complete indicator found")
         except Exception:
             print("[tiktok] upload wait timeout (480s, may still be processing)")
+        print(f"[tiktok] page@post-attempt: {_page_hint(driver)}")
 
         # Hide leftover overlays/guides that can intercept the Post click.
         try:
@@ -1029,6 +1051,7 @@ def upload_tiktok(video_path, description, account_id=None):
                 driver.execute_script("arguments[0].click();", post_btn)
                 _sleep(5, 10)
                 print(f"[tiktok] posted OK (selector: {sel[:50]})")
+                print(f"[tiktok] page@posted: {_page_hint(driver)}")
                 posted = True
                 break
             except Exception as e:

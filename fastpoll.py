@@ -118,6 +118,21 @@ def trigger_process(video_ids):
         log.warning("failed to trigger process: %s", e)
 
 
+_recent_triggers = {}  # key -> monotonic ts (in-process debounce)
+
+
+def _should_trigger(key, cooldown_s=900):
+    """Debounce duplicate GH dispatches: runner claim lags several loops,
+    so the same queued job/video would otherwise re-trigger every pass."""
+    now = time.monotonic()
+    for k in [k for k, ts in _recent_triggers.items() if now - ts > 3600]:
+        _recent_triggers.pop(k, None)
+    if now - _recent_triggers.get(key, -1e9) < cooldown_s:
+        return False
+    _recent_triggers[key] = now
+    return True
+
+
 def check_manual_jobs():
     """Check for queued manual upload jobs and trigger processing."""
     if not WORKER or not TOKEN:
@@ -127,6 +142,10 @@ def check_manual_jobs():
         r.raise_for_status()
         job = r.json().get("job")
         if not job:
+            return False
+
+        if not _should_trigger(f"manual:{job['id']}", 900):
+            log.info("manual job %s triggered recently; waiting for runner claim", job["id"])
             return False
 
         log.info("MANUAL job %s: %s -> %s", job["id"], job["url"], job.get("dest_platforms"))
@@ -207,7 +226,7 @@ def poll_once():
         except Exception as e:
             log.warning("task %s add_video failed: %s", tid, e)
 
-    if new_ids:
+    if new_ids and _should_trigger("vids:" + ",".join(str(i) for i in new_ids), 1800):
         trigger_process(new_ids)
     return new_ids
 
