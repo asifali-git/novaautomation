@@ -1,8 +1,8 @@
 name: poll
 
+# Polling is done by the Render fast-poller (fastpoll.py, every 8-15s) which
+# dispatches process.yml directly — no scheduled GH run needed.
 on:
-  schedule:
-    - cron: '*/5 * * * *'   # every 5 min (Actions minimum)
   workflow_dispatch: {}
 
 concurrency:

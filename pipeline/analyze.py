@@ -132,6 +132,9 @@ Return ONLY valid JSON (no markdown fences, no commentary):
   "description": "2-3 sentences",
   "hashtags": ["#tag1","#tag2","#tag3"],
   "tags": ["8-15 short seo tags"],
+  "source_captions": [
+    {"top": 0.85, "bottom": 0.89, "kind": "text"}
+  ],
   "segments": [
     {
       "index": 0,
@@ -163,6 +166,18 @@ Rules:
 - caption.text: <=5 words, ONE per segment, different wording each.
 - narration: clean natural spoken line. Empty string = silent segment.
   Never repeat the same line in consecutive segments.
+- source_captions: PERSISTENT burned-in text/logos/watermarks that belong to the
+  ORIGINAL source video (old captions, channel names, "subscribe" overlays,
+  watermarks, credit lines). They can appear ANYWHERE in the frame — top,
+  middle, or bottom; the position is NEVER fixed. Report each distinct text
+  band visible in MOST sampled frames as its vertical extent:
+  "top"/"bottom" = frame fractions (0.0 = very top, 1.0 = very bottom),
+  padded ~0.01 beyond the text edges. OUR new captions are added later — you
+  only locate the source's own text. Ignore moving objects, subtitles that are
+  part of a scene shot (e.g. movie dialogue burned by the same uploader counts
+  ONLY if it is clearly a persistent overlay band). [] if nothing is burned in.
+  Example: a two-line white credit at the lower area -> [{"top": 0.84, "bottom": 0.91, "kind": "text"}]
+  same video with a small logo top-right -> [{"top": 0.04, "bottom": 0.10, "kind": "logo"}]
 - Do not invent visual facts. Base on frames + audio only.
 """
 
@@ -430,7 +445,10 @@ def _normalize(plan, duration):
     plan["audio_mode"] = "lower"
     plan["audio_volume"] = 0.40 if audio_type == "asmr" else 0.55
     plan["has_speech"] = audio_type == "vocal"
-    plan["caption_regions"] = []
+    # AI-observed source text (any position) -> regions to remove; [] if none.
+    import smart as _smart
+    plan["caption_regions"] = _smart.normalize_source_captions(plan.get("source_captions"))
+    plan.pop("source_captions", None)
 
     g = plan.get("global") or {}
     if audio_type == "asmr":

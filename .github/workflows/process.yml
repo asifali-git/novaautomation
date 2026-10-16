@@ -70,9 +70,14 @@ jobs:
           INTERNAL_TOKEN: ${{ secrets.INTERNAL_TOKEN }}
         run: |
           resp=$(curl -s -H "x-token: $INTERNAL_TOKEN" "$WORKER_URL/api/internal/logins/env")
-          echo "YT_REFRESH_TOKEN=$(echo "$resp" | python -c 'import sys,json;print(json.load(sys.stdin).get("YT_REFRESH_TOKEN") or "")')" >> "$GITHUB_ENV"
-          echo "YT_CLIENT_ID=$(echo "$resp" | python -c 'import sys,json;print(json.load(sys.stdin).get("YT_CLIENT_ID") or "")')" >> "$GITHUB_ENV"
-          echo "YT_CLIENT_SECRET=$(echo "$resp" | python -c 'import sys,json;print(json.load(sys.stdin).get("YT_CLIENT_SECRET") or "")')" >> "$GITHUB_ENV"
+          get() { echo "$resp" | python -c "import sys,json;print(json.load(sys.stdin).get('$1') or '')"; }
+          rt=$(get YT_REFRESH_TOKEN); cid=$(get YT_CLIENT_ID); cs=$(get YT_CLIENT_SECRET)
+          [ -n "$rt" ] && echo "::add-mask::$rt"
+          [ -n "$cid" ] && echo "::add-mask::$cid"
+          [ -n "$cs" ] && echo "::add-mask::$cs"
+          echo "YT_REFRESH_TOKEN=$rt" >> "$GITHUB_ENV"
+          echo "YT_CLIENT_ID=$cid" >> "$GITHUB_ENV"
+          echo "YT_CLIENT_SECRET=$cs" >> "$GITHUB_ENV"
 
       - name: Process manual upload
         if: ${{ inputs.manual_job_id != '' }}

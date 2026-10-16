@@ -793,6 +793,25 @@ def _harvest_profile_url(driver, pattern, url, timeout=45):
     return None
 
 
+def _find_profile_url(driver, meta):
+    """Best-effort public profile URL for the logged-in TikTok account."""
+    import re
+    try:
+        hrefs = driver.execute_script(
+            "return [...document.querySelectorAll('a[href]')].map(a=>a.href)"
+        ) or []
+        for h in hrefs:
+            m = re.search(r"https?://(?:www\.)?tiktok\.com/@([\w.-]+)", h)
+            if m and "/video/" not in h and "/photo/" not in h and "tiktokstudio" not in h:
+                return f"https://www.tiktok.com/@{m.group(1)}"
+    except Exception:
+        pass
+    uname = str((meta or {}).get("username") or "").strip().lstrip("@")
+    if re.fullmatch(r"[\w.]{2,24}", uname):
+        return f"https://www.tiktok.com/@{uname}"
+    return None
+
+
 def upload_tiktok(video_path, description, account_id=None):
     """Upload video to TikTok using cookies from worker."""
     cookies = _get_cookies("tiktok", account_id=account_id)
@@ -827,6 +846,21 @@ def upload_tiktok(video_path, description, account_id=None):
         print(f"[tiktok] session cookies present: {has_session} (total cookies: {len(all_c)})")
         if not has_session:
             print("[tiktok] WARNING: no session cookie — may not be logged in")
+
+        # Baseline: newest profile video BEFORE posting, so after posting we can
+        # prove a NEW video appeared (never report a stale/pinned URL).
+        import re as _re
+        profile_url = _find_profile_url(driver, meta)
+        baseline_id = None
+        if profile_url:
+            u0 = _harvest_profile_url(
+                driver, r"/@[\w.-]+/(?:video|photo)/(\d+)", profile_url, timeout=25
+            )
+            m0 = _re.search(r"/(?:video|photo)/(\d+)", u0 or "")
+            baseline_id = m0.group(1) if m0 else None
+            print(f"[tiktok] profile: {profile_url} baseline newest id: {baseline_id or 'none'}")
+        else:
+            print("[tiktok] profile url unknown; post-verify will rely on success dialog")
 
         driver.get(
             "https://www.tiktok.com/tiktokstudio/upload?from=creator_center"
@@ -926,21 +960,23 @@ def upload_tiktok(video_path, description, account_id=None):
 
         _sleep(5, 10)
 
-        # Wait for upload complete — try multiple selectors
+        # Wait for upload complete — poll any indicator (60MB files need time).
         uploaded = False
-        for xpath in ["//span[text()='Uploaded']", "//div[text()='Uploaded']",
-                      "//*[contains(text(),'uploaded')]"]:
-            try:
-                WebDriverWait(driver, 60).until(
-                    EC.presence_of_element_located((By.XPATH, xpath))
-                )
-                uploaded = True
-                print(f"[tiktok] upload complete indicator found: {xpath}")
-                break
-            except Exception:
-                continue
-        if not uploaded:
-            print("[tiktok] upload wait timeout (may still succeed)")
+        _up_xpaths = [
+            "//span[text()='Uploaded']",
+            "//div[text()='Uploaded']",
+            "//*[contains(text(),'uploaded')]",
+            "//*[contains(text(),'Upload complete')]",
+            "//*[contains(text(),'upload complete')]",
+        ]
+        try:
+            WebDriverWait(driver, 240).until(
+                lambda d: any(d.find_elements(By.XPATH, x) for x in _up_xpaths)
+            )
+            uploaded = True
+            print("[tiktok] upload complete indicator found")
+        except Exception:
+            print("[tiktok] upload wait timeout (240s, may still be processing)")
 
         # Click Post — try multiple selectors with JS click fallback
         post_selectors = [
@@ -949,6 +985,7 @@ def upload_tiktok(video_path, description, account_id=None):
             "//button[contains(text(),'Post')]",
             "//button[@data-e2e='post_video_button']",
         ]
+        posted = False
         for sel in post_selectors:
             try:
                 post_btn = WebDriverWait(driver, 10).until(
@@ -960,28 +997,43 @@ def upload_tiktok(video_path, description, account_id=None):
                 driver.execute_script("arguments[0].click();", post_btn)
                 _sleep(5, 10)
                 print(f"[tiktok] posted OK (selector: {sel[:50]})")
-                # Capture the published URL (success dialog "View post" / profile).
-                pub_url = None
-                for _ in range(6):
-                    pub_url = _harvest_url_js(
-                        driver, r"/@[\w.-]+/(video|photo)/\d+"
-                    )
-                    if pub_url:
-                        break
-                    _sleep(3, 5)
-                if not pub_url and meta.get("username"):
-                    uname = str(meta["username"]).lstrip("@")
-                    pub_url = _harvest_profile_url(
-                        driver, r"/@[\w.-]+/video/\d+",
-                        f"https://www.tiktok.com/@{uname}",
-                    )
-                print(f"[tiktok] published URL: {pub_url or '(not found)'}")
-                return _up(True, url=pub_url, account_id=account_id)
+                posted = True
+                break
             except Exception as e:
                 print(f"[tiktok] post selector failed: {sel[:40]}: {e}")
                 continue
-        print("[tiktok] no Post button found")
-        return _up(False, error="no Post button", account_id=account_id)
+        if not posted:
+            print("[tiktok] no Post button found")
+            return _up(False, error="no Post button", account_id=account_id)
+
+        # Verify the NEW video actually landed — success dialog first, then a
+        # profile poll for a video id NEWER than the baseline. A stale/pinned
+        # URL is never reported; unverified posts return an honest failure.
+        for _ in range(8):
+            pub_url = _harvest_url_js(driver, r"/@[\w.-]+/(?:video|photo)/\d+")
+            if pub_url:
+                m = _re.search(r"/(?:video|photo)/(\d+)", pub_url)
+                vid_found = m.group(1) if m else None
+                if not baseline_id:
+                    print(f"[tiktok] published URL (dialog, no baseline): {pub_url}")
+                    return _up(True, url=pub_url, account_id=account_id)
+                if vid_found and vid_found != baseline_id:
+                    print(f"[tiktok] verified via success dialog: {pub_url}")
+                    return _up(True, url=pub_url, account_id=account_id)
+            _sleep(3, 5)
+        if profile_url:
+            for attempt in range(6):
+                u = _harvest_profile_url(
+                    driver, r"/@[\w.-]+/(?:video|photo)/(\d+)", profile_url, timeout=25
+                )
+                m = _re.search(r"/(?:video|photo)/(\d+)", u or "")
+                if m and m.group(1) != baseline_id:
+                    print(f"[tiktok] verified via profile (new id {m.group(1)}): {u}")
+                    return _up(True, url=u, account_id=account_id)
+                print(f"[tiktok] profile check {attempt + 1}/6: no new video yet")
+        print("[tiktok] posted but NEW video NOT verified — honest failure (stale URL suppressed)")
+        return _up(False, error="posted but new video not verified on profile",
+                   account_id=account_id)
     except Exception as e:
         print(f"[tiktok] error: {e}")
         import traceback

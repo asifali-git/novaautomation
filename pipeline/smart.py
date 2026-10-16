@@ -96,23 +96,23 @@ def detect_caption_regions(path):
         base = 1.0
     # Static-text mask: high edge vs baseline AND low temporal variance.
     tv_base = float(np.median(tvar)) or 1.0
-    text_mask = (edge > max(base * 2.2, 6.0)) & (tvar < tv_base * 1.6)
+    text_mask = (edge > max(base * 1.5, 5.0)) & (tvar < tv_base * 1.6)
 
-    # Group contiguous text rows (allow small gaps <= 4 rows).
+    # Group contiguous text rows (allow small gaps <= 8 rows: two-line captions).
     rows = np.where(text_mask)[0]
     if len(rows) == 0:
         return []
     groups = []
     start = prev = rows[0]
     for r in rows[1:]:
-        if r - prev <= 4:
+        if r - prev <= 8:
             prev = r
         else:
             groups.append((start, prev))
             start = prev = r
     groups.append((start, prev))
 
-    # Keep groups tall enough to be text (>= 6 rows) and compute confidence.
+    # Keep groups tall enough to be text (>= 5 rows) and compute confidence.
     regions = []
     for y0, y1 in groups:
         if (y1 - y0) < 6:
@@ -141,6 +141,83 @@ def detect_caption_regions(path):
     # Sort by position; cap to 2 regions (top + bottom typical).
     regions.sort(key=lambda r: r["top_frac"])
     return regions[:2]
+
+
+def _band_for(top, bot):
+    mid = (top + bot) / 2.0
+    if mid < 0.35:
+        return "top"
+    if mid > 0.65:
+        return "bottom"
+    return "mid"
+
+
+def normalize_source_captions(raw):
+    """Validate AI-observed [{top,bottom}] source-text extents -> region dicts.
+
+    Position-agnostic: any frame-fraction band (top/mid/bottom) is accepted.
+    """
+    regions = []
+    for r in raw or []:
+        try:
+            t = float(r.get("top"))
+            b = float(r.get("bottom"))
+        except Exception:
+            continue
+        if b < t:
+            t, b = b, t
+        t = max(0.0, min(1.0, t))
+        b = max(0.0, min(1.0, b))
+        if b - t < 0.012:          # < ~1% frame height = not a real text band
+            continue
+        band = _band_for(t, b)
+        regions.append({
+            "band": band,
+            "top_frac": round(t, 4),
+            "bottom_frac": round(b, 4),
+            "action": "delogo" if band == "mid" else "crop",
+            "confidence": 0.9,
+        })
+    regions.sort(key=lambda r: r["top_frac"])
+    return regions[:3]
+
+
+def merge_caption_regions(ai_regions, cv_regions):
+    """Union AI-observed + CV-detected source-text bands (position-agnostic).
+
+    Overlapping/near bands merge into one so the WHOLE text block is removed;
+    the union never shrinks (a slightly wider crop beats leftover text).
+    """
+    intervals = []
+    for r in list(ai_regions or []) + list(cv_regions or []):
+        try:
+            t = float(r.get("top_frac"))
+            b = float(r.get("bottom_frac"))
+        except Exception:
+            continue
+        if b <= t:
+            continue
+        intervals.append([t, b])
+    if not intervals:
+        return []
+    intervals.sort()
+    merged = [intervals[0]]
+    for t, b in intervals[1:]:
+        if t <= merged[-1][1] + 0.02:      # overlap or tiny gap -> union
+            merged[-1][1] = max(merged[-1][1], b)
+        else:
+            merged.append([t, b])
+    out = []
+    for t, b in merged[:3]:
+        band = _band_for(t, b)
+        out.append({
+            "band": band,
+            "top_frac": round(t, 4),
+            "bottom_frac": round(b, 4),
+            "action": "delogo" if band == "mid" else "crop",
+            "confidence": 0.95,
+        })
+    return out
 
 
 def _features(path):

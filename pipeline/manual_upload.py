@@ -117,15 +117,17 @@ def make_plan(src, title_hint):
 
 
 def detect_captions(src, plan):
-    """Detect burned-in source captions/watermarks for removal."""
+    """Merge AI-observed + CV-detected burned-in source text (any position)."""
     try:
-        regions = smart.detect_caption_regions(src)
+        regions = smart.merge_caption_regions(
+            plan.get("caption_regions") or [],
+            smart.detect_caption_regions(src))
         plan["caption_regions"] = regions
-        print(f"[captions] detected {len(regions)} region(s): "
-              f"{[(r['band'], r['action']) for r in regions]}")
+        print(f"[captions] {len(regions)} region(s): "
+              f"{[(r['band'], r['action'], r['top_frac'], r['bottom_frac']) for r in regions]}")
     except Exception as e:
         print(f"[captions] detection failed: {e}", file=sys.stderr)
-        plan["caption_regions"] = []
+        plan.setdefault("caption_regions", [])
 
 
 def make_voices(plan, work, used_ai=True):

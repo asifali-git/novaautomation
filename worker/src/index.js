@@ -251,6 +251,37 @@ async function deleteLogin(db, id) {
 
 // --- Accounts (social media cookies) -----------------------------------------
 
+const COOKIE_DOMAINS = {
+  tiktok: ['tiktok.com'],
+  facebook: ['facebook.com', 'fb.com'],
+  instagram: ['instagram.com'],
+  youtube: ['youtube.com', 'google.com'],
+  twitter: ['twitter.com', 'x.com'],
+  x: ['twitter.com', 'x.com'],
+};
+
+function validateCookieDomains(platform, cookiesStr) {
+  const need = COOKIE_DOMAINS[platform];
+  if (!need || !cookiesStr) return;
+  const s = String(cookiesStr).toLowerCase();
+  if (need.some((d) => s.includes(d))) return;          // correct platform present
+  const others = Object.values(COOKIE_DOMAINS)
+    .flat()
+    .filter((d) => !need.includes(d));
+  const foreign = others.find((d) => s.includes(d));
+  if (foreign) {
+    throw new Error(
+      `cookies are for ${foreign}, not ${platform} — export them while logged in on ${need[0]}`
+    );
+  }
+  if (s.includes('pages.dev') || s.includes('workers.dev') || s.includes('novaautomation')) {
+    throw new Error(
+      `these are not ${platform} login cookies (foreign site data) — re-export them from ${need[0]} while logged in`
+    );
+  }
+  // No recognizable domains (minimal name/value export) — accept.
+}
+
 async function listAccounts(db, user) {
   const res = user
     ? await db
@@ -276,6 +307,7 @@ async function saveAccount(db, body) {
   const cookies = body.cookies;
   if (!cookies) throw new Error('cookies required');
   const cookiesStr = typeof cookies === 'string' ? cookies : JSON.stringify(cookies);
+  validateCookieDomains(platform, cookiesStr);
   const username = body.username || null;
   const proxy = (body.proxy || '').trim();
   const country = (body.country || '').trim();
@@ -567,7 +599,12 @@ export default {
       if (path === '/api/accounts' && req.method === 'POST') {
         const body = await readBody(req);
         body.user_id = gateUser.id;
-        const account = await saveAccount(env.DB, body);
+        let account;
+        try {
+          account = await saveAccount(env.DB, body);
+        } catch (e) {
+          return withCors(json({ error: String(e.message || e) }, 400));
+        }
         return withCors(json({ account }, 201));
       }
 

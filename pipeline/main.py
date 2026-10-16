@@ -286,13 +286,17 @@ def run():
     print(f"[plan] {len(plan['segments'])} segs, ai={used_ai}, "
           f"audio={plan.get('audio_type')}, mode={plan.get('audio_mode')}")
 
-    # 1b. Detect burned-in source captions so apply.py can crop/delogo them.
+    # 1b. Merge AI-observed source text with CV detection (any position),
+    #     so old captions/watermarks are cropped/delogoed wherever they sit.
     try:
-        plan["caption_regions"] = smart.detect_caption_regions(src)
-        print(f"[captions] detected {len(plan['caption_regions'])} region(s)")
+        plan["caption_regions"] = smart.merge_caption_regions(
+            plan.get("caption_regions") or [],
+            smart.detect_caption_regions(src))
+        print(f"[captions] {len(plan['caption_regions'])} region(s): "
+              f"{[(r['band'], r['top_frac'], r['bottom_frac']) for r in plan['caption_regions']]}")
     except Exception:
-        plan["caption_regions"] = []
-        print("[captions] detection failed; none injected")
+        plan.setdefault("caption_regions", [])
+        print("[captions] detection failed; keeping plan regions", file=sys.stderr)
 
     # 2. Kokoro narration (AI path only; fallback = visual-only, no voice).
     voice_wavs = make_voices(plan, work, vid, used_ai=used_ai)
