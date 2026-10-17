@@ -1,0 +1,23 @@
+name: fastpoll-keepalive
+
+# Render free tier sleeps after ~15 min without external traffic; this cron
+# pings /wake every 10 min to keep it alive AND triggers an immediate
+# manual-job check (so queued Quick Upload jobs dispatch even if fastpoll
+#'s own loop was asleep).
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  wake:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Ping fastpoll /wake
+        run: |
+          curl -fsS --max-time 25 https://novapoll.onrender.com/wake || true

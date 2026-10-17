@@ -119,6 +119,7 @@ def trigger_process(video_ids):
 
 
 _recent_triggers = {}  # key -> monotonic ts (in-process debounce)
+_state = {"last_poll": 0, "last_manual_check": 0, "last_manual_found": None}
 
 
 def _should_trigger(key, cooldown_s=900):
@@ -237,9 +238,12 @@ def poll_loop():
     while True:
         try:
             # Check manual jobs first
-            check_manual_jobs()
+            _state["last_manual_check"] = time.time()
+            found = check_manual_jobs()
+            _state["last_manual_found"] = found
             # Then check for new videos from tasks
             new = poll_once()
+            _state["last_poll"] = time.time()
             if new:
                 log.info("found %d new video(s)", len(new))
         except Exception as e:
@@ -248,14 +252,22 @@ def poll_loop():
 
 
 def keepalive_loop():
-    """Ping self every 10-13 min so Render free tier doesn't sleep."""
+    """Ping self via PUBLIC url every 8-10 min so Render free tier doesn't sleep.
+
+    Must go through Render's router (RENDER_EXTERNAL_URL / SELF_URL) — a
+    localhost ping never counts as traffic and the service sleeps after 15 min.
+    """
     port = os.getenv("PORT", "10000")
-    self_url = os.getenv("SELF_URL", f"http://127.0.0.1:{port}/health")
+    public = os.getenv("RENDER_EXTERNAL_URL", "").rstrip("/")
+    self_url = os.getenv("SELF_URL") or (
+        f"{public}/health" if public else f"http://127.0.0.1:{port}/health"
+    )
+    log.info("keepalive target: %s", self_url)
     while True:
-        interval = random.randint(600, 780)  # 10-13 minutes
+        interval = random.randint(480, 600)  # 8-10 min (sleep threshold ~15 min)
         time.sleep(interval)
         try:
-            requests.get(self_url, timeout=10)
+            requests.get(self_url, timeout=15)
             log.info("keepalive ping sent (slept %ds)", interval)
         except Exception as e:
             log.warning("keepalive ping failed: %s", e)
@@ -267,8 +279,28 @@ class Handler(BaseHTTPRequestHandler):
         if self.path == "/health":
             body = b'{"ok":true}'
             self.send_response(200)
+        elif self.path == "/status":
+            import json as _json
+            body = _json.dumps({
+                "service": "fastpoll",
+                "ok": True,
+                "last_poll": _state.get("last_poll"),
+                "last_manual_check": _state.get("last_manual_check"),
+                "last_manual_found": _state.get("last_manual_found"),
+                "poll_interval": [POLL_MIN, POLL_MAX],
+                "gh_repo": GH_REPO or None,
+            }).encode()
+            self.send_response(200)
+        elif self.path == "/wake":
+            # Manual wake: trigger an immediate manual-job check (bypasses sleep).
+            try:
+                triggered = check_manual_jobs()
+                body = ('{"ok":true,"manual_triggered":%s}' % ("true" if triggered else "false")).encode()
+            except Exception as e:
+                body = ('{"ok":false,"error":"%s"}' % str(e).replace('"', "'")[:200]).encode()
+            self.send_response(200)
         else:
-            body = b'{"service":"fastpoll","endpoints":["/health"]}'
+            body = b'{"service":"fastpoll","endpoints":["/health","/status","/wake"]}'
             self.send_response(200)
         self.send_header("Content-Type", "application/json")
         self.send_header("Content-Length", str(len(body)))
@@ -285,7 +317,7 @@ def main():
     t.start()
     ka = threading.Thread(target=keepalive_loop, daemon=True)
     ka.start()
-    log.info("HTTP server on :%d", port)
+    log.info("HTTP server on :%d (keepalive via public url)", port)
     HTTPServer(("0.0.0.0", port), Handler).serve_forever()
 
 
