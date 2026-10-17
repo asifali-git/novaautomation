@@ -6,6 +6,7 @@ compatibility_date = "2024-12-01"
 ENVIRONMENT = "production"
 ALLOWED_ORIGIN = "https://novaautomation.pages.dev"
 PUBLIC_BASE_URL = "https://novaautomation.asifaliasmr05.workers.dev"
+GH_REPO = "asifali-git/novaautomation"
 
 [[d1_databases]]
 binding = "DB"

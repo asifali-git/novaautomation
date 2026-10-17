@@ -476,10 +476,32 @@ async function userFromRequest(req, env) {
   return { id: row.id, username: row.username, email: row.email, is_admin: !!row.is_admin, created_at: row.created_at };
 }
 
+// Fire GitHub process.yml dispatch (manual job). Best-effort; fastpoll also triggers.
+async function dispatchManualJob(env, jobId) {
+  const token = env.GH_TOKEN;
+  const repo = env.GH_REPO || 'asifali-git/novaautomation';
+  if (!token) throw new Error('GH_TOKEN not set on worker');
+  const r = await fetch(`https://api.github.com/repos/${repo}/actions/workflows/process.yml/dispatches`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Accept': 'application/vnd.github+json',
+      'Content-Type': 'application/json',
+      'User-Agent': 'novaautomation-worker', // GitHub API rejects requests without it
+    },
+    body: JSON.stringify({ ref: 'master', inputs: { manual_job_id: String(jobId) } }),
+  });
+  if (!r.ok) {
+    const t = await r.text().catch(() => '');
+    throw new Error(`gh ${r.status}: ${t.slice(0, 200)}`);
+  }
+  return true;
+}
+
 // --- Router -----------------------------------------------------------------
 
 export default {
-  async fetch(req, env) {
+  async fetch(req, env, cctx) {
     const url = new URL(req.url);
     const path = url.pathname;
     const origin = req.headers.get('origin') || '';
@@ -646,7 +668,19 @@ export default {
           .bind(url, body.title || null, dest, 'queued', gateUser.id, now(), now())
           .run();
         const job = await env.DB.prepare('SELECT * FROM manual_jobs WHERE id = ?').bind(res.meta?.last_row_id).first();
-        return withCors(json({ job }, 201));
+        // Instant GH trigger (synchronous — result visible in response).
+        let dispatched = false;
+        let dispatchError = null;
+        if (job) {
+          try {
+            dispatched = await dispatchManualJob(env, job.id);
+            if (!dispatched) dispatchError = 'dispatch request failed';
+          } catch (e) {
+            dispatchError = (e && e.message) || String(e);
+          }
+          console.log('gh dispatch for job', job.id, dispatched ? 'ok' : 'failed', dispatchError || '');
+        }
+        return withCors(json({ job, dispatched, dispatch_error: dispatchError }, 201));
       }
 
       if (path === '/api/manual/jobs' && req.method === 'GET') {
