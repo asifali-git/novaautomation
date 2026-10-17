@@ -501,6 +501,16 @@ async function dispatchManualJob(env, jobId) {
 // --- Router -----------------------------------------------------------------
 
 export default {
+  // Cron: ping fastpoll's /wake so Render free tier never sleeps (yt-dlp
+  // polling needs it alive; GitHub Actions can't poll every 15-30s).
+  async scheduled(_event, env, ctx) {
+    const url = env.RENDER_WAKE_URL || 'https://novapoll.onrender.com/wake';
+    ctx.waitUntil(
+      fetch(url, { method: 'GET' })
+        .then((r) => console.log('render wake', r.status))
+        .catch((e) => console.log('render wake fail', e && e.message))
+    );
+  },
   async fetch(req, env, cctx) {
     const url = new URL(req.url);
     const path = url.pathname;
