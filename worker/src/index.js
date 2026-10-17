@@ -502,15 +502,59 @@ async function dispatchProcess(env, inputs) {
 // --- Router -----------------------------------------------------------------
 
 export default {
-  // Cron: ping fastpoll's /wake so Render free tier never sleeps (yt-dlp
-  // polling needs it alive; GitHub Actions can't poll every 15-30s).
+  // Cron every 5 min: (1) ping fastpoll's /wake so Render free tier never
+  // sleeps (yt-dlp detection needs it alive; GH can't poll every 15-30s),
+  // (2) sweep stranded videos/jobs (created but GH dispatch missed).
   async scheduled(_event, env, ctx) {
-    const url = env.RENDER_WAKE_URL || 'https://novapoll.onrender.com/wake';
-    ctx.waitUntil(
-      fetch(url, { method: 'GET' })
-        .then((r) => console.log('render wake', r.status))
-        .catch((e) => console.log('render wake fail', e && e.message))
-    );
+    ctx.waitUntil((async () => {
+      const wakeUrl = env.RENDER_WAKE_URL || 'https://novapoll.onrender.com/wake';
+      try {
+        const r = await fetch(wakeUrl, { method: 'GET' });
+        console.log('render wake', r.status);
+      } catch (e) {
+        console.log('render wake fail', e && e.message);
+      }
+      // Stranded videos: detected, never dispatched, >5 min old.
+      try {
+        const cutoff = now() - 5 * 60 * 1000;
+        const rows = await env.DB.prepare(
+          "SELECT id FROM videos WHERE status = 'detected' AND (dispatched_at IS NULL OR dispatched_at = 0) AND created_at < ? ORDER BY id ASC LIMIT 10"
+        ).bind(cutoff).all();
+        const ids = (rows.results || []).map((r) => r.id);
+        if (ids.length) {
+          const ok = await dispatchProcess(env, { video_ids: ids.join(',') });
+          if (ok) {
+            for (const id of ids) {
+              await env.DB.prepare('UPDATE videos SET dispatched_at = ? WHERE id = ?').bind(now(), id).run();
+            }
+          }
+          console.log('sweep dispatched videos', ids.join(','), ok ? 'ok' : 'failed');
+        }
+      } catch (e) {
+        console.log('video sweep fail', e && e.message);
+      }
+      // Stranded manual jobs: queued, never dispatched, >5 min old.
+      try {
+        const cutoff = now() - 5 * 60 * 1000;
+        const rows = await env.DB.prepare(
+          "SELECT id FROM manual_jobs WHERE status = 'queued' AND (dispatched_at IS NULL OR dispatched_at = 0) AND created_at < ? ORDER BY id ASC LIMIT 5"
+        ).bind(cutoff).all();
+        const ids = (rows.results || []).map((r) => r.id);
+        if (ids.length) {
+          for (const id of ids) {
+            try {
+              await dispatchProcess(env, { manual_job_id: String(id) });
+              await env.DB.prepare('UPDATE manual_jobs SET dispatched_at = ? WHERE id = ?').bind(now(), id).run();
+              console.log('sweep dispatched manual job', id);
+            } catch (e) {
+              console.log('sweep manual job', id, 'fail', e && e.message);
+            }
+          }
+        }
+      } catch (e) {
+        console.log('manual sweep fail', e && e.message);
+      }
+    })());
   },
   async fetch(req, env, cctx) {
     const url = new URL(req.url);

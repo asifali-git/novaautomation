@@ -16,6 +16,6 @@ services:
       - key: POLL_MIN
         value: 8
       - key: POLL_MAX
-        value: 15
+        value: 12
       - key: SELF_URL
         sync: false
