@@ -1,13 +1,16 @@
-"""Fast poller — checks for new videos every 8-15 seconds (randomized).
+"""Fast poller — yt-dlp checks every 8-12 seconds (randomized).
 
 Runs as a Render web service. A background thread loops yt-dlp checks
 against active tasks and registers new videos with the worker.
-Optionally triggers the GitHub Actions process workflow on new finds.
+
+ROLE: detection only. The worker triggers GitHub Actions (process.yml)
+on new videos/manual jobs — this service never calls GitHub for videos.
 
 Env vars:
   WORKER_URL, INTERNAL_TOKEN   — worker API access
-  GH_TOKEN, GH_REPO            — trigger process.yml (optional)
-  POLL_MIN, POLL_MAX           — seconds between polls (default 8 / 15)
+  GH_TOKEN, GH_REPO            — backup dispatch for manual jobs only
+                                 (worker is primary; skipped if dispatched)
+  POLL_MIN, POLL_MAX           — seconds between polls (default 8 / 12)
 """
 import os
 import sys
@@ -24,7 +27,7 @@ TOKEN = os.getenv("INTERNAL_TOKEN", "")
 GH_TOKEN = os.getenv("GH_TOKEN", "")
 GH_REPO = os.getenv("GH_REPO", "")  # e.g. "asifali-git/novaautomation"
 POLL_MIN = int(os.getenv("POLL_MIN", "8"))
-POLL_MAX = int(os.getenv("POLL_MAX", "15"))
+POLL_MAX = int(os.getenv("POLL_MAX", "12"))
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
 log = logging.getLogger("fastpoll")
@@ -229,13 +232,16 @@ def poll_once():
             if res.get("created"):
                 vid = res["video"]["id"]
                 new_ids.append(vid)
-                log.info("NEW task %s video %s -> id %s", tid, key, vid)
+                log.info("NEW task %s video %s -> id %s (worker dispatched=%s)",
+                         tid, key, vid, res.get("dispatched"))
+                # Fallback only: worker is the primary GH triggerer. If its
+                # dispatch failed, fire from here so the video isn't stranded.
+                if not res.get("dispatched") and _should_trigger(f"vids:{vid}", 1800):
+                    trigger_process([vid])
             patch_task(tid, last_seen_key=key)
         except Exception as e:
             log.warning("task %s add_video failed: %s", tid, e)
 
-    if new_ids and _should_trigger("vids:" + ",".join(str(i) for i in new_ids), 1800):
-        trigger_process(new_ids)
     return new_ids
 
 

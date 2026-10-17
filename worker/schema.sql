@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS videos (
   error TEXT,
   attempts INTEGER NOT NULL DEFAULT 0,
   duration REAL,
+  dispatched_at INTEGER,
   created_at INTEGER NOT NULL,
   updated_at INTEGER NOT NULL
 );

@@ -476,8 +476,9 @@ async function userFromRequest(req, env) {
   return { id: row.id, username: row.username, email: row.email, is_admin: !!row.is_admin, created_at: row.created_at };
 }
 
-// Fire GitHub process.yml dispatch (manual job). Best-effort; fastpoll also triggers.
-async function dispatchManualJob(env, jobId) {
+// Fire GitHub process.yml dispatch. Primary trigger for both new videos and
+// manual jobs (fastpoll only detects; it fires only as a fallback).
+async function dispatchProcess(env, inputs) {
   const token = env.GH_TOKEN;
   const repo = env.GH_REPO || 'asifali-git/novaautomation';
   if (!token) throw new Error('GH_TOKEN not set on worker');
@@ -489,7 +490,7 @@ async function dispatchManualJob(env, jobId) {
       'Content-Type': 'application/json',
       'User-Agent': 'novaautomation-worker', // GitHub API rejects requests without it
     },
-    body: JSON.stringify({ ref: 'master', inputs: { manual_job_id: String(jobId) } }),
+    body: JSON.stringify({ ref: 'master', inputs }),
   });
   if (!r.ok) {
     const t = await r.text().catch(() => '');
@@ -683,7 +684,7 @@ export default {
         let dispatchError = null;
         if (job) {
           try {
-            dispatched = await dispatchManualJob(env, job.id);
+            dispatched = await dispatchProcess(env, { manual_job_id: String(job.id) });
             if (!dispatched) dispatchError = 'dispatch request failed';
           } catch (e) {
             dispatchError = (e && e.message) || String(e);
@@ -1011,6 +1012,22 @@ export default {
         if (path === '/api/internal/videos' && req.method === 'POST') {
           const body = await readBody(req);
           const result = await addVideo(env.DB, body);
+          // New video -> trigger GH process immediately (fastpoll only detects).
+          let dispatched = false;
+          if (result.created && result.video) {
+            try {
+              dispatched = await dispatchProcess(env, { video_ids: String(result.video.id) });
+              if (dispatched) {
+                await env.DB.prepare('UPDATE videos SET dispatched_at = ? WHERE id = ?')
+                  .bind(now(), result.video.id).run().catch(() => {});
+                result.video.dispatched_at = now();
+              }
+            } catch (e) {
+              console.log('gh dispatch failed for video', result.video.id, e && e.message);
+            }
+            console.log('gh dispatch video', result.video.id, dispatched ? 'ok' : 'failed');
+          }
+          result.dispatched = dispatched;
           return withCors(json(result, result.created ? 201 : 200));
         }
 
