@@ -145,6 +145,13 @@ def check_manual_jobs():
         if not job:
             return False
 
+        # Worker dispatches instantly on job create; skip if it already did
+        # (dispatched_at recent) — but still fire as backup if it didn't.
+        disp = job.get("dispatched_at") or 0
+        if disp and (time.time() * 1000 - disp) < 900_000:
+            log.info("manual job %s already dispatched by worker; skipping", job["id"])
+            return False
+
         if not _should_trigger(f"manual:{job['id']}", 900):
             log.info("manual job %s triggered recently; waiting for runner claim", job["id"])
             return False

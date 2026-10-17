@@ -73,6 +73,7 @@ CREATE TABLE IF NOT EXISTS manual_jobs (
   status TEXT NOT NULL DEFAULT 'queued',
   result TEXT,
   error TEXT,
+  dispatched_at INTEGER,
   created_at INTEGER NOT NULL,
   updated_at INTEGER NOT NULL
 );

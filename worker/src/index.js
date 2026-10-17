@@ -678,6 +678,12 @@ export default {
           } catch (e) {
             dispatchError = (e && e.message) || String(e);
           }
+          if (dispatched) {
+            // Record so fastpoll (backup) doesn't create a duplicate GH run.
+            await env.DB.prepare('UPDATE manual_jobs SET dispatched_at = ? WHERE id = ?')
+              .bind(now(), job.id).run().catch(() => {});
+            job.dispatched_at = now();
+          }
           console.log('gh dispatch for job', job.id, dispatched ? 'ok' : 'failed', dispatchError || '');
         }
         return withCors(json({ job, dispatched, dispatch_error: dispatchError }, 201));
