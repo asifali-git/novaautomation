@@ -633,11 +633,32 @@ def _stop_xvfb():
 atexit.register(_stop_xvfb)
 
 
-def _make_driver(headless=True, proxy=None, country=None):
+def _browser_profile_dir(platform, account_id=None):
+    """Persistent Chrome user-data-dir for a platform/account.
+
+    Real logins (cookies, localStorage, fingerprint) persist across runs so
+    automation reuses ONE 'device' instead of a fresh browser every upload
+    (a fresh profile per post is a strong bot signal). Override with env
+    <PLATFORM>_PROFILE_DIR; default work/browser_profiles/<platform>[_id].
+    NOTE: only meaningful on a persistent machine — GH Actions runners are
+    ephemeral and lose the profile after each job."""
+    env_key = f"{platform.upper()}_PROFILE_DIR"
+    base = os.environ.get(env_key)
+    if base:
+        d = base
+    else:
+        suffix = f"{platform}_{account_id}" if account_id else platform
+        d = os.path.join(os.getcwd(), "work", "browser_profiles", suffix)
+    os.makedirs(d, exist_ok=True)
+    return os.path.abspath(d)
+
+
+def _make_driver(headless=True, proxy=None, country=None, profile_dir=None):
     """Create driver. proxy: raw proxy string (may include user:pass).
     country: code/name — sets timezone/locale/geolocation/UA-language.
     headless=True tries Xvfb first (headed on virtual display); real
-    --headless only as fallback."""
+    --headless only as fallback. profile_dir: persistent Chrome user-data-dir
+    (real login persists across runs — anti-bot)."""
     import undetected_chromedriver as uc
 
     profile = _country_profile(country)
@@ -652,6 +673,12 @@ def _make_driver(headless=True, proxy=None, country=None):
     opts.add_argument("--disable-dev-shm-usage")
     opts.add_argument("--disable-gpu")
     opts.add_argument("--window-size=1280,900")
+
+    if profile_dir:
+        os.makedirs(profile_dir, exist_ok=True)
+        opts.add_argument(f"--user-data-dir={os.path.abspath(profile_dir)}")
+        opts.add_argument("--profile-directory=Default")
+        print(f"[social] persistent profile: {profile_dir}")
 
     if profile:
         opts.add_argument(f"--lang={profile['lang']}")
@@ -728,6 +755,75 @@ def _quit(driver):
 
 
 # ─────────────────────────── TIKTOK ───────────────────────────
+
+def _tiktok_logged_in(driver):
+    """True if the driver (persistent profile or injected cookies) has a
+    TikTok session."""
+    try:
+        names = {c.get("name") for c in driver.get_cookies()}
+        return bool(names & {"sessionid", "sid_tt", "sidguard"})
+    except Exception:
+        return False
+
+
+def _tiktok_warmup(driver, languages=None, scrolls=None):
+    """Light organic For You feed activity before upload.
+
+    Going straight to the upload page from a cold browser looks robotic.
+    A short human-like browse (random mouse moves + scrolls + pauses) warms
+    the session. Disable with TIKTOK_WARMUP=0."""
+    if os.environ.get("TIKTOK_WARMUP", "1") == "0":
+        print("[tiktok] warmup disabled (TIKTOK_WARMUP=0)")
+        return
+    try:
+        driver.get("https://www.tiktok.com/foryou")
+        _spoof(driver, languages=languages)
+        _sleep(4, 7)
+        n = scrolls or random.randint(3, 6)
+        from selenium.webdriver.common.action_chains import ActionChains
+
+        for _ in range(n):
+            try:
+                size = driver.get_window_size()
+                ActionChains(driver).move_by_offset(
+                    random.randint(-120, 120), random.randint(-80, 80)
+                ).move_by_offset(
+                    random.randint(-size["width"] // 5, size["width"] // 5),
+                    random.randint(-size["height"] // 5, size["height"] // 5),
+                ).perform()
+            except Exception:
+                pass
+            driver.execute_script(
+                f"window.scrollBy(0, {random.randint(300, 900)});"
+            )
+            _sleep(4, 10)
+        print(f"[tiktok] feed warmup done ({n} scrolls)")
+    except Exception as e:
+        print(f"[tiktok] warmup skipped: {e}")
+
+
+def login_tiktok(account_id=None):
+    """Open a HEADED browser on the persistent TikTok profile for a one-time
+    MANUAL login. The session is saved in the profile on disk and reused by
+    every future automated upload (no cookie re-injection, same device)."""
+    profile_dir = _browser_profile_dir("tiktok", account_id)
+    print(f"[tiktok] login profile: {profile_dir}")
+    print("[tiktok] log in manually in the opened window (waiting up to 10 min)...")
+    driver = _make_driver(headless=False, profile_dir=profile_dir)
+    try:
+        driver.get("https://www.tiktok.com/login")
+        deadline = time.time() + 600
+        while time.time() < deadline:
+            if _tiktok_logged_in(driver):
+                print("[tiktok] login detected — session saved to profile")
+                time.sleep(5)  # let Chrome flush the profile to disk
+                return True
+            time.sleep(3)
+        print("[tiktok] login timed out (10 min)")
+        return False
+    finally:
+        _quit(driver)
+
 
 def _harvest_url_js(driver, pattern):
     """Return first anchor href on page matching regex pattern.
@@ -842,11 +938,11 @@ def _find_profile_url(driver, meta):
 
 
 def upload_tiktok(video_path, description, account_id=None):
-    """Upload video to TikTok using cookies from worker."""
+    """Upload video to TikTok using the persistent profile session
+    (one-time manual login) or worker cookies as bootstrap."""
     cookies = _get_cookies("tiktok", account_id=account_id)
     if not cookies:
-        print("[tiktok] no cookies in worker; skipping")
-        return _up(False, error="no cookies", account_id=account_id)
+        print("[tiktok] no cookies in worker; relying on persistent profile session")
 
     meta = _account_meta(account_id)
     profile = _country_profile(meta.get("country"))
@@ -855,26 +951,35 @@ def upload_tiktok(video_path, description, account_id=None):
               f"(country: {meta.get('country') or '-'})")
 
     print(f"[tiktok] video: {video_path} ({os.path.getsize(video_path)//1024} KB)")
+    profile_dir = _browser_profile_dir("tiktok", account_id)
     driver = _make_driver(
-        headless=True, proxy=meta.get("proxy"), country=meta.get("country")
+        headless=True, proxy=meta.get("proxy"), country=meta.get("country"),
+        profile_dir=profile_dir,
     )
     try:
-        # Load cookies on tiktok.com domain
+        # Open TikTok on the persistent profile — if it's already logged in,
+        # reuse that session (same 'device' every run = no fresh-profile signal).
         driver.get("https://www.tiktok.com/")
         _spoof(driver, languages=(profile or {}).get("languages"))
-        loaded = _load_cookies_for_driver(driver, cookies)
-        if loaded == 0:
-            print("[tiktok] zero cookies loaded; aborting")
-            return _up(False, error="zero cookies loaded", account_id=account_id)
-        driver.refresh()
-        _sleep(3, 5)
-
-        # Verify login by checking cookies
-        all_c = driver.get_cookies()
-        has_session = any(c.get("name") in ("sessionid", "sid_tt", "sidguard") for c in all_c)
-        print(f"[tiktok] session cookies present: {has_session} (total cookies: {len(all_c)})")
+        has_session = _tiktok_logged_in(driver)
+        if has_session:
+            print("[tiktok] persistent profile session OK — skipping cookie inject")
+        elif cookies:
+            loaded = _load_cookies_for_driver(driver, cookies)
+            if loaded == 0:
+                print("[tiktok] zero cookies loaded; aborting")
+                return _up(False, error="zero cookies loaded", account_id=account_id)
+            driver.refresh()
+            _sleep(3, 5)
+            has_session = _tiktok_logged_in(driver)
+            print(f"[tiktok] session after cookie inject: {has_session}")
         if not has_session:
-            print("[tiktok] WARNING: no session cookie — may not be logged in")
+            print("[tiktok] WARNING: no session cookie — may not be logged in "
+                  "(run: python upload_social.py --login-tiktok)")
+
+        # Organic For You feed browse first — uploading straight from a cold
+        # open looks robotic; a short human-like scroll warms the session.
+        _tiktok_warmup(driver, languages=(profile or {}).get("languages"))
 
         # Baseline: newest profile video BEFORE posting, so after posting we can
         # prove a NEW video appeared (never report a stale/pinned URL).
@@ -1982,8 +2087,12 @@ def upload_all(video_path, title, description):
 
 
 if __name__ == "__main__":
+    if len(sys.argv) >= 2 and sys.argv[1] == "--login-tiktok":
+        acct = int(sys.argv[2]) if len(sys.argv) > 2 and sys.argv[2].isdigit() else None
+        sys.exit(0 if login_tiktok(acct) else 1)
     if len(sys.argv) < 3:
         print("Usage: python upload_social.py <video> <title> [description]")
+        print("       python upload_social.py --login-tiktok [account_id]")
         sys.exit(1)
     v = sys.argv[1]
     t = sys.argv[2]
