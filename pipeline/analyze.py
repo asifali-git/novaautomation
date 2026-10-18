@@ -85,9 +85,10 @@ product demo each get different treatment.
 CRITICAL - TRANSFORMATIVE EDITS (copyright/reused-content safety):
 Every segment MUST get real visual changes so the output is sufficiently distinct
 from the source. Never leave a segment with speed=1.0, color=preset none.
-Always apply: crop (fixed heavy reframe), color grade, speed variation,
-sharpness. This is MANDATORY per segment.
-NO ZOOM — zoom is always "none". Use crop for recomposition instead.
+Always apply: color grade, speed variation, sharpness. This is MANDATORY per segment.
+NO ZOOM, NO CROP — zoom is always "none" and crop is always all zeros (full frame
+kept so the main subject stays fully visible). Old source text is removed
+separately via source_captions — never via crop.
 
 AUDIO AWARENESS - decide "audio_type" by LISTENING:
   "vocal"  = spoken words: human/AI speech, movie dialogue, dubbing, narration, singing
@@ -142,7 +143,7 @@ Return ONLY valid JSON (no markdown fences, no commentary):
       "end": 3.0,
       "action": "keep"|"remove"|"highlight",
       "speed": 1.10,
-      "crop": {"top": 0.08, "bottom": 0.06, "left": 0.04, "right": 0.04},
+      "crop": {"top": 0.0, "bottom": 0.0, "left": 0.0, "right": 0.0},
       "zoom": {"type": "none", "amount": 1.0},
       "sharpness": 0.10,
       "color": {"preset": "vivid"|"warm"|"cool"|"moody"|"noir"|"vintage"|"neon", "brightness": 0.0, "contrast": 1.06, "saturation": 1.12},
@@ -160,10 +161,10 @@ Rules:
 - segments cover timeline contiguously (first start=0, each start=previous end).
 - 8 to 16 short segments.
 - speed: 1.0=normal, >1=faster. Vary per segment (1.08-1.15 typical).
-- EVERY segment: zoom=none (MANDATORY), fixed crop (top 0.08, bottom 0.06, left 0.04, right 0.04),
-  non-none color grade, speed != 1.0, sharpness 0.06-0.12 (subtle, never harsh).
-  This is mandatory for copyright safety.
-- crop: ALWAYS use exactly {"top": 0.08, "bottom": 0.06, "left": 0.04, "right": 0.04}.
+- EVERY segment: zoom=none (MANDATORY), crop all zeros (MANDATORY — full frame,
+  never crop), non-none color grade, speed != 1.0, sharpness 0.06-0.12 (subtle,
+  never harsh). This is mandatory for copyright safety.
+- crop: ALWAYS use exactly {"top": 0.0, "bottom": 0.0, "left": 0.0, "right": 0.0}.
 - caption.text: <=5 words, ONE per segment, different wording each.
 - narration: clean natural spoken line. Empty string = silent segment.
   Never repeat the same line in consecutive segments.
@@ -314,19 +315,21 @@ def _extract_json(text):
 
 PRESETS = ["vivid", "warm", "cool", "moody"]
 
-# Fixed crop (same as fallback) — applied to ALL segments regardless of AI output.
-FIXED_CROP = {"top": 0.08, "bottom": 0.06, "left": 0.04, "right": 0.04}
+# No transformation crop — keep the full frame (subjects stay framed).
+# Only the old-caption band (caption_regions -> caption_crop_top/bottom in
+# apply.py) is cropped, exactly as tight as the detected text rows.
+FIXED_CROP = {"top": 0.0, "bottom": 0.0, "left": 0.0, "right": 0.0}
 
 
 def _transform_floor(seg, idx):
     """Enforce transformative minimums on a segment (copyright safety).
-    No zoom (zoompan removed). Fixed crop like fallback. Speed/color/sharpness vary."""
+    No zoom, no crop (full frame kept). Speed/color/sharpness vary."""
     if abs(seg["speed"] - 1.0) < 0.02:
         seg["speed"] = round(1.08 + (idx % 5) * 0.015, 3)
     # No zoom — always none.
     seg["zoom"] = {"type": "none", "amount": 1.0}
-    # Fixed crop (same as fallback).
-    seg["crop"] = dict(FIXED_CROP)
+    # No crop — full frame; old text is removed only via caption_regions.
+    seg["crop"] = {"top": 0.0, "bottom": 0.0, "left": 0.0, "right": 0.0}
     if seg["color"]["preset"] == "none":
         seg["color"]["preset"] = PRESETS[idx % len(PRESETS)]
     if seg["color"]["saturation"] < 1.06:

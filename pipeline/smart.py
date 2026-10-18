@@ -574,7 +574,8 @@ def _seeded_plan(feats, dur, seed, title_hint=""):
         # Bright content: avoid neon (washes out highlights)
         if feats.get("brightness", 0.5) > 0.6 and preset == "neon":
             preset = "warm"
-        crop_amt = round((s % 4) * 0.015, 3)
+        # No crop — full frame kept (subject stays visible).
+        crop_amt = 0.0
         sharp = round(0.05 + (s % 3) * 0.03, 3)
 
         # Narration: seeded pick, avoid ALL previously used (not just previous)
@@ -653,11 +654,11 @@ def _simple_plan(dur):
         # Only bright/natural presets — NO moody/vintage (they look B&W).
         preset = ["warm", "cool", "vivid", "warm", "cool", "vivid", "warm", "cool"][i % 8]
         sharp = 0.12
-        # Heavy crop: 8-12% top+bottom, 4% left+right — very visible recomposition.
-        crop_top = 0.08
-        crop_bot = 0.06
-        crop_left = 0.04
-        crop_right = 0.04
+        # No crop — full frame kept; only old-caption rows are cropped later.
+        crop_top = 0.0
+        crop_bot = 0.0
+        crop_left = 0.0
+        crop_right = 0.0
         segs.append({
             "index": i,
             "start": round(i * seg_len, 2),

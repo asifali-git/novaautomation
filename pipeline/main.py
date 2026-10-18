@@ -10,7 +10,7 @@ Env:
   ANALYZE=true|false           use AI edit-plan (default true; Nemotron -> smart fallback)
   NVIDIA_API_KEY               Nemotron omni key (build.nvidia.com)
   VOICEOVER=true|false         add Kokoro narration from plan (default true)
-  MAX_SECS                     cap clip length (default 30)
+  MAX_SECS                     cap clip length (default 90)
   PRIVACY                      public|unlisted|private (default public)
   OPENROUTER_API_KEY           metadata fallback if plan lacks it
   YT_REFRESH_TOKEN/CLIENT_*    YouTube upload
@@ -35,7 +35,7 @@ import upload_social as us
 
 WORKER = os.getenv("WORKER_URL", "").rstrip("/")
 TOKEN = os.getenv("INTERNAL_TOKEN", "")
-MAX_SECS = float(os.getenv("MAX_SECS", "30"))
+MAX_SECS = float(os.getenv("MAX_SECS", "90"))
 ANALYZE = os.getenv("ANALYZE", "true").lower() in ("1", "true", "yes")
 VOICEOVER = os.getenv("VOICEOVER", "true").lower() in ("1", "true", "yes")
 PRIVACY = os.getenv("PRIVACY", "public")
