@@ -100,36 +100,11 @@ def _seg_duration(seg):
 
 
 def _delogo_chain(regions, sw=None, sh=None):
-    """Build delogo filter chain for mid-band caption regions (action='delogo').
-    regions: list of dicts with top_frac, bottom_frac (fractions of source H).
-    sw/sh: ACTUAL source dimensions (delogo needs absolute pixels on the
-    source frame — W/H constants are wrong for non-1080x1920 sources).
-    Returns filter string like 'delogo=x=0:y=200:w=1080:h=150,delogo=...' or ''.
+    """DISABLED — ffmpeg delogo on full-width bands smears vertical streaks
+    across the frame and ruins the video. Mid-band captions stay as-is;
+    top/bottom bands are still removed via crop. Kept for call-site compat.
     """
-    if not regions:
-        return ""
-    w = int(sw) if sw else W
-    hh_src = int(sh) if sh else H
-    chains = []
-    for r in regions:
-        top = min(max(float(r.get("top_frac", 0.0) or 0.0), 0.0), 1.0)
-        bot = min(max(float(r.get("bottom_frac", 0.0) or 0.0), 0.0), 1.0)
-        if bot <= top:
-            continue
-        # delogo requires the box fully inside the frame with a 1px margin,
-        # otherwise ffmpeg aborts with "Logo area is outside of the frame".
-        x = 1
-        y = int(round(top * hh_src))
-        if y < 1:
-            y = 1
-        ww = max(w - 2, 2)
-        h = int(round((bot - top) * hh_src))
-        if y + h > hh_src - 1:
-            h = hh_src - 1 - y
-        if h < 2:
-            continue
-        chains.append(f"delogo=x={x}:y={y}:w={ww}:h={h}:show=0")
-    return ",".join(chains)
+    return ""
 
 
 def _video_chain(seg, caption_crop_top=0.0, caption_crop_bottom=0.0, delogo_filter="", mirror=False, gcolor=None):
