@@ -14,8 +14,11 @@ Env vars:
 """
 import os
 import sys
+import re
+import json
 import time
 import random
+import tempfile
 import threading
 import logging
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -67,7 +70,7 @@ def patch_task(task_id, **fields):
         pass
 
 
-def flat_latest(url):
+def flat_latest(url, cookiefile=None, proxy=None):
     """Lightweight yt-dlp check — flat extract, no download."""
     import yt_dlp
 
@@ -79,6 +82,10 @@ def flat_latest(url):
         "skip_download": True,
         "socket_timeout": 10,
     }
+    if cookiefile:
+        opts["cookiefile"] = cookiefile
+    if proxy:
+        opts["proxy"] = proxy
     with yt_dlp.YoutubeDL(opts) as ydl:
         info = ydl.extract_info(url, download=False)
 
@@ -98,6 +105,182 @@ def flat_latest(url):
         "title": e.get("title"),
         "url": e.get("url") or e.get("webpage_url") or url,
     }
+
+
+# --- Platform-aware detection --------------------------------------------------
+# Facebook/TikTok need cookies (from Worker D1 accounts); Facebook pages also
+# need a scrape (yt-dlp has no FB page-listing extractor anymore).
+
+_COOKIE_TTL = 600
+_ck_cache = {}     # (platform, uid) -> {"exp", "items", "file"}
+_date_cache = {}   # fb video id -> {"date": "YYYYMMDD", "title": str}
+_fb_sess_cache = {}  # uid -> (session, exp)
+
+_FB_HEADERS = {
+    "User-Agent": ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                   "(KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"),
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Sec-Fetch-Mode": "navigate",
+    "Sec-Fetch-Site": "none",
+    "Sec-Fetch-Dest": "document",
+    "Upgrade-Insecure-Requests": "1",
+}
+
+
+def _fetch_account_cookies(platform, uid):
+    """Cookies for a platform from the Worker (task owner scoped)."""
+    key = (platform, int(uid or 0))
+    now = time.time()
+    ent = _ck_cache.get(key)
+    if ent and ent["exp"] > now:
+        return ent["items"]
+    params = f"?platform={platform}" + (f"&user_id={int(uid)}" if uid else "")
+    items = None
+    try:
+        r = requests.get(f"{WORKER}/api/internal/accounts/cookies{params}",
+                         headers=_h(), timeout=30)
+        if r.status_code == 200:
+            data = r.json().get("cookies")
+            if isinstance(data, list):
+                items = data
+            elif isinstance(data, str) and data.strip():
+                s = data.lstrip()
+                if s.startswith("[") or s.startswith("{"):
+                    try:
+                        items = json.loads(s)
+                    except Exception:
+                        items = data
+                else:
+                    items = data  # Netscape cookie text
+    except Exception as e:
+        log.warning("cookie fetch %s failed: %s", platform, e)
+    _ck_cache[key] = {"exp": now + _COOKIE_TTL, "items": items}
+    return items
+
+
+def _cookie_file(platform, uid):
+    """Temp Netscape cookie file for yt-dlp (cached)."""
+    items = _fetch_account_cookies(platform, uid)
+    key = (platform, int(uid or 0))
+    ent = _ck_cache.get(key, {})
+    if ent.get("file") and ent.get("exp", 0) > time.time():
+        return ent["file"]
+    if not items:
+        return None
+    if isinstance(items, str):
+        text = items
+    else:
+        lines = ["# Netscape HTTP Cookie File"]
+        for c in items:
+            if not isinstance(c, dict):
+                continue
+            domain = c.get("domain") or ""
+            inc = "TRUE" if domain.startswith(".") else "FALSE"
+            exp = int(c.get("expirationDate") or c.get("expiryDate") or 0)
+            lines.append("\t".join([
+                domain, inc, c.get("path") or "/",
+                "TRUE" if c.get("secure") else "FALSE",
+                str(exp), str(c.get("name") or ""), str(c.get("value") or ""),
+            ]))
+        text = "\n".join(lines) + "\n"
+    fd, path = tempfile.mkstemp(prefix=f"{platform}_", suffix=".txt")
+    with os.fdopen(fd, "w", encoding="utf-8") as f:
+        f.write(text)
+    if key in _ck_cache:
+        _ck_cache[key]["file"] = path
+    return path
+
+
+def _fb_session(uid):
+    """requests.Session with the owner's Facebook cookies."""
+    items = _fetch_account_cookies("facebook", uid)
+    if not items or isinstance(items, str):
+        return None
+    key = int(uid or 0)
+    now = time.time()
+    ent = _fb_sess_cache.get(key)
+    if ent and ent[1] > now:
+        return ent[0]
+    s = requests.Session()
+    s.headers.update(_FB_HEADERS)
+    for c in items:
+        try:
+            s.cookies.set(c.get("name"), c.get("value", ""),
+                          domain=c.get("domain") or ".facebook.com",
+                          path=c.get("path") or "/")
+        except Exception:
+            pass
+    _fb_sess_cache[key] = (s, now + _COOKIE_TTL)
+    return s
+
+
+def _fb_video_ids(url, uid):
+    """Page name + video ids (doc order) from m.facebook.com server-rendered tabs."""
+    m = re.search(r"facebook\.com/([^/?#]+)", url)
+    if not m:
+        raise ValueError(f"not a facebook page url: {url}")
+    page = m.group(1)
+    if page in ("watch", "reel", "watchparty", "videos", "profile.php",
+                "permalink.php", "story.php", "photo.php"):
+        raise ValueError("use a page url like facebook.com/<PageName> "
+                         "(single-video/profile.php urls unsupported)")
+    s = _fb_session(uid)
+    if s is None:
+        raise ValueError("no facebook cookies connected — add a Facebook "
+                         "account first (Connect)")
+    ids = []
+    for path in (f"/{page}/reels", f"/{page}/videos"):
+        try:
+            h = s.get(f"https://m.facebook.com{path}", timeout=30).text
+        except Exception as e:
+            log.warning("fb fetch %s failed: %s", path, e)
+            continue
+        for x in re.findall(r'"video_id"\s*:\s*"?(\d{10,})"?', h):
+            if x not in ids:
+                ids.append(x)
+    if not ids:
+        raise ValueError(f"no videos found on facebook page '{page}'")
+    return page, ids
+
+
+def _fb_reel_meta(vid, cookiefile):
+    """upload_date+title for one FB reel (cached)."""
+    if vid in _date_cache:
+        return _date_cache[vid]
+    import yt_dlp
+    opts = {"quiet": True, "no_warnings": True, "skip_download": True,
+            "socket_timeout": 20}
+    if cookiefile:
+        opts["cookiefile"] = cookiefile
+    meta = {"date": "", "title": ""}
+    try:
+        with yt_dlp.YoutubeDL(opts) as ydl:
+            info = ydl.extract_info(f"https://www.facebook.com/reel/{vid}",
+                                    download=False) or {}
+        meta = {"date": info.get("upload_date") or "",
+                "title": info.get("title") or ""}
+    except Exception as e:
+        log.warning("date probe reel %s failed: %s", vid, e)
+    _date_cache[vid] = meta
+    return meta
+
+
+def fb_latest(url, uid):
+    """Newest reel of a FB page (tabs are not date-ordered -> probe dates)."""
+    page, ids = _fb_video_ids(url, uid)
+    cookiefile = _cookie_file("facebook", uid)
+    best, best_meta = None, {"date": "", "title": ""}
+    for vid in ids[:12]:
+        meta = _fb_reel_meta(vid, cookiefile)
+        if meta["date"] >= best_meta["date"]:
+            best, best_meta = vid, meta
+    if best is None:
+        best = ids[0]
+    log.info("fb page %s: %d ids, latest=%s (%s)", page, len(ids), best,
+             best_meta["date"] or "date?")
+    return {"id": best, "title": best_meta["title"] or None,
+            "url": f"https://www.facebook.com/reel/{best}"}
 
 
 def trigger_process(video_ids):
@@ -206,8 +389,15 @@ def poll_once():
     for t in tasks:
         tid = t["id"]
         url = t["source_url"]
+        platform = (t.get("platform") or "").lower()
+        uid = t.get("user_id") or 0
         try:
-            latest = flat_latest(url)
+            if platform == "facebook" or "facebook.com" in url:
+                latest = fb_latest(url, uid)
+            elif platform in ("tiktok", "instagram"):
+                latest = flat_latest(url, cookiefile=_cookie_file(platform, uid))
+            else:
+                latest = flat_latest(url)
         except Exception as e:
             log.warning("task %s fetch failed: %s", tid, e)
             continue
