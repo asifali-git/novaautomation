@@ -1,0 +1,89 @@
+name: fbcheck
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/5 * * * *'
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install deps
+        run: pip install -r requirements.txt
+      - name: Check FB tasks (fetch feed, enqueue latest, set baseline)
+        env:
+          WORKER_URL: ${{ secrets.WORKER_URL }}
+          INTERNAL_TOKEN: ${{ secrets.INTERNAL_TOKEN }}
+        run: |
+          python - <<'PY'
+          import os
+          import sys
+
+          sys.path.insert(0, ".")
+          import requests
+
+          import fastpoll
+
+          W = os.environ["WORKER_URL"]
+          H = {"x-token": os.environ["INTERNAL_TOKEN"]}
+
+          def api(method, path, **kw):
+              r = requests.request(method, W + path, headers=H, timeout=40, **kw)
+              try:
+                  return r.status_code, (r.json() if r.content else {})
+              except Exception:
+                  return r.status_code, {}
+
+          _, data = api("GET", "/api/internal/tasks")
+          tasks = data.get("tasks", [])
+          fb = [t for t in tasks
+                if (t.get("platform") or "").lower() == "facebook"
+                or "facebook.com" in (t.get("source_url") or "")]
+          print(f"fb tasks: {[t['id'] for t in fb]}")
+
+          for t in fb:
+              tid = t["id"]
+              url = t.get("source_url") or ""
+              try:
+                  page, nodes = fastpoll._fb_fetch_feed(url, t.get("user_id") or 0)
+              except Exception as e:
+                  print(f"task {tid}: FETCH FAIL: {e}")
+                  continue
+              if not nodes:
+                  print(f"task {tid}: no feed cards")
+                  continue
+              nodes.sort(reverse=True)
+              created_ts, newest = nodes[0]
+              seen = t.get("last_seen_key")
+              baseline = t.get("baseline_key")
+              print(f"task {tid}: {len(nodes)} cards, newest={newest} "
+                    f"created={created_ts} seen={seen}")
+              if baseline and newest == seen:
+                  print(f"task {tid}: no change")
+                  continue
+
+              code, res = api("POST", "/api/internal/videos", json={
+                  "task_id": tid,
+                  "video_key": newest,
+                  "url": f"https://www.facebook.com/reel/{newest}",
+                  "title": None,
+              })
+              print(f"task {tid}: enqueue -> {code} "
+                    f"created={res.get('created')} dispatched={res.get('dispatched')}")
+              if res.get("created") and not res.get("dispatched"):
+                  print(f"task {tid}: WARNING worker dispatch failed — "
+                        f"video sits at 'detected' until cron sweeper retries")
+
+              if baseline is None and seen is None:
+                  c, _ = api("PATCH", f"/api/internal/tasks/{tid}",
+                             json={"baseline_key": newest, "last_seen_key": newest})
+                  print(f"task {tid}: baseline set {newest} ({c})")
+              else:
+                  c, _ = api("PATCH", f"/api/internal/tasks/{tid}",
+                             json={"last_seen_key": newest})
+                  print(f"task {tid}: seen -> {newest} ({c})")
+          print("fbcheck done")
+          PY

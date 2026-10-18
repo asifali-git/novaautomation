@@ -415,6 +415,27 @@ def trigger_process(video_ids):
         log.warning("failed to trigger process: %s", e)
 
 
+def trigger_fbcheck():
+    """Ask a GitHub runner to run fbcheck.yml (FB feed is login-walled
+    from Render's IP; the runner's IP fetches it fine)."""
+    if not GH_TOKEN or not GH_REPO:
+        log.warning("fbcheck skipped: GH_TOKEN/GH_REPO not set")
+        return False
+    url = f"https://api.github.com/repos/{GH_REPO}/actions/workflows/fbcheck.yml/dispatches"
+    headers = {
+        "Authorization": f"token {GH_TOKEN}",
+        "Accept": "application/vnd.github+json",
+    }
+    try:
+        r = requests.post(url, headers=headers, json={"ref": "master"},
+                          timeout=15)
+        r.raise_for_status()
+        return True
+    except Exception as e:
+        log.warning("fbcheck dispatch failed: %s", e)
+        return False
+
+
 _recent_triggers = {}  # key -> monotonic ts (in-process debounce)
 _state = {"last_poll": 0, "last_manual_check": 0, "last_manual_found": None}
 
@@ -504,7 +525,13 @@ def poll_once():
         uid = t.get("user_id") or 0
         try:
             if platform == "facebook" or "facebook.com" in url:
-                latest = fb_latest(url, uid)
+                # FB feed is login-walled from Render's IP. A GitHub runner
+                # (fbcheck.yml) fetches the feed, enqueues the newest reel
+                # and sets baseline/seen itself — skip local FB fetching.
+                if _should_trigger("fbcheck", 60):
+                    ok = trigger_fbcheck()
+                    log.info("task %s: fbcheck dispatch -> %s", tid, ok)
+                continue
             elif platform in ("tiktok", "instagram"):
                 latest = flat_latest(url, cookiefile=_cookie_file(platform, uid))
             else:
