@@ -1,6 +1,7 @@
 """Poll active tasks, detect new videos, register them with the worker.
 
-First poll for a task only records the baseline (no back-catalog upload).
+First poll for a task enqueues the LATEST video (full pipeline run), then
+records it as the baseline so the older back-catalog is never processed.
 Later polls register anything newer than the last seen key.
 """
 import os
@@ -74,9 +75,21 @@ def main():
         baseline = t.get("baseline_key")
 
         if baseline is None and seen is None:
-            # First poll: record baseline, skip back-catalog.
-            patch_task(tid, baseline_key=key, last_seen_key=key)
-            print(f"[poll] task {tid} baseline set to {key}")
+            # First poll: enqueue THE latest video (full pipeline), then set
+            # baseline so the older back-catalog is never processed. On
+            # failure leave baseline unset so the next run retries.
+            try:
+                res = add_video(tid, key, latest.get("url") or url, latest.get("title"))
+                if res.get("created"):
+                    new_count += 1
+                    new_ids.append(res["video"]["id"])
+                    print(f"[poll] task {tid} first poll -> latest {key} id {res['video']['id']}")
+                else:
+                    print(f"[poll] task {tid} first poll: latest {key} already known")
+                patch_task(tid, baseline_key=key, last_seen_key=key)
+                print(f"[poll] task {tid} baseline set to {key}")
+            except Exception as e:
+                print(f"[poll] task {tid} first-poll enqueue failed (will retry): {e}", file=sys.stderr)
             continue
 
         if key == seen:

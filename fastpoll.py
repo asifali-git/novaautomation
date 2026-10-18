@@ -220,8 +220,25 @@ def poll_once():
         baseline = t.get("baseline_key")
 
         if baseline is None and seen is None:
-            patch_task(tid, baseline_key=key, last_seen_key=key)
-            log.info("task %s baseline set to %s", tid, key)
+            # First time we see this source: enqueue THE latest video so it
+            # goes through the full pipeline (download+edit+upload), then set
+            # it as baseline so the older back-catalog is never picked up.
+            # On failure leave baseline unset → retried on the next loop.
+            try:
+                res = add_video(tid, key, latest.get("url") or url, latest.get("title"))
+                if res.get("created"):
+                    vid = res["video"]["id"]
+                    new_ids.append(vid)
+                    log.info("task %s first poll -> latest video %s id %s (dispatched=%s)",
+                             tid, key, vid, res.get("dispatched"))
+                    if not res.get("dispatched") and _should_trigger(f"vids:{vid}", 1800):
+                        trigger_process([vid])
+                else:
+                    log.info("task %s first poll: latest %s already known", tid, key)
+                patch_task(tid, baseline_key=key, last_seen_key=key)
+                log.info("task %s baseline set to %s", tid, key)
+            except Exception as e:
+                log.warning("task %s first-poll enqueue failed (will retry): %s", tid, e)
             continue
 
         if key == seen:
