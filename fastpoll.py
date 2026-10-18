@@ -216,7 +216,12 @@ def _fb_session(uid):
 
 
 def _fb_video_ids(url, uid):
-    """Page name + video ids (doc order) from m.facebook.com server-rendered tabs."""
+    """Page name + reel video ids (doc order) from the FB reels tab.
+
+    Only the reels tab is server-rendered (videos tab is a JS grid + one
+    featured id — useless as 'latest'). m.facebook.com redirects to www with
+    a desktop UA; both are tried, the big ~15MB page needs a long timeout.
+    """
     m = re.search(r"facebook\.com/([^/?#]+)", url)
     if not m:
         raise ValueError(f"not a facebook page url: {url}")
@@ -230,17 +235,28 @@ def _fb_video_ids(url, uid):
         raise ValueError("no facebook cookies connected — add a Facebook "
                          "account first (Connect)")
     ids = []
-    for path in (f"/{page}/reels", f"/{page}/videos"):
+    for host in ("www.facebook.com", "m.facebook.com"):
         try:
-            h = s.get(f"https://m.facebook.com{path}", timeout=30).text
+            r = s.get(f"https://{host}/{page}/reels", timeout=60,
+                      allow_redirects=True)
+            h = r.text
         except Exception as e:
-            log.warning("fb fetch %s failed: %s", path, e)
+            log.warning("fb fetch %s/%s/reels failed: %s", host, page, e)
             continue
+        found = 0
         for x in re.findall(r'"video_id"\s*:\s*"?(\d{10,})"?', h):
             if x not in ids:
                 ids.append(x)
+                found += 1
+        log.info("fb %s/%s/reels: %s len=%d new_ids=%d", host, page,
+                 r.status_code, len(h), found)
+        if ids:
+            break
     if not ids:
-        raise ValueError(f"no videos found on facebook page '{page}'")
+        raise ValueError(
+            f"facebook page '{page}': reels tab returned no videos "
+            "(check page url has /reels content, or cookies expired — "
+            "long-form video listing is not supported)")
     return page, ids
 
 
@@ -398,8 +414,14 @@ def poll_once():
                 latest = flat_latest(url, cookiefile=_cookie_file(platform, uid))
             else:
                 latest = flat_latest(url)
+            if t.get("last_error"):
+                patch_task(tid, last_error="")
         except Exception as e:
             log.warning("task %s fetch failed: %s", tid, e)
+            try:
+                patch_task(tid, last_error=str(e)[:200])
+            except Exception:
+                pass
             continue
 
         if not latest or not latest.get("id"):
