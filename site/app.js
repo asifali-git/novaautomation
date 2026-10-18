@@ -66,7 +66,7 @@ function switchView(name, skipHash = false) {
   if (!skipHash) {
     history.pushState({ view: name }, '', `#${name}`);
   }
-  if (name === 'dashboard') loadDashboard();
+  if (name === 'dashboard') { loadDashboard(); loadLive(); }
   if (name === 'sources') loadTasks();
   if (name === 'activity') loadVideos();
   if (name === 'youtube') loadYouTube();
@@ -327,9 +327,15 @@ $('add-form')?.addEventListener('submit', async e => {
 });
 
 /* ===== Load Tasks (Sources) ===== */
+let ytLoginsForLabels = [];
+
 async function loadTasks() {
   try {
-    const d = await api('/api/tasks');
+    const [d, dl] = await Promise.all([
+      api('/api/tasks'),
+      api('/api/logins').catch(() => ({ logins: [] })),
+    ]);
+    ytLoginsForLabels = (dl.logins || []).filter(l => l.provider === 'youtube');
     const tasks = d.tasks || [];
     $('nav-task-count').textContent = tasks.length;
 
@@ -354,11 +360,27 @@ async function loadTasks() {
         if (!m) return '';
         let label = m.label;
         if (acctId) {
-          const acct = allAccounts.find(a => String(a.id) === acctId);
-          if (acct?.username) label += ` · ${acct.username}`;
+          if (plat === 'youtube') {
+            const l = ytLoginsForLabels.find(x => String(x.id) === acctId);
+            label = l ? (l.channel_title || `Channel #${acctId}`) : `Channel #${acctId}`;
+          } else {
+            const acct = allAccounts.find(a => String(a.id) === acctId);
+            if (acct?.username) label += ` · ${acct.username}`;
+          }
         }
-        return `<span class="plat-pill ${m.cls}">${m.icon} ${label}</span>`;
+        return `<span class="plat-pill ${m.cls}">${m.icon} ${esc(label)}</span>`;
       }).join(' ');
+
+      const s = t.stats || {};
+      const monitor = `
+        <div class="job-monitor" onclick="openAnalytics(${t.id})" title="Click for full analytics">
+          <span class="jm-num up" title="uploaded">${s.uploaded || 0}</span>
+          <span class="jm-num" title="total">${s.total || 0}</span>
+          <span class="jm-num ${s.failed ? 'down' : ''}" title="failed">${s.failed || 0}</span>
+          ${s.live ? `<span class="badge run jm-live"><span class="badge-dot"></span> ${s.live} live</span>` : ''}
+          ${s.retryable ? `<span class="badge warn" title="auto-retryable failures">↻ ${s.retryable}</span>` : ''}
+          <span class="jm-cta">analytics →</span>
+        </div>`;
 
       const isActive = t.status === 'active';
       const active = isActive ? `<span class="badge ok"><span class="badge-dot"></span> Active</span>` : `<span class="badge idle">Paused</span>`;
@@ -371,9 +393,11 @@ async function loadTasks() {
         </td>
         <td><span class="plat-pill ${meta.cls}">${meta.icon} ${meta.label}</span></td>
         <td>${destBadges}</td>
+        <td>${monitor}</td>
         <td>${active}</td>
         <td class="muted">${lastSeen}</td>
         <td>
+          <button class="btn ghost sm" onclick="openAnalytics(${t.id})" title="Analytics">▤</button>
           <button class="btn ghost sm" onclick="toggleTask('${t.id}', '${isActive ? 'paused' : 'active'}')">${isActive ? '⏸' : '▶'}</button>
           <button class="btn danger sm" onclick="delTask('${t.id}')">✕</button>
         </td>
@@ -415,11 +439,13 @@ document.querySelectorAll('.pill[data-filter]').forEach(p => {
 
 async function loadVideos() {
   try {
-    const d = await api('/api/videos');
+    const d = await api('/api/videos?limit=300');
     let videos = d.videos || [];
     $('nav-video-count').textContent = videos.length;
 
-    if (videoFilter !== 'all') {
+    if (videoFilter === 'live') {
+      videos = videos.filter(v => LIVE_STATUSES.includes(v.status));
+    } else if (videoFilter !== 'all') {
       videos = videos.filter(v => v.status === videoFilter);
     }
 
@@ -439,17 +465,25 @@ async function loadVideos() {
       const badge = statusBadge(v.status);
       let ref = {};
       try { ref = v.upload_ref ? JSON.parse(v.upload_ref) : {}; } catch (_) {}
-      const ytLink = ref.youtube ? `<a href="${esc(ref.youtube)}" target="_blank">YouTube ↗</a>` : '';
+      const ytId = ref.id && ref.provider === 'youtube' ? ref.id : null;
+      const ytLink = ytId ? `<a href="https://youtu.be/${esc(ytId)}" target="_blank">YouTube ↗</a>` : '';
+      const retryBadge = (v.retry_count || 0) > 0
+        ? `<span class="badge warn" title="auto/manual retries used">↻ ${v.retry_count}/3</span>` : '';
+      const errTitle = ref.error || v.error;
 
       return `<tr>
         <td>
           <div class="cell-title">${esc(v.title || v.video_key)}</div>
-          <div class="cell-sub">${ytLink}</div>
+          <div class="cell-sub">${ytLink || `<span class="muted">${esc(v.url || '').slice(0, 60)}</span>`}</div>
         </td>
         <td class="muted">${esc(v.source_name || '—')}</td>
-        <td>${badge}</td>
+        <td>${badge} ${retryBadge}</td>
+        <td>${stageChips(v)}</td>
         <td class="muted">${timeAgo(v.updated_at)}</td>
-        <td>${(ref.error || v.error) ? `<span class="muted" title="${esc(ref.error || v.error)}">⚠</span>` : ''}</td>
+        <td style="white-space:nowrap">
+          ${errTitle ? `<span class="muted" title="${esc(errTitle)}">⚠</span>` : ''}
+          ${videoActions(v)}
+        </td>
       </tr>`;
     }).join('');
   } catch (e) {
@@ -457,13 +491,261 @@ async function loadVideos() {
   }
 }
 
+const LIVE_STATUSES = ['detected', 'downloading', 'analyzing', 'voiceover', 'editing', 'metadata', 'uploading'];
+const STAGE_META = {
+  detected:         { icon: '⊕', label: 'Detected' },
+  downloading:      { icon: '⬇', label: 'Downloading' },
+  analyzing:        { icon: '🧠', label: 'Analyzing' },
+  voiceover:        { icon: '🎙', label: 'Voiceover' },
+  editing:          { icon: '✂', label: 'Editing' },
+  metadata:         { icon: '✨', label: 'Metadata' },
+  uploading:        { icon: '↑', label: 'Uploading' },
+  uploaded:         { icon: '✓', label: 'Uploaded' },
+  failed:           { icon: '✕', label: 'Failed' },
+  cancelled:        { icon: '⊘', label: 'Cancelled' },
+};
+
 function statusBadge(s) {
+  const m = STAGE_META[s];
   if (s === 'uploaded') return `<span class="badge ok"><span class="badge-dot"></span> Uploaded</span>`;
-  if (s === 'processing') return `<span class="badge run"><span class="badge-dot"></span> Processing</span>`;
   if (s === 'failed') return `<span class="badge err"><span class="badge-dot"></span> Failed</span>`;
-  if (s === 'uploading') return `<span class="badge run"><span class="badge-dot"></span> Uploading</span>`;
-  if (s === 'downloaded') return `<span class="badge run"><span class="badge-dot"></span> Downloaded</span>`;
+  if (s === 'cancelled') return `<span class="badge idle">⊘ Cancelled</span>`;
+  if (LIVE_STATUSES.includes(s)) return `<span class="badge run"><span class="badge-dot"></span> ${m ? m.label : esc(s)}</span>`;
   return `<span class="badge idle">${esc(s)}</span>`;
+}
+
+// Stage chips row: detected ✓ → downloaded ✓ → edited ✓ → uploaded
+function stageChips(v) {
+  const steps = [
+    { on: !!(v.detected_at || v.created_at), icon: '⊕', title: 'detected' },
+    { on: !!v.downloaded_at, icon: '⬇', title: 'downloaded' },
+    { on: !!v.edited_at, icon: '✂', title: 'edited' },
+    { on: !!v.uploaded_at, icon: '✓', title: 'uploaded' },
+  ];
+  if (v.failed_at) steps.push({ on: true, icon: '✕', title: 'failed', bad: true });
+  if (v.cancelled_at) steps.push({ on: true, icon: '⊘', title: 'cancelled', bad: true });
+  return `<span class="stage-chips">${steps.map(s =>
+    `<span class="stage-chip ${s.on ? 'on' : ''} ${s.bad ? 'bad' : ''}" title="${s.title}">${s.icon}</span>`
+  ).join('')}</span>`;
+}
+
+function fmtClock(ts) {
+  if (!ts) return '—';
+  const dt = new Date(Number(ts));
+  if (isNaN(dt.getTime())) return '—';
+  const same = dt.toDateString() === new Date().toDateString();
+  const hm = `${String(dt.getHours()).padStart(2, '0')}:${String(dt.getMinutes()).padStart(2, '0')}`;
+  return same ? hm : `${dt.getDate()}/${dt.getMonth() + 1} ${hm}`;
+}
+
+// Cancel / Retry actions for a video row
+function videoActions(v) {
+  const btns = [];
+  if (LIVE_STATUSES.includes(v.status)) {
+    btns.push(`<button class="btn danger sm" onclick="cancelVideo(${v.id})" title="Cancel processing">⊘</button>`);
+  }
+  if (v.status === 'failed' || v.status === 'cancelled') {
+    const over = (v.retry_count || 0) >= 3;
+    btns.push(`<button class="btn ghost sm" onclick="retryVideo(${v.id}${over ? ', true' : ''})" title="Retry (attempt ${(v.retry_count || 0) + 1}/3)${over ? ' — force beyond limit' : ''}">↻ Retry</button>`);
+  }
+  return btns.join(' ');
+}
+
+async function cancelVideo(id) {
+  if (!confirm('Cancel this video? Processing will stop.')) return;
+  try {
+    await api(`/api/videos/${id}/cancel`, { method: 'POST' });
+    toast('Video cancelled');
+    refreshActiveViews();
+  } catch (e) { toast(e.message, 'err'); }
+}
+
+async function retryVideo(id, force) {
+  try {
+    const d = await api(`/api/videos/${id}/retry${force ? '?force=1' : ''}`, { method: 'POST' });
+    if (d.dispatched) toast('Re-queued for processing');
+    else toast('Re-queued' + (d.dispatch_error ? ` (dispatch pending: ${d.dispatch_error})` : ''), d.dispatched ? 'ok' : 'ok');
+    refreshActiveViews();
+  } catch (e) { toast(e.message, 'err'); }
+}
+
+function refreshActiveViews() {
+  const active = document.querySelector('.view.active')?.id;
+  if (active === 'view-dashboard') { loadDashboard(); loadLive(); }
+  if (active === 'view-sources') loadTasks();
+  if (active === 'view-activity') loadVideos();
+  if ($('modal-analytics').classList.contains('open') && analyticsTaskId) loadJobAnalytics();
+}
+
+/* ===== Job Analytics modal ===== */
+let analyticsTaskId = null;
+let analyticsRange = 'week';
+let analyticsTimer = null;
+
+function openAnalytics(taskId) {
+  analyticsTaskId = taskId;
+  $('modal-analytics').classList.add('open');
+  setAnalyticsRange(analyticsRange);
+  loadJobAnalytics();
+  clearInterval(analyticsTimer);
+  analyticsTimer = setInterval(() => {
+    if ($('modal-analytics').classList.contains('open')) loadJobAnalytics();
+  }, 5000);
+}
+
+function closeAnalytics() {
+  $('modal-analytics').classList.remove('open');
+  clearInterval(analyticsTimer);
+  analyticsTimer = null;
+  analyticsTaskId = null;
+}
+$('an-close')?.addEventListener('click', closeAnalytics);
+$('modal-analytics')?.addEventListener('click', e => { if (e.target === $('modal-analytics')) closeAnalytics(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && $('modal-analytics')?.classList.contains('open')) closeAnalytics();
+});
+
+document.querySelectorAll('#an-ranges .pill').forEach(p => {
+  p.addEventListener('click', () => setAnalyticsRange(p.dataset.range));
+});
+
+function setAnalyticsRange(r) {
+  analyticsRange = r;
+  document.querySelectorAll('#an-ranges .pill').forEach(p => p.classList.toggle('active', p.dataset.range === r));
+  $('an-custom-row').style.display = r === 'custom' ? 'flex' : 'none';
+  if (r !== 'custom') loadJobAnalytics();
+}
+
+$('an-apply-custom')?.addEventListener('click', () => loadJobAnalytics());
+
+async function loadJobAnalytics() {
+  if (!analyticsTaskId) return;
+  try {
+    let qs = `?range=${analyticsRange}`;
+    if (analyticsRange === 'custom') {
+      const from = $('an-from').value, to = $('an-to').value;
+      if (!from || !to) return;
+      qs += `&from=${from}&to=${to}`;
+    }
+    const d = await api(`/api/tasks/${analyticsTaskId}/analytics${qs}`);
+    renderJobAnalytics(d);
+  } catch (e) {
+    toast(e.message, 'err');
+    if (/not found|forbidden|404|403/i.test(e.message || '')) closeAnalytics();
+  }
+}
+
+function renderJobAnalytics(d) {
+  $('an-title').textContent = `Analytics — ${d.task?.name || d.task?.source_url || 'Job'}`;
+
+  // ---- stat cards ----
+  const t = d.totals || {};
+  const at = d.all_time || {};
+  const cards = [
+    { k: 'Detected', v: t.detected, cls: '' },
+    { k: 'Downloaded', v: t.downloaded, cls: '' },
+    { k: 'Edited', v: t.edited, cls: '' },
+    { k: 'Uploaded', v: t.uploaded, cls: 'up' },
+    { k: 'Failed', v: t.failed, cls: t.failed ? 'down' : '' },
+    { k: 'Cancelled', v: t.cancelled, cls: '' },
+    { k: 'In progress', v: d.in_progress, cls: d.in_progress ? 'run' : '' },
+    { k: 'Avg time', v: d.avg_minutes != null ? `${d.avg_minutes}m` : '—', cls: '' },
+    { k: 'Retries', v: d.retries_total, cls: '' },
+  ];
+  $('an-stats').innerHTML = cards.map(c =>
+    `<div class="an-stat ${c.cls}"><div class="an-stat-v">${c.v ?? 0}</div><div class="an-stat-k">${c.k}</div></div>`
+  ).join('') +
+    `<div class="an-stat alltime"><div class="an-stat-v">${at.uploaded ?? 0}<span class="an-stat-sub">/${at.total ?? 0}</span></div><div class="an-stat-k">All time uploaded</div></div>`;
+
+  // ---- time series chart (pure CSS stacked bars) ----
+  const series = (d.series || []).slice();
+  const chart = $('an-chart');
+  if (series.length === 0) {
+    chart.innerHTML = '<div class="empty-state">No data in this range</div>';
+  } else {
+    const KEYS = [
+      { k: 'detected', c: 'detected' },
+      { k: 'downloaded', c: 'downloaded' },
+      { k: 'uploaded', c: 'uploaded' },
+      { k: 'failed', c: 'failed' },
+    ];
+    const max = Math.max(1, ...series.map(s => KEYS.reduce((n, x) => n + (s[x.k] || 0), 0)));
+    const label = (s) => {
+      const dt = new Date(s.t);
+      if (d.bucket === 'hour') return `${String(dt.getHours()).padStart(2, '0')}:00`;
+      if (d.bucket === 'month') return `${dt.toLocaleString('en', { month: 'short' })} ${String(dt.getFullYear()).slice(2)}`;
+      return `${dt.getDate()}/${dt.getMonth() + 1}`;
+    };
+    const showLabels = series.length <= 40;
+    chart.innerHTML = `<div class="an-bars">` + series.map(s => {
+      const total = KEYS.reduce((n, x) => n + (s[x.k] || 0), 0);
+      const segs = KEYS.filter(x => s[x.k] > 0).map(x =>
+        `<span class="an-seg ${x.c}" style="flex:${s[x.k]}" title="${x.k}: ${s[x.k]}"></span>`).join('');
+      const title = `${label(s)} — det ${s.detected} · dl ${s.downloaded} · up ${s.uploaded} · fail ${s.failed} · cx ${s.cancelled}`;
+      return `<div class="an-col" title="${title}">
+        <div class="an-stack" style="height:${Math.round(total / max * 100)}%">${segs}</div>
+        ${showLabels ? `<div class="an-lab">${label(s)}</div>` : ''}
+      </div>`;
+    }).join('') + `</div>`;
+  }
+
+  // ---- live now ----
+  const live = d.live || [];
+  $('an-live-count').textContent = live.length ? `${live.length} running` : '';
+  $('an-live-table').querySelector('tbody').innerHTML = live.map(v => `<tr>
+    <td><div class="cell-title">${esc(v.title || v.video_key)}</div></td>
+    <td>${statusBadge(v.status)}</td>
+    <td>${stageChips(v)}</td>
+    <td class="muted">${(v.retry_count || 0)}/3${(v.attempts || 0) > 1 ? ` (up ${v.attempts})` : ''}</td>
+    <td class="muted">${fmtClock(v.updated_at)}</td>
+    <td>${videoActions(v)}</td>
+  </tr>`).join('');
+  $('an-live-empty').style.display = live.length ? 'none' : '';
+
+  // ---- recent table ----
+  const recent = d.recent || [];
+  $('an-recent-table').querySelector('tbody').innerHTML = recent.map(v => `<tr>
+    <td><div class="cell-title">${esc(v.title || v.video_key)}</div>
+        <div class="cell-sub">${ytLinkFrom(v)}</div></td>
+    <td>${statusBadge(v.status)} ${(v.retry_count || 0) > 0 ? `<span class="badge warn">↻ ${v.retry_count}/3</span>` : ''}</td>
+    <td class="muted">${(v.retry_count || 0)}/3</td>
+    <td class="muted">${v.duration ? Math.round(v.duration) + 's' : '—'}</td>
+    <td class="muted">${fmtClock(v.updated_at)}</td>
+    <td style="white-space:nowrap">${videoActions(v)}</td>
+  </tr>`).join('');
+  $('an-recent-empty').style.display = recent.length ? 'none' : '';
+}
+
+function ytLinkFrom(v) {
+  try {
+    const ref = v.upload_ref ? JSON.parse(v.upload_ref) : {};
+    if (ref.id && ref.provider === 'youtube') return `<a href="https://youtu.be/${esc(ref.id)}" target="_blank">YouTube ↗</a>`;
+  } catch (_) {}
+  return '';
+}
+
+/* ===== Dashboard live card ===== */
+async function loadLive() {
+  try {
+    const d = await api('/api/videos?status=live&limit=50');
+    const live = d.videos || [];
+    const card = $('dash-live-card');
+    const tbody = document.querySelector('#dash-live-table tbody');
+    card.style.display = live.length ? '' : 'none';
+    $('dash-live-empty').style.display = live.length ? 'none' : '';
+    $('dash-live-count').textContent = live.length ? `${live.length} running` : '';
+    if (!live.length) { tbody.innerHTML = ''; return; }
+    tbody.innerHTML = live.map(v => `<tr>
+      <td><div class="cell-title">${esc(v.title || v.video_key)}</div></td>
+      <td class="muted">${esc(v.source_name || '—')}</td>
+      <td>${statusBadge(v.status)}</td>
+      <td>${stageChips(v)}</td>
+      <td class="muted">${(v.retry_count || 0)}/3</td>
+      <td>${videoActions(v)}</td>
+    </tr>`).join('');
+  } catch (e) {
+    console.error('loadLive:', e);
+  }
 }
 
 /* ===== Dashboard ===== */
@@ -491,13 +773,14 @@ async function loadDashboard() {
       feed.innerHTML = '<div class="empty-state">No activity yet</div>';
     } else {
       feed.innerHTML = recent.map(v => {
-        const cls = v.status === 'uploaded' ? 'ok' : v.status === 'failed' ? 'err' : 'run';
-        const icon = v.status === 'uploaded' ? '✓' : v.status === 'failed' ? '✕' : '⟳';
+        const cls = v.status === 'uploaded' ? 'ok' : v.status === 'failed' ? 'err' : v.status === 'cancelled' ? 'idle' : 'run';
+        const icon = v.status === 'uploaded' ? '✓' : v.status === 'failed' ? '✕' : v.status === 'cancelled' ? '⊘' : '⟳';
+        const m = STAGE_META[v.status];
         return `<div class="feed-item">
           <div class="feed-icon ${cls}">${icon}</div>
           <div class="feed-text">
             <div class="feed-title">${esc(v.title || v.video_key)}</div>
-            <div class="feed-meta">${esc(v.status)} · ${timeAgo(v.updated_at)}</div>
+            <div class="feed-meta">${m ? esc(m.label) : esc(v.status)} · ${timeAgo(v.updated_at)}</div>
           </div>
         </div>`;
       }).join('');
@@ -1220,7 +1503,7 @@ async function startApp(user) {
   setInterval(() => {
     loadState();
     const active = document.querySelector('.view.active')?.id;
-    if (active === 'view-dashboard') loadDashboard();
+    if (active === 'view-dashboard') { loadDashboard(); loadLive(); }
     if (active === 'view-sources') loadTasks();
     if (active === 'view-activity') loadVideos();
     if (active === 'view-manual') loadManualJobs();

@@ -387,7 +387,21 @@ def main():
                         print(f"[upload] yt login {e.get('login_id')} (user {job_uid})")
                     elif e is not None:
                         raise RuntimeError("no YouTube account connected for this user")
-                yt_url = upload_youtube(final_path, meta)
+                # 3 upload attempts with backoff (transient YT quota/network errors).
+                yt_url = None
+                last_err = None
+                for attempt in range(1, 4):
+                    try:
+                        if attempt > 1:
+                            time.sleep(15 * attempt)
+                        yt_url = upload_youtube(final_path, meta)
+                        last_err = None
+                        break
+                    except Exception as ee:
+                        last_err = ee
+                        print(f"[upload] youtube attempt {attempt}/3 failed: {ee}", file=sys.stderr)
+                if last_err is not None:
+                    raise last_err
                 results["youtube"] = {
                     "success": True, "url": yt_url, "account": acct,
                     "uploaded_at": int(time.time() * 1000),

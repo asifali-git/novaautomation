@@ -58,7 +58,34 @@ async function listTasks(db, user) {
         .bind(user.is_admin ? 1 : 0, user.id)
         .all()
     : await db.prepare('SELECT * FROM tasks ORDER BY id DESC').all();
-  return res.results || [];
+  const tasks = res.results || [];
+  // Per-task counters (total / uploaded / failed / live) for monitor cards.
+  try {
+    const scope = user ? ' AND (? = 1 OR user_id = ?)' : '';
+    const vals = user ? [user.is_admin ? 1 : 0, user.id] : [];
+    const sres = await db
+      .prepare(
+        `SELECT task_id, COUNT(*) AS total,
+                SUM(CASE WHEN status = 'uploaded' THEN 1 ELSE 0 END) AS uploaded,
+                SUM(CASE WHEN status = 'failed' THEN 1 ELSE 0 END) AS failed,
+                SUM(CASE WHEN status = 'cancelled' THEN 1 ELSE 0 END) AS cancelled,
+                SUM(CASE WHEN status IN ('detected','downloading','analyzing','voiceover','editing','metadata','uploading') THEN 1 ELSE 0 END) AS live,
+                SUM(CASE WHEN status = 'failed' AND retry_count < 3 THEN 1 ELSE 0 END) AS retryable,
+                MAX(updated_at) AS last_activity
+         FROM videos WHERE 1=1${scope} GROUP BY task_id`
+      )
+      .bind(...vals)
+      .all();
+    const map = {};
+    (sres.results || []).forEach((r) => { map[r.task_id] = r; });
+    tasks.forEach((t) => {
+      const s = map[t.id];
+      t.stats = s
+        ? { total: +s.total || 0, uploaded: +s.uploaded || 0, failed: +s.failed || 0, cancelled: +s.cancelled || 0, live: +s.live || 0, retryable: +s.retryable || 0, last_activity: s.last_activity || null }
+        : { total: 0, uploaded: 0, failed: 0, cancelled: 0, live: 0, retryable: 0, last_activity: null };
+    });
+  } catch { /* stats are best-effort */ }
+  return tasks;
 }
 
 async function getTask(db, id) {
@@ -159,21 +186,41 @@ async function addVideo(db, body) {
   const t = now();
   const res = await db
     .prepare(
-      `INSERT INTO videos (task_id, video_key, url, title, status, user_id, created_at, updated_at)
-       VALUES (?, ?, ?, ?, 'detected', ?, ?, ?)`
+      `INSERT INTO videos (task_id, video_key, url, title, status, user_id, detected_at, created_at, updated_at)
+       VALUES (?, ?, ?, ?, 'detected', ?, ?, ?, ?)`
     )
-    .bind(taskId, key, url, body.title || null, userId, t, t)
+    .bind(taskId, key, url, body.title || null, userId, t, t, t)
     .run();
   return { video: await getVideo(db, res.meta?.last_row_id), created: true };
 }
 
 const VIDEO_FIELDS = [
   'status', 'error', 'meta', 'upload_ref', 'file_path', 'processed_path', 'attempts', 'duration', 'title',
+  'retry_count', 'detected_at', 'downloaded_at', 'edited_at', 'uploaded_at', 'failed_at', 'cancelled_at',
 ];
+
+// Statuses that mean the video is still being worked on.
+const LIVE_STATUSES = ['detected', 'downloading', 'analyzing', 'voiceover', 'editing', 'metadata', 'uploading'];
+const TERMINAL_STATUSES = ['uploaded', 'failed', 'cancelled'];
+// Which stage-timestamp column each settled status implies.
+const STATUS_STAMP = {
+  uploaded: 'uploaded_at',
+  failed: 'failed_at',
+  cancelled: 'cancelled_at',
+};
+// Statuses that imply the download has finished (download completed before these).
+const DOWNLOADED_BY = ['editing', 'analyzing', 'voiceover', 'metadata', 'uploading', 'uploaded'];
+// Statuses that imply the edit/apply has finished. ('failed' excluded: it can
+// happen at any stage — prior transitions already stamped these.)
+const EDITED_BY = ['metadata', 'uploading', 'uploaded'];
 
 async function patchVideo(db, id, body) {
   const video = await getVideo(db, id);
   if (!video) throw new Error('video not found');
+  // Cancelled is sticky: a still-running pipeline can't un-cancel it.
+  if (video.status === 'cancelled' && body.status && body.status !== 'cancelled') {
+    delete body.status;
+  }
   const fields = [];
   const vals = [];
   for (const k of VIDEO_FIELDS) {
@@ -181,6 +228,19 @@ async function patchVideo(db, id, body) {
       fields.push(`${k} = ?`);
       vals.push(typeof body[k] === 'object' ? JSON.stringify(body[k]) : body[k]);
     }
+  }
+  // Auto stage timestamps on status transitions.
+  const st = 'status' in body ? body.status : null;
+  if (st) {
+    const t = now();
+    const stamp = (col) => {
+      if (col in body || video[col]) return;
+      fields.push(`${col} = ?`);
+      vals.push(t);
+    };
+    if (DOWNLOADED_BY.includes(st)) stamp('downloaded_at');
+    if (EDITED_BY.includes(st)) stamp('edited_at');
+    if (STATUS_STAMP[st]) stamp(STATUS_STAMP[st]);
   }
   if (!fields.length) return video;
   fields.push('updated_at = ?');
@@ -196,6 +256,164 @@ async function nextPendingVideo(db) {
     .first();
   return res;
 }
+
+// --- Analytics ---------------------------------------------------------------
+
+const DAY_MS = 86400000;
+
+function analyticsWindow(range, fromParam, toParam) {
+  const nowMs = now();
+  switch (range) {
+    case 'day':   return { from: nowMs - DAY_MS, to: nowMs, bucket: 'hour' };
+    case 'week':  return { from: nowMs - 7 * DAY_MS, to: nowMs, bucket: 'day' };
+    case 'month': return { from: nowMs - 30 * DAY_MS, to: nowMs, bucket: 'day' };
+    case 'year':  return { from: nowMs - 365 * DAY_MS, to: nowMs, bucket: 'month' };
+    case 'custom': {
+      const f = Number(fromParam) || nowMs - 7 * DAY_MS;
+      const t = Number(toParam) || nowMs;
+      const span = Math.max(t - f, 3600000);
+      return { from: f, to: Math.max(t, f + 3600000), bucket: span <= 2 * DAY_MS ? 'hour' : span <= 90 * DAY_MS ? 'day' : 'month' };
+    }
+    default: return { from: nowMs - 7 * DAY_MS, to: nowMs, bucket: 'day' };
+  }
+}
+
+function bucketStart(ts, bucket) {
+  const d = new Date(ts);
+  if (bucket === 'hour') return new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), d.getUTCHours()).getTime();
+  if (bucket === 'month') return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1);
+  return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
+}
+
+const EVENT_FIELDS = [
+  ['detected', 'detected_at'],
+  ['downloaded', 'downloaded_at'],
+  ['edited', 'edited_at'],
+  ['uploaded', 'uploaded_at'],
+  ['failed', 'failed_at'],
+  ['cancelled', 'cancelled_at'],
+];
+
+async function taskAnalytics(db, { taskId, user, range = 'week', from, to }) {
+  const win = analyticsWindow(range, from, to);
+
+  const task = await getTask(db, taskId);
+  if (!task) return null;
+  if (user && !user.is_admin && task.user_id !== user.id) return { forbidden: true };
+
+  // Rows having ANY event inside the window (video may be older than window).
+  const bind = [taskId];
+  let evWhere = '';
+  EVENT_FIELDS.forEach(([, col], i) => {
+    if (i) evWhere += ' OR ';
+    if (col === 'detected_at') {
+      evWhere += '(COALESCE(detected_at, created_at) >= ? AND COALESCE(detected_at, created_at) < ?)';
+    } else {
+      evWhere += `(${col} >= ? AND ${col} < ?)`;
+    }
+    bind.push(win.from, win.to);
+  });
+  const rows = await db
+    .prepare(
+      `SELECT id, video_key, url, title, status, retry_count, attempts, error, duration, upload_ref,
+              detected_at, downloaded_at, edited_at, uploaded_at, failed_at, cancelled_at,
+              created_at, updated_at
+       FROM videos WHERE task_id = ? AND (${evWhere})
+       ORDER BY id DESC LIMIT 5000`
+    )
+    .bind(...bind)
+    .all();
+  const vids = rows.results || [];
+
+  // Bucketed time series.
+  const series = [];
+  const index = {};
+  const pushBucket = (t) => {
+    if (index[t] != null) return index[t];
+    index[t] = series.length;
+    series.push({ t, detected: 0, downloaded: 0, edited: 0, uploaded: 0, failed: 0, cancelled: 0 });
+    return series.length - 1;
+  };
+  const inWin = (ts) => ts != null && ts >= win.from && ts < win.to;
+  const detTs = (v) => v.detected_at || v.created_at;
+  const totals = { detected: 0, downloaded: 0, edited: 0, uploaded: 0, failed: 0, cancelled: 0 };
+  const bump = (field, ts) => {
+    if (!inWin(ts)) return;
+    totals[field]++;
+    series[pushBucket(bucketStart(ts, win.bucket))][field]++;
+  };
+  vids.forEach((v) => {
+    bump('detected', detTs(v));
+    bump('downloaded', v.downloaded_at);
+    bump('edited', v.edited_at);
+    bump('uploaded', v.uploaded_at);
+    bump('failed', v.failed_at);
+    bump('cancelled', v.cancelled_at);
+  });
+
+  // Fill empty buckets across the window so charts have continuous x-axis.
+  const stepMs = win.bucket === 'hour' ? 3600000 : win.bucket === 'month' ? null : DAY_MS;
+  if (stepMs) {
+    const first = bucketStart(win.from, win.bucket);
+    for (let t = first; t < win.to; t += stepMs) pushBucket(t);
+  } else {
+    const d0 = new Date(win.from);
+    let y = d0.getUTCFullYear(), m = d0.getUTCMonth();
+    const end = new Date(win.to);
+    while (y < end.getUTCFullYear() || (y === end.getUTCFullYear() && m <= end.getUTCMonth())) {
+      pushBucket(Date.UTC(y, m, 1));
+      m++; if (m > 11) { m = 0; y++; }
+    }
+  }
+  series.sort((a, b) => a.t - b.t);
+
+  // Average detect -> upload time for videos uploaded in window.
+  let sumMs = 0, nMs = 0;
+  vids.forEach((v) => {
+    if (v.uploaded_at && inWin(v.uploaded_at)) {
+      const start = detTs(v);
+      if (start && v.uploaded_at >= start) { sumMs += v.uploaded_at - start; nMs++; }
+    }
+  });
+
+  // Live now + current status breakdown + retries (whole task, not just window).
+  const all = await db
+    .prepare(
+      `SELECT id, video_key, url, title, status, retry_count, attempts, error, upload_ref, duration,
+              detected_at, downloaded_at, edited_at, uploaded_at, failed_at, cancelled_at, created_at, updated_at
+       FROM videos WHERE task_id = ? ORDER BY updated_at DESC LIMIT 500`
+    )
+    .bind(taskId)
+    .all();
+  const allVids = all.results || [];
+  const statusCounts = {};
+  allVids.forEach((v) => { statusCounts[v.status] = (statusCounts[v.status] || 0) + 1; });
+  const live = allVids.filter((v) => LIVE_STATUSES.includes(v.status)).slice(0, 30);
+  const recent = allVids.slice(0, 12);
+
+  return {
+    task: { id: task.id, name: task.name, source_url: task.source_url, platform: task.platform, dest_platforms: task.dest_platforms, status: task.status },
+    range,
+    from: win.from,
+    to: win.to,
+    bucket: win.bucket,
+    totals,
+    series,
+    status_counts: statusCounts,
+    in_progress: live.length,
+    retries_total: allVids.reduce((s, v) => s + (v.retry_count || 0), 0),
+    avg_minutes: nMs ? Math.round((sumMs / nMs) / 60000 * 10) / 10 : null,
+    live,
+    recent,
+    all_time: {
+      total: allVids.length,
+      uploaded: statusCounts.uploaded || 0,
+      failed: statusCounts.failed || 0,
+      cancelled: statusCounts.cancelled || 0,
+    },
+  };
+}
+
 
 async function listLogins(db, { withTokens = false, user = null } = {}) {
   const res = user
@@ -533,6 +751,40 @@ export default {
       } catch (e) {
         console.log('video sweep fail', e && e.message);
       }
+      // Auto-retry: failed BEFORE the upload stage (edited_at still null), up to
+      // 3 total runs. Upload-stage failures are excluded — they already get 3
+      // in-run upload attempts, and auto-re-running those would burn YT quota.
+      try {
+        const rows = await env.DB.prepare(
+          `SELECT id FROM videos
+           WHERE status = 'failed' AND retry_count < 3 AND edited_at IS NULL
+             AND COALESCE(failed_at, updated_at) < ?
+           ORDER BY id ASC LIMIT 5`
+        ).bind(now() - 2 * 60 * 1000).all();
+        const ids = (rows.results || []).map((r) => r.id);
+        if (ids.length) {
+          for (const id of ids) {
+            await env.DB.prepare(
+              `UPDATE videos SET status = 'detected', retry_count = retry_count + 1,
+                                 error = NULL, failed_at = NULL, dispatched_at = NULL, updated_at = ?
+               WHERE id = ? AND status = 'failed'`
+            ).bind(now(), id).run();
+          }
+          try {
+            const ok = await dispatchProcess(env, { video_ids: ids.join(',') });
+            if (ok) {
+              for (const id of ids) {
+                await env.DB.prepare('UPDATE videos SET dispatched_at = ? WHERE id = ? AND dispatched_at IS NULL').bind(now(), id).run();
+              }
+            }
+            console.log('auto-retry dispatched videos', ids.join(','), ok ? 'ok' : 'failed');
+          } catch (e) {
+            console.log('auto-retry dispatch fail', e && e.message);
+          }
+        }
+      } catch (e) {
+        console.log('auto-retry sweep fail', e && e.message);
+      }
       // Stranded manual jobs: queued, never dispatched, >5 min old.
       try {
         const cutoff = now() - 5 * 60 * 1000;
@@ -704,8 +956,99 @@ export default {
 
       // ---- Videos (scoped) ----
       if (path === '/api/videos' && req.method === 'GET') {
-        const videos = await listVideos(env.DB, { limit: 200, user: gateUser });
-        return withCors(json({ videos }));
+        const taskId = url.searchParams.get('task_id');
+        const status = url.searchParams.get('status'); // comma list, or 'live'
+        const limit = Math.min(Number(url.searchParams.get('limit')) || 200, 500);
+        const filters = [];
+        const vals = [];
+        if (taskId) { filters.push('v.task_id = ?'); vals.push(Number(taskId)); }
+        if (status) {
+          const wanted = status === 'live'
+            ? LIVE_STATUSES
+            : status.split(',').map((s) => s.trim()).filter(Boolean);
+          if (wanted.length) {
+            filters.push(`v.status IN (${wanted.map(() => '?').join(',')})`);
+            vals.push(...wanted);
+          }
+        }
+        const scope = ' AND (? = 1 OR v.user_id = ?)';
+        const scopeVals = [gateUser.is_admin ? 1 : 0, gateUser.id];
+        const res = await env.DB.prepare(
+          `SELECT v.*, t.name AS source_name, t.source_url AS source
+           FROM videos v LEFT JOIN tasks t ON v.task_id = t.id
+           WHERE 1=1${filters.length ? ` AND ${filters.join(' AND ')}` : ''}${scope}
+           ORDER BY v.updated_at DESC LIMIT ?`
+        ).bind(...vals, ...scopeVals, limit).all();
+        return withCors(json({ videos: res.results || [] }));
+      }
+
+      // ---- Per-job analytics (monitor card drill-down) ----
+      const taskAnalyticsMatch = path.match(/^\/api\/tasks\/(\d+)\/analytics$/);
+      if (taskAnalyticsMatch && req.method === 'GET') {
+        const taskId = Number(taskAnalyticsMatch[1]);
+        const data = await taskAnalytics(env.DB, {
+          taskId,
+          user: gateUser,
+          range: url.searchParams.get('range') || 'week',
+          from: url.searchParams.get('from'),
+          to: url.searchParams.get('to'),
+        });
+        if (!data) return withCors(json({ error: 'not found' }, 404));
+        if (data.forbidden) return withCors(json({ error: 'forbidden' }, 403));
+        return withCors(json(data));
+      }
+
+      // ---- Cancel a live video (stops further pipeline work) ----
+      const vCancel = path.match(/^\/api\/videos\/(\d+)\/cancel$/);
+      if (vCancel && req.method === 'POST') {
+        const id = Number(vCancel[1]);
+        const video = await getVideo(env.DB, id);
+        if (!video) return withCors(json({ error: 'not found' }, 404));
+        if (!gateUser.is_admin && video.user_id !== gateUser.id) {
+          return withCors(json({ error: 'forbidden' }, 403));
+        }
+        if (TERMINAL_STATUSES.includes(video.status)) {
+          return withCors(json({ error: `already ${video.status} — can't cancel` }, 400));
+        }
+        const res = await env.DB.prepare(
+          `UPDATE videos SET status = 'cancelled', cancelled_at = ?, error = NULL, updated_at = ?
+           WHERE id = ? AND status IN (${LIVE_STATUSES.map(() => '?').join(',')})`
+        ).bind(now(), now(), id, ...LIVE_STATUSES).run();
+        if (!res.meta?.changes) return withCors(json({ error: 'video already finished' }, 400));
+        return withCors(json({ video: await getVideo(env.DB, id) }));
+      }
+
+      // ---- Retry a failed/cancelled video (re-dispatch GH pipeline) ----
+      const vRetry = path.match(/^\/api\/videos\/(\d+)\/retry$/);
+      if (vRetry && req.method === 'POST') {
+        const id = Number(vRetry[1]);
+        const video = await getVideo(env.DB, id);
+        if (!video) return withCors(json({ error: 'not found' }, 404));
+        if (!gateUser.is_admin && video.user_id !== gateUser.id) {
+          return withCors(json({ error: 'forbidden' }, 403));
+        }
+        if (video.status === 'uploaded') return withCors(json({ error: 'already uploaded' }, 400));
+        if (video.status === 'detected') return withCors(json({ error: 'already queued' }, 400));
+        const force = !!url.searchParams.get('force');
+        if (!force && (video.retry_count || 0) >= 3) {
+          return withCors(json({ error: 'retry limit reached (3) — use force to override' }, 400));
+        }
+        await env.DB.prepare(
+          `UPDATE videos SET status = 'detected', error = NULL, failed_at = NULL, cancelled_at = NULL,
+                             dispatched_at = NULL, retry_count = retry_count + 1, updated_at = ?
+           WHERE id = ?`
+        ).bind(now(), id).run();
+        let dispatched = false;
+        let dispatchError = null;
+        try {
+          dispatched = await dispatchProcess(env, { video_ids: String(id) });
+          if (dispatched) {
+            await env.DB.prepare('UPDATE videos SET dispatched_at = ? WHERE id = ?').bind(now(), id).run();
+          }
+        } catch (e) {
+          dispatchError = e.message || String(e);
+        }
+        return withCors(json({ video: await getVideo(env.DB, id), dispatched, dispatch_error: dispatchError }));
       }
 
       if (path === '/api/health' && req.method === 'GET') {

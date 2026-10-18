@@ -34,6 +34,13 @@ CREATE TABLE IF NOT EXISTS videos (
   attempts INTEGER NOT NULL DEFAULT 0,
   duration REAL,
   dispatched_at INTEGER,
+  detected_at INTEGER,
+  downloaded_at INTEGER,
+  edited_at INTEGER,
+  uploaded_at INTEGER,
+  failed_at INTEGER,
+  cancelled_at INTEGER,
+  retry_count INTEGER NOT NULL DEFAULT 0,
   created_at INTEGER NOT NULL,
   updated_at INTEGER NOT NULL
 );

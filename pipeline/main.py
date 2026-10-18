@@ -19,6 +19,7 @@ Env:
 import os
 import sys
 import json
+import time
 import traceback
 import requests
 
@@ -62,6 +63,33 @@ def set_status(video_id, **fields):
         worker_patch(f"/api/internal/videos/{video_id}", fields)
     except Exception as e:
         print(f"[warn] state update failed: {e}", file=sys.stderr)
+
+
+def is_cancelled(video_id):
+    """True if the user cancelled this video in the panel (cancel is sticky)."""
+    try:
+        v = worker_get(f"/api/internal/videos/{video_id}").get("video") or {}
+        return v.get("status") == "cancelled"
+    except Exception as e:
+        print(f"[warn] cancel check failed: {e}", file=sys.stderr)
+        return False
+
+
+def upload_with_retry(fn, *, attempts=3, backoff=15, label="upload"):
+    """Run fn() up to `attempts` times with linear backoff. Returns result or raises last error."""
+    last = None
+    for i in range(1, attempts + 1):
+        try:
+            out = fn()
+            if i > 1:
+                print(f"[retry] {label} succeeded on attempt {i}")
+            return out
+        except Exception as e:
+            last = e
+            print(f"[retry] {label} attempt {i}/{attempts} failed: {e}", file=sys.stderr)
+            if i < attempts:
+                time.sleep(backoff * i)
+    raise last
 
 
 def fetch_target():
@@ -279,6 +307,9 @@ def run():
     src, info = dl.download(url, out_dir=work, max_secs=MAX_SECS)
     print(f"[download] {src} ({os.path.getsize(src)//1024} KB)")
     title_hint = info.get("title") or title
+    if is_cancelled(vid):
+        print("[cancel] cancelled by user before edit — stopping")
+        return 0
     set_status(vid, status="editing", title=title_hint)
 
     # 1. Analyze -> JSON edit plan (Nemotron -> simple visual fallback).
@@ -321,6 +352,9 @@ def run():
     print(f"[meta] {meta['title']}")
 
     # 5. Upload (dest may pin a channel: "youtube:<login_id>").
+    if is_cancelled(vid):
+        print("[cancel] cancelled by user before upload — stopping")
+        return 0
     set_status(vid, status="uploading")
     pinned = False
     for part in (dest_platforms or "").split(","):
@@ -350,14 +384,24 @@ def run():
         elif has_rt is False:
             raise RuntimeError("no YouTube account connected for this user")
     access = yt.refresh_access_token()
-    video_id = yt.upload_video(
-        out_path,
-        title=meta["title"],
-        description=meta["description"],
-        tags=meta["tags"],
-        privacy=PRIVACY,
-        access_token=access,
-    )
+
+    def _do_yt_upload():
+        attempt = _do_yt_upload.n = getattr(_do_yt_upload, "n", 0) + 1
+        set_status(vid, status="uploading", attempts=attempt)
+        # Fresh access token per attempt (first attempt reuses the cached one).
+        tok = access if attempt == 1 else yt.refresh_access_token()
+        return yt.upload_video(
+            out_path,
+            title=meta["title"],
+            description=meta["description"],
+            tags=meta["tags"],
+            privacy=PRIVACY,
+            access_token=tok,
+        )
+
+    video_id = upload_with_retry(_do_yt_upload, attempts=3, backoff=20, label="youtube upload")
+    if not video_id:
+        raise RuntimeError("youtube upload returned no video id")
     print(f"[upload] youtube id {video_id}")
 
     # 5b. Social media upload (TikTok / Instagram / Facebook via cookies).

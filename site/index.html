@@ -132,6 +132,29 @@
           </div>
         </div>
       </div>
+
+      <div class="card" id="dash-live-card" style="display:none;">
+        <div class="card-header">
+          <h2><span class="badge run"><span class="badge-dot"></span> Live</span> &nbsp;Processing Now</h2>
+          <span class="muted" id="dash-live-count"></span>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table" id="dash-live-table">
+            <thead>
+              <tr>
+                <th>Video</th>
+                <th>Source</th>
+                <th>Stage</th>
+                <th>Stages</th>
+                <th>Retries</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="live-empty empty-state" id="dash-live-empty" style="display:none;">Nothing processing right now</div>
+      </div>
     </section>
 
     <!-- ===== SOURCES ===== -->
@@ -152,6 +175,7 @@
                 <th>Source</th>
                 <th>Platform</th>
                 <th>Upload To</th>
+                <th>Monitor</th>
                 <th>Status</th>
                 <th>Last Seen</th>
                 <th></th>
@@ -178,8 +202,9 @@
         <div class="filter-pills">
           <button class="pill active" data-filter="all">All</button>
           <button class="pill" data-filter="uploaded">Uploaded</button>
-          <button class="pill" data-filter="processing">Processing</button>
+          <button class="pill" data-filter="live">Processing</button>
           <button class="pill" data-filter="failed">Failed</button>
+          <button class="pill" data-filter="cancelled">Cancelled</button>
         </div>
       </header>
 
@@ -191,6 +216,7 @@
                 <th>Video</th>
                 <th>Source</th>
                 <th>Status</th>
+                <th>Stages</th>
                 <th>Updated</th>
                 <th></th>
               </tr>
@@ -519,6 +545,77 @@
           <button class="btn primary" type="submit">Add Source</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- ===== JOB ANALYTICS MODAL ===== -->
+  <div class="modal-overlay" id="modal-analytics">
+    <div class="modal wide">
+      <div class="modal-header">
+        <h2 id="an-title">Job Analytics</h2>
+        <div class="an-ranges" id="an-ranges">
+          <button class="pill" data-range="day">Daily</button>
+          <button class="pill active" data-range="week">Weekly</button>
+          <button class="pill" data-range="month">Monthly</button>
+          <button class="pill" data-range="year">Yearly</button>
+          <button class="pill" data-range="custom">Custom</button>
+        </div>
+        <button class="modal-close" id="an-close">&times;</button>
+      </div>
+      <div class="an-custom-row" id="an-custom-row" style="display:none;">
+        <label>From <input type="date" id="an-from" class="form-input" /></label>
+        <label>To <input type="date" id="an-to" class="form-input" /></label>
+        <button class="btn primary sm" id="an-apply-custom">Apply</button>
+        <span class="muted" id="an-live-hint">auto-refreshes every 5s</span>
+      </div>
+      <div class="an-body" id="an-body">
+        <div class="an-stats" id="an-stats"></div>
+
+        <div class="card an-chart-card">
+          <div class="card-header">
+            <h2>Over Time</h2>
+            <div class="an-legend">
+              <span class="an-key detected">■ detected</span>
+              <span class="an-key downloaded">■ downloaded</span>
+              <span class="an-key uploaded">■ uploaded</span>
+              <span class="an-key failed">■ failed</span>
+            </div>
+          </div>
+          <div class="an-chart" id="an-chart"></div>
+        </div>
+
+        <div class="card" id="an-live-card">
+          <div class="card-header">
+            <h2><span class="badge run"><span class="badge-dot"></span> Live</span> &nbsp;Processing Now</h2>
+            <span class="muted" id="an-live-count"></span>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table" id="an-live-table">
+              <thead>
+                <tr><th>Video</th><th>Stage</th><th>Stages</th><th>Retries</th><th>Updated</th><th></th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="empty-state" id="an-live-empty" style="display:none;">Nothing processing right now</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h2>Recent Videos</h2>
+            <button class="btn ghost sm" onclick="closeAnalytics(); switchView('activity');">View all →</button>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table" id="an-recent-table">
+              <thead>
+                <tr><th>Video</th><th>Status</th><th>Retries</th><th>Duration</th><th>Updated</th><th></th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="empty-state" id="an-recent-empty" style="display:none;">No videos yet</div>
+        </div>
+      </div>
     </div>
   </div>
 
