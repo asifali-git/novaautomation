@@ -241,8 +241,60 @@ def _fb_parse_feed(h):
     return nodes
 
 
+def _fb_account(uid):
+    """Owner's Facebook account {cookies, proxy} from Worker (cached)."""
+    key = ("fbacc", int(uid or 0))
+    now = time.time()
+    ent = _ck_cache.get(key)
+    if ent and ent["exp"] > now:
+        return ent["items"]
+    acc = None
+    try:
+        params = f"?user_id={int(uid)}" if uid else ""
+        r = requests.get(f"{WORKER}/api/internal/accounts/env{params}",
+                         headers=_h(), timeout=30)
+        if r.status_code == 200:
+            lst = (r.json() or {}).get("facebook") or []
+            if lst:
+                acc = lst[0]
+    except Exception as e:
+        log.warning("fb account fetch failed: %s", e)
+    _ck_cache[key] = {"exp": now + _COOKIE_TTL, "items": acc}
+    return acc
+
+
+def _cookie_jar(items):
+    """Name->value dict from a JSON cookie list or Netscape cookie text."""
+    jar = {}
+    if isinstance(items, str):
+        s = items.lstrip()
+        if s.startswith("[") or s.startswith("{"):
+            try:
+                items = json.loads(s)
+            except Exception:
+                items = None
+        else:
+            for line in items.splitlines():
+                if not line or line.startswith("#"):
+                    continue
+                parts = line.split("\t")
+                if len(parts) >= 7:
+                    jar[parts[5]] = parts[6]
+            return jar
+    if isinstance(items, list):
+        for c in items:
+            if isinstance(c, dict) and c.get("name"):
+                jar[c["name"]] = c.get("value", "")
+    return jar
+
+
 def _fb_fetch_feed(url, uid):
-    """Page name + feed cards from FB. Tries www/m × plain/noscript SSR."""
+    """Page name + feed cards from FB.
+
+    Pass 1: curl_cffi with Chrome TLS impersonation — DC IPs get an instant
+    login wall from python-requests' fingerprint. Pass 2: plain requests.
+    Account proxy (if set in NOVA UI) is used for both passes.
+    """
     m = re.search(r"facebook\.com/([^/?#]+)", url)
     if not m:
         raise ValueError(f"not a facebook page url: {url}")
@@ -251,38 +303,83 @@ def _fb_fetch_feed(url, uid):
                 "permalink.php", "story.php", "photo.php"):
         raise ValueError("use a page url like facebook.com/<PageName> "
                          "(single-video/profile.php urls unsupported)")
+    acc = _fb_account(uid) or {}
+    jar = _cookie_jar(acc.get("cookies")) or _cookie_jar(
+        _fetch_account_cookies("facebook", uid))
+    if not jar:
+        raise ValueError("no facebook cookies connected — add a Facebook "
+                         "account first (Connect)")
+    proxy = acc.get("proxy") or None
+    prox = {"http": proxy, "https": proxy} if proxy else None
+    variants = [f"https://{h}/{page}/reels{q}"
+                for h in ("www.facebook.com", "m.facebook.com")
+                for q in ("", "?_fb_noscript=1")]
+    attempts = []
+
+    try:
+        from curl_cffi import requests as crequests
+        have_cffi = True
+    except Exception:
+        have_cffi = False
+
+    if have_cffi:
+        hdrs = {k: v for k, v in _FB_HEADERS.items()
+                if k.lower() != "user-agent"}
+        for full in variants:
+            t0 = time.time()
+            try:
+                r = crequests.get(full, headers=hdrs, cookies=jar,
+                                  impersonate="chrome131", timeout=60,
+                                  allow_redirects=True, proxies=prox)
+            except Exception as e:
+                attempts.append({"url": full, "fetcher": "cffi",
+                                 "err": str(e)[:120],
+                                 "sec": round(time.time() - t0, 1)})
+                log.warning("fb cffi %s failed: %s", full, e)
+                continue
+            nodes = _fb_parse_feed(r.text)
+            attempts.append({"url": full, "fetcher": "cffi",
+                             "status": r.status_code, "len": len(r.text),
+                             "final": r.url[:140], "cards": len(nodes),
+                             "sec": round(time.time() - t0, 1)})
+            log.info("fb cffi %s: %s len=%d cards=%d", full, r.status_code,
+                     len(r.text), len(nodes))
+            if nodes:
+                _FB_DBG.update(attempts=attempts, ts=time.time(), err=None)
+                return page, nodes
+
     s = _fb_session(uid)
     if s is None:
         raise ValueError("no facebook cookies connected — add a Facebook "
                          "account first (Connect)")
-    attempts = []
-    for host in ("www.facebook.com", "m.facebook.com"):
-        for suffix in ("", "?_fb_noscript=1"):
-            full = f"https://{host}/{page}/reels{suffix}"
-            t0 = time.time()
-            try:
-                r = s.get(full, timeout=60, allow_redirects=True)
-                h = r.text
-            except Exception as e:
-                attempts.append({"url": full, "err": str(e)[:120],
-                                 "sec": round(time.time() - t0, 1)})
-                log.warning("fb fetch %s failed: %s", full, e)
-                continue
-            nodes = _fb_parse_feed(h)
-            attempts.append({"url": full, "status": r.status_code,
-                             "len": len(h), "final": r.url[:140],
-                             "cards": len(nodes),
+    if proxy:
+        s.proxies = dict(prox)
+    for full in variants:
+        t0 = time.time()
+        try:
+            r = s.get(full, timeout=60, allow_redirects=True)
+        except Exception as e:
+            attempts.append({"url": full, "fetcher": "req",
+                             "err": str(e)[:120],
                              "sec": round(time.time() - t0, 1)})
-            log.info("fb %s: %s len=%d cards=%d", full, r.status_code,
-                     len(h), len(nodes))
-            if nodes:
-                _FB_DBG.update(attempts=attempts, ts=time.time(), err=None)
-                return page, nodes
+            log.warning("fb req %s failed: %s", full, e)
+            continue
+        nodes = _fb_parse_feed(r.text)
+        attempts.append({"url": full, "fetcher": "req",
+                         "status": r.status_code, "len": len(r.text),
+                         "final": r.url[:140], "cards": len(nodes),
+                         "sec": round(time.time() - t0, 1)})
+        log.info("fb req %s: %s len=%d cards=%d", full, r.status_code,
+                 len(r.text), len(nodes))
+        if nodes:
+            _FB_DBG.update(attempts=attempts, ts=time.time(), err=None)
+            return page, nodes
+
     _FB_DBG.update(attempts=attempts, ts=time.time(),
-                   err=f"page '{page}': no feed cards in reels response")
+                   err=f"page '{page}': no feed cards ({len(attempts)} attempts)")
     raise ValueError(
         f"facebook page '{page}': reels feed empty after {len(attempts)} "
-        f"attempts (wall/timeout on this IP, or no reels) — see /status")
+        f"attempts (login wall / no reels / cookies dead) — see /status")
 
 
 def fb_latest(url, uid):
