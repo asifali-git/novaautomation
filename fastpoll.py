@@ -113,8 +113,10 @@ def flat_latest(url, cookiefile=None, proxy=None):
 
 _COOKIE_TTL = 600
 _ck_cache = {}     # (platform, uid) -> {"exp", "items", "file"}
-_date_cache = {}   # fb video id -> {"date": "YYYYMMDD", "title": str}
 _fb_sess_cache = {}  # uid -> (session, exp)
+
+# Live fetch diagnostics, exposed via /status (Render-side truth).
+_FB_DBG = {"attempts": [], "latest": None, "err": None, "ts": 0}
 
 _FB_HEADERS = {
     "User-Agent": ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
@@ -215,13 +217,32 @@ def _fb_session(uid):
     return s
 
 
-def _fb_video_ids(url, uid):
-    """Page name + reel video ids (doc order) from the FB reels tab.
+def _fb_parse_feed(h):
+    """(creation_time, video_id) pairs from the reels feed HTML.
 
-    Only the reels tab is server-rendered (videos tab is a JS grid + one
-    featured id — useless as 'latest'). m.facebook.com redirects to www with
-    a desktop UA; both are tried, the big ~15MB page needs a long timeout.
+    Each feed card carries creation_time + attachments.media.id (the video).
+    Cards are ~40KB; anything much bigger is the playback blob (skipped).
+    Order-independent — pick newest by timestamp.
     """
+    times = [(m.start(), int(m.group(1))) for m in
+             re.finditer(r'"creation_time"\s*:\s*(\d{10})', h)]
+    nodes = []
+    for i, (pos, t) in enumerate(times):
+        end = times[i + 1][0] if i + 1 < len(times) else min(len(h), pos + 200000)
+        if end - pos > 200000:
+            continue
+        seg = h[pos:end]
+        vids = []
+        for mm in re.finditer(r'"media"\s*:\s*\{[^{}]{0,300}?"id"\s*:\s*"(\d{10,})"', seg):
+            if mm.group(1) not in vids:
+                vids.append(mm.group(1))
+        if len(vids) == 1:
+            nodes.append((t, vids[0]))
+    return nodes
+
+
+def _fb_fetch_feed(url, uid):
+    """Page name + feed cards from FB. Tries www/m × plain/noscript SSR."""
     m = re.search(r"facebook\.com/([^/?#]+)", url)
     if not m:
         raise ValueError(f"not a facebook page url: {url}")
@@ -234,69 +255,46 @@ def _fb_video_ids(url, uid):
     if s is None:
         raise ValueError("no facebook cookies connected — add a Facebook "
                          "account first (Connect)")
-    ids = []
+    attempts = []
     for host in ("www.facebook.com", "m.facebook.com"):
-        try:
-            r = s.get(f"https://{host}/{page}/reels", timeout=60,
-                      allow_redirects=True)
-            h = r.text
-        except Exception as e:
-            log.warning("fb fetch %s/%s/reels failed: %s", host, page, e)
-            continue
-        found = 0
-        for x in re.findall(r'"video_id"\s*:\s*"?(\d{10,})"?', h):
-            if x not in ids:
-                ids.append(x)
-                found += 1
-        log.info("fb %s/%s/reels: %s len=%d new_ids=%d", host, page,
-                 r.status_code, len(h), found)
-        if ids:
-            break
-    if not ids:
-        raise ValueError(
-            f"facebook page '{page}': reels tab returned no videos "
-            "(check page url has /reels content, or cookies expired — "
-            "long-form video listing is not supported)")
-    return page, ids
-
-
-def _fb_reel_meta(vid, cookiefile):
-    """upload_date+title for one FB reel (cached)."""
-    if vid in _date_cache:
-        return _date_cache[vid]
-    import yt_dlp
-    opts = {"quiet": True, "no_warnings": True, "skip_download": True,
-            "socket_timeout": 20}
-    if cookiefile:
-        opts["cookiefile"] = cookiefile
-    meta = {"date": "", "title": ""}
-    try:
-        with yt_dlp.YoutubeDL(opts) as ydl:
-            info = ydl.extract_info(f"https://www.facebook.com/reel/{vid}",
-                                    download=False) or {}
-        meta = {"date": info.get("upload_date") or "",
-                "title": info.get("title") or ""}
-    except Exception as e:
-        log.warning("date probe reel %s failed: %s", vid, e)
-    _date_cache[vid] = meta
-    return meta
+        for suffix in ("", "?_fb_noscript=1"):
+            full = f"https://{host}/{page}/reels{suffix}"
+            t0 = time.time()
+            try:
+                r = s.get(full, timeout=60, allow_redirects=True)
+                h = r.text
+            except Exception as e:
+                attempts.append({"url": full, "err": str(e)[:120],
+                                 "sec": round(time.time() - t0, 1)})
+                log.warning("fb fetch %s failed: %s", full, e)
+                continue
+            nodes = _fb_parse_feed(h)
+            attempts.append({"url": full, "status": r.status_code,
+                             "len": len(h), "final": r.url[:140],
+                             "cards": len(nodes),
+                             "sec": round(time.time() - t0, 1)})
+            log.info("fb %s: %s len=%d cards=%d", full, r.status_code,
+                     len(h), len(nodes))
+            if nodes:
+                _FB_DBG.update(attempts=attempts, ts=time.time(), err=None)
+                return page, nodes
+    _FB_DBG.update(attempts=attempts, ts=time.time(),
+                   err=f"page '{page}': no feed cards in reels response")
+    raise ValueError(
+        f"facebook page '{page}': reels feed empty after {len(attempts)} "
+        f"attempts (wall/timeout on this IP, or no reels) — see /status")
 
 
 def fb_latest(url, uid):
-    """Newest reel of a FB page (tabs are not date-ordered -> probe dates)."""
-    page, ids = _fb_video_ids(url, uid)
-    cookiefile = _cookie_file("facebook", uid)
-    best, best_meta = None, {"date": "", "title": ""}
-    for vid in ids[:12]:
-        meta = _fb_reel_meta(vid, cookiefile)
-        if meta["date"] >= best_meta["date"]:
-            best, best_meta = vid, meta
-    if best is None:
-        best = ids[0]
-    log.info("fb page %s: %d ids, latest=%s (%s)", page, len(ids), best,
-             best_meta["date"] or "date?")
-    return {"id": best, "title": best_meta["title"] or None,
-            "url": f"https://www.facebook.com/reel/{best}"}
+    """Newest reel of a FB page — one fetch, creation_time decides latest."""
+    page, nodes = _fb_fetch_feed(url, uid)
+    nodes.sort(key=lambda x: x[0], reverse=True)
+    t, vid = nodes[0]
+    _FB_DBG["latest"] = {"id": vid, "created": t}
+    log.info("fb page %s: %d feed videos, latest=%s @%d", page, len(nodes),
+             vid, t)
+    return {"id": vid, "title": None,
+            "url": f"https://www.facebook.com/reel/{vid}"}
 
 
 def trigger_process(video_ids):
@@ -418,11 +416,14 @@ def poll_once():
                 patch_task(tid, last_error="")
         except Exception as e:
             log.warning("task %s fetch failed: %s", tid, e)
+            _state["task_err"] = f"task {tid}: {str(e)[:180]}"
+            _state["task_err_ts"] = time.time()
             try:
                 patch_task(tid, last_error=str(e)[:200])
             except Exception:
                 pass
             continue
+        _state["task_err"] = None
 
         if not latest or not latest.get("id"):
             continue
@@ -531,6 +532,9 @@ class Handler(BaseHTTPRequestHandler):
                 "last_manual_found": _state.get("last_manual_found"),
                 "poll_interval": [POLL_MIN, POLL_MAX],
                 "gh_repo": GH_REPO or None,
+                "task_err": _state.get("task_err"),
+                "task_err_ts": _state.get("task_err_ts"),
+                "fb": _FB_DBG,
             }).encode()
             self.send_response(200)
         elif self.path == "/wake":
