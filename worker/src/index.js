@@ -566,7 +566,7 @@ function googleAuthUrl(env, state, clientId) {
     client_id: cid,
     redirect_uri: redirect,
     response_type: 'code',
-    scope: 'https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube.readonly',
+    scope: 'https://www.googleapis.com/auth/youtube https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube.readonly',
     access_type: 'offline',
     prompt: 'consent',
     state,
