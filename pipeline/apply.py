@@ -112,16 +112,23 @@ def _delogo_chain(regions, sw=None, sh=None):
     hh_src = int(sh) if sh else H
     chains = []
     for r in regions:
-        top = float(r.get("top_frac", 0.0) or 0.0)
-        bot = float(r.get("bottom_frac", 0.0) or 0.0)
+        top = min(max(float(r.get("top_frac", 0.0) or 0.0), 0.0), 1.0)
+        bot = min(max(float(r.get("bottom_frac", 0.0) or 0.0), 0.0), 1.0)
         if bot <= top:
             continue
-        x = 0
+        # delogo requires the box fully inside the frame with a 1px margin,
+        # otherwise ffmpeg aborts with "Logo area is outside of the frame".
+        x = 1
         y = int(round(top * hh_src))
-        ww = w
+        if y < 1:
+            y = 1
+        ww = max(w - 2, 2)
         h = int(round((bot - top) * hh_src))
-        if h > 0:
-            chains.append(f"delogo=x={x}:y={y}:w={ww}:h={h}:show=0")
+        if y + h > hh_src - 1:
+            h = hh_src - 1 - y
+        if h < 2:
+            continue
+        chains.append(f"delogo=x={x}:y={y}:w={ww}:h={h}:show=0")
     return ",".join(chains)
 
 
