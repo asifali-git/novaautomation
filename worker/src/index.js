@@ -1324,6 +1324,22 @@ export default {
           token.client_id = clientId || env.YT_CLIENT_ID;
           token.client_secret = clientSecret || env.YT_CLIENT_SECRET;
           const channel = token.access_token ? await fetchChannelTitle(token.access_token) : null;
+          const tokenJson = JSON.stringify(token);
+          // Same channel re-connected by same user → refresh token in place (no duplicate row).
+          const dup = channel
+            ? await env.DB
+                .prepare("SELECT id FROM logins WHERE provider = 'youtube' AND user_id = ? AND channel_title = ?")
+                .bind(srow.user_id, channel)
+                .first()
+            : null;
+          if (dup) {
+            await env.DB
+              .prepare('UPDATE logins SET token_json = ?, label = ? WHERE id = ?')
+              .bind(tokenJson, channel, dup.id)
+              .run();
+            const ch = encodeURIComponent(channel);
+            return redirectTo(`yt=connected&channel=${ch}&id=${dup.id}`);
+          }
           const login = await saveLogin(env.DB, {
             provider: 'youtube',
             label: channel || 'YouTube channel',

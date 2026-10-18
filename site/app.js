@@ -815,26 +815,39 @@ async function loadDashboard() {
 async function loadYouTube() {
   try {
     const d = await api('/api/state');
-    const logins = d.logins || [];
+    const logins = (d.logins || []).filter(l => l.provider === 'youtube');
     $('nav-yt-status').className = 'nav-dot' + (logins.length > 0 ? ' on' : '');
 
-    if (logins.length > 0) {
-      $('yt-channel-name').textContent = logins[0].channel_title || 'Connected channel';
-      $('yt-channel-meta').textContent = `Connected since ${new Date(logins[0].created_at).toLocaleDateString()}`;
-      $('btn-login').textContent = 'Reconnect';
+    const nameEl = $('yt-channel-name');
+    const metaEl = $('yt-channel-meta');
+    const btn = $('btn-login');
+    if (logins.length === 0) {
+      nameEl.textContent = 'No channel connected';
+      metaEl.textContent = 'Connect your YouTube channel for automatic uploads';
+      btn.innerHTML = '<span class="g">▶</span> Connect YouTube';
+    } else {
+      const names = logins.map(l => l.channel_title).filter(Boolean);
+      if (logins.length === 1) {
+        nameEl.textContent = names[0] || 'Connected channel';
+        metaEl.textContent = `Connected since ${new Date(logins[0].created_at).toLocaleDateString()}`;
+      } else {
+        nameEl.textContent = `${logins.length} channels connected`;
+        metaEl.textContent = names.slice(0, 3).join(' · ') + (names.length > 3 ? ` · +${names.length - 3} more` : '');
+      }
+      btn.innerHTML = '<span class="g">▶</span> Connect Another Channel';
     }
 
     const list = $('login-list');
     if (logins.length === 0) {
-      list.innerHTML = '';
+      list.innerHTML = '<div class="empty-state">No channels yet — click Connect to add one. You can connect as many channels as you like.</div>';
       return;
     }
-    list.innerHTML = logins.map(l => `
+    list.innerHTML = logins.map((l, i) => `
       <div class="account-row">
         <span class="platform-dot yt">▶</span>
         <div>
-          <div class="account-row-name">${esc(l.channel_title || 'Channel')}</div>
-          <div class="account-row-email">${esc(l.label || l.provider)}</div>
+          <div class="account-row-name">${esc(l.channel_title || 'Channel')}${logins.length > 1 ? ` <span class="badge idle">#${i + 1}</span>` : ''}</div>
+          <div class="account-row-email">${l.label && l.label !== l.channel_title ? esc(l.label) + ' · ' : ''}connected ${new Date(l.created_at).toLocaleDateString()}</div>
         </div>
         <button class="btn ghost sm" onclick="copyRefresh('${l.id}')">Copy refresh token</button>
         <button class="btn danger sm" onclick="delLogin('${l.id}')">Remove</button>
@@ -1563,7 +1576,8 @@ async function startApp(user) {
   // Handle OAuth callback
   const params = new URLSearchParams(window.location.search);
   if (params.get('yt') === 'connected') {
-    toast('YouTube connected successfully!');
+    const ch = params.get('channel');
+    toast(ch ? `YouTube connected: ${ch}` : 'YouTube connected successfully!');
     window.history.replaceState({}, '', window.location.pathname);
     switchView('youtube');
   } else if (params.get('yt') === 'error') {
