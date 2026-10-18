@@ -948,6 +948,32 @@ export default {
         return withCors(json({ ok }));
       }
 
+      // ---- Update cookies (and optionally username/proxy/country) of an existing account ----
+      if (path.startsWith('/api/accounts/') && req.method === 'PATCH') {
+        const id = Number(path.split('/')[3]);
+        const row = await getAccount(env.DB, id);
+        if (!row) return withCors(json({ error: 'not found' }, 404));
+        if (!gateUser.is_admin && row.user_id !== gateUser.id) {
+          return withCors(json({ error: 'forbidden' }, 403));
+        }
+        const body = await readBody(req);
+        const cookies = body.cookies;
+        if (!cookies) return withCors(json({ error: 'cookies required' }, 400));
+        const cookiesStr = typeof cookies === 'string' ? cookies : JSON.stringify(cookies);
+        try {
+          validateCookieDomains(row.platform, cookiesStr);
+        } catch (e) {
+          return withCors(json({ error: String(e.message || e) }, 400));
+        }
+        const username = body.username !== undefined ? (body.username || null) : row.username;
+        const proxy = body.proxy !== undefined ? String(body.proxy || '').trim() : row.proxy;
+        const country = body.country !== undefined ? String(body.country || '').trim() : row.country;
+        await env.DB.prepare(
+          'UPDATE accounts SET username = ?, cookies = ?, proxy = ?, country = ?, updated_at = ? WHERE id = ?'
+        ).bind(username, cookiesStr, proxy, country, now(), id).run();
+        return withCors(json({ account: await getAccount(env.DB, id) }));
+      }
+
       // ---- YouTube logins (no tokens exposed) ----
       if (path === '/api/logins' && req.method === 'GET') {
         const logins = await listLogins(env.DB, { user: gateUser });

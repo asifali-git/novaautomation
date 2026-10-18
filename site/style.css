@@ -1394,6 +1394,18 @@ select.form-input {
   height: 26px;
 }
 
+/* ===== Update cookies modal ===== */
+.uc-account-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 28px;
+  border-bottom: 1px solid var(--border);
+  margin: -24px -28px 20px;
+  background: var(--bg3);
+  border-radius: 16px 16px 0 0;
+}
+
 /* ===== Analytics responsive ===== */
 @media (max-width: 768px) {
   .modal.wide { max-width: 100%; }

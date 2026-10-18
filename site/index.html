@@ -619,6 +619,61 @@
     </div>
   </div>
 
+  <!-- ===== UPDATE COOKIES MODAL ===== -->
+  <div class="modal-overlay" id="modal-update-cookies">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Update Cookies</h2>
+        <button class="modal-close" id="uc-close">&times;</button>
+      </div>
+      <form id="update-cookies-form" class="form pro-form">
+        <div class="uc-account-row" id="uc-account-row">
+          <span class="plat-pill" id="uc-plat-pill">—</span>
+          <span class="muted" id="uc-account-name"></span>
+        </div>
+        <div class="form-row">
+          <label class="form-group">
+            <span class="form-label">New Cookies File</span>
+            <div class="file-upload" id="uc-file-drop">
+              <input id="uf-cookies" type="file" accept=".json,.txt,.pkl" required />
+              <span class="file-upload-text" id="uc-file-text">Drop file or click to browse</span>
+              <span class="file-upload-hint">.json / .txt / .pkl auto-detected</span>
+            </div>
+          </label>
+          <label class="form-group">
+            <span class="form-label">Username <span class="muted">(optional)</span></span>
+            <input id="uf-username" type="text" class="form-input" placeholder="@yourhandle" />
+          </label>
+        </div>
+        <div class="form-row">
+          <label class="form-group">
+            <span class="form-label">Proxy <span class="muted">(optional)</span></span>
+            <input id="uf-proxy" type="text" class="form-input" placeholder="user:pass@host:port" />
+          </label>
+          <label class="form-group">
+            <span class="form-label">Country</span>
+            <select id="uf-country" class="form-input">
+              <option value="">— none —</option>
+              <option value="GB">🇬🇧 United Kingdom</option>
+              <option value="DE">🇩🇪 Germany</option>
+              <option value="IT">🇮🇹 Italy</option>
+              <option value="FR">🇫🇷 France</option>
+              <option value="US">🇺🇸 United States</option>
+              <option value="NL">🇳🇱 Netherlands</option>
+              <option value="ES">🇪🇸 Spain</option>
+              <option value="IN">🇮🇳 India</option>
+            </select>
+          </label>
+        </div>
+        <p class="form-hint">Only this account's cookies are replaced — no need to delete & re-add. Videos/destinations linked to this account stay intact.</p>
+        <div class="form-actions">
+          <button class="btn primary" type="submit">Update Cookies</button>
+          <button class="btn ghost" type="button" id="uc-cancel">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- ===== AUTH SCREEN ===== -->
   <div id="auth-screen" class="auth-screen" style="display:none;">
     <div class="card auth-card">

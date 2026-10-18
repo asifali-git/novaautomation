@@ -895,7 +895,8 @@ async function loadSocial() {
         <span>${esc(a.username || 'Connected')}</span>
         ${a.country ? `<span class="badge idle" title="Fingerprint country">${esc(a.country)}</span>` : ''}
         ${a.proxy ? `<span class="badge idle" title="${esc(a.proxy)}">proxy</span>` : ''}
-        <button class="btn danger sm" style="margin-left:auto" onclick="delAccount('${a.id}')">✕</button>
+        <button class="btn ghost sm" style="margin-left:auto" onclick="openUpdateCookies('${a.id}')" title="Update cookies without re-adding">⟳ Cookies</button>
+        <button class="btn danger sm" onclick="delAccount('${a.id}')" title="Delete account">✕</button>
       </div>
     `).join('');
 
@@ -1050,6 +1051,21 @@ async function delAccount(id) {
 }
 
 /* ===== Connect Account form ===== */
+async function parseCookiesFile(file) {
+  const text = await file.text();
+  const detected = detectCookieFormat(text, file.name);
+  console.log(`[cookies] detected format: ${detected.format} for ${file.name}`);
+  if (detected.format === 'json') return detected.data;
+  if (detected.format === 'pickle') {
+    const buf = await file.arrayBuffer();
+    const bytes = new Uint8Array(buf);
+    let binary = '';
+    for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+    return { __base64: btoa(binary), __format: 'pickle' };
+  }
+  return text; // Netscape raw string
+}
+
 $('af-cookies')?.addEventListener('change', () => {
   const file = $('af-cookies').files[0];
   const drop = $('file-drop');
@@ -1073,23 +1089,7 @@ $('account-form')?.addEventListener('submit', async e => {
   if (!file) return toast('Select a cookies file', 'err');
 
   try {
-    const text = await file.text();
-    const detected = detectCookieFormat(text, file.name);
-    console.log(`[cookies] detected format: ${detected.format} for ${file.name}`);
-
-    let cookies;
-    if (detected.format === 'json') {
-      cookies = detected.data;
-    } else if (detected.format === 'pickle') {
-      const buf = await file.arrayBuffer();
-      const bytes = new Uint8Array(buf);
-      let binary = '';
-      for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
-      cookies = { __base64: btoa(binary), __format: 'pickle' };
-    } else {
-      // Netscape raw string
-      cookies = text;
-    }
+    const cookies = await parseCookiesFile(file);
 
     await api('/api/accounts', {
       method: 'POST',
@@ -1103,6 +1103,78 @@ $('account-form')?.addEventListener('submit', async e => {
     $('file-drop').classList.remove('has-file');
     $('file-text').textContent = 'Drop file or click to browse';
     toast(`${PLATFORM_META[platform]?.label || platform} account connected`);
+    loadSocial();
+    loadDashboard();
+  } catch (e2) {
+    toast(e2.message, 'err');
+  }
+});
+
+/* ===== Update Cookies modal ===== */
+let updateCookiesId = null;
+
+async function openUpdateCookies(id) {
+  let account = null;
+  try {
+    const d = await api('/api/accounts');
+    account = (d.accounts || []).find(a => String(a.id) === String(id));
+  } catch (_) {}
+  if (!account) return toast('Account not found', 'err');
+
+  updateCookiesId = account.id;
+  const meta = PLATFORM_META[account.platform] || { icon: '?', label: account.platform, cls: '' };
+  const pill = $('uc-plat-pill');
+  pill.className = `plat-pill ${meta.cls}`;
+  pill.textContent = `${meta.icon} ${meta.label}`;
+  $('uc-account-name').textContent = account.username || `account #${account.id}`;
+  $('uf-username').value = account.username || '';
+  $('uf-proxy').value = account.proxy || '';
+  $('uf-country').value = account.country || '';
+  $('uf-cookies').value = '';
+  $('uc-file-drop').classList.remove('has-file');
+  $('uc-file-text').textContent = 'Drop file or click to browse';
+  $('modal-update-cookies').classList.add('open');
+  setTimeout(() => $('uf-cookies').focus(), 100);
+}
+
+function closeUpdateCookies() {
+  $('modal-update-cookies').classList.remove('open');
+  updateCookiesId = null;
+}
+$('uc-close')?.addEventListener('click', closeUpdateCookies);
+$('uc-cancel')?.addEventListener('click', closeUpdateCookies);
+$('modal-update-cookies')?.addEventListener('click', e => { if (e.target === $('modal-update-cookies')) closeUpdateCookies(); });
+
+$('uf-cookies')?.addEventListener('change', () => {
+  const file = $('uf-cookies').files[0];
+  if (file) {
+    $('uc-file-drop').classList.add('has-file');
+    $('uc-file-text').textContent = file.name;
+  } else {
+    $('uc-file-drop').classList.remove('has-file');
+    $('uc-file-text').textContent = 'Drop file or click to browse';
+  }
+});
+
+$('update-cookies-form')?.addEventListener('submit', async e => {
+  e.preventDefault();
+  if (!updateCookiesId) return;
+  const file = $('uf-cookies').files[0];
+  if (!file) return toast('Select a cookies file', 'err');
+
+  try {
+    const cookies = await parseCookiesFile(file);
+    await api(`/api/accounts/${updateCookiesId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({
+        cookies,
+        username: $('uf-username').value.trim() || undefined,
+        proxy: $('uf-proxy')?.value.trim() || '',
+        country: $('uf-country')?.value || '',
+      }),
+    });
+    closeUpdateCookies();
+    toast('Cookies updated');
     loadSocial();
     loadDashboard();
   } catch (e2) {
