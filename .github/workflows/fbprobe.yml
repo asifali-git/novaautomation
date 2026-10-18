@@ -1,0 +1,33 @@
+name: fbprobe
+on:
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install deps
+        run: pip install -r requirements.txt
+      - name: Fetch FB reels feed from runner IP
+        env:
+          WORKER_URL: ${{ secrets.WORKER_URL }}
+          INTERNAL_TOKEN: ${{ secrets.INTERNAL_TOKEN }}
+        run: |
+          python - <<'PY'
+          import json, os, sys, time
+          sys.path.insert(0, ".")
+          import fastpoll
+          try:
+              t0 = time.time()
+              page, nodes = fastpoll._fb_fetch_feed("https://www.facebook.com/CoconutVaries", 2)
+              nodes.sort(reverse=True)
+              print(f"OK cards={len(nodes)} latest={nodes[0]} ({time.time()-t0:.1f}s)")
+          except Exception as e:
+              print(f"FAIL: {e}")
+          print("ATTEMPTS:")
+          for a in fastpoll._FB_DBG.get("attempts", []):
+              print(" ", json.dumps(a))
+          PY
