@@ -92,6 +92,49 @@ async function getTask(db, id) {
   return db.prepare('SELECT * FROM tasks WHERE id = ?').bind(id).first();
 }
 
+// Dest entries ("youtube:4", "tiktok", ...) must reference the caller's own
+// login/account — otherwise any user could upload via another user's connected
+// channel/cookies. Admin (owner) may target anything. Returns error string or null.
+const DEST_PLATFORMS = new Set(['youtube', 'tiktok', 'instagram', 'facebook']);
+
+async function assertDestOwned(db, user, destRaw) {
+  if (!destRaw || (user && user.is_admin)) return null;
+  const list = Array.isArray(destRaw) ? destRaw : String(destRaw).split(',');
+  for (const raw of list) {
+    const entry = String(raw).trim();
+    if (!entry) continue;
+    const [platRaw, idRaw] = entry.includes(':') ? entry.split(':', 2) : [entry, null];
+    const plat = (platRaw || '').toLowerCase().trim();
+    if (!DEST_PLATFORMS.has(plat)) return `unknown destination "${plat}"`;
+    if (!idRaw) continue;
+    const id = Number(idRaw);
+    if (!Number.isInteger(id) || id <= 0) return `invalid destination id in "${entry}"`;
+    if (!user) return 'unauthorized';
+    if (plat === 'youtube') {
+      const l = await db.prepare('SELECT id, user_id FROM logins WHERE id = ? AND provider = ?').bind(id, 'youtube').first();
+      if (!l) return `YouTube login ${id} not found`;
+      if (l.user_id !== user.id) return `YouTube login ${id} does not belong to you`;
+    } else {
+      const a = await db.prepare('SELECT id, platform, user_id FROM accounts WHERE id = ?').bind(id).first();
+      if (!a) return `account ${id} not found`;
+      if (a.platform !== plat) return `account ${id} is not a ${plat} account`;
+      if (a.user_id !== user.id) return `account ${id} does not belong to you`;
+    }
+  }
+  return null;
+}
+
+async function assertLoginOwned(db, user, loginId) {
+  if (!loginId || (user && user.is_admin)) return null;
+  const id = Number(loginId);
+  if (!Number.isInteger(id) || id <= 0) return 'invalid login_id';
+  if (!user) return 'unauthorized';
+  const l = await db.prepare('SELECT id, user_id FROM logins WHERE id = ?').bind(id).first();
+  if (!l) return `login ${id} not found`;
+  if (l.user_id !== user.id) return `login ${id} does not belong to you`;
+  return null;
+}
+
 async function createTask(db, body) {
   const url = (body.source_url || '').trim();
   if (!url) throw new Error('source_url required');
@@ -1086,6 +1129,8 @@ export default {
         const body = await readBody(req);
         const url = (body.url || '').trim();
         if (!url) return withCors(json({ error: 'url required' }, 400));
+        const destErr = await assertDestOwned(env.DB, gateUser, body.dest_platforms);
+        if (destErr) return withCors(json({ error: destErr }, 400));
         const dest = Array.isArray(body.dest_platforms) ? body.dest_platforms.join(',') : (body.dest_platforms || 'youtube');
         const res = await env.DB
           .prepare('INSERT INTO manual_jobs (url, title, dest_platforms, status, user_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)')
@@ -1235,6 +1280,10 @@ export default {
 
       if (path === '/api/tasks' && req.method === 'POST') {
         const body = await readBody(req);
+        const destErr =
+          (await assertDestOwned(env.DB, gateUser, body.dest_platforms)) ||
+          (await assertLoginOwned(env.DB, gateUser, body.login_id));
+        if (destErr) return withCors(json({ error: destErr }, 400));
         body.user_id = gateUser.id;
         const task = await createTask(env.DB, body);
         return withCors(json({ task }, 201));
@@ -1247,6 +1296,12 @@ export default {
           return withCors(json({ error: 'forbidden' }, 403));
         }
         const body = await readBody(req);
+        if ('dest_platforms' in body || 'login_id' in body) {
+          const destErr =
+            (await assertDestOwned(env.DB, gateUser, body.dest_platforms)) ||
+            (await assertLoginOwned(env.DB, gateUser, body.login_id));
+          if (destErr) return withCors(json({ error: destErr }, 400));
+        }
         const task = await patchTask(env.DB, id, body);
         if (!task) return withCors(json({ error: 'not found' }, 404));
         return withCors(json({ task }));
@@ -1502,8 +1557,15 @@ export default {
 
         if (path === '/api/internal/accounts/env' && req.method === 'GET') {
           // Return active social cookies for the pipeline runner (?user_id=N to scope).
+          // No uid → admin-owned accounts only (never another user's cookies).
           const uid = url.searchParams.get('user_id');
-          const accounts = await listAccounts(env.DB, uid ? { id: Number(uid), is_admin: 0 } : null);
+          let accounts;
+          if (uid) {
+            accounts = await listAccounts(env.DB, { id: Number(uid), is_admin: 0 });
+          } else {
+            const adm = await env.DB.prepare('SELECT id FROM users WHERE is_admin = 1 ORDER BY id LIMIT 1').first();
+            accounts = adm ? await listAccounts(env.DB, { id: adm.id, is_admin: 0 }) : [];
+          }
           const result = {};
           for (const a of accounts) {
             if (a.status !== 'active') continue;
@@ -1519,6 +1581,7 @@ export default {
 
         if (path === '/api/internal/accounts/cookies' && req.method === 'GET') {
           // Return cookies for a specific platform (?user_id=N to scope).
+          // No uid → admin-owned account only (never another user's cookies).
           const platform = url.searchParams.get('platform') || '';
           const uid = url.searchParams.get('user_id');
           let cookies = null;
@@ -1529,7 +1592,14 @@ export default {
               .first();
             if (row) { try { cookies = JSON.parse(row.cookies); } catch { cookies = row.cookies; } }
           } else {
-            cookies = await getAccountCookies(env.DB, platform);
+            const adm = await env.DB.prepare('SELECT id FROM users WHERE is_admin = 1 ORDER BY id LIMIT 1').first();
+            if (adm) {
+              const row = await env.DB
+                .prepare("SELECT cookies FROM accounts WHERE platform = ? AND status = 'active' AND user_id = ? ORDER BY id DESC LIMIT 1")
+                .bind(platform, adm.id)
+                .first();
+              if (row) { try { cookies = JSON.parse(row.cookies); } catch { cookies = row.cookies; } }
+            }
           }
           if (!cookies) return withCors(json({ error: 'no cookies for platform' }, 404));
           return withCors(json({ platform, cookies }));
