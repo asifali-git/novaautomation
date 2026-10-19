@@ -1,0 +1,544 @@
+{
+ "audio_type": "asmr",
+ "audio_mode": "lower",
+ "audio_volume": 0.4,
+ "has_speech": false,
+ "video_summary": "A green watermelon is sliced open to reveal its yellow interior, showcasing its texture and color contrast.",
+ "style": "educational",
+ "title": "Green Watermelon Reveals Yellow Interior",
+ "description": "Discover the surprising color difference inside this green watermelon. A professional cut reveals its true interior.",
+ "hashtags": [
+  "#coconut",
+  "#asmr",
+  "#fruit",
+  "#nature",
+  "#satisfying"
+ ],
+ "tags": [
+  "coconut",
+  "watermelon",
+  "fresh",
+  "green",
+  "yellow",
+  "fruit",
+  "nature",
+  "ASMR",
+  "cutting",
+  "vegetable",
+  "healthy",
+  "tropical",
+  "outdoor",
+  "taste",
+  "color"
+ ],
+ "segments": [
+  {
+   "index": 0,
+   "start": 0.0,
+   "end": 3.0,
+   "action": "highlight",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vibrant",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Green Exterior",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "A green watermelon sits on a wooden stump, ready to be revealed.",
+   "notes": "Hook sets up the surprise; visual focus on the whole fruit."
+  },
+  {
+   "index": 1,
+   "start": 3.0,
+   "end": 6.0,
+   "action": "keep",
+   "speed": 1.05,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.05,
+    "saturation": 1.08
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Hand Position",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "The hand grips the fruit firmly, preparing for the cut.",
+   "notes": "Maintains full frame; emphasizes hand stability before action."
+  },
+  {
+   "index": 2,
+   "start": 6.0,
+   "end": 9.0,
+   "action": "highlight",
+   "speed": 1.12,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.11,
+   "color": {
+    "preset": "cool",
+    "brightness": 0.0,
+    "contrast": 1.07,
+    "saturation": 1.1
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Knife Approach",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "A sharp knife approaches, promising a clean split.",
+   "notes": "Builds tension; audio will feature crisp slicing sounds."
+  },
+  {
+   "index": 3,
+   "start": 9.0,
+   "end": 12.0,
+   "action": "keep",
+   "speed": 1.08,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.04,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "First Slice",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "The blade glides through the rind with minimal resistance.",
+   "notes": "Captures the clean cut; ASMR audio dominates."
+  },
+  {
+   "index": 4,
+   "start": 12.0,
+   "end": 15.0,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "moody",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.11
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Interior Reveal",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "The inside shows a surprising yellow hue, not red.",
+   "notes": "First reveal of the unexpected color inside the fruit."
+  },
+  {
+   "index": 5,
+   "start": 15.0,
+   "end": 18.0,
+   "action": "highlight",
+   "speed": 1.15,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.11,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.07,
+    "saturation": 1.13
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Yellow Interior",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "This color indicates a specific ripeness stage in the fruit.",
+   "notes": "Emphasizes the unique characteristic of this variety."
+  },
+  {
+   "index": 6,
+   "start": 18.0,
+   "end": 21.0,
+   "action": "keep",
+   "speed": 1.05,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.07,
+   "color": {
+    "preset": "cool",
+    "brightness": 0.0,
+    "contrast": 1.05,
+    "saturation": 1.06
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Fruit Texture",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "The rind's texture is smooth and firm, ideal for slicing.",
+   "notes": "Details the physical qualities observed during cutting."
+  },
+  {
+   "index": 7,
+   "start": 21.0,
+   "end": 24.0,
+   "action": "highlight",
+   "speed": 1.12,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vibrant",
+    "brightness": 0.0,
+    "contrast": 1.08,
+    "saturation": 1.14
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Cutting Technique",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Cutting along the grain ensures a smoother, cleaner slice.",
+   "notes": "Shares a pro tip that enhances the viewing experience."
+  },
+  {
+   "index": 8,
+   "start": 24.0,
+   "end": 27.0,
+   "action": "keep",
+   "speed": 1.08,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "moody",
+    "brightness": 0.0,
+    "contrast": 1.04,
+    "saturation": 1.09
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Final Reveal",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "The full interior is now visible, showcasing its unique color.",
+   "notes": "Concludes the visual journey of the cut."
+  },
+  {
+   "index": 9,
+   "start": 27.0,
+   "end": 30.0,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "cool",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.07
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Color Contrast",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "The green exterior contrasts sharply with the yellow inside.",
+   "notes": "Highlights the visual appeal of the fruit's appearance."
+  },
+  {
+   "index": 10,
+   "start": 30.0,
+   "end": 33.0,
+   "action": "keep",
+   "speed": 1.05,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.07,
+   "color": {
+    "preset": "vintage",
+    "brightness": 0.0,
+    "contrast": 1.03,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Fruit Quality",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "This variety is prized for its sweetness and texture.",
+   "notes": "Adds context about the fruit's culinary value."
+  },
+  {
+   "index": 11,
+   "start": 33.0,
+   "end": 36.0,
+   "action": "keep",
+   "speed": 1.12,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.05,
+    "saturation": 1.08
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Taste Implication",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "The yellow hue suggests a naturally sweeter flavor profile.",
+   "notes": "Connects visual color to taste expectation."
+  },
+  {
+   "index": 12,
+   "start": 36.0,
+   "end": 37.567,
+   "action": "keep",
+   "speed": 1.11,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.06,
+   "color": {
+    "preset": "moody",
+    "brightness": 0.0,
+    "contrast": 1.04,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Final Question",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Would you try this fruit raw, or blend it into a drink?",
+   "notes": "Ends with a direct question to engage viewers."
+  }
+ ],
+ "global": {
+  "intro_effect": "fade",
+  "ending_effect": "fade",
+  "voice_gain": 1.0
+ },
+ "caption_regions": [
+  {
+   "band": "bottom",
+   "top_frac": 0.8875,
+   "bottom_frac": 0.9125,
+   "action": "crop",
+   "confidence": 0.95
+  }
+ ]
+}
