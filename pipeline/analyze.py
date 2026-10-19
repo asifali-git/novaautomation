@@ -7,10 +7,12 @@ that the ffmpeg/Kokoro backend (apply.py + voice.py) executes.
 Transformative floor is enforced so content is always altered enough to
 reduce reused-content / copyright risk, even if the model returns sparse data.
 
-Env: NVIDIA_API_KEY  (free key from build.nvidia.com)
+Env: NVIDIA_API_KEY  (primary — Nemotron on build.nvidia.com)
+     GEMINI_API_KEY  (2nd fallback — Google Gemini when Nemotron fails)
 """
 import os
 import io
+import sys
 import base64
 import json
 import subprocess
@@ -21,6 +23,9 @@ FFMPEG = os.getenv("FFMPEG_BIN", "ffmpeg")
 FFPROBE = os.getenv("FFPROBE_BIN", "ffprobe")
 MODEL = os.getenv("NVIDIA_MODEL", "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning")
 API = "https://integrate.api.nvidia.com/v1/chat/completions"
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+GEMINI_API = ("https://generativelanguage.googleapis.com/v1beta/models/"
+              f"{GEMINI_MODEL}:generateContent")
 
 
 def probe_duration(path):
@@ -292,6 +297,58 @@ def _call_nemotron(frames, title_hint="", duration=None, audio_b64=None):
     raise last
 
 
+def _gemini_key():
+    return os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
+
+
+def _call_gemini(frames, title_hint="", duration=None, audio_b64=None):
+    """2nd-choice backend: same multimodal prompt -> Google Gemini generateContent."""
+    key = _gemini_key()
+    if not key:
+        raise RuntimeError("GEMINI_API_KEY / GOOGLE_API_KEY not set")
+    parts = [{"text": PROMPT}]
+    if title_hint:
+        parts.append({"text": f"Source title/context: {title_hint}"})
+    if duration:
+        parts.append({"text": f"Source duration: {duration:.1f}s"})
+    if audio_b64:
+        parts.append({"inline_data": {"mime_type": "audio/wav", "data": audio_b64}})
+        parts.append({"text": "Audio attached. Listen to decide audio_type and narration."})
+    parts.append({"text": f"Here are {len(frames)} timestamped frames. Produce the JSON edit plan now."})
+    for t, b64 in frames:
+        parts.append({"text": f"[t={t:.2f}s]"})
+        parts.append({"inline_data": {"mime_type": "image/jpeg", "data": b64}})
+    payload = {
+        "contents": [{"role": "user", "parts": parts}],
+        "generationConfig": {
+            "temperature": 0.7,
+            "topP": 0.95,
+            "maxOutputTokens": 8192,
+        },
+    }
+    url = f"{GEMINI_API}?key={key}"
+    import time
+    last = None
+    for attempt in range(3):
+        try:
+            r = requests.post(url, json=payload, timeout=300)
+            if r.status_code == 429 or r.status_code >= 500:
+                last = RuntimeError(f"HTTP {r.status_code}: {(r.text or '')[:200]}")
+                time.sleep(5 * (attempt + 1))
+                continue
+            r.raise_for_status()
+            data = r.json()
+            cand = (data.get("candidates") or [{}])[0]
+            txt = "".join(p.get("text", "") for p in (cand.get("content") or {}).get("parts") or [])
+            if not txt:
+                raise RuntimeError(f"gemini empty response: {str(data)[:300]}")
+            return txt
+        except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
+            last = e
+            time.sleep(5 * (attempt + 1))
+    raise last
+
+
 def _extract_json(text):
     if not text:
         raise RuntimeError("empty model response")
@@ -525,13 +582,32 @@ def analyze_video(path, title_hint="", fps=1.0, max_frames=10, allow_fallback=Tr
         if allow_fallback:
             return _normalize(_fallback_plan(dur, title_hint), dur)
         raise RuntimeError("no frames extracted")
-    if not os.getenv("NVIDIA_API_KEY"):
-        if allow_fallback:
-            print("[analyze] no NVIDIA_API_KEY; using fallback plan")
-            return _normalize(_fallback_plan(dur, title_hint), dur)
-        raise RuntimeError("NVIDIA_API_KEY not set")
     audio_b64 = extract_audio(path)
-    raw = _call_nemotron(frames, title_hint=title_hint, duration=dur, audio_b64=audio_b64)
+    raw = None
+    first_err = None
+    if os.getenv("NVIDIA_API_KEY"):
+        try:
+            raw = _call_nemotron(frames, title_hint=title_hint, duration=dur, audio_b64=audio_b64)
+            print("[analyze] nemotron ok")
+        except Exception as e:
+            first_err = f"nemotron: {e}"
+            print(f"[analyze] nemotron failed ({e}); trying gemini", file=sys.stderr)
+    else:
+        print("[analyze] no NVIDIA_API_KEY; trying gemini")
+    if raw is None:
+        if _gemini_key():
+            try:
+                raw = _call_gemini(frames, title_hint=title_hint, duration=dur, audio_b64=audio_b64)
+                print("[analyze] gemini ok")
+            except Exception as e:
+                first_err = f"{first_err}; gemini: {e}" if first_err else f"gemini: {e}"
+                print(f"[analyze] gemini failed ({e}); using simple fallback", file=sys.stderr)
+        else:
+            print("[analyze] no GEMINI/GOOGLE API key; using simple fallback")
+    if raw is None:
+        if allow_fallback:
+            return _normalize(_fallback_plan(dur, title_hint), dur)
+        raise RuntimeError(f"all AI backends failed ({first_err})")
     plan = _extract_json(raw)
     plan = _normalize(plan, dur)
     print(f"[analyze] {len(plan['segments'])} segs, audio={plan['audio_type']}, "
