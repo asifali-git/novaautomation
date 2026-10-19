@@ -156,14 +156,18 @@ BANNED in narration (fails monetization review):
   coconut's interior", "the perfectly peeled coconut awaits...")
 - restating the on-screen caption
 SPACING & PACING (MANDATORY — ASMR quality + monetization):
-- Narration count depends on audio_type (decide after listening):
-  * "asmr": ONLY 3-4 narrated segments in the entire video. ALL other
-    segments: narration "" (empty). The natural cutting/scraping/splash
-    audio must dominate (~80-90% of the runtime) — ASMR viewers came for
-    the sound, not a talking robot.
-  * "vocal" / "music" / "sfx" / "silent" (general/informative videos):
-    5-8 narrated segments forming a storyline — hook -> build -> expert
-    insight -> payoff/conclusion. Remaining segments "" so audio breathes.
+- STRICT SEGMENT LIMIT (hard rule, no exceptions):
+  * "asmr": EXACTLY 3 segments in the entire video may have a narration
+    line — one hook early, one fact mid-video, one question at the end.
+    ALL OTHER segments: narration "" (empty string). Writing narration on
+    more than 3 asmr segments REJECTS the plan.
+    Natural cutting/scraping/splash audio must dominate (~70-80% of runtime).
+  * general (vocal/music/sfx/silent): 5-8 narrated segments max (hook ->
+    build -> insight -> payoff). Remaining "" so audio breathes.
+- NEVER narrate visible actions ("the hand grips", "the knife cuts", "the
+  blade glides", "the inside is yellow"). Narration must state information
+  NOT visible on screen: history, botany, nutrition, origin, technique WHY,
+  consumer tips, myth-busting.
 - Do NOT narrate every segment in either mode.
 - Each spoken line: 10-15 words (under 3 seconds of speech).
 - Arc (~60s): hook/surprising fact early -> breathing room -> insight
@@ -238,10 +242,10 @@ Rules:
   "" on every other segment. Different wording each time.
 - narration: value-adding commentary (fact, insight, opinion, humor, or a
   question) — NEVER a description of visible action, never a caption repeat.
-  Count per audio_type: "asmr" -> 3-4 narrated segments only; general
-  (vocal/music/sfx/silent) -> 5-8 narrated segments as a storyline. ALL
-  other segments get "" (empty = silent, natural audio stays prominent).
-  Never repeat a line in consecutive segments.
+  Count per audio_type: "asmr" -> EXACTLY 3 narrated segments (hook, mid
+  fact, end question); general (vocal/music/sfx/silent) -> 5-8 narrated
+  segments as a storyline. ALL other segments get "" (empty = silent,
+  natural audio stays prominent). Never repeat a line in consecutive segments.
 - source_captions: PERSISTENT burned-in text/logos/watermarks that belong to the
   ORIGINAL source video (old captions, channel names, "subscribe" overlays,
   watermarks, credit lines). They can appear ANYWHERE in the frame — top,
@@ -258,8 +262,9 @@ Rules:
 - title: distinct angle (fact-led, question-led, or bold hook) — never a
   paraphrase of the source title.
 - description: 2-3 genuine sentences explaining the context/facts (no generic
-  spam). 3-5 real hashtags only. Never mention Facebook, reposting, or
-  compilation.
+  spam). 3-5 real hashtags only, EVERY hashtag must match the actual subject
+  of this video (watermelon video never gets #coconut). Never mention
+  Facebook, reposting, or compilation.
 - Do not invent visual facts. Base on frames + audio only.
 """
 
@@ -389,6 +394,71 @@ def _call_gemini(frames, title_hint="", duration=None, audio_b64=None, correctio
             except requests.exceptions.HTTPError as e:
                 last = e
                 break
+    raise last
+
+
+OR_FREE_MODELS = [
+    "nvidia/nemotron-3.5-super-vl:free",
+    "google/gemma-4-31b-it:free",
+    "google/gemma-4-26b-a4b-it:free",
+    "minimax/minimax-m3.1-flash:free",
+]
+
+
+def _call_openrouter(frames, title_hint="", duration=None, correction="", model=None):
+    """3rd-choice backend: OpenRouter free video-capable models (image+video input;
+    these have NO audio modality so audio_b64 is intentionally not attached)."""
+    key = os.getenv("OPENROUTER_API_KEY")
+    if not key:
+        raise RuntimeError("OPENROUTER_API_KEY not set")
+    content = [{"type": "text", "text": PROMPT}]
+    if title_hint:
+        content.append({"type": "text", "text": f"Source title/context: {title_hint}"})
+    if duration:
+        content.append({"type": "text", "text": f"Source duration: {duration:.1f}s"})
+    content.append({
+        "type": "text",
+        "text": ("Audio track is NOT attached for this model. Infer audio_type "
+                 "(asmr/vocal/music/sfx/silent) from visuals, motion and source title."),
+    })
+    content.append({
+        "type": "text",
+        "text": f"Here are {len(frames)} timestamped frames. Produce the JSON edit plan now.",
+    })
+    for t, b64 in frames:
+        content.append({"type": "text", "text": f"[t={t:.2f}s]"})
+        content.append({
+            "type": "image_url",
+            "image_url": {"url": f"data:image/jpeg;base64,{b64}"},
+        })
+    if correction:
+        content.append({"type": "text", "text": correction})
+    payload = {
+        "model": model or OR_FREE_MODELS[0],
+        "messages": [{"role": "user", "content": content}],
+        "max_tokens": 8192,
+        "temperature": 0.7,
+    }
+    headers = {"Authorization": f"Bearer {key}", "Content-Type": "application/json"}
+    import time
+    last = None
+    for attempt in range(3):
+        try:
+            r = requests.post("https://openrouter.ai/api/v1/chat/completions",
+                              headers=headers, json=payload, timeout=300)
+            if r.status_code == 429 or r.status_code >= 500:
+                last = RuntimeError(f"{payload['model']}: HTTP {r.status_code}: {(r.text or '')[:200]}")
+                time.sleep(5 * (attempt + 1))
+                continue
+            r.raise_for_status()
+            data = r.json()
+            txt = ((data.get("choices") or [{}])[0].get("message") or {}).get("content") or ""
+            if not txt:
+                raise RuntimeError(f"openrouter empty response: {str(data)[:300]}")
+            return txt
+        except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
+            last = e
+            time.sleep(5 * (attempt + 1))
     raise last
 
 
@@ -623,6 +693,21 @@ def _normalize(plan, duration):
     plan["audio_mode"] = "lower"
     plan["audio_volume"] = 0.40 if audio_type == "asmr" else 0.55
     plan["has_speech"] = audio_type == "vocal"
+    # HARD TRIM: asmr must stay sparse — if the model over-narrated, keep
+    # only the hook (first), mid fact, and end question; blank the rest.
+    narr_idx = [i for i, s in enumerate(clean) if s["narration"].strip()]
+    max_n = 4 if audio_type == "asmr" else 8
+    if len(narr_idx) > max_n:
+        keep = {narr_idx[0], narr_idx[len(narr_idx) // 2], narr_idx[-1]}
+        dropped = 0
+        for i in narr_idx:
+            if i not in keep:
+                clean[i]["narration"] = ""
+                clean[i]["caption"]["text"] = ""
+                dropped += 1
+        if dropped:
+            print(f"[analyze] trimmed narration on {dropped} segs "
+                  f"(kept {len(keep)} of {len(narr_idx)}, max={max_n})")
     # AI-observed source text (any position) -> regions to remove; [] if none.
     import smart as _smart
     plan["caption_regions"] = _smart.normalize_source_captions(plan.get("source_captions"))
@@ -698,7 +783,32 @@ def analyze_video(path, title_hint="", fps=1.0, max_frames=10, allow_fallback=Tr
                     print(f"[analyze] gemini failed ({e}); using simple fallback", file=sys.stderr)
                     break
         else:
-            print("[analyze] no GEMINI/GOOGLE API key; using simple fallback")
+            print("[analyze] no GEMINI/GOOGLE API key; skipping to openrouter")
+    if plan is None and os.getenv("OPENROUTER_API_KEY"):
+        for or_model in OR_FREE_MODELS:
+            for attempt in (0, 1):
+                try:
+                    raw = _call_openrouter(frames, title_hint=title_hint, duration=dur,
+                                           correction=corr if attempt else "",
+                                           model=or_model)
+                    cand = _extract_json(raw)
+                    n = _narration_count(cand)
+                    need = _min_narration(cand.get("audio_type"))
+                    if n < need:
+                        print(f"[analyze] openrouter {or_model} narration {n} < {need}; "
+                              "corrective retry", file=sys.stderr)
+                        corr = _narration_fix_note(cand)
+                        continue
+                    plan = cand
+                    print(f"[analyze] openrouter ok ({or_model})")
+                    break
+                except Exception as e:
+                    first_err = f"{first_err}; openrouter({or_model}): {e}" if first_err \
+                        else f"openrouter({or_model}): {e}"
+                    print(f"[analyze] openrouter {or_model} failed ({e})", file=sys.stderr)
+                    break
+            if plan is not None:
+                break
     if plan is None:
         if allow_fallback:
             return _normalize(_fallback_plan(dur, title_hint), dur)
