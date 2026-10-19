@@ -262,7 +262,9 @@ Rules:
 - title: distinct angle (fact-led, question-led, or bold hook) — never a
   paraphrase of the source title.
 - description: 2-3 genuine sentences explaining the context/facts (no generic
-  spam). 3-5 real hashtags only, EVERY hashtag must match the actual subject
+  spam), ACCURATE to what the frames actually show (never misdescribe a
+  visible color/subject, e.g. red interior is not "green hue"). 3-5 real
+  hashtags only, EVERY hashtag must match the actual subject
   of this video (watermelon video never gets #coconut). Never mention
   Facebook, reposting, or compilation.
 - Do not invent visual facts. Base on frames + audio only.
@@ -708,6 +710,30 @@ def _normalize(plan, duration):
         if dropped:
             print(f"[analyze] trimmed narration on {dropped} segs "
                   f"(kept {len(keep)} of {len(narr_idx)}, max={max_n})")
+    # Narrated segments need room for the spoken line (~10-15 words = ~3s).
+    # Steal time from the neighbour segment (keeps timeline contiguous) so
+    # the final question/hook never gets clipped in the rendered audio.
+    for i, seg in enumerate(clean):
+        if not seg["narration"].strip():
+            continue
+        need = 3.0 - (seg["end"] - seg["start"])
+        if need <= 0:
+            continue
+        if i > 0:
+            prev = clean[i - 1]
+            take = min(need, max(0.0, (prev["end"] - prev["start"]) - 1.0))
+            if take > 0:
+                prev["end"] = round(prev["end"] - take, 3)
+                seg["start"] = prev["end"]
+        if seg["end"] - seg["start"] >= 3.0:
+            continue
+        if i + 1 < len(clean):
+            nxt = clean[i + 1]
+            take = min(3.0 - (seg["end"] - seg["start"]),
+                       max(0.0, (nxt["end"] - nxt["start"]) - 1.0))
+            if take > 0:
+                seg["end"] = round(seg["end"] + take, 3)
+                nxt["start"] = seg["end"]
     # AI-observed source text (any position) -> regions to remove; [] if none.
     import smart as _smart
     plan["caption_regions"] = _smart.normalize_source_captions(plan.get("source_captions"))
