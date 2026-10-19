@@ -129,6 +129,23 @@ shown). When unsure of a detail, phrase it qualitatively ("far more",
 "naturally sweeter") or switch to opinion — NEVER invent numbers, studies,
 percentages, or origins.
 
+FACT QUALITY BAR (YouTube's reused-content reviewer decides on THIS):
+Each of the 3 narration lines must be a DEEP transformative fact. Apply the
+reviewer test: "Could a viewer derive this sentence just by looking at the
+clip?" If YES — reject the line and pick a different angle.
+- ❌ WEAK / visual-derived (gets flagged as minimal commentary):
+  "The rind is smooth yet firm, indicating proper ripeness."
+  "This variety thrives in warm climates, making it sweeter."
+  Anything about color, shape, texture, or motion already visible.
+- ✅ STRONG / invisible knowledge (safe): facts that NAME a concept,
+  mechanism, origin, or history the frames cannot show — e.g. "yellow
+  watermelons lack lycopene, the pigment that turns regular melons red."
+  Chemistry/botany terms, where the practice originates, what professionals
+  do differently and WHY, myth-busts that explain the real mechanism.
+Aim for at least one named concept or mechanism across the 3 lines. Never
+pad with observation to hit the count — if the subject is thin, go for the
+deepest true fact you know instead.
+
 HOOK (mandatory — the FIRST narrated segment):
 - Open with a hook: a direct question, a bold surprising claim, a myth-bust,
   or a sharp comparison. Use a DIFFERENT hook style than the obvious default
