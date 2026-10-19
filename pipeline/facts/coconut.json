@@ -9,250 +9,5010 @@
  "angles": {
   "A": [
    {
-    "id": "coc-A-01",
+    "id": "coc-A-001",
     "used": 0,
     "text": "A coconut is a drupe, not a true nut — the hard shell is the endocarp wrapped around a single seed."
    },
    {
-    "id": "coc-A-02",
+    "id": "coc-A-002",
     "used": 0,
     "text": "The shell has three germination pores, the eyes, but usually only one of them ever sprouts."
    },
    {
-    "id": "coc-A-03",
+    "id": "coc-A-003",
     "used": 0,
     "text": "Coconut water is liquid endosperm — it slowly solidifies into the white meat as the fruit matures."
    },
    {
-    "id": "coc-A-04",
+    "id": "coc-A-004",
     "used": 0,
     "text": "A floating coconut can survive months at sea before washing ashore and sprouting on a new beach."
    },
    {
-    "id": "coc-A-05",
+    "id": "coc-A-005",
     "used": 0,
     "text": "The fibrous husk traps air pockets, which is exactly what keeps the fruit buoyant on ocean currents."
    },
    {
-    "id": "coc-A-06",
+    "id": "coc-A-006",
     "used": 0,
     "text": "Over half of coconut fat is lauric acid, a medium-chain fatty acid rare in most other foods."
    },
    {
-    "id": "coc-A-07",
+    "id": "coc-A-007",
     "used": 0,
     "text": "The meat grows thicker and the water volume shrinks the longer the nut stays ripening on the palm."
    },
    {
-    "id": "coc-A-08",
+    "id": "coc-A-008",
     "used": 0,
     "text": "Coconut comes from Portuguese coco, meaning skull, because the three pores look like a face."
    },
    {
-    "id": "coc-A-09",
+    "id": "coc-A-009",
     "used": 0,
     "text": "Sprouting happens through the softest of the three eyes, where the embryo sits just behind the shell."
    },
    {
-    "id": "coc-A-10",
+    "id": "coc-A-010",
     "used": 0,
     "text": "Salt-tolerant roots let coconut palms grow where ordinary fruit trees would die of stress."
    },
    {
-    "id": "coc-A-11",
+    "id": "coc-A-011",
     "used": 0,
     "text": "The palm takes close to a full year to carry one bunch of coconuts from flower to ripe nut."
    },
    {
-    "id": "coc-A-12",
+    "id": "coc-A-012",
     "used": 0,
     "text": "Each flower on the palm is either male or female, so the tree depends on insects to cross-pollinate it."
+   },
+   {
+    "id": "coc-A-013",
+    "used": 0,
+    "text": "The only species in the genus Cocos is Cocos nucifera — the name means nut-bearing."
+   },
+   {
+    "id": "coc-A-014",
+    "used": 0,
+    "text": "Botanically the coconut palm is a monocot, closer to grass than to oak trees."
+   },
+   {
+    "id": "coc-A-015",
+    "used": 0,
+    "text": "Being a monocot, the trunk has no bark and no cambium to heal wounds."
+   },
+   {
+    "id": "coc-A-016",
+    "used": 0,
+    "text": "Without annual rings, a palm trunk cannot tell its age the way a tree does."
+   },
+   {
+    "id": "coc-A-017",
+    "used": 0,
+    "text": "The trunk is packed with vascular bundles instead of growth rings."
+   },
+   {
+    "id": "coc-A-018",
+    "used": 0,
+    "text": "Tall varieties can reach thirty metres with a single unbranched column."
+   },
+   {
+    "id": "coc-A-019",
+    "used": 0,
+    "text": "Fronds can grow several metres long from a crown at the very top."
+   },
+   {
+    "id": "coc-A-020",
+    "used": 0,
+    "text": "Each frond's sheath wraps the growing point before the leaf unfolds."
+   },
+   {
+    "id": "coc-A-021",
+    "used": 0,
+    "text": "Palms shed old fronds, leaving a clean ring pattern of leaf scars behind."
+   },
+   {
+    "id": "coc-A-022",
+    "used": 0,
+    "text": "The flowering structure is a spadix enclosed in a tough woody spathe."
+   },
+   {
+    "id": "coc-A-023",
+    "used": 0,
+    "text": "Male flowers crowd the tip of the spadix, female flowers sit at its base."
+   },
+   {
+    "id": "coc-A-024",
+    "used": 0,
+    "text": "Pollination happens through insects and wind together, not by any single agent."
+   },
+   {
+    "id": "coc-A-025",
+    "used": 0,
+    "text": "Unpollinated female flowers simply wither and drop before forming any nut."
+   },
+   {
+    "id": "coc-A-026",
+    "used": 0,
+    "text": "Dwarf varieties can flower several years earlier than tall varieties."
+   },
+   {
+    "id": "coc-A-027",
+    "used": 0,
+    "text": "Dwarf-by-tall hybrids are bred for early yields without losing hardiness."
+   },
+   {
+    "id": "coc-A-028",
+    "used": 0,
+    "text": "One bunch commonly carries dozens of nuts ripening at staggered intervals."
+   },
+   {
+    "id": "coc-A-029",
+    "used": 0,
+    "text": "A healthy palm keeps bunches at several stages at once, harvesting year-round."
+   },
+   {
+    "id": "coc-A-030",
+    "used": 0,
+    "text": "The fruit skin, husk and shell are three distinct layers of one drupe."
+   },
+   {
+    "id": "coc-A-031",
+    "used": 0,
+    "text": "The thin outer skin turns green, golden or red depending on the variety."
+   },
+   {
+    "id": "coc-A-032",
+    "used": 0,
+    "text": "Inside the stony shell sits one single seed, no more."
+   },
+   {
+    "id": "coc-A-033",
+    "used": 0,
+    "text": "The white meat IS the seed's cellular endosperm — same tissue, different texture."
+   },
+   {
+    "id": "coc-A-034",
+    "used": 0,
+    "text": "A young nut can hold a few hundred millilitres of sweet water."
+   },
+   {
+    "id": "coc-A-035",
+    "used": 0,
+    "text": "Germination is slow by fruit standards — often months before the shoot appears."
+   },
+   {
+    "id": "coc-A-036",
+    "used": 0,
+    "text": "Roots are fibrous and spreading; a coconut palm never grows a taproot."
+   },
+   {
+    "id": "coc-A-037",
+    "used": 0,
+    "text": "The shallow fibrous roots can breathe even in waterlogged coastal soil."
+   },
+   {
+    "id": "coc-A-038",
+    "used": 0,
+    "text": "Brackish irrigation would kill most crops; coconuts handle it comfortably."
+   },
+   {
+    "id": "coc-A-039",
+    "used": 0,
+    "text": "The palm thrives mainly on coastal lowlands, not in true highlands."
+   },
+   {
+    "id": "coc-A-040",
+    "used": 0,
+    "text": "Chill is its weakest point — prolonged cold stalls growth and blackens leaves."
+   },
+   {
+    "id": "coc-A-041",
+    "used": 0,
+    "text": "Salty sea spray bothers the foliage far less than it bothers most plants."
+   },
+   {
+    "id": "coc-A-042",
+    "used": 0,
+    "text": "It demands full sun; shaded seedlings stretch pale and weak."
+   },
+   {
+    "id": "coc-A-043",
+    "used": 0,
+    "text": "Sandy and limestone soils are fine — the palm is not a soil snob."
+   },
+   {
+    "id": "coc-A-044",
+    "used": 0,
+    "text": "Karst limestone coasts famous for coconuts would starve ordinary fruit trees."
+   },
+   {
+    "id": "coc-A-045",
+    "used": 0,
+    "text": "Longevity is impressive: palms keep producing for sixty or seventy years."
+   },
+   {
+    "id": "coc-A-046",
+    "used": 0,
+    "text": "The trunk never branches — everything grows from one single apex."
+   },
+   {
+    "id": "coc-A-047",
+    "used": 0,
+    "text": "Kill that single growing point and the whole palm dies with it."
+   },
+   {
+    "id": "coc-A-048",
+    "used": 0,
+    "text": "The apex bud is edible, but taking it kills the palm — heart of palm logic."
+   },
+   {
+    "id": "coc-A-049",
+    "used": 0,
+    "text": "Coconut water stays sterile inside the sealed nut until the shell is breached."
+   },
+   {
+    "id": "coc-A-050",
+    "used": 0,
+    "text": "Fresh meat is roughly a third fat by weight — a genuinely fatty seed."
+   },
+   {
+    "id": "coc-A-051",
+    "used": 0,
+    "text": "Beneath the dominant lauric acid sit smaller shares of capric and caprylic acids."
+   },
+   {
+    "id": "coc-A-052",
+    "used": 0,
+    "text": "Those medium-chain fats are absorbed straight to the liver instead of stored first."
+   },
+   {
+    "id": "coc-A-053",
+    "used": 0,
+    "text": "Coconut water is naturally rich in potassium — an isotonic by nature, not by factory."
+   },
+   {
+    "id": "coc-A-054",
+    "used": 0,
+    "text": "Coconut water contains cytokinins, plant hormones now standard in laboratory tissue culture."
+   },
+   {
+    "id": "coc-A-055",
+    "used": 0,
+    "text": "Traditionally, growers poured fresh coconut water into culture media to trigger cell division."
+   },
+   {
+    "id": "coc-A-056",
+    "used": 0,
+    "text": "Raw meat carries modest protein but plenty of dietary fibre."
+   },
+   {
+    "id": "coc-A-057",
+    "used": 0,
+    "text": "It contributes B vitamins like thiamine along with trace iron and copper."
+   },
+   {
+    "id": "coc-A-058",
+    "used": 0,
+    "text": "Chlorosis from potassium deficiency shows first as yellow bands on older fronds."
+   },
+   {
+    "id": "coc-A-059",
+    "used": 0,
+    "text": "Boron deficiency deforms new nuts into hooked shapes and stalls whole bunches."
+   },
+   {
+    "id": "coc-A-060",
+    "used": 0,
+    "text": "Lethal Yellowing, a phytoplasma disease, has flattened entire Caribbean plantations."
+   },
+   {
+    "id": "coc-A-061",
+    "used": 0,
+    "text": "Bud rot fungus has historically wiped out groves region by region."
+   },
+   {
+    "id": "coc-A-062",
+    "used": 0,
+    "text": "The rhinoceros beetle shreds young fronds before they ever unfold."
+   },
+   {
+    "id": "coc-A-063",
+    "used": 0,
+    "text": "Coconut mites scar the shell surface long before the nut is cut open."
+   },
+   {
+    "id": "coc-A-064",
+    "used": 0,
+    "text": "Rats are among the biggest Field pests of ripening bunches worldwide."
+   },
+   {
+    "id": "coc-A-065",
+    "used": 0,
+    "text": "Coconut gardens commonly intercrop bananas, pepper or cacao beneath the canopy."
+   },
+   {
+    "id": "coc-A-066",
+    "used": 0,
+    "text": "Cacao tolerates the coconut's shade — the two crops shade each other's economics."
+   },
+   {
+    "id": "coc-A-067",
+    "used": 0,
+    "text": "Palms are spaced roughly a canopy width apart so crowns never starve each other for light."
+   },
+   {
+    "id": "coc-A-068",
+    "used": 0,
+    "text": "Malayan Dwarf and West African Tall are two of the most widely moved varieties."
+   },
+   {
+    "id": "coc-A-069",
+    "used": 0,
+    "text": "The yellow dwarf stays short with heavy bunches; the tall reaches for the sky instead."
+   },
+   {
+    "id": "coc-A-070",
+    "used": 0,
+    "text": "Semi-dwarf hybrids merge the dwarf's reachability with the tall parent's toughness."
+   },
+   {
+    "id": "coc-A-071",
+    "used": 0,
+    "text": "Dwarfs are bred so harvest needs no climb at all."
+   },
+   {
+    "id": "coc-A-072",
+    "used": 0,
+    "text": "Wild populations on both Indian and Pacific sides suggest ancient human voyagers moved them, not currents alone."
+   },
+   {
+    "id": "coc-A-073",
+    "used": 0,
+    "text": "Botanists still argue whether the palm's true homeland is Southeast Asia or the western Pacific."
+   },
+   {
+    "id": "coc-A-074",
+    "used": 0,
+    "text": "Polynesian voyagers carried living coconuts across thousands of kilometres of open ocean."
+   },
+   {
+    "id": "coc-A-075",
+    "used": 0,
+    "text": "Arabic traders carried the same fruit across the Indian Ocean trade lanes."
+   },
+   {
+    "id": "coc-A-076",
+    "used": 0,
+    "text": "Sanskrit texts name it nālikera — coconuts were recorded millennia before modern taxonomy."
+   },
+   {
+    "id": "coc-A-077",
+    "used": 0,
+    "text": "The palm's water, meat, husk, shell and frond each feed a different industry — nothing is waste."
+   },
+   {
+    "id": "coc-A-078",
+    "used": 0,
+    "text": "Sun, salt and wind together define where the species can live at all."
+   },
+   {
+    "id": "coc-A-079",
+    "used": 0,
+    "text": "CO2 fixation in palms uses a single apical meristem — no secondary growth ever occurs."
+   },
+   {
+    "id": "coc-A-080",
+    "used": 0,
+    "text": "Because there is no secondary growth, a scarred trunk stays scarred forever."
+   },
+   {
+    "id": "coc-A-081",
+    "used": 0,
+    "text": "The shell's stone-hard endocarp is pure protection for the single seed inside."
+   },
+   {
+    "id": "coc-A-082",
+    "used": 0,
+    "text": "Unlike true nuts, the coconut's 'shell' is fruit wall, not seed coat."
+   },
+   {
+    "id": "coc-A-083",
+    "used": 0,
+    "text": "Endosperm starts as liquid and gradually deposits as solid cellular tissue on the inner wall."
+   },
+   {
+    "id": "coc-A-084",
+    "used": 0,
+    "text": "The transition from water to meat is visible layer by layer as the nut matures."
+   },
+   {
+    "id": "coc-A-085",
+    "used": 0,
+    "text": "Older nuts sit higher in water-to-meat ratio than young ones — the inverse of drinking nuts."
+   },
+   {
+    "id": "coc-A-086",
+    "used": 0,
+    "text": "Fat content of the meat rises steadily through ripening."
+   },
+   {
+    "id": "coc-A-087",
+    "used": 0,
+    "text": "The husk is mostly lignocellulose — a fibre bundle engineered by evolution for floatation."
+   },
+   {
+    "id": "coc-A-088",
+    "used": 0,
+    "text": "Lignin in the husk is why coir resists saltwater rot for months."
+   },
+   {
+    "id": "coc-A-089",
+    "used": 0,
+    "text": "Coir's structure holds air like a sponge; that is the whole flotation trick."
+   },
+   {
+    "id": "coc-A-090",
+    "used": 0,
+    "text": "Each eye is sealed by a pore plug; only the embryo's eye ever opens."
+   },
+   {
+    "id": "coc-A-091",
+    "used": 0,
+    "text": "The embryo sits directly behind the softest pore, ready to push through."
+   },
+   {
+    "id": "coc-A-092",
+    "used": 0,
+    "text": "Because germination targets one pore only, the other two stay sealed for life."
+   },
+   {
+    "id": "coc-A-093",
+    "used": 0,
+    "text": "Coconut pollen is light and dry — wind carries a share of it."
+   },
+   {
+    "id": "coc-A-094",
+    "used": 0,
+    "text": "Insect pollinators visit the same spadix carrying pollen between its own male and female flowers."
+   },
+   {
+    "id": "coc-A-095",
+    "used": 0,
+    "text": "The spathe splits open like a woody claw when the spadix is ready."
+   },
+   {
+    "id": "coc-A-096",
+    "used": 0,
+    "text": "After splitting, the spathe falls away and the bare spadix keeps producing for months."
+   },
+   {
+    "id": "coc-A-097",
+    "used": 0,
+    "text": "Inflorescences abort under drought — the palm sacrifices fruit before it sacrifices itself."
+   },
+   {
+    "id": "coc-A-098",
+    "used": 0,
+    "text": "Severe salt or drought stress shows first as shortened, stiff new fronds."
+   },
+   {
+    "id": "coc-A-099",
+    "used": 0,
+    "text": "Palms store starch in the trunk, not in annual rings, to buffer lean seasons."
+   },
+   {
+    "id": "coc-A-100",
+    "used": 0,
+    "text": "Water inside a sealed nut stays free of microbes thanks to antimicrobial compounds."
+   },
+   {
+    "id": "coc-A-101",
+    "used": 0,
+    "text": "Lauric acid's antimicrobial reputation is why coconut fat resists spoilage longer than most oils."
+   },
+   {
+    "id": "coc-A-102",
+    "used": 0,
+    "text": "Oxidation rather than microbes is what eventually turns old coconut water sour."
+   },
+   {
+    "id": "coc-A-103",
+    "used": 0,
+    "text": "Coconut oil is solid below about twenty-five degrees because of that saturated share."
+   },
+   {
+    "id": "coc-A-104",
+    "used": 0,
+    "text": "Smoke point of virgin coconut oil sits moderately high — fine for gentle frying, not deep searing."
+   },
+   {
+    "id": "coc-A-105",
+    "used": 0,
+    "text": "Fresh coconut water clouds as microbes finally breach the shell after opening."
+   },
+   {
+    "id": "coc-A-106",
+    "used": 0,
+    "text": "The meat's aromatic compounds are mostly lactones and pyrazines — toasted notes come from browning."
+   },
+   {
+    "id": "coc-A-107",
+    "used": 0,
+    "text": "Maillard browning during toasting builds the classic nutty coconut aroma within minutes."
+   },
+   {
+    "id": "coc-A-108",
+    "used": 0,
+    "text": "Free fatty acids rise in improperly dried copra — why refined oil needs cleaning."
+   },
+   {
+    "id": "coc-A-109",
+    "used": 0,
+    "text": "Copra oil is crude and dark until bleached and deodorised in the refinery."
+   },
+   {
+    "id": "coc-A-110",
+    "used": 0,
+    "text": "Virgin oil skips that refinery, keeping polyphenols and the coconut aroma."
+   },
+   {
+    "id": "coc-A-111",
+    "used": 0,
+    "text": "Polyphenol content is higher in virgin than in refined coconut oil."
+   },
+   {
+    "id": "coc-A-112",
+    "used": 0,
+    "text": "Drying copra below safe moisture invites aflatoxin — the reason food-grade drying is watched."
+   },
+   {
+    "id": "coc-A-113",
+    "used": 0,
+    "text": "Fresh wet processing avoids aflatoxin entirely, which is why cream tastes cleaner than cheap oil."
+   },
+   {
+    "id": "coc-A-114",
+    "used": 0,
+    "text": "Desiccated coconut is just shredded meat dried to low moisture for storage."
+   },
+   {
+    "id": "coc-A-115",
+    "used": 0,
+    "text": "Coconut flour is defatted meal milled fine — a by-product turned ingredient."
+   },
+   {
+    "id": "coc-A-116",
+    "used": 0,
+    "text": "Protein in coconut meal suits animal feed better than human baking — it is low and gummy."
+   },
+   {
+    "id": "coc-A-117",
+    "used": 0,
+    "text": "Coconut water's sugar profile is mostly glucose, fructose and sucrose in gentle balance."
+   },
+   {
+    "id": "coc-A-118",
+    "used": 0,
+    "text": "Young nuts carry more sugar, older nuts more fat — the taste shift everyone notices."
+   },
+   {
+    "id": "coc-A-119",
+    "used": 0,
+    "text": "Cytokinins in the water explain why tissue cultures drink it so readily."
+   },
+   {
+    "id": "coc-A-120",
+    "used": 0,
+    "text": "Boron and potassium together govern nut fill; growers soil-test for both."
+   },
+   {
+    "id": "coc-A-121",
+    "used": 0,
+    "text": "Magnesium deficiency mottles older fronds between the veins in classic interveinal pattern."
+   },
+   {
+    "id": "coc-A-122",
+    "used": 0,
+    "text": "Trace manganese appears in meat alongside iron and copper."
+   },
+   {
+    "id": "coc-A-123",
+    "used": 0,
+    "text": "Phytate in the seed binds minerals — a nutrition detail dietitians actually track."
+   },
+   {
+    "id": "coc-A-124",
+    "used": 0,
+    "text": "Germination converts stored starch to sugar — sprouting coconut tastes sweeter at the eye."
+   },
+   {
+    "id": "coc-A-125",
+    "used": 0,
+    "text": "The liquid endosperm is reabsorbed rather than lost as the meat thickens."
+   },
+   {
+    "id": "coc-A-126",
+    "used": 0,
+    "text": "Buoyant husk plus sealed shell equals a seed designed for ocean highways."
+   },
+   {
+    "id": "coc-A-127",
+    "used": 0,
+    "text": "Not every floret sets fruit — a bunch sheds most female flowers early."
+   },
+   {
+    "id": "coc-A-128",
+    "used": 0,
+    "text": "Pollination timing matters: a wet week can halve nut set in a flowering cycle."
+   },
+   {
+    "id": "coc-A-129",
+    "used": 0,
+    "text": "Wind-pollinated palms still set better nuts when insects add traffic to the spadix."
+   },
+   {
+    "id": "coc-A-130",
+    "used": 0,
+    "text": "Sea-dispersed seeds can stay viable for months — long enough to cross an ocean."
+   },
+   {
+    "id": "coc-A-131",
+    "used": 0,
+    "text": "Freshwater river palms? No — the species is a creature of coasts and islands."
+   },
+   {
+    "id": "coc-A-132",
+    "used": 0,
+    "text": "Tidal flats and atoll rims are classic natural coconut habitats."
+   },
+   {
+    "id": "coc-A-133",
+    "used": 0,
+    "text": "Inland plantings follow humans, water and trade routes rather than wild spread."
+   },
+   {
+    "id": "coc-A-134",
+    "used": 0,
+    "text": "The palm's leaf canals wick salt away from sensitive tissues — a halophyte trick."
+   },
+   {
+    "id": "coc-A-135",
+    "used": 0,
+    "text": "Stomata on frond undersides close early in drought to lock moisture in."
+   },
+   {
+    "id": "coc-A-136",
+    "used": 0,
+    "text": "Crown diameter correlates with frond number — fuller crowns mean more photosynthetic area."
+   },
+   {
+    "id": "coc-A-137",
+    "used": 0,
+    "text": "Old fronds translocate potassium back into the trunk before they yellow and fall."
+   },
+   {
+    "id": "coc-A-138",
+    "used": 0,
+    "text": "The palm recycles nutrients from dying fronds instead of dropping them green."
+   },
+   {
+    "id": "coc-A-139",
+    "used": 0,
+    "text": "Nuts inside a bunch ripen from the rachis outward, not all at once."
+   },
+   {
+    "id": "coc-A-140",
+    "used": 0,
+    "text": "Harvest windows are read by eye, ear and husk colour together."
+   },
+   {
+    "id": "coc-A-141",
+    "used": 0,
+    "text": "Latex-like exudate from wound sites seals cut surfaces against infection."
+   },
+   {
+    "id": "coc-A-142",
+    "used": 0,
+    "text": "Vascular bundles in the trunk run vertically — no horizontal growth, no branches, ever."
+   },
+   {
+    "id": "coc-A-143",
+    "used": 0,
+    "text": "Because palms cannot branch, storm damage to the crown is usually fatal."
+   },
+   {
+    "id": "coc-A-144",
+    "used": 0,
+    "text": "Hurricane-scarred groves regenerate only by planting, never by regrowth of old trunks."
+   },
+   {
+    "id": "coc-A-145",
+    "used": 0,
+    "text": "Apical tissue temperature regulates frond emergence — heat accelerates leafing rhythm."
+   },
+   {
+    "id": "coc-A-146",
+    "used": 0,
+    "text": "Long-day tropical photoperiod barely changes flowering; water availability drives it harder."
+   },
+   {
+    "id": "coc-A-147",
+    "used": 0,
+    "text": "Coconut mirrors day length only weakly — irrigation schedules shape yield more."
+   },
+   {
+    "id": "coc-A-148",
+    "used": 0,
+    "text": "Photosynthesis concentrates in the crown; trunk contributes almost nothing green."
+   },
+   {
+    "id": "coc-A-149",
+    "used": 0,
+    "text": "The trunk's green only ever shows under the leaf bases, and rarely."
+   },
+   {
+    "id": "coc-A-150",
+    "used": 0,
+    "text": "Seed coat remnants cling inside the shell after the meat is scooped."
+   },
+   {
+    "id": "coc-A-151",
+    "used": 0,
+    "text": "The shell's inner face is smooth where the meat presses against it."
+   },
+   {
+    "id": "coc-A-152",
+    "used": 0,
+    "text": "Mature meat pulls away from the shell when the nut finishes ripening."
+   },
+   {
+    "id": "coc-A-153",
+    "used": 0,
+    "text": "Wild coastal stands are maintained today more by people than by natural dispersal."
+   },
+   {
+    "id": "coc-A-154",
+    "used": 0,
+    "text": "Genetic studies show two major population pools — Indian Ocean and Pacific — split by human movement."
+   },
+   {
+    "id": "coc-A-155",
+    "used": 0,
+    "text": "Pacific and Indian pools differ in frond shape and nut form enough to tell apart."
+   },
+   {
+    "id": "coc-A-156",
+    "used": 0,
+    "text": "Breeding programmes cross the pools to combine disease resistance with yield."
+   },
+   {
+    "id": "coc-A-157",
+    "used": 0,
+    "text": "Varietal identity often survives only in germplasm banks and research stations now."
+   },
+   {
+    "id": "coc-A-158",
+    "used": 0,
+    "text": "Pollen banks let breeders cross distant palms without moving living trees."
+   },
+   {
+    "id": "coc-A-159",
+    "used": 0,
+    "text": "Hand pollination is practised where natural pollen traffic has dropped near farms."
+   },
+   {
+    "id": "coc-A-160",
+    "used": 0,
+    "text": "Insect decline on farms shows up first as empty bunches two seasons later."
+   },
+   {
+    "id": "coc-A-161",
+    "used": 0,
+    "text": "Coconut's genome has been sequenced, linking wild and cultivated lineups for the first time."
+   },
+   {
+    "id": "coc-A-162",
+    "used": 0,
+    "text": "Transcriptome studies watch how the palm responds to salinity at gene level."
+   },
+   {
+    "id": "coc-A-163",
+    "used": 0,
+    "text": "Salt-tolerance genes from coastal landraces are markers breeders now chase deliberately."
+   },
+   {
+    "id": "coc-A-164",
+    "used": 0,
+    "text": "Root oxygen supply fails in deep clay — drainage matters more than fertiliser there."
+   },
+   {
+    "id": "coc-A-165",
+    "used": 0,
+    "text": "Raised planting beds on wet ground keep roots aerated through monsoon weeks."
+   },
+   {
+    "id": "coc-A-166",
+    "used": 0,
+    "text": "Canopy interplay with banana leaves creates a humid microclimate that slows evaporation."
+   },
+   {
+    "id": "coc-A-167",
+    "used": 0,
+    "text": "Mycorrhizal associations help palms mine phosphorus from poor coral soils."
+   },
+   {
+    "id": "coc-A-168",
+    "used": 0,
+    "text": "Limestone soils supply calcium freely; growers mostly manage potassium and boron instead."
+   },
+   {
+    "id": "coc-A-169",
+    "used": 0,
+    "text": "Windbreaks along coasts cut salt burn on young seedlings noticeably."
+   },
+   {
+    "id": "coc-A-170",
+    "used": 0,
+    "text": "Seedling leaves are strap-like before true pinnate fronds appear."
+   },
+   {
+    "id": "coc-A-171",
+    "used": 0,
+    "text": "Establishment phase demands shade only briefly — then full sun takes over."
+   },
+   {
+    "id": "coc-A-172",
+    "used": 0,
+    "text": "First nut flush arrives after years of vegetative growth in tall types."
+   },
+   {
+    "id": "coc-A-173",
+    "used": 0,
+    "text": "Dwarf types compress that juvenile window for commercial speed."
+   },
+   {
+    "id": "coc-A-174",
+    "used": 0,
+    "text": "Hybrid vigour shows in nut weight more than in trunk height."
+   },
+   {
+    "id": "coc-A-175",
+    "used": 0,
+    "text": "Nut weight varies by variety more than by position on the bunch."
+   },
+   {
+    "id": "coc-A-176",
+    "used": 0,
+    "text": "Bunch position affects size — terminal nuts run smaller than basal ones."
+   },
+   {
+    "id": "coc-A-177",
+    "used": 0,
+    "text": "Sun-facing nuts colour faster — husk hue is partly light history."
+   },
+   {
+    "id": "coc-A-178",
+    "used": 0,
+    "text": "Husk colour change is a ripeness cue, but sugar rise decides the truth."
+   },
+   {
+    "id": "coc-A-179",
+    "used": 0,
+    "text": "Sugar transport into the nut slows once the husk turns fully golden."
+   },
+   {
+    "id": "coc-A-180",
+    "used": 0,
+    "text": "Detaching a bunch early keeps water sweet but sacrifices meat yield — a real trade-off."
+   },
+   {
+    "id": "coc-A-181",
+    "used": 0,
+    "text": "The palm balances vegetative and reproductive effort through water status, not calendar."
+   },
+   {
+    "id": "coc-A-182",
+    "used": 0,
+    "text": "Abscisic acid rises under stress and tells the palm to abort young nuts."
+   },
+   {
+    "id": "coc-A-183",
+    "used": 0,
+    "text": "Physiological drop after flowering can shed half the potential harvest without any pest."
+   },
+   {
+    "id": "coc-A-184",
+    "used": 0,
+    "text": "Rain during anthesis washes pollen off the spadix — flowering weather matters."
+   },
+   {
+    "id": "coc-A-185",
+    "used": 0,
+    "text": "Consistent mild warmth suits flowering better than heat spikes."
+   },
+   {
+    "id": "coc-A-186",
+    "used": 0,
+    "text": "Root-zone temperature below comfort range slows nutrient uptake visibly."
+   },
+   {
+    "id": "coc-A-187",
+    "used": 0,
+    "text": "Palms fed on steady mulch sustain bunches longer than heavy occasional fertilising."
+   },
+   {
+    "id": "coc-A-188",
+    "used": 0,
+    "text": "Organic mulch also moderates the shallow root zone against heat swings."
+   },
+   {
+    "id": "coc-A-189",
+    "used": 0,
+    "text": "Fibre content in meat slows sugar absorption — a genuine glycaemic detail."
+   },
+   {
+    "id": "coc-A-190",
+    "used": 0,
+    "text": "Medium-chain triglycerides supply quick energy rather than long-term storage fuel."
+   },
+   {
+    "id": "coc-A-191",
+    "used": 0,
+    "text": "Athletes study coconut fats for exactly that rapid-absorption property."
+   },
+   {
+    "id": "coc-A-192",
+    "used": 0,
+    "text": "Coconut cream's emulsion holds because proteins and lecithin sit at the fat interface."
+   },
+   {
+    "id": "coc-A-193",
+    "used": 0,
+    "text": "Shaking separates nothing in cream — heat and time break the emulsion instead."
+   },
+   {
+    "id": "coc-A-194",
+    "used": 0,
+    "text": "Whipping coconut cream works only when chilled fat crystals stiffen the interface."
+   },
+   {
+    "id": "coc-A-195",
+    "used": 0,
+    "text": "Saturated fat crystals form networks above twenty degrees, firming the cream naturally."
+   },
+   {
+    "id": "coc-A-196",
+    "used": 0,
+    "text": "Rapid cooling after boiling keeps cream from splitting in curries."
+   },
+   {
+    "id": "coc-A-197",
+    "used": 0,
+    "text": "Acid plus heat is the classic split — lime finishes what simmering starts."
+   },
+   {
+    "id": "coc-A-198",
+    "used": 0,
+    "text": "Traditional curdling with coconut water uses the same acid-set chemistry as cheese."
+   },
+   {
+    "id": "coc-A-199",
+    "used": 0,
+    "text": "Coconut water's enzymes aid that set — old recipes knew the trick first."
+   },
+   {
+    "id": "coc-A-200",
+    "used": 0,
+    "text": "During fermentation, microbes convert sap sugars to acid, alcohol or vinegar depending on exposure."
+   },
+   {
+    "id": "coc-A-201",
+    "used": 0,
+    "text": "Controlled fermentation makes nipa-style sweets and coconut vinegar both."
+   },
+   {
+    "id": "coc-A-202",
+    "used": 0,
+    "text": "Vinegar from coconut sap holds a sharper nose than cane vinegar."
+   },
+   {
+    "id": "coc-A-203",
+    "used": 0,
+    "text": "Coconut sugar retains some inulin, which slows its glucose release slightly."
+   },
+   {
+    "id": "coc-A-204",
+    "used": 0,
+    "text": "Lower glycaemic index than cane sugar is one reason coconut sugar spread globally."
+   },
+   {
+    "id": "coc-A-205",
+    "used": 0,
+    "text": "Glycaemic claims still vary by processing — a fair caveat in nutrition circles."
+   },
+   {
+    "id": "coc-A-206",
+    "used": 0,
+    "text": "Trace inulin survives traditional boiling in clay pans."
+   },
+   {
+    "id": "coc-A-207",
+    "used": 0,
+    "text": "Clay-pan boiling also adds the caramel notes prized in gula melaka."
+   },
+   {
+    "id": "coc-A-208",
+    "used": 0,
+    "text": "Smoked drying over open fires once defined copra flavour across the Pacific."
+   },
+   {
+    "id": "coc-A-209",
+    "used": 0,
+    "text": "Modern drum dryers remove that smoke flavour for neutral oil markets."
+   },
+   {
+    "id": "coc-A-210",
+    "used": 0,
+    "text": "Smoke compounds in traditional copra trace back to guaiacol families."
+   },
+   {
+    "id": "coc-A-211",
+    "used": 0,
+    "text": "Desiccated coconut browns faster than fresh when toasted — less water to drive off."
+   },
+   {
+    "id": "coc-A-212",
+    "used": 0,
+    "text": "Maillard speed depends on moisture; dry shreds colour in half the time."
+   },
+   {
+    "id": "coc-A-213",
+    "used": 0,
+    "text": "Freeze-dried coconut keeps aroma best of any commercial form."
+   },
+   {
+    "id": "coc-A-214",
+    "used": 0,
+    "text": "Vacuum packaging slows rancidity by cutting oxygen, the oil's real enemy."
+   },
+   {
+    "id": "coc-A-215",
+    "used": 0,
+    "text": "Antioxidants in virgin oil slow that rancidity without any additive."
+   },
+   {
+    "id": "coc-A-216",
+    "used": 0,
+    "text": "Rancid coconut smells like old paint — the aldehydes give it away instantly."
+   },
+   {
+    "id": "coc-A-217",
+    "used": 0,
+    "text": "Cold storage extends shelf life more than any preservative for fresh meat."
+   },
+   {
+    "id": "coc-A-218",
+    "used": 0,
+    "text": "Frozen grated coconut clumps because surface water crystallises between shreds."
+   },
+   {
+    "id": "coc-A-219",
+    "used": 0,
+    "text": "Blanching before freezing reduces that clumping by gelatinising surface starch."
+   },
+   {
+    "id": "coc-A-220",
+    "used": 0,
+    "text": "Rapid freezing keeps cell walls intact; slow freezing pierces them with ice blades."
+   },
+   {
+    "id": "coc-A-221",
+    "used": 0,
+    "text": "The difference shows the moment the bag thaws into wet strands."
+   },
+   {
+    "id": "coc-A-222",
+    "used": 0,
+    "text": "Microbial load on fresh shell surfaces is high — knives transfer it to meat."
+   },
+   {
+    "id": "coc-A-223",
+    "used": 0,
+    "text": "Wiping the shell before cracking cuts contamination risk measurably."
+   },
+   {
+    "id": "coc-A-224",
+    "used": 0,
+    "text": "Street hygiene around drinking nuts improved once vendors moved from shared blades to wrapped straws."
+   },
+   {
+    "id": "coc-A-225",
+    "used": 0,
+    "text": "Sealed nut water is clean inside; the risk always lives on the outside surface."
+   },
+   {
+    "id": "coc-A-226",
+    "used": 0,
+    "text": "Cracking tools should be sanitised between nuts for the same reason."
+   },
+   {
+    "id": "coc-A-227",
+    "used": 0,
+    "text": "UV sun exposure on displayed nuts lowers surface microbes passively."
+   },
+   {
+    "id": "coc-A-228",
+    "used": 0,
+    "text": "Shaded displays need ice under the crate to slow bacterial growth."
+   },
+   {
+    "id": "coc-A-229",
+    "used": 0,
+    "text": "Coconut water spoils fastest of all coconut products once opened."
+   },
+   {
+    "id": "coc-A-230",
+    "used": 0,
+    "text": "Refrigeration doubles its window; boiling extends it further for markets."
+   },
+   {
+    "id": "coc-A-231",
+    "used": 0,
+    "text": "Fresh cream separates into oil and solids within days at room temperature."
+   },
+   {
+    "id": "coc-A-232",
+    "used": 0,
+    "text": "Canned cream lasts months because heat sterilisation kills the split-inducing microbes."
+   },
+   {
+    "id": "coc-A-233",
+    "used": 0,
+    "text": "Canning also browns the cream slightly — a small flavour trade."
+   },
+   {
+    "id": "coc-A-234",
+    "used": 0,
+    "text": "UHT coconut milk holds a year unopened — modern logistics rewrote the shelf-life map."
+   },
+   {
+    "id": "coc-A-235",
+    "used": 0,
+    "text": "Powdered coconut milk disperses fast because carriers keep the fat from balling."
+   },
+   {
+    "id": "coc-A-236",
+    "used": 0,
+    "text": "Instant mixes sacrifice some aroma for that convenience."
+   },
+   {
+    "id": "coc-A-237",
+    "used": 0,
+    "text": "Coconut olein is the liquid fraction separated for frying markets."
+   },
+   {
+    "id": "coc-A-238",
+    "used": 0,
+    "text": "Fractionation splits the oil into olein and stearin by controlled cooling."
+   },
+   {
+    "id": "coc-A-239",
+    "used": 0,
+    "text": "Stearin firms soap bars; olein keeps them softer in tropical heat."
+   },
+   {
+    "id": "coc-A-240",
+    "used": 0,
+    "text": "Interesterification rearranges fatty acids without producing trans fats — modern shortenings use it."
+   },
+   {
+    "id": "coc-A-241",
+    "used": 0,
+    "text": "Hydrogenation is now rare in coconut fat processing because of trans-fat rules."
+   },
+   {
+    "id": "coc-A-242",
+    "used": 0,
+    "text": "Phytosterols survive virgin processing and modestly block cholesterol absorption."
+   },
+   {
+    "id": "coc-A-243",
+    "used": 0,
+    "text": "Coconut-derived squalene appears in cosmetics at small but useful shares."
+   },
+   {
+    "id": "coc-A-244",
+    "used": 0,
+    "text": "Lauric acid derivatives show up in toothpaste surfactants as mild foamers."
+   },
+   {
+    "id": "coc-A-245",
+    "used": 0,
+    "text": "Cocamidopropyl betaine in shampoos traces back to coconut fatty acids."
+   },
+   {
+    "id": "coc-A-246",
+    "used": 0,
+    "text": "The soap reaction — saponification — turns coconut fat into hard white bars."
+   },
+   {
+    "id": "coc-A-247",
+    "used": 0,
+    "text": "High lauric content gives coconut soaps their quick, bubbly lather."
+   },
+   {
+    "id": "coc-A-248",
+    "used": 0,
+    "text": "Cold-process soaps keep glycerin in the bar instead of stripping it out."
+   },
+   {
+    "id": "coc-A-249",
+    "used": 0,
+    "text": "Candle wax blends use coconut stearin for a slower, cleaner burn."
+   },
+   {
+    "id": "coc-A-250",
+    "used": 0,
+    "text": "Coconut charcoal burns long and steady — hookah and culinary grades both rely on it."
    }
   ],
   "B": [
    {
-    "id": "coc-B-01",
+    "id": "coc-B-001",
     "used": 0,
     "text": "Street vendors tap the equator of the nut — a hollow ring tone means plenty of water inside."
    },
    {
-    "id": "coc-B-02",
+    "id": "coc-B-002",
     "used": 0,
     "text": "A heavy cleaver cuts with its own weight; the wrist only guides the fall instead of pushing."
    },
    {
-    "id": "coc-B-03",
+    "id": "coc-B-003",
     "used": 0,
     "text": "Scoring a ring around the middle and then wedging it open gives the cleanest possible halves."
    },
    {
-    "id": "coc-B-04",
+    "id": "coc-B-004",
     "used": 0,
     "text": "Dull blades crush the fibers instead of slicing them, which is why shells shatter into ragged edges."
    },
    {
-    "id": "coc-B-05",
+    "id": "coc-B-005",
     "used": 0,
     "text": "Green young coconuts are shaved into a pyramid so the base sits flat and a straw finds the soft eye."
    },
    {
-    "id": "coc-B-06",
+    "id": "coc-B-006",
     "used": 0,
     "text": "The soft germination eye is the designed opening point — hardest to spot, easiest to pierce."
    },
    {
-    "id": "coc-B-07",
+    "id": "coc-B-007",
     "used": 0,
     "text": "Cutting with the fiber direction instead of across it lets the blade glide with far less drag."
    },
    {
-    "id": "coc-B-08",
+    "id": "coc-B-008",
     "used": 0,
     "text": "Vendors angle the blade at 45 degrees to pop a triangular drinking notch in a single practiced stroke."
    },
    {
-    "id": "coc-B-09",
+    "id": "coc-B-009",
     "used": 0,
     "text": "Machetes are ground asymmetrically so the flat side leaves a smooth plane on the finished cut."
    },
    {
-    "id": "coc-B-10",
+    "id": "coc-B-010",
     "used": 0,
     "text": "Tapping before every cut lets vendors sort water-heavy nuts from meat-heavy ones by ear alone."
    },
    {
-    "id": "coc-B-11",
+    "id": "coc-B-011",
     "used": 0,
     "text": "Prying with the blade tip after a ring cut splits the husk along its natural seams."
    },
    {
-    "id": "coc-B-12",
+    "id": "coc-B-012",
     "used": 0,
     "text": "Rolling the nut under a palm heel loosens the husk fibers before peeling, so the strands come away whole."
+   },
+   {
+    "id": "coc-B-013",
+    "used": 0,
+    "text": "Harvesters read ripeness from three cues together — husk colour, loose cap, and the slosh inside."
+   },
+   {
+    "id": "coc-B-014",
+    "used": 0,
+    "text": "Loose cap fibres around the crown mean the nut is finishing on the tree."
+   },
+   {
+    "id": "coc-B-015",
+    "used": 0,
+    "text": "Twisting a ripe nut off by hand beats a clumsy cut that damages the spadix."
+   },
+   {
+    "id": "coc-B-016",
+    "used": 0,
+    "text": "Pole cutters hook the bunch stem, never the trunk, to protect future yields."
+   },
+   {
+    "id": "coc-B-017",
+    "used": 0,
+    "text": "Long bamboo poles with curved blades reach crowns without climbing at all."
+   },
+   {
+    "id": "coc-B-018",
+    "used": 0,
+    "text": "Modern harvester tools extend reach with telescoping shafts and pulley-assisted baskets."
+   },
+   {
+    "id": "coc-B-019",
+    "used": 0,
+    "text": "Manual climbers tie a loop of coir rope around both feet as a clamp."
+   },
+   {
+    "id": "coc-B-020",
+    "used": 0,
+    "text": "The foot-loop grip works by friction — knees bend outward to lock the rope."
+   },
+   {
+    "id": "coc-B-021",
+    "used": 0,
+    "text": "Traditional climbing notches are cut at a slight upward angle so feet cannot slip out."
+   },
+   {
+    "id": "coc-B-022",
+    "used": 0,
+    "text": "Modern climbers add a safety harness above the loop for the high crowns."
+   },
+   {
+    "id": "coc-B-023",
+    "used": 0,
+    "text": "Climbing takes minutes; the descent is when most accidents happen."
+   },
+   {
+    "id": "coc-B-024",
+    "used": 0,
+    "text": "Footing checks before every climb matter more than blade sharpness."
+   },
+   {
+    "id": "coc-B-025",
+    "used": 0,
+    "text": "A wobble at the top usually means a bad notch, not a weak climber."
+   },
+   {
+    "id": "coc-B-026",
+    "used": 0,
+    "text": "Harvested bunches are carried in shoulder baskets to avoid bruising tender green nuts."
+   },
+   {
+    "id": "coc-B-027",
+    "used": 0,
+    "text": "Green drinking nuts bruise visibly — a drop marks the flesh under the skin."
+   },
+   {
+    "id": "coc-B-028",
+    "used": 0,
+    "text": "Rattling bunches are sorted by ear before they ever reach the cutting block."
+   },
+   {
+    "id": "coc-B-029",
+    "used": 0,
+    "text": "Sound sorting saves time: empty-sounding nuts go to meat, bright sloshers go to water."
+   },
+   {
+    "id": "coc-B-030",
+    "used": 0,
+    "text": "The cutting block stays wet so shell fragments wash off instead of sticking."
+   },
+   {
+    "id": "coc-B-031",
+    "used": 0,
+    "text": "Wiping the block between nuts is street hygiene people actually notice."
+   },
+   {
+    "id": "coc-B-032",
+    "used": 0,
+    "text": "One confident strike beats three tentative taps — hesitation shatters shells raggedly."
+   },
+   {
+    "id": "coc-B-033",
+    "used": 0,
+    "text": "Blade speed matters more than blade mass for a clean coconut split."
+   },
+   {
+    "id": "coc-B-034",
+    "used": 0,
+    "text": "A swinging cleaver lands flat-faced; glancing blows skid off the curved shell."
+   },
+   {
+    "id": "coc-B-035",
+    "used": 0,
+    "text": "Curved shells deflect straight hits — angle of attack decides everything."
+   },
+   {
+    "id": "coc-B-036",
+    "used": 0,
+    "text": "Vendors rest the nut in a small rope coil so it cannot roll mid-cut."
+   },
+   {
+    "id": "coc-B-037",
+    "used": 0,
+    "text": "The rope nest is a stabiliser that costs nothing and saves fingers."
+   },
+   {
+    "id": "coc-B-038",
+    "used": 0,
+    "text": "A shallow scoring pass around the circumference sets the fault line for the crack."
+   },
+   {
+    "id": "coc-B-039",
+    "used": 0,
+    "text": "Second pass deepens the ring; third pass opens it with a wedge twist."
+   },
+   {
+    "id": "coc-B-040",
+    "used": 0,
+    "text": "Twisting the blade like a lever inside the ring cut splits husk along natural seams."
+   },
+   {
+    "id": "coc-B-041",
+    "used": 0,
+    "text": "Husk strips peel away from the shell once the ring cut severs their grip."
+   },
+   {
+    "id": "coc-B-042",
+    "used": 0,
+    "text": "Peeling in sections keeps the fibres long instead of shredding them short."
+   },
+   {
+    "id": "coc-B-043",
+    "used": 0,
+    "text": "Long husk strands are worth more to weavers than dust-short fibres."
+   },
+   {
+    "id": "coc-B-044",
+    "used": 0,
+    "text": "Shelling without husk first requires a vice-like grip and a very controlled edge."
+   },
+   {
+    "id": "coc-B-045",
+    "used": 0,
+    "text": "Nutcrackers made from two hinged iron bars spare the hands entirely."
+   },
+   {
+    "id": "coc-B-046",
+    "used": 0,
+    "text": "Foot-operated crackers free both hands for catching the halves."
+   },
+   {
+    "id": "coc-B-047",
+    "used": 0,
+    "text": "Split halves are rinsed immediately to remove shell dust from the meat face."
+   },
+   {
+    "id": "coc-B-048",
+    "used": 0,
+    "text": "Shell dust grinds between teeth if rinsing gets skipped — customers notice."
+   },
+   {
+    "id": "coc-B-049",
+    "used": 0,
+    "text": "Grating against a spiked board follows the shell's inner curve naturally."
+   },
+   {
+    "id": "coc-B-050",
+    "used": 0,
+    "text": "Hand grating drums hold the half in a cage while a rotating spiked wheel shreds."
+   },
+   {
+    "id": "coc-B-051",
+    "used": 0,
+    "text": "Freshly grated meat releases oil under the fingers almost at once."
+   },
+   {
+    "id": "coc-B-052",
+    "used": 0,
+    "text": "Fine grating increases oil release — coarse grates stay drier for baking."
+   },
+   {
+    "id": "coc-B-053",
+    "used": 0,
+    "text": "Traditional presses screw down in stages rather than one heavy crank."
+   },
+   {
+    "id": "coc-B-054",
+    "used": 0,
+    "text": "First press runs thin and cool; pressure builds heat on later presses."
+   },
+   {
+    "id": "coc-B-055",
+    "used": 0,
+    "text": "Hot water steeping before pressing draws more cream out of the same shreds."
+   },
+   {
+    "id": "coc-B-056",
+    "used": 0,
+    "text": "Steeping too long pulls bitter tannins along with the cream."
+   },
+   {
+    "id": "coc-B-057",
+    "used": 0,
+    "text": "Coconut milk output depends on water temperature more than on added force."
+   },
+   {
+    "id": "coc-B-058",
+    "used": 0,
+    "text": "Cream grades separate by dilution — one shreds, three waters, three presses."
+   },
+   {
+    "id": "coc-B-059",
+    "used": 0,
+    "text": "The thick cream caps the thin milk after resting — decanting picks the grade."
+   },
+   {
+    "id": "coc-B-060",
+    "used": 0,
+    "text": "Settling bowls show three visible layers: thin milk, cream, and stray solids."
+   },
+   {
+    "id": "coc-B-061",
+    "used": 0,
+    "text": "Blanching grated meat sterilises the surface before it goes into desserts."
+   },
+   {
+    "id": "coc-B-062",
+    "used": 0,
+    "text": "Boiling cream gently beats vigorous bubbling for curry stability."
+   },
+   {
+    "id": "coc-B-063",
+    "used": 0,
+    "text": "Vigorous boiling shears the emulsion; a simmer keeps fat droplets intact."
+   },
+   {
+    "id": "coc-B-064",
+    "used": 0,
+    "text": "Ladle stirring in slow circles calms a pot that threatens to split."
+   },
+   {
+    "id": "coc-B-065",
+    "used": 0,
+    "text": "Acid additions come off the heat — residual warmth plus lime equals curdling."
+   },
+   {
+    "id": "coc-B-066",
+    "used": 0,
+    "text": "Tempering a coconut sauce means spooning hot liquid into the cold base first."
+   },
+   {
+    "id": "coc-B-067",
+    "used": 0,
+    "text": "Coconut cream whips best at sixteen degrees — cool kitchen, chilled bowl, cold blades."
+   },
+   {
+    "id": "coc-B-068",
+    "used": 0,
+    "text": "Whipping with a pinch of stabiliser holds peaks through tropical afternoons."
+   },
+   {
+    "id": "coc-B-069",
+    "used": 0,
+    "text": "Over-beating sends whipped cream from peaks to butter in under a minute."
+   },
+   {
+    "id": "coc-B-070",
+    "used": 0,
+    "text": "Rescued split cream can be chilled, re-whipped — sometimes it forgives."
+   },
+   {
+    "id": "coc-B-071",
+    "used": 0,
+    "text": "Coconut oil in pastry stays solid until the oven's heat releases it at once."
+   },
+   {
+    "id": "coc-B-072",
+    "used": 0,
+    "text": "Cold fat, cold water, quick hands — the pastry rule survives the tropics."
+   },
+   {
+    "id": "coc-B-073",
+    "used": 0,
+    "text": "Rubbing coconut oil into flour coats gluten strands for short, tender crumb."
+   },
+   {
+    "id": "coc-B-074",
+    "used": 0,
+    "text": "Coconut flour needs roughly half the liquid of wheat flour in any swap."
+   },
+   {
+    "id": "coc-B-075",
+    "used": 0,
+    "text": "Resting coconut-flour batter lets fibre drink moisture before baking sets the crumb."
+   },
+   {
+    "id": "coc-B-076",
+    "used": 0,
+    "text": "Without rest, coconut cakes bake dry at the edges and gummy at the centre."
+   },
+   {
+    "id": "coc-B-077",
+    "used": 0,
+    "text": "Egg ratio is the lever that rescues structure in dairy-free coconut bakes."
+   },
+   {
+    "id": "coc-B-078",
+    "used": 0,
+    "text": "Coconut milk curries thicken by reduction, not by flour — time does the work."
+   },
+   {
+    "id": "coc-B-079",
+    "used": 0,
+    "text": "Reduction concentrates flavour and thickens simultaneously — two benefits, one simmer."
+   },
+   {
+    "id": "coc-B-080",
+    "used": 0,
+    "text": "Adding cream late keeps emulsions stable through the final minutes of cooking."
+   },
+   {
+    "id": "coc-B-081",
+    "used": 0,
+    "text": "Finishing with a spoon of thick cream rounds sharp spice edges instantly."
+   },
+   {
+    "id": "coc-B-082",
+    "used": 0,
+    "text": "Coconut oil smoke point suits stir-fry heat; virgin oil suits gentle sauté only."
+   },
+   {
+    "id": "coc-B-083",
+    "used": 0,
+    "text": "Refined oil handles hotter pans because refining removes low-smoke compounds."
+   },
+   {
+    "id": "coc-B-084",
+    "used": 0,
+    "text": "Wok hei plus coconut fat makes the classic Southeast Asian sear profile."
+   },
+   {
+    "id": "coc-B-085",
+    "used": 0,
+    "text": "Sugar and coconut cream cook to soft-ball stage for classic sweets."
+   },
+   {
+    "id": "coc-B-086",
+    "used": 0,
+    "text": "Soft-ball temperature is the invisible line between sauce and candy in coconut desserts."
+   },
+   {
+    "id": "coc-B-087",
+    "used": 0,
+    "text": "Clay pans heat gently and evenly for the slow reduction traditional sugars need."
+   },
+   {
+    "id": "coc-B-088",
+    "used": 0,
+    "text": "Stirring coconut sugar continuously prevents scorching on the pan's hot spots."
+   },
+   {
+    "id": "coc-B-089",
+    "used": 0,
+    "text": "Scorched coconut caramel turns bitter in seconds — the window is narrow."
+   },
+   {
+    "id": "coc-B-090",
+    "used": 0,
+    "text": "Cooling trays spread hot candy so it sets without trapping steam underneath."
+   },
+   {
+    "id": "coc-B-091",
+    "used": 0,
+    "text": "Steam trapped under set candy makes it sticky — airflow matters."
+   },
+   {
+    "id": "coc-B-092",
+    "used": 0,
+    "text": "Coconut water boiling skims its foam for clearer jelly sets."
+   },
+   {
+    "id": "coc-B-093",
+    "used": 0,
+    "text": "Clear coconut jelly demands steady low heat and patient skimming."
+   },
+   {
+    "id": "coc-B-094",
+    "used": 0,
+    "text": "Setting jelly in the shell itself doubles as presentation and mould."
+   },
+   {
+    "id": "coc-B-095",
+    "used": 0,
+    "text": "Gel strength falls if acidic fruit juice is added before the set begins."
+   },
+   {
+    "id": "coc-B-096",
+    "used": 0,
+    "text": "Acid goes in after cooling — chemistry order matters for a firm set."
+   },
+   {
+    "id": "coc-B-097",
+    "used": 0,
+    "text": "Coconut starch settles in water and needs repeated rinsing for pure white powder."
+   },
+   {
+    "id": "coc-B-098",
+    "used": 0,
+    "text": "Wet starch dries into brittle sheets that mill into fine flour."
+   },
+   {
+    "id": "coc-B-099",
+    "used": 0,
+    "text": "Sprouted coconut gratings reduce phytate before grinding into batters."
+   },
+   {
+    "id": "coc-B-100",
+    "used": 0,
+    "text": "Soaking young meat softens it enough to blend smooth without added water."
+   },
+   {
+    "id": "coc-B-101",
+    "used": 0,
+    "text": "Smooth coconut paste is sieved — fibre bits ruin delicate desserts."
+   },
+   {
+    "id": "coc-B-102",
+    "used": 0,
+    "text": "Sieving warm cream removes protein clumps that appear during long simmering."
+   },
+   {
+    "id": "coc-B-103",
+    "used": 0,
+    "text": "Chilled cream whips larger than room-temperature cream — temperature again."
+   },
+   {
+    "id": "coc-B-104",
+    "used": 0,
+    "text": "Freezing cream in cubes makes instant smoothie thickener."
+   },
+   {
+    "id": "coc-B-105",
+    "used": 0,
+    "text": "Ice cube trays of coconut milk prevent last-minute fridge disappointment."
+   },
+   {
+    "id": "coc-B-106",
+    "used": 0,
+    "text": "Thawed cream separates but stirs back for cooking use without harm."
+   },
+   {
+    "id": "coc-B-107",
+    "used": 0,
+    "text": "Street vendors pre-score hard shells so rush-hour service is one strike only."
+   },
+   {
+    "id": "coc-B-108",
+    "used": 0,
+    "text": "Pre-scoring saves seconds per customer — volume math that decides a stall's income."
+   },
+   {
+    "id": "coc-B-109",
+    "used": 0,
+    "text": "Display stacks show water nuts by size; uniformity signals careful grading."
+   },
+   {
+    "id": "coc-B-110",
+    "used": 0,
+    "text": "Size grading is really water-volume estimation under another name."
+   },
+   {
+    "id": "coc-B-111",
+    "used": 0,
+    "text": "The softest eye gets marked with a small chalk dot for fast drilling."
+   },
+   {
+    "id": "coc-B-112",
+    "used": 0,
+    "text": "Drilling the eye needs a narrow gouge, not a knife tip that snaps."
+   },
+   {
+    "id": "coc-B-113",
+    "used": 0,
+    "text": "A snapped knife tip inside a drink is a stall's worst advertisement."
+   },
+   {
+    "id": "coc-B-114",
+    "used": 0,
+    "text": "Wrapped straws replaced shared steel tubes when hygiene rules reached street stalls."
+   },
+   {
+    "id": "coc-B-115",
+    "used": 0,
+    "text": "Opening notch placement avoids the eye entirely to keep shell chips out."
+   },
+   {
+    "id": "coc-B-116",
+    "used": 0,
+    "text": "Shell chips near the opening float where a straw will catch them — careful vendors rinse."
+   },
+   {
+    "id": "coc-B-117",
+    "used": 0,
+    "text": "Wiping the cut face removes loose fibre before serving."
+   },
+   {
+    "id": "coc-B-118",
+    "used": 0,
+    "text": "Boiled-shell sterilisation of tools sounds extreme — until one sick customer."
+   },
+   {
+    "id": "coc-B-119",
+    "used": 0,
+    "text": "Alcohol wipes on blades became normal in tourist-facing stalls."
+   },
+   {
+    "id": "coc-B-120",
+    "used": 0,
+    "text": "Vendor stools sit low so the cutting block is at wrist height — ergonomics by experience."
+   },
+   {
+    "id": "coc-B-121",
+    "used": 0,
+    "text": "Wrist-height blocks reduce shoulder fatigue across a full selling day."
+   },
+   {
+    "id": "coc-B-122",
+    "used": 0,
+    "text": "Rotating the nut between strikes keeps each cut on fresh shell surface."
+   },
+   {
+    "id": "coc-B-123",
+    "used": 0,
+    "text": "A fresh surface bites better; reused grooves make the blade skid."
+   },
+   {
+    "id": "coc-B-124",
+    "used": 0,
+    "text": "Feet plant wide for stability — every strike starts from the ground."
+   },
+   {
+    "id": "coc-B-125",
+    "used": 0,
+    "text": "Blade follows through past the shell; stopping short wastes the swing's energy."
+   },
+   {
+    "id": "coc-B-126",
+    "used": 0,
+    "text": "Follow-through control separates clean splits from flying fragments."
+   },
+   {
+    "id": "coc-B-127",
+    "used": 0,
+    "text": "Sparks do not fly, but shell shards do — eye protection exists for reason."
+   },
+   {
+    "id": "coc-B-128",
+    "used": 0,
+    "text": "Children stay behind the swing arc — stall layout enforces it, not warnings."
+   },
+   {
+    "id": "coc-B-129",
+    "used": 0,
+    "text": "Rope coils damp the block so cuts do not wake the whole street."
+   },
+   {
+    "id": "coc-B-130",
+    "used": 0,
+    "text": "Quiet stalls draw crowds at dawn — noise management is sales strategy too."
+   },
+   {
+    "id": "coc-B-131",
+    "used": 0,
+    "text": "Bagging water nuts uses the husk itself as a handle — no extra packaging."
+   },
+   {
+    "id": "coc-B-132",
+    "used": 0,
+    "text": "Placing the notch upward in a bag stops spillage on the walk home."
+   },
+   {
+    "id": "coc-B-133",
+    "used": 0,
+    "text": "Households tap the soft eye with a spoon handle before reaching for a knife."
+   },
+   {
+    "id": "coc-B-134",
+    "used": 0,
+    "text": "Spoon-handle tapping finds the eye by sound — softer spot, duller thud."
+   },
+   {
+    "id": "coc-B-135",
+    "used": 0,
+    "text": "The household opening tool is often a screwdriver — blunt, wide, safe."
+   },
+   {
+    "id": "coc-B-136",
+    "used": 0,
+    "text": "Pushing the eye in with thumb pressure works on the youngest nuts only."
+   },
+   {
+    "id": "coc-B-137",
+    "used": 0,
+    "text": "Older nuts need a drill bit or a sharpened steel punch."
+   },
+   {
+    "id": "coc-B-138",
+    "used": 0,
+    "text": "Shells from clean splits get reused as bowls, ladles and plant pots."
+   },
+   {
+    "id": "coc-B-139",
+    "used": 0,
+    "text": "Cracked-with-care shells sell to craft buyers; smashed shells go to the kiln."
+   },
+   {
+    "id": "coc-B-140",
+    "used": 0,
+    "text": "Shell kilns run oxygen-starved for charcoal instead of ash — controlled smouldering."
+   },
+   {
+    "id": "coc-B-141",
+    "used": 0,
+    "text": "Charcoal makers judge temperature by flame colour at the vent."
+   },
+   {
+    "id": "coc-B-142",
+    "used": 0,
+    "text": "Too much air turns a charcoal burn into plain ash."
+   },
+   {
+    "id": "coc-B-143",
+    "used": 0,
+    "text": "Cooling charcoal sealed in the kiln prevents re-ignition in the sack."
+   },
+   {
+    "id": "coc-B-144",
+    "used": 0,
+    "text": "Bagged warm charcoal has ignited more than one storage shed."
+   },
+   {
+    "id": "coc-B-145",
+    "used": 0,
+    "text": "Coir dust catches sparks — a real fire hazard near kilns."
+   },
+   {
+    "id": "coc-B-146",
+    "used": 0,
+    "text": "Wet husk barriers slow accidental spread around charcoal yards."
+   },
+   {
+    "id": "coc-B-147",
+    "used": 0,
+    "text": "Grating machines jam when fed shell fragments by mistake."
+   },
+   {
+    "id": "coc-B-148",
+    "used": 0,
+    "text": "Feed rollers grip shreds; metal scraps destroy the drum's teeth."
+   },
+   {
+    "id": "coc-B-149",
+    "used": 0,
+    "text": "Machine screens set grate fineness — swapping screens changes product grade."
+   },
+   {
+    "id": "coc-B-150",
+    "used": 0,
+    "text": "Pressed cake from cream extraction still feeds livestock as protein-rich meal."
+   },
+   {
+    "id": "coc-B-151",
+    "used": 0,
+    "text": "Cake drying prevents mould during storage between milling runs."
+   },
+   {
+    "id": "coc-B-152",
+    "used": 0,
+    "text": "De-husking machines score the husk before gripping — grip alone tears wrong."
+   },
+   {
+    "id": "coc-B-153",
+    "used": 0,
+    "text": "Whole-shell recovery rate decides a de-husker's commercial success."
+   },
+   {
+    "id": "coc-B-154",
+    "used": 0,
+    "text": "Blade replacement schedules matter — dull machine blades pulverise instead of cut."
+   },
+   {
+    "id": "coc-B-155",
+    "used": 0,
+    "text": "Fine dust from dull blades lowers fibre grade significantly."
+   },
+   {
+    "id": "coc-B-156",
+    "used": 0,
+    "text": "Coir retting tanks need shade — sun overcooks the ret and weakens fibre."
+   },
+   {
+    "id": "coc-B-157",
+    "used": 0,
+    "text": "Ret completion is judged by pulling a fibre and feeling it snap clean."
+   },
+   {
+    "id": "coc-B-158",
+    "used": 0,
+    "text": "Over-retted fibre goes limp and dark — mill buyers discount it heavily."
+   },
+   {
+    "id": "coc-B-159",
+    "used": 0,
+    "text": "Fibre combs separate long from short by width, not by cutting."
+   },
+   {
+    "id": "coc-B-160",
+    "used": 0,
+    "text": "Twisting machines lay fibres at set angles for rope of uniform strength."
+   },
+   {
+    "id": "coc-B-161",
+    "used": 0,
+    "text": "Rope tests pull a sample until failure — the break point grades the batch."
+   },
+   {
+    "id": "coc-B-162",
+    "used": 0,
+    "text": "Weaving looms use coir yarn for mats that breathe in humid climates."
+   },
+   {
+    "id": "coc-B-163",
+    "used": 0,
+    "text": "Husk choppers size mulch pieces for bagged garden markets."
+   },
+   {
+    "id": "coc-B-164",
+    "used": 0,
+    "text": "Sieved coco peat ships dust-free; unsifted batches clog hydroponic drippers."
+   },
+   {
+    "id": "coc-B-165",
+    "used": 0,
+    "text": "Buffered coco peat is rinsed to neutral pH before nursery use."
+   },
+   {
+    "id": "coc-B-166",
+    "used": 0,
+    "text": "Coco chip blends add drainage where pure peat would drown roots."
+   },
+   {
+    "id": "coc-B-167",
+    "used": 0,
+    "text": "Pre-wet coco bales expand tenfold — warehouse space math surprises newcomers."
+   },
+   {
+    "id": "coc-B-168",
+    "used": 0,
+    "text": "Washing coco peat uses ten times its volume in water — an environmental trade."
+   },
+   {
+    "id": "coc-B-169",
+    "used": 0,
+    "text": "Closed-loop washing systems recover that water now — modern mills recycle it."
+   },
+   {
+    "id": "coc-B-170",
+    "used": 0,
+    "text": "Fibre oil extraction uses screw presses with gradual pressure ramps."
+   },
+   {
+    "id": "coc-B-171",
+    "used": 0,
+    "text": "Copra drying racks need airflow below as well as heat above."
+   },
+   {
+    "id": "coc-B-172",
+    "used": 0,
+    "text": "Solar dryers beat open-yard drying on hygiene and speed both."
+   },
+   {
+    "id": "coc-B-173",
+    "used": 0,
+    "text": "Fungal load drops dramatically when copra dries under plastic covers."
+   },
+   {
+    "id": "coc-B-174",
+    "used": 0,
+    "text": "Rain on fresh copra starts mould within hours — cover discipline is everything."
+   },
+   {
+    "id": "coc-B-175",
+    "used": 0,
+    "text": "Cheap copra smells cheesy from poor drying; buyers reject loads on scent alone."
+   },
+   {
+    "id": "coc-B-176",
+    "used": 0,
+    "text": "Wet-mill cream needs same-day processing or refrigeration before nightfall."
+   },
+   {
+    "id": "coc-B-177",
+    "used": 0,
+    "text": "Tropical heat gives fresh coconut hours, not days, before it turns."
+   },
+   {
+    "id": "coc-B-178",
+    "used": 0,
+    "text": "Night markets sell what morning harvest could not move before dark."
+   },
+   {
+    "id": "coc-B-179",
+    "used": 0,
+    "text": "Insulated crates with ice pads stretch a vendor's window by hours."
+   },
+   {
+    "id": "coc-B-180",
+    "used": 0,
+    "text": "Bamboo shade screens cut display temperature noticeably at noon."
+   },
+   {
+    "id": "coc-B-181",
+    "used": 0,
+    "text": "Misting greens cools the stall air — customers feel the difference first."
+   },
+   {
+    "id": "coc-B-182",
+    "used": 0,
+    "text": "Shade cloth plus hanging greens keeps drinking nuts visibly fresh longer."
+   },
+   {
+    "id": "coc-B-183",
+    "used": 0,
+    "text": "Display water keeps husks from drying to a dull grey."
+   },
+   {
+    "id": "coc-B-184",
+    "used": 0,
+    "text": "Dulled husks rehydrate briefly in water and regain colour for display."
+   },
+   {
+    "id": "coc-B-185",
+    "used": 0,
+    "text": "Sorting tables grade by sound first, size second, colour last."
+   },
+   {
+    "id": "coc-B-186",
+    "used": 0,
+    "text": "Colour lies under shade; sound does not — that is why ears lead."
+   },
+   {
+    "id": "coc-B-187",
+    "used": 0,
+    "text": "Marking water nuts with the harvest day tracks freshness honestly."
+   },
+   {
+    "id": "coc-B-188",
+    "used": 0,
+    "text": "First-day nuts shine at the eye; week-old ones look papery there."
+   },
+   {
+    "id": "coc-B-189",
+    "used": 0,
+    "text": "Old nut foam at the opening signals fermentation — never serve it."
+   },
+   {
+    "id": "coc-B-190",
+    "used": 0,
+    "text": "Sour smell at the eye is the final veto on any serving."
+   },
+   {
+    "id": "coc-B-191",
+    "used": 0,
+    "text": "Serving spoons rest on raised racks, never on the cutting surface."
+   },
+   {
+    "id": "coc-B-192",
+    "used": 0,
+    "text": "Cut faces go upward in display so dust never lands on them."
+   },
+   {
+    "id": "coc-B-193",
+    "used": 0,
+    "text": "A cover cloth that breathes beats plastic that sweats."
+   },
+   {
+    "id": "coc-B-194",
+    "used": 0,
+    "text": "Sweat under plastic rots greens within a day in tropical heat."
+   },
+   {
+    "id": "coc-B-195",
+    "used": 0,
+    "text": "Night cooling racks keep cream sets firm until morning trade."
+   },
+   {
+    "id": "coc-B-196",
+    "used": 0,
+    "text": "Frozen drink nuts exist — street innovation where ice is plentiful."
+   },
+   {
+    "id": "coc-B-197",
+    "used": 0,
+    "text": "Blended frozen young meat makes instant sorbet with zero additives."
+   },
+   {
+    "id": "coc-B-198",
+    "used": 0,
+    "text": "Shaved-ice toppings of coconut strands pair with syrups at fairs."
+   },
+   {
+    "id": "coc-B-199",
+    "used": 0,
+    "text": "Layered desserts rely on set times — each coconut layer must cool before the next."
+   },
+   {
+    "id": "coc-B-200",
+    "used": 0,
+    "text": "Cooling racks under set trays stop bottoms from sweating into sog."
+   },
+   {
+    "id": "coc-B-201",
+    "used": 0,
+    "text": "Brief chill before slicing holds cream layers sharp in the knife."
+   },
+   {
+    "id": "coc-B-202",
+    "used": 0,
+    "text": "Clean cuts through set coconut desserts need a warmed, wiped blade."
+   },
+   {
+    "id": "coc-B-203",
+    "used": 0,
+    "text": "Warm blade melts the fat slightly; wiped between cuts, slices stay flawless."
+   },
+   {
+    "id": "coc-B-204",
+    "used": 0,
+    "text": "Portion cutters with wire frames score soft set sweets evenly."
+   },
+   {
+    "id": "coc-B-205",
+    "used": 0,
+    "text": "Wire beats blade on sticky sweets — less drag, cleaner faces."
+   },
+   {
+    "id": "coc-B-206",
+    "used": 0,
+    "text": "Sweet trays are scored before cutting so pieces break along the line."
+   },
+   {
+    "id": "coc-B-207",
+    "used": 0,
+    "text": "Scoring depth controls break line; too deep pre-splits the tray."
+   },
+   {
+    "id": "coc-B-208",
+    "used": 0,
+    "text": "Packing set sweets between paper sheets stops surfaces from bonding."
+   },
+   {
+    "id": "coc-B-209",
+    "used": 0,
+    "text": "Non-stick liners spare the classic metal trays' reputation for tearing sweets."
+   },
+   {
+    "id": "coc-B-210",
+    "used": 0,
+    "text": "Coconut ice layers set at different times — top layer spreads cooler."
+   },
+   {
+    "id": "coc-B-211",
+    "used": 0,
+    "text": "Colour layers use natural powders so they set at matching densities."
+   },
+   {
+    "id": "coc-B-212",
+    "used": 0,
+    "text": "Grating frozen coconut yields snow-fine powder that never smears."
+   },
+   {
+    "id": "coc-B-213",
+    "used": 0,
+    "text": "Warm hands melt butter-fats while working — chilled tools prevent it."
+   },
+   {
+    "id": "coc-B-214",
+    "used": 0,
+    "text": "Pastry chefs towel-chill cutters before pressing coconut dough."
+   },
+   {
+    "id": "coc-B-215",
+    "used": 0,
+    "text": "Pressed crumbs hold shape better when the fat stays crystalline."
+   },
+   {
+    "id": "coc-B-216",
+    "used": 0,
+    "text": "Room temperature decides crumb quality more than recipe ratios do."
+   },
+   {
+    "id": "coc-B-217",
+    "used": 0,
+    "text": "Hot kitchens demand faster working windows for coconut pastry."
+   },
+   {
+    "id": "coc-B-218",
+    "used": 0,
+    "text": "Pre-chilled boards keep grated shreds from releasing surface oil."
+   },
+   {
+    "id": "coc-B-219",
+    "used": 0,
+    "text": "Oil release during grating is freshness showing, not a flaw."
+   },
+   {
+    "id": "coc-B-220",
+    "used": 0,
+    "text": "Stale shreds release no oil and toast unevenly — freshness test by feel."
+   },
+   {
+    "id": "coc-B-221",
+    "used": 0,
+    "text": "Toasting tests: pale shreds colour slowly; fresh ones brown in minutes."
+   },
+   {
+    "id": "coc-B-222",
+    "used": 0,
+    "text": "Constant tossing prevents edge scorch during stovetop toasting."
+   },
+   {
+    "id": "coc-B-223",
+    "used": 0,
+    "text": "Oven toasting spreads heat evenly on trays with room between shreds."
+   },
+   {
+    "id": "coc-B-224",
+    "used": 0,
+    "text": "Hot trays keep cooking after removal — pull them a shade early."
+   },
+   {
+    "id": "coc-B-225",
+    "used": 0,
+    "text": "Carryover browning catches many a batch at the last second."
+   },
+   {
+    "id": "coc-B-226",
+    "used": 0,
+    "text": "Spreading cooled toasts on racks stops steam from softening crunch."
+   },
+   {
+    "id": "coc-B-227",
+    "used": 0,
+    "text": "Seal toasting only after full cooling or the steam returns the crunch."
+   },
+   {
+    "id": "coc-B-228",
+    "used": 0,
+    "text": "Oil-roasted shreds brown faster than dry-toasted — watch them closely."
+   },
+   {
+    "id": "coc-B-229",
+    "used": 0,
+    "text": "Salted coconut chips balance sweet-salt through a light brine before roasting."
+   },
+   {
+    "id": "coc-B-230",
+    "used": 0,
+    "text": "Brine roasting also seasons the interior, not just the surface."
+   },
+   {
+    "id": "coc-B-231",
+    "used": 0,
+    "text": "Low-and-slow roasting preserves white colour with milder, nuttier notes."
+   },
+   {
+    "id": "coc-B-232",
+    "used": 0,
+    "text": "High heat browns quickly but risks burnt edges on thin shreds."
+   },
+   {
+    "id": "coc-B-233",
+    "used": 0,
+    "text": "Thin shreds dry faster — cut thickness sets the whole roasting schedule."
+   },
+   {
+    "id": "coc-B-234",
+    "used": 0,
+    "text": "Uniform grating thickness is roasting consistency's real foundation."
+   },
+   {
+    "id": "coc-B-235",
+    "used": 0,
+    "text": "Hand graters make uneven shreds; machines win consistency, hands win texture variety."
+   },
+   {
+    "id": "coc-B-236",
+    "used": 0,
+    "text": "Roasted coconut oil smokes earlier — heat already degraded some of it."
+   },
+   {
+    "id": "coc-B-237",
+    "used": 0,
+    "text": "Double-frying coconut snacks risks oil saturation — single fry suits them better."
+   },
+   {
+    "id": "coc-B-238",
+    "used": 0,
+    "text": "Drain-fried coconut on paper loses too much flavour oil — use racks instead."
+   },
+   {
+    "id": "coc-B-239",
+    "used": 0,
+    "text": "Racks drain excess oil while keeping chips crisp underneath."
+   },
+   {
+    "id": "coc-B-240",
+    "used": 0,
+    "text": "Cooling between batches keeps fryer temperature steady for uniform colour."
+   },
+   {
+    "id": "coc-B-241",
+    "used": 0,
+    "text": "Thermometers tame tropical guesswork — oil at set temperature behaves predictably."
+   },
+   {
+    "id": "coc-B-242",
+    "used": 0,
+    "text": "Cold shreds dropped into hot oil crash the temperature and soak grease."
+   },
+   {
+    "id": "coc-B-243",
+    "used": 0,
+    "text": "Room-temperature ingredients before frying = crisp results after."
+   },
+   {
+    "id": "coc-B-244",
+    "used": 0,
+    "text": "Pressed coconut patties bind through starch gelatinisation, not eggs."
+   },
+   {
+    "id": "coc-B-245",
+    "used": 0,
+    "text": "Soaked rice flour plus grated coconut is the classic patty base."
+   },
+   {
+    "id": "coc-B-246",
+    "used": 0,
+    "text": "Binding tests run in a pan first — if one patty holds, the batch does."
+   },
+   {
+    "id": "coc-B-247",
+    "used": 0,
+    "text": "Excess moisture steams patties soft — squeezing shreds is a mandatory step."
+   },
+   {
+    "id": "coc-B-248",
+    "used": 0,
+    "text": "Cheesecloth squeezing yields the driest shreds for frying."
+   },
+   {
+    "id": "coc-B-249",
+    "used": 0,
+    "text": "The squeezed milk from that step becomes curry base — nothing is wasted."
+   },
+   {
+    "id": "coc-B-250",
+    "used": 0,
+    "text": "Twisting cheesecloth harder extracts cream that whisking alone never reaches."
    }
   ],
   "C": [
    {
-    "id": "coc-C-01",
+    "id": "coc-C-001",
     "used": 0,
     "text": "Thai vendors shave green coconuts into smooth rounds, served ice-cold with a straw straight in."
    },
    {
-    "id": "coc-C-02",
+    "id": "coc-C-002",
     "used": 0,
     "text": "In Kerala, toddy tappers still climb with a rope loop instead of ladders or spikes."
    },
    {
-    "id": "coc-C-03",
+    "id": "coc-C-003",
     "used": 0,
     "text": "Notches cut into the trunk by generations of climbers become the palm's permanent staircase."
    },
    {
-    "id": "coc-C-04",
+    "id": "coc-C-004",
     "used": 0,
     "text": "Sri Lanka's king coconut has an orange shell and is drunk plain rather than cooked with."
    },
    {
-    "id": "coc-C-05",
+    "id": "coc-C-005",
     "used": 0,
     "text": "Caribbean jelly-cutting opens young nuts with one confident machete arc instead of ring scoring."
    },
    {
-    "id": "coc-C-06",
+    "id": "coc-C-006",
     "used": 0,
     "text": "Fermented coconut sap becomes toddy, and distilled further becomes arrack, an old colonial trade spirit."
    },
    {
-    "id": "coc-C-07",
+    "id": "coc-C-007",
     "used": 0,
     "text": "Coir rope spun from the husk once rigged sailing ships before synthetic fiber replaced it."
    },
    {
-    "id": "coc-C-08",
+    "id": "coc-C-008",
     "used": 0,
     "text": "In the Philippines, tender buko meat is scooped into salads and drinks instead of being grated dry."
    },
    {
-    "id": "coc-C-09",
+    "id": "coc-C-009",
     "used": 0,
     "text": "Vietnam's Ben Tre region turns coconut flesh into candy and uses every strand of the husk."
    },
    {
-    "id": "coc-C-10",
+    "id": "coc-C-010",
     "used": 0,
     "text": "Indian vendors sell tender coconut water with a slab of the soft meat floating in the same cup."
    },
    {
-    "id": "coc-C-11",
+    "id": "coc-C-011",
     "used": 0,
     "text": "Brazilian beach sellers drill the soft eye and serve agua de coco straight from the shell."
    },
    {
-    "id": "coc-C-12",
+    "id": "coc-C-012",
     "used": 0,
     "text": "In Java, sugar tapped from the coconut palm has been a standard sweetener long before cane arrived."
+   },
+   {
+    "id": "coc-C-013",
+    "used": 0,
+    "text": "India, Indonesia and the Philippines rotate as the world's top three producers."
+   },
+   {
+    "id": "coc-C-014",
+    "used": 0,
+    "text": "Kerala's coastline is nicknamed coconut country for its endless palm horizon."
+   },
+   {
+    "id": "coc-C-015",
+    "used": 0,
+    "text": "Goan kitchens build entire curries on first-press coconut cream."
+   },
+   {
+    "id": "coc-C-016",
+    "used": 0,
+    "text": "Coastal Karnataka uses roasted coconut masala as its regional signature."
+   },
+   {
+    "id": "coc-C-017",
+    "used": 0,
+    "text": "Tamil Nadu's tender coconut stalls appear every few hundred metres in summer."
+   },
+   {
+    "id": "coc-C-018",
+    "used": 0,
+    "text": "Andhra and Telangana markets sell copra as a standard grocery staple."
+   },
+   {
+    "id": "coc-C-019",
+    "used": 0,
+    "text": "Karnataka's coir towns still hand-tie rope for temple and fishing use."
+   },
+   {
+    "id": "coc-C-020",
+    "used": 0,
+    "text": "Konkan kitchens grate coconut fresh for every single meal of the day."
+   },
+   {
+    "id": "coc-C-021",
+    "used": 0,
+    "text": "Malabar cuisine layers coconut milk in stages, thin first, thick last."
+   },
+   {
+    "id": "coc-C-022",
+    "used": 0,
+    "text": "Coconut oil remains the everyday hair and cooking oil across Kerala homes."
+   },
+   {
+    "id": "coc-C-023",
+    "used": 0,
+    "text": "Kerala's temple offerings almost always include a husked coconut on the leaf plate."
+   },
+   {
+    "id": "coc-C-024",
+    "used": 0,
+    "text": "A broken coconut in Hindu ritual symbolises the ego yielding to the divine."
+   },
+   {
+    "id": "coc-C-025",
+    "used": 0,
+    "text": "Wedding ceremonies across South India crack coconuts for auspicious beginnings."
+   },
+   {
+    "id": "coc-C-026",
+    "used": 0,
+    "text": "Coconut feature in Buddhist offerings across Sri Lanka's temples."
+   },
+   {
+    "id": "coc-C-027",
+    "used": 0,
+    "text": "Sri Lanka's king coconut drinks are sold at roadside stalls island-wide."
+   },
+   {
+    "id": "coc-C-028",
+    "used": 0,
+    "text": "Thailand's coconut milk industry grew with the kingdom's dessert traditions."
+   },
+   {
+    "id": "coc-C-029",
+    "used": 0,
+    "text": "Thai desserts like sticky rice with coconut cream define royal court cuisine."
+   },
+   {
+    "id": "coc-C-030",
+    "used": 0,
+    "text": "Malaysia's kuih family leans on coconut cream for half its texture."
+   },
+   {
+    "id": "coc-C-031",
+    "used": 0,
+    "text": "Indonesian rendang cannot exist without thick coconut milk reduction."
+   },
+   {
+    "id": "coc-C-032",
+    "used": 0,
+    "text": "Rendang's long dry simmer is really coconut fat doing the cooking."
+   },
+   {
+    "id": "coc-C-033",
+    "used": 0,
+    "text": "Indonesian villages tap palm sugar long before cane reached the archipelago."
+   },
+   {
+    "id": "coc-C-034",
+    "used": 0,
+    "text": "Bali's temple offerings carry woven palm-leaf baskets edged with coconut."
+   },
+   {
+    "id": "coc-C-035",
+    "used": 0,
+    "text": "Javanese coconut sugar makers rise before dawn to climb and tap."
+   },
+   {
+    "id": "coc-C-036",
+    "used": 0,
+    "text": "Filipino cuisine uses coconut vinegar as its everyday acid."
+   },
+   {
+    "id": "coc-C-037",
+    "used": 0,
+    "text": "Bicol Express runs on chilli and thick coconut cream together."
+   },
+   {
+    "id": "coc-C-038",
+    "used": 0,
+    "text": "Filipino buko pie became a provincial airport-souvenir institution."
+   },
+   {
+    "id": "coc-C-039",
+    "used": 0,
+    "text": "Philippine coconut levy politics shaped national elections for a generation."
+   },
+   {
+    "id": "coc-C-040",
+    "used": 0,
+    "text": "Vietnam's Ben Tre province calls itself the coconut kingdom of the Mekong."
+   },
+   {
+    "id": "coc-C-041",
+    "used": 0,
+    "text": "Vietnamese coconut candy workshops boil cream in open pans along canals."
+   },
+   {
+    "id": "coc-C-042",
+    "used": 0,
+    "text": "Cà ri gà in Vietnam finishes with coconut milk like its neighbours' curries."
+   },
+   {
+    "id": "coc-C-043",
+    "used": 0,
+    "text": "Laos and Cambodia both simmer meats in first-press coconut cream."
+   },
+   {
+    "id": "coc-C-044",
+    "used": 0,
+    "text": "Myanmar's mohinga soup carries a whisper of coconut oil on top."
+   },
+   {
+    "id": "coc-C-045",
+    "used": 0,
+    "text": "Bangladeshi coastal belts grow coconuts where the Ganges meets the sea."
+   },
+   {
+    "id": "coc-C-046",
+    "used": 0,
+    "text": "Pakistani coastal Sindh keeps small coconut groves near Karachi's markets."
+   },
+   {
+    "id": "coc-C-047",
+    "used": 0,
+    "text": "Sri Lankan pol sambol is grated coconut, chilli and lime, nothing more."
+   },
+   {
+    "id": "coc-C-048",
+    "used": 0,
+    "text": "Maldives exports copra historically — coconut once underwrote the island economy."
+   },
+   {
+    "id": "coc-C-049",
+    "used": 0,
+    "text": "Maldivian hodhu fish curry swims in coconut milk."
+   },
+   {
+    "id": "coc-C-050",
+    "used": 0,
+    "text": "Fijian lovo earth-oven cooking wraps fish in banana leaf over coconut fire."
+   },
+   {
+    "id": "coc-C-051",
+    "used": 0,
+    "text": "Samoan palusami bakes coconut cream inside taro leaves in the umu."
+   },
+   {
+    "id": "coc-C-052",
+    "used": 0,
+    "text": "Tongan umu feasts rely on coconut cream in nearly every dish."
+   },
+   {
+    "id": "coc-C-053",
+    "used": 0,
+    "text": "Hawaiian haupia sets coconut milk into firm white blocks for dessert."
+   },
+   {
+    "id": "coc-C-054",
+    "used": 0,
+    "text": "Hawaiian kukui nut and coconut lei traditions predate plantation days."
+   },
+   {
+    "id": "coc-C-055",
+    "used": 0,
+    "text": "Polynesian voyaging canoes carried coconuts as living provisions across oceans."
+   },
+   {
+    "id": "coc-C-056",
+    "used": 0,
+    "text": "Tuvalu's atoll economy still circles the coconut palm end to end."
+   },
+   {
+    "id": "coc-C-057",
+    "used": 0,
+    "text": "Kiribati copra exports fund entire municipal budgets."
+   },
+   {
+    "id": "coc-C-058",
+    "used": 0,
+    "text": "Solomon Islanders weave coconut fronds for roof thatch on family homes."
+   },
+   {
+    "id": "coc-C-059",
+    "used": 0,
+    "text": "Papua New Guinean sago and coconut gardens feed coastal villages together."
+   },
+   {
+    "id": "coc-C-060",
+    "used": 0,
+    "text": "Caribbean rum's history is inseparable from coconut plantations and slave labour."
+   },
+   {
+    "id": "coc-C-061",
+    "used": 0,
+    "text": "Trinidadian coconut chutney tops doubles street food daily."
+   },
+   {
+    "id": "coc-C-062",
+    "used": 0,
+    "text": "Jamaican coconut drops are spiced sugar cakes boiled with ginger."
+   },
+   {
+    "id": "coc-C-063",
+    "used": 0,
+    "text": "Barbados coconut bread is a Sunday tea-table standard."
+   },
+   {
+    "id": "coc-C-064",
+    "used": 0,
+    "text": "Cuban cocos piragua carts shave coconut ice under colonial arcades."
+   },
+   {
+    "id": "coc-C-065",
+    "used": 0,
+    "text": "Puerto Rican tembleque sets coconut pudding with cinnamon snow."
+   },
+   {
+    "id": "coc-C-066",
+    "used": 0,
+    "text": "Dominican piña colada's cream layer is coconut, not dairy."
+   },
+   {
+    "id": "coc-C-067",
+    "used": 0,
+    "text": "Brazilian quindim glazes egg-yolk custard with shredded coconut."
+   },
+   {
+    "id": "coc-C-068",
+    "used": 0,
+    "text": "Brazilian coco da Bahia markets sell every coconut form at once."
+   },
+   {
+    "id": "coc-C-069",
+    "used": 0,
+    "text": "Mexican cocada cookies press sweetened coconut into baked discs."
+   },
+   {
+    "id": "coc-C-070",
+    "used": 0,
+    "text": "Mexican horchata variations include coconut in coastal states."
+   },
+   {
+    "id": "coc-C-071",
+    "used": 0,
+    "text": "Venezuelan tequeños de coco turn coconut into savoury party sticks."
+   },
+   {
+    "id": "coc-C-072",
+    "used": 0,
+    "text": "Colombian Caribbean coasts cook rice with coconut milk instead of stock."
+   },
+   {
+    "id": "coc-C-073",
+    "used": 0,
+    "text": "Panamanian rice and coconut milk define the isthmus's coastal palate."
+   },
+   {
+    "id": "coc-C-074",
+    "used": 0,
+    "text": "Nigerian coconut rice mirrors the same coastal logic across the Atlantic."
+   },
+   {
+    "id": "coc-C-075",
+    "used": 0,
+    "text": "Ghanaian coconut candies boil street-side in enamel pots."
+   },
+   {
+    "id": "coc-C-076",
+    "used": 0,
+    "text": "Ivorian coconut grating circles are women's cooperative work groups."
+   },
+   {
+    "id": "coc-C-077",
+    "used": 0,
+    "text": "Tanzanian coconut milk thickens coastal pilau rice."
+   },
+   {
+    "id": "coc-C-078",
+    "used": 0,
+    "text": "Kenyan Lamu archipelago bakes with coconut milk in Swahili kitchens."
+   },
+   {
+    "id": "coc-C-079",
+    "used": 0,
+    "text": "Mozambican coconut sauces dress cassava leaves by the coast."
+   },
+   {
+    "id": "coc-C-080",
+    "used": 0,
+    "text": "Madagascar vanilla and coconut desserts pair on the same export ships."
+   },
+   {
+    "id": "coc-C-081",
+    "used": 0,
+    "text": "Seychelles coconut crab reserves protect the world's largest land crustacean."
+   },
+   {
+    "id": "coc-C-082",
+    "used": 0,
+    "text": "Mauritius coconut gateau graces colonial-era bakery windows."
+   },
+   {
+    "id": "coc-C-083",
+    "used": 0,
+    "text": "Cape Verdean coconut sweets arrived with Portuguese trade winds."
+   },
+   {
+    "id": "coc-C-084",
+    "used": 0,
+    "text": "Coconut features in West African juju rituals as protection charm."
+   },
+   {
+    "id": "coc-C-085",
+    "used": 0,
+    "text": "Nigerian weddings distribute coconuts as symbols of fertility and blessing."
+   },
+   {
+    "id": "coc-C-086",
+    "used": 0,
+    "text": "Ghanaian naming ceremonies sometimes include cracked coconut for luck."
+   },
+   {
+    "id": "coc-C-087",
+    "used": 0,
+    "text": "Yoruba shrines carry coconuts among standard offering lists."
+   },
+   {
+    "id": "coc-C-088",
+    "used": 0,
+    "text": "Brazilian Candomblé offerings place coconut at the feet of Oshun."
+   },
+   {
+    "id": "coc-C-089",
+    "used": 0,
+    "text": "Cuban Santería ritual uses coconut in the same deity's honour."
+   },
+   {
+    "id": "coc-C-090",
+    "used": 0,
+    "text": "Hindu pujas across Bali mirror Indian coconut symbolism exactly."
+   },
+   {
+    "id": "coc-C-091",
+    "used": 0,
+    "text": "Thai monks receive coconut water as routine morning alms."
+   },
+   {
+    "id": "coc-C-092",
+    "used": 0,
+    "text": "Buddhist temples in Myanmar offer whole coconuts on festival days."
+   },
+   {
+    "id": "coc-C-093",
+    "used": 0,
+    "text": "Filipino fiesta tables always include a coconut dessert regardless of region."
+   },
+   {
+    "id": "coc-C-094",
+    "used": 0,
+    "text": "Thai Loy Krathong floats sometimes use coconut-shell cups."
+   },
+   {
+    "id": "coc-C-095",
+    "used": 0,
+    "text": "Indonesian tapai in coconut shells ferments rice into mild palm alcohol."
+   },
+   {
+    "id": "coc-C-096",
+    "used": 0,
+    "text": "Polynesian kava ceremonies sit under coconut palms by tradition."
+   },
+   {
+    "id": "coc-C-097",
+    "used": 0,
+    "text": "Samoan sua — coconut cream pudding — closes feasts island-wide."
+   },
+   {
+    "id": "coc-C-098",
+    "used": 0,
+    "text": "Fijian yaqona drinking follows coconut-shell cups called bilo."
+   },
+   {
+    "id": "coc-C-099",
+    "used": 0,
+    "text": "Pacific Island currency designs frequently feature coconut palms."
+   },
+   {
+    "id": "coc-C-100",
+    "used": 0,
+    "text": "Samoa's national flag stars sit above a southern cross on shield — the palm fills its landscape identity."
+   },
+   {
+    "id": "coc-C-101",
+    "used": 0,
+    "text": "Guinea-Bissau's coat of arms carries a coconut palm."
+   },
+   {
+    "id": "coc-C-102",
+    "used": 0,
+    "text": "São Tomé's plantation history grew on cocoa and coconut together."
+   },
+   {
+    "id": "coc-C-103",
+    "used": 0,
+    "text": "Colonial botanic gardens shipped coconut seedlings worldwide as imperial assets."
+   },
+   {
+    "id": "coc-C-104",
+    "used": 0,
+    "text": "Dutch East India Company moved coconut varieties across its spice routes."
+   },
+   {
+    "id": "coc-C-105",
+    "used": 0,
+    "text": "Portuguese sailors spread coconut palms along the African coast settlements."
+   },
+   {
+    "id": "coc-C-106",
+    "used": 0,
+    "text": "Arab dhows carried copra and coconut oil across the Indian Ocean for centuries."
+   },
+   {
+    "id": "coc-C-107",
+    "used": 0,
+    "text": "Manila-Acapulco galleons traded coconut products between Asia and Mexico."
+   },
+   {
+    "id": "coc-C-108",
+    "used": 0,
+    "text": "Eighteenth-century British trade ships loaded coir rope for the Royal Navy."
+   },
+   {
+    "id": "coc-C-109",
+    "used": 0,
+    "text": "Coir fibre commanded ports from Kochi to London dockyards."
+   },
+   {
+    "id": "coc-C-110",
+    "used": 0,
+    "text": "Kochi's coir industry once employed tens of thousands of women weavers."
+   },
+   {
+    "id": "coc-C-111",
+    "used": 0,
+    "text": "Coir weaving centres in Alappuzha still run hand looms today."
+   },
+   {
+    "id": "coc-C-112",
+    "used": 0,
+    "text": "Kerala's coir cooperatives evolved from colonial-era estate structures."
+   },
+   {
+    "id": "coc-C-113",
+    "used": 0,
+    "text": "Pondicherry's French colonial cooks used coconut cream in local curry hybrids."
+   },
+   {
+    "id": "coc-C-114",
+    "used": 0,
+    "text": "Goa's Portuguese kitchens adopted coconut before chilli arrived from the Americas."
+   },
+   {
+    "id": "coc-C-115",
+    "used": 0,
+    "text": "Chilli and coconut met in Indian kitchens only after the Columbian exchange."
+   },
+   {
+    "id": "coc-C-116",
+    "used": 0,
+    "text": "Ayurvedic texts classify coconut as cooling for the body's temperament."
+   },
+   {
+    "id": "coc-C-117",
+    "used": 0,
+    "text": "Siddha medicine in Tamil Nadu long used coconut oil as a base."
+   },
+   {
+    "id": "coc-C-118",
+    "used": 0,
+    "text": "Unani formulations employ coconut oil as carrier for topical remedies."
+   },
+   {
+    "id": "coc-C-119",
+    "used": 0,
+    "text": "Traditional midwives in Kerala massage newborns with mild coconut oil."
+   },
+   {
+    "id": "coc-C-120",
+    "used": 0,
+    "text": "South Indian oil pools at temples offer free coconut-oil hair anointing."
+   },
+   {
+    "id": "coc-C-121",
+    "used": 0,
+    "text": "Kerala's temple festivals light thousands of coconut-oil lamps at dusk."
+   },
+   {
+    "id": "coc-C-122",
+    "used": 0,
+    "text": "Deepavali in South India pairs oil lamps with coconut-sweet offerings."
+   },
+   {
+    "id": "coc-C-123",
+    "used": 0,
+    "text": "Pongal harvest festivals grate coconut fresh into the offering pot."
+   },
+   {
+    "id": "coc-C-124",
+    "used": 0,
+    "text": "Onam sadya serves multiple coconut-based curries on the banana leaf."
+   },
+   {
+    "id": "coc-C-125",
+    "used": 0,
+    "text": "Christmas in Goa means bebinca layers rich with coconut milk."
+   },
+   {
+    "id": "coc-C-126",
+    "used": 0,
+    "text": "Sri Lankan kokis are deep-fried coconut-milk rosettes for New Year."
+   },
+   {
+    "id": "coc-C-127",
+    "used": 0,
+    "text": "Sri Lankan avurudu sweets nearly all begin with coconut milk."
+   },
+   {
+    "id": "coc-C-128",
+    "used": 0,
+    "text": "Thai Songkran desserts float coconut cream over shaved ice."
+   },
+   {
+    "id": "coc-C-129",
+    "used": 0,
+    "text": "Vietnamese Tết trays include coconut sweets for prosperity symbolism."
+   },
+   {
+    "id": "coc-C-130",
+    "used": 0,
+    "text": "Chinese New Year in Southeast Asia carries coconut candy gift boxes."
+   },
+   {
+    "id": "coc-C-131",
+    "used": 0,
+    "text": "Chinese opera stages in coastal Guangdong once sold coconut sweets at interval."
+   },
+   {
+    "id": "coc-C-132",
+    "used": 0,
+    "text": "Persian-influenced Mughlai cuisine reached coconut through Deccan coastal trade."
+   },
+   {
+    "id": "coc-C-133",
+    "used": 0,
+    "text": "Hyderabadi cuisine uses copra in some kormas — dry coconut, not cream."
+   },
+   {
+    "id": "coc-C-134",
+    "used": 0,
+    "text": "Awadhi kitchens adopted dried coconut powders from trade intermediaries."
+   },
+   {
+    "id": "coc-C-135",
+    "used": 0,
+    "text": "Gujarati farsan snacks include copra in dry chutney powders."
+   },
+   {
+    "id": "coc-C-136",
+    "used": 0,
+    "text": "Rajasthani cooking uses dry coconut since fresh fruit never reached the desert."
+   },
+   {
+    "id": "coc-C-137",
+    "used": 0,
+    "text": "Marathi goda masala blends roasted coconut with warm spices."
+   },
+   {
+    "id": "coc-C-138",
+    "used": 0,
+    "text": "Malvani cuisine's roasted coconut base defines its fish curries."
+   },
+   {
+    "id": "coc-C-139",
+    "used": 0,
+    "text": "Chettinad masalas grind coconut with poppy seeds for body."
+   },
+   {
+    "id": "coc-C-140",
+    "used": 0,
+    "text": "Bengali chingri malai curry carries coconut cream into eastern India."
+   },
+   {
+    "id": "coc-C-141",
+    "used": 0,
+    "text": "Odisha's temple kitchens at Puri cook with coconut extensively."
+   },
+   {
+    "id": "coc-C-142",
+    "used": 0,
+    "text": "Andhra's coastal Andhra fish stews simmer in coconut milk."
+   },
+   {
+    "id": "coc-C-143",
+    "used": 0,
+    "text": "Kerala's fish moilee poaches gently in thin coconut milk."
+   },
+   {
+    "id": "coc-C-144",
+    "used": 0,
+    "text": "Kerala's beef fry finishes with a scrape of fresh coconut."
+   },
+   {
+    "id": "coc-C-145",
+    "used": 0,
+    "text": "Kerala parotta stands serve beef curry with coconut-based gravy statewide."
+   },
+   {
+    "id": "coc-C-146",
+    "used": 0,
+    "text": "Mangalorean bunt kitchens own coconut-ghee dessert traditions."
+   },
+   {
+    "id": "coc-C-147",
+    "used": 0,
+    "text": "Mangalorean kori gassi builds its paste on roasted coconut."
+   },
+   {
+    "id": "coc-C-148",
+    "used": 0,
+    "text": "Coorg's pandi curry uses coconut oil as its finishing fat."
+   },
+   {
+    "id": "coc-C-149",
+    "used": 0,
+    "text": "Coorgi cuisine pickles in coconut oil rather than mustard oil."
+   },
+   {
+    "id": "coc-C-150",
+    "used": 0,
+    "text": "Konkani gassi pastes rest on fresh coconut and tamarind both."
+   },
+   {
+    "id": "coc-C-151",
+    "used": 0,
+    "text": "Sindhi kadhi mirrors coastal coconut adaptations in the far northwest."
+   },
+   {
+    "id": "coc-C-152",
+    "used": 0,
+    "text": "Parsi coconut barfi still graces Bombay wedding tables."
+   },
+   {
+    "id": "coc-C-153",
+    "used": 0,
+    "text": "Parsi dhansak history links to Gujarati coastal coconut trade routes."
+   },
+   {
+    "id": "coc-C-154",
+    "used": 0,
+    "text": "Bombay's street bhelpuri vendors offer dry coconut chutney on request."
+   },
+   {
+    "id": "coc-C-155",
+    "used": 0,
+    "text": "Kolkata's Bengali sweet shops stock coconut laddus year-round."
+   },
+   {
+    "id": "coc-C-156",
+    "used": 0,
+    "text": "Delhi's halwai counters sell copra laddus as winter standard."
+   },
+   {
+    "id": "coc-C-157",
+    "used": 0,
+    "text": "Rajasthani mewa laddus bind dry coconut with ghee and jaggery."
+   },
+   {
+    "id": "coc-C-158",
+    "used": 0,
+    "text": "Uttar Pradesh's peda traditions sometimes fold in desiccated coconut."
+   },
+   {
+    "id": "coc-C-159",
+    "used": 0,
+    "text": "Gujarati shrikhand variations top with tender coconut in coastal districts."
+   },
+   {
+    "id": "coc-C-160",
+    "used": 0,
+    "text": "Maharashtrian kharvas uses colostrum, but coconut versions suit fasting days."
+   },
+   {
+    "id": "coc-C-161",
+    "used": 0,
+    "text": "Indian railway stalls sell tender coconut water at every coastal halt."
+   },
+   {
+    "id": "coc-C-162",
+    "used": 0,
+    "text": "Hill stations charge premium prices for coconuts trucked up from plains."
+   },
+   {
+    "id": "coc-C-163",
+    "used": 0,
+    "text": "Indian coconut statistics track millions of smallholding farmers, not plantations alone."
+   },
+   {
+    "id": "coc-C-164",
+    "used": 0,
+    "text": "Kerala's smallholder pattern contrasts with Indonesia's estate model."
+   },
+   {
+    "id": "coc-C-165",
+    "used": 0,
+    "text": "Indonesia's coconut smallholders sell through village middlemen called pengepul."
+   },
+   {
+    "id": "coc-C-166",
+    "used": 0,
+    "text": "Philippine coconut levy fund history ended in Supreme Court battles."
+   },
+   {
+    "id": "coc-C-167",
+    "used": 0,
+    "text": "Husking cooperatives in the Philippines pool mechanical de-husker capacity."
+   },
+   {
+    "id": "coc-C-168",
+    "used": 0,
+    "text": "Thai coconut farmers face mealybug plagues that reshaped national supply."
+   },
+   {
+    "id": "coc-C-169",
+    "used": 0,
+    "text": "Oil palm displaced coconut across Malaysia through the late twentieth century."
+   },
+   {
+    "id": "coc-C-170",
+    "used": 0,
+    "text": "Indonesia's palm-oil expansion pushed coconut to smaller eastern islands."
+   },
+   {
+    "id": "coc-C-171",
+    "used": 0,
+    "text": "Sri Lanka's research institutes breed tall varieties for coconut oil yield."
+   },
+   {
+    "id": "coc-C-172",
+    "used": 0,
+    "text": "India's coconut development board funds replanting of senile palms."
+   },
+   {
+    "id": "coc-C-173",
+    "used": 0,
+    "text": "Palm replanting subsidies target the sixty-year age cliff in old groves."
+   },
+   {
+    "id": "coc-C-174",
+    "used": 0,
+    "text": "Senile groves yield a fraction — replanting economics drive national policy."
+   },
+   {
+    "id": "coc-C-175",
+    "used": 0,
+    "text": "Germination protocols in national nurseries standardise seedling quality."
+   },
+   {
+    "id": "coc-C-176",
+    "used": 0,
+    "text": "Seed gardens maintain certified varieties for farmer distribution."
+   },
+   {
+    "id": "coc-C-177",
+    "used": 0,
+    "text": "Farmers choose dwarfs for garden scale, talls for copra economics."
+   },
+   {
+    "id": "coc-C-178",
+    "used": 0,
+    "text": "Garden coconuts feed households; estate coconuts feed export contracts."
+   },
+   {
+    "id": "coc-C-179",
+    "used": 0,
+    "text": "Home groves seldom sell — they underwrite daily family nutrition instead."
+   },
+   {
+    "id": "coc-C-180",
+    "used": 0,
+    "text": "Coconut laddus at weddings double as edible return gifts in South India."
+   },
+   {
+    "id": "coc-C-181",
+    "used": 0,
+    "text": "Catering orders count coconuts by the hundred for big weddings."
+   },
+   {
+    "id": "coc-C-182",
+    "used": 0,
+    "text": "Temple prasadam lines distribute coconut sweets to queues of devotees."
+   },
+   {
+    "id": "coc-C-183",
+    "used": 0,
+    "text": "Festival sweet stalls sell coconut burfi fastest of all varieties."
+   },
+   {
+    "id": "coc-C-184",
+    "used": 0,
+    "text": "Chettinad mansion kitchens still store copra in ceramic jars for years."
+   },
+   {
+    "id": "coc-C-185",
+    "used": 0,
+    "text": "Heirloom coconut recipes survive in temple cookbook pamphlets."
+   },
+   {
+    "id": "coc-C-186",
+    "used": 0,
+    "text": "Grandmother measurements — handful, fistful — encode ratios no scale captures."
+   },
+   {
+    "id": "coc-C-187",
+    "used": 0,
+    "text": "Oral recipe transmission survives alongside printed community cookbooks now."
+   },
+   {
+    "id": "coc-C-188",
+    "used": 0,
+    "text": "Community recipe archives digitise grandmother-era coconut dishes for diaspora."
+   },
+   {
+    "id": "coc-C-189",
+    "used": 0,
+    "text": "Diaspora grocers stock young coconut meat imported frozen for homesick cooks."
+   },
+   {
+    "id": "coc-C-190",
+    "used": 0,
+    "text": "Thai grocery chains abroad sell frozen coconut cream for expat curries."
+   },
+   {
+    "id": "coc-C-191",
+    "used": 0,
+    "text": "Caribbean carnival sweets still centre coconut drops and sugar cake."
+   },
+   {
+    "id": "coc-C-192",
+    "used": 0,
+    "text": "Carnival season spikes coconut demand weeks ahead of every parade."
+   },
+   {
+    "id": "coc-C-193",
+    "used": 0,
+    "text": "Christmas pudding recipes in Australia replace suet with coconut readily."
+   },
+   {
+    "id": "coc-C-194",
+    "used": 0,
+    "text": "Australian lamingtons define an entire national cake in coconut crumb."
+   },
+   {
+    "id": "coc-C-195",
+    "used": 0,
+    "text": "New Zealand haupia-style puddings echo Polynesian neighbours at potlucks."
+   },
+   {
+    "id": "coc-C-196",
+    "used": 0,
+    "text": "British colonial tea rooms served coconut ice as empire confectionery."
+   },
+   {
+    "id": "coc-C-197",
+    "used": 0,
+    "text": "Coconut ice — pink-and-white fudge rolled in desiccated coconut — persists in seaside towns."
+   },
+   {
+    "id": "coc-C-198",
+    "used": 0,
+    "text": "Victorian-era coconut macaroons arrived via colonial sugar trade wealth."
+   },
+   {
+    "id": "coc-C-199",
+    "used": 0,
+    "text": "American coconut cream pies built reputation through mid-century diner menus."
+   },
+   {
+    "id": "coc-C-200",
+    "used": 0,
+    "text": "Toasted coconut on American birthday cakes became a post-war norm."
+   },
+   {
+    "id": "coc-C-201",
+    "used": 0,
+    "text": "Hawaiian plate lunches pair mac salad with coconut-rich sides."
+   },
+   {
+    "id": "coc-C-202",
+    "used": 0,
+    "text": "Hawaiian poi and haupia pair at lū'au tables island-wide."
+   },
+   {
+    "id": "coc-C-203",
+    "used": 0,
+    "text": "Tongan pig-roast feasts finish with coconut cream desserts."
+   },
+   {
+    "id": "coc-C-204",
+    "used": 0,
+    "text": "Fijian raketi — coconut sweets — wrap celebration gift tables."
+   },
+   {
+    "id": "coc-C-205",
+    "used": 0,
+    "text": "Samoan puligi — coconut candy — cooks in open pots at fetes."
+   },
+   {
+    "id": "coc-C-206",
+    "used": 0,
+    "text": "Marshallese coconut bread bakes in repurposed oil drums as ovens."
+   },
+   {
+    "id": "coc-C-207",
+    "used": 0,
+    "text": "Kiribati woven coconut-leaf mats serve as both seating and gift currency."
+   },
+   {
+    "id": "coc-C-208",
+    "used": 0,
+    "text": "Papua New Guinean trade stores stock copra as cash crop cash-in."
+   },
+   {
+    "id": "coc-C-209",
+    "used": 0,
+    "text": "Solomon Islands copra remains a top rural export earner."
+   },
+   {
+    "id": "coc-C-210",
+    "used": 0,
+    "text": "Vanuatu's yacht stops buy coconut bread from harbour bakeries."
+   },
+   {
+    "id": "coc-C-211",
+    "used": 0,
+    "text": "New Caledonian French pastry absorbs coconut creams into island tartes."
+   },
+   {
+    "id": "coc-C-212",
+    "used": 0,
+    "text": "Mauritian gateau coco pairs with rum-filled afternoon teas."
+   },
+   {
+    "id": "coc-C-213",
+    "used": 0,
+    "text": "Maldives' short eats — gulha and bajiya — often hide coconut filling."
+   },
+   {
+    "id": "coc-C-214",
+    "used": 0,
+    "text": "Sri Lankan love cake carries cashew and coconut into wedding boxes."
+   },
+   {
+    "id": "coc-C-215",
+    "used": 0,
+    "text": "Indian Ocean trade winds carried both the fruit and its recipes."
+   },
+   {
+    "id": "coc-C-216",
+    "used": 0,
+    "text": "Spice Islands traders mixed coconut cookings with clove and nutmeg heat."
+   },
+   {
+    "id": "coc-C-217",
+    "used": 0,
+    "text": "Manila's coconut sweet vendors once called out in Spanish street cries."
+   },
+   {
+    "id": "coc-C-218",
+    "used": 0,
+    "text": "Bangkok's coconut ice cream carts still push wooden carts by hand."
+   },
+   {
+    "id": "coc-C-219",
+    "used": 0,
+    "text": "Hanoi's coconut iced coffee layered cream over robusta as a modern street trend."
+   },
+   {
+    "id": "coc-C-220",
+    "used": 0,
+    "text": "Saigon coconut shakes blend frozen meat with syrup at market stalls."
+   },
+   {
+    "id": "coc-C-221",
+    "used": 0,
+    "text": "Jakarta's es kelapa muda stalls serve young coconut chilled with spoon."
+   },
+   {
+    "id": "coc-C-222",
+    "used": 0,
+    "text": "Manila's buko juice vendors slice tops with one machete swing."
+   },
+   {
+    "id": "coc-C-223",
+    "used": 0,
+    "text": "Bangkok's coconut pancake — khanom bueang — fills thin crepes with cream."
+   },
+   {
+    "id": "coc-C-224",
+    "used": 0,
+    "text": "Penang's coconut tart tops a colonial-era bakery shelf."
+   },
+   {
+    "id": "coc-C-225",
+    "used": 0,
+    "text": "Singapore's kaya toast breakfasts include coconut jam spread daily."
+   },
+   {
+    "id": "coc-C-226",
+    "used": 0,
+    "text": "Kaya — coconut-egg jam — belongs to Hainanese kopitiam tradition."
+   },
+   {
+    "id": "coc-C-227",
+    "used": 0,
+    "text": "Hainanese chefs carried coconut jam-making across Southeast Asian port cities."
+   },
+   {
+    "id": "coc-C-228",
+    "used": 0,
+    "text": "Macau's coconut puddle desserts echo Portuguese custard traditions."
+   },
+   {
+    "id": "coc-C-229",
+    "used": 0,
+    "text": "Hong Kong's coconut milk desserts ride dim sum trolley culture."
+   },
+   {
+    "id": "coc-C-230",
+    "used": 0,
+    "text": "Shanghai coconut buns mark the ingredient's northern Chinese arrival."
+   },
+   {
+    "id": "coc-C-231",
+    "used": 0,
+    "text": "Japanese coco pan — sweet coconut buns — fill convenience-store shelves."
+   },
+   {
+    "id": "coc-C-232",
+    "used": 0,
+    "text": "Korean coconut milk latte trend swept café menus recently."
+   },
+   {
+    "id": "coc-C-233",
+    "used": 0,
+    "text": "Middle Eastern baklava variations layer coconut flakes into modern versions."
+   },
+   {
+    "id": "coc-C-234",
+    "used": 0,
+    "text": "Turkish delight producers coat coconut-dusted varieties for export."
+   },
+   {
+    "id": "coc-C-235",
+    "used": 0,
+    "text": "Gulf supermarkets stock coconut milk for South Asian expat cooking en masse."
+   },
+   {
+    "id": "coc-C-236",
+    "used": 0,
+    "text": "Dubai's Filipino restaurants serve buko pandan daily."
+   },
+   {
+    "id": "coc-C-237",
+    "used": 0,
+    "text": "London's Brick Lane curry houses sell coconut laddus alongside biryani."
+   },
+   {
+    "id": "coc-C-238",
+    "used": 0,
+    "text": "Toronto's Filipino bakeries sell ube-coconut cakes to diaspora families."
+   },
+   {
+    "id": "coc-C-239",
+    "used": 0,
+    "text": "San Francisco's coconut ice cream scoops anchor Mission district paletas culture."
+   },
+   {
+    "id": "coc-C-240",
+    "used": 0,
+    "text": "Houston's West African markets sell whole dried coconuts for stew bases."
+   },
+   {
+    "id": "coc-C-241",
+    "used": 0,
+    "text": "New York's Jamaican pastry shops sell coconut drops year-round."
+   },
+   {
+    "id": "coc-C-242",
+    "used": 0,
+    "text": "Parisian pâtisseries now fold coconut into macaron shells regularly."
+   },
+   {
+    "id": "coc-C-243",
+    "used": 0,
+    "text": "Berlin's vegan cafés lean on coconut cream for cheese alternatives."
+   },
+   {
+    "id": "coc-C-244",
+    "used": 0,
+    "text": "Amsterdam's Surinamese roti shops pour coconut sauce over potatoes."
+   },
+   {
+    "id": "coc-C-245",
+    "used": 0,
+    "text": "Caribbean diaspora sweets carry coconut memory across ocean distances."
+   },
+   {
+    "id": "coc-C-246",
+    "used": 0,
+    "text": "Globalisation did not erase regional coconut styles — it relocated them."
+   },
+   {
+    "id": "coc-C-247",
+    "used": 0,
+    "text": "The same fruit tastes different because each culture kept its own technique."
+   },
+   {
+    "id": "coc-C-248",
+    "used": 0,
+    "text": "Coconut dishes are really local histories you can eat."
+   },
+   {
+    "id": "coc-C-249",
+    "used": 0,
+    "text": "Trade routes wrote the cookbook before any author did."
+   },
+   {
+    "id": "coc-C-250",
+    "used": 0,
+    "text": "Where palms grew, kitchens adapted; where they did not, imports filled in."
    }
   ],
   "D": [
    {
-    "id": "coc-D-01",
+    "id": "coc-D-001",
     "used": 0,
     "text": "Shake a young nut by your ear — a loud slosh means more water, a muted feel means more meat."
    },
    {
-    "id": "coc-D-02",
+    "id": "coc-D-002",
     "used": 0,
     "text": "Heavier nuts for their size hold more water; the lighter ones have set more flesh inside."
    },
    {
-    "id": "coc-D-03",
+    "id": "coc-D-003",
     "used": 0,
     "text": "Coconut milk splits when simmered too long — the plant proteins coalesce and release their fat."
    },
    {
-    "id": "coc-D-04",
+    "id": "coc-D-004",
     "used": 0,
     "text": "Toasting grated coconut browns its natural sugars and deepens the aroma within a couple of minutes."
    },
    {
-    "id": "coc-D-05",
+    "id": "coc-D-005",
     "used": 0,
     "text": "Traditional copra is just sun-dried coconut meat, pressed later for the oil."
    },
    {
-    "id": "coc-D-06",
+    "id": "coc-D-006",
     "used": 0,
     "text": "Coconut water oxidizes quickly — the clearer and colder it is, the cleaner it tastes."
    },
    {
-    "id": "coc-D-07",
+    "id": "coc-D-007",
     "used": 0,
     "text": "Coconut oil stays solid below about 25 degrees because over ninety percent of it is saturated fat."
    },
    {
-    "id": "coc-D-08",
+    "id": "coc-D-008",
     "used": 0,
     "text": "Freezing coconut before grating keeps the oils from smearing — it powders instead of clumping."
    },
    {
-    "id": "coc-D-09",
+    "id": "coc-D-009",
     "used": 0,
     "text": "Coconut water itself can set coconut milk into curds, the same acid-set principle as lemon cheese."
    },
    {
-    "id": "coc-D-10",
+    "id": "coc-D-010",
     "used": 0,
     "text": "A pinch of salt in coconut dessert suppresses bitterness, so the natural sugar reads even sweeter."
    },
    {
-    "id": "coc-D-11",
+    "id": "coc-D-011",
     "used": 0,
     "text": "A minute in the microwave makes the meat shrink and pop out of the shell in clean pieces."
    },
    {
-    "id": "coc-D-12",
+    "id": "coc-D-012",
     "used": 0,
     "text": "Cold dulls aroma, so coconut desserts taste richer slightly cooled than straight from the fridge."
+   },
+   {
+    "id": "coc-D-013",
+    "used": 0,
+    "text": "Choosing a drinking nut starts with shaking it — the slosh tells the whole story."
+   },
+   {
+    "id": "coc-D-014",
+    "used": 0,
+    "text": "Loud slosh inside means a young nut heavy with water; muted means set meat."
+   },
+   {
+    "id": "coc-D-015",
+    "used": 0,
+    "text": "Heavier nuts for their size hold more water — weigh two in your palm."
+   },
+   {
+    "id": "coc-D-016",
+    "used": 0,
+    "text": "Firm pressure on the soft eye should meet gentle give, not rock hardness."
+   },
+   {
+    "id": "coc-D-017",
+    "used": 0,
+    "text": "A rock-hard soft eye means the nut sat too long and dried inside."
+   },
+   {
+    "id": "coc-D-018",
+    "used": 0,
+    "text": "Grey or mouldy patches around the eyes are an instant rejection."
+   },
+   {
+    "id": "coc-D-019",
+    "used": 0,
+    "text": "Green husks feel cool and springy; aged ones turn yellow and papery."
+   },
+   {
+    "id": "coc-D-020",
+    "used": 0,
+    "text": "Even husk colour across the nut usually means even ripening underneath."
+   },
+   {
+    "id": "coc-D-021",
+    "used": 0,
+    "text": "Cracked or bruised husks invite mould before you reach home."
+   },
+   {
+    "id": "coc-D-022",
+    "used": 0,
+    "text": "Sweet-smelling water at a test opening confirms freshness at once."
+   },
+   {
+    "id": "coc-D-023",
+    "used": 0,
+    "text": "Sour or fizzy water means fermentation has already started — pour it away."
+   },
+   {
+    "id": "coc-D-024",
+    "used": 0,
+    "text": "Clear water tastes cleaner than cloudy in almost every blind comparison."
+   },
+   {
+    "id": "coc-D-025",
+    "used": 0,
+    "text": "Young coconut water peaks in sweetness around the early months on the palm."
+   },
+   {
+    "id": "coc-D-026",
+    "used": 0,
+    "text": "Bright white meat scrapes easily from young nuts with a spoon."
+   },
+   {
+    "id": "coc-D-027",
+    "used": 0,
+    "text": "Firm, thick meat in mature nuts grates better than it spoons."
+   },
+   {
+    "id": "coc-D-028",
+    "used": 0,
+    "text": "Fresh grated coconut releases oil between your fingers within seconds."
+   },
+   {
+    "id": "coc-D-029",
+    "used": 0,
+    "text": "Stale shreds stay dry and powdery — no oil, no aroma."
+   },
+   {
+    "id": "coc-D-030",
+    "used": 0,
+    "text": "Fresh coconut smells sweet and clean; old coconut smells faintly like paint."
+   },
+   {
+    "id": "coc-D-031",
+    "used": 0,
+    "text": "Rancid coconut oil smells sharp and waxy — discard rather than cook with it."
+   },
+   {
+    "id": "coc-D-032",
+    "used": 0,
+    "text": "Properly stored fresh meat keeps about a week refrigerated."
+   },
+   {
+    "id": "coc-D-033",
+    "used": 0,
+    "text": "Cut faces dry out fast — wrap tightly or submerge in water overnight."
+   },
+   {
+    "id": "coc-D-034",
+    "used": 0,
+    "text": "Storing grated coconut under water keeps it white for days."
+   },
+   {
+    "id": "coc-D-035",
+    "used": 0,
+    "text": "Change that water daily or it turns sour itself."
+   },
+   {
+    "id": "coc-D-036",
+    "used": 0,
+    "text": "Frozen grated coconut keeps months and toasts straight from the freezer."
+   },
+   {
+    "id": "coc-D-037",
+    "used": 0,
+    "text": "Freeze in small portions so you never refreeze a thawed bag."
+   },
+   {
+    "id": "coc-D-038",
+    "used": 0,
+    "text": "Coconut cream keeps three to four days opened in the fridge."
+   },
+   {
+    "id": "coc-D-039",
+    "used": 0,
+    "text": "Oil solidifying in the fridge is normal — warm the jar before scooping."
+   },
+   {
+    "id": "coc-D-040",
+    "used": 0,
+    "text": "Coconut oil at room temperature being hard is simply saturated fat behaving."
+   },
+   {
+    "id": "coc-D-041",
+    "used": 0,
+    "text": "Warm the jar in a bowl of water for thirty seconds to soften."
+   },
+   {
+    "id": "coc-D-042",
+    "used": 0,
+    "text": "Virgin coconut oil keeps over a year away from heat and light."
+   },
+   {
+    "id": "coc-D-043",
+    "used": 0,
+    "text": "Store it dark and cool — a cupboard, never the window sill."
+   },
+   {
+    "id": "coc-D-044",
+    "used": 0,
+    "text": "Refined coconut oil lasts longer because refining removes fragile compounds."
+   },
+   {
+    "id": "coc-D-045",
+    "used": 0,
+    "text": "Desiccated coconut keeps months in an airtight jar away from humidity."
+   },
+   {
+    "id": "coc-D-046",
+    "used": 0,
+    "text": " humidity cakes desiccated coconut within days — seal it properly."
+   },
+   {
+    "id": "coc-D-047",
+    "used": 0,
+    "text": "Coconut water tastes best chilled, never ice-cold — cold numbs its aroma."
+   },
+   {
+    "id": "coc-D-048",
+    "used": 0,
+    "text": "Serve coconut desserts slightly cool rather than fridge-cold for full flavour."
+   },
+   {
+    "id": "coc-D-049",
+    "used": 0,
+    "text": "Salt a pinch into coconut drinks to sharpen perceived sweetness."
+   },
+   {
+    "id": "coc-D-050",
+    "used": 0,
+    "text": "Acid — lime or tamarind — lifts coconut curries out of richness."
+   },
+   {
+    "id": "coc-D-051",
+    "used": 0,
+    "text": "A spoon of thick cream at the end rounds sharp spices instantly."
+   },
+   {
+    "id": "coc-D-052",
+    "used": 0,
+    "text": "Layer coconut cream in stages: thin for simmering, thick for finishing."
+   },
+   {
+    "id": "coc-D-053",
+    "used": 0,
+    "text": "Adding thick cream to a boiling pot risks a split — take it off heat first."
+   },
+   {
+    "id": "coc-D-054",
+    "used": 0,
+    "text": "Temper cream with hot sauce before combining to avoid shock splitting."
+   },
+   {
+    "id": "coc-D-055",
+    "used": 0,
+    "text": "Stir curries slowly in circles — vigorous boiling shears the emulsion."
+   },
+   {
+    "id": "coc-D-056",
+    "used": 0,
+    "text": "Coconut milk curdles with direct acid and high heat together — separate the two."
+   },
+   {
+    "id": "coc-D-057",
+    "used": 0,
+    "text": "Lime goes in after the pot comes off the boil, every time."
+   },
+   {
+    "id": "coc-D-058",
+    "used": 0,
+    "text": "Reduction thickens coconut curry naturally — no flour needed at all."
+   },
+   {
+    "id": "coc-D-059",
+    "used": 0,
+    "text": "Coconut cream doubles as whipping cream when chilled with the bowl and blades."
+   },
+   {
+    "id": "coc-D-060",
+    "used": 0,
+    "text": "A pinch of stabiliser holds whipped coconut cream through warm afternoons."
+   },
+   {
+    "id": "coc-D-061",
+    "used": 0,
+    "text": "Over-whipping turns coconut cream grainy, then greasy, then butter — know the stages."
+   },
+   {
+    "id": "coc-D-062",
+    "used": 0,
+    "text": "Coconut oil replaces butter in pastry at a one-to-one ratio roughly."
+   },
+   {
+    "id": "coc-D-063",
+    "used": 0,
+    "text": "Coconut flour absorbs nearly twice the liquid of wheat flour."
+   },
+   {
+    "id": "coc-D-064",
+    "used": 0,
+    "text": "Rest coconut-flour batter five minutes so the fibre drinks before baking."
+   },
+   {
+    "id": "coc-D-065",
+    "used": 0,
+    "text": "Eggs are the structural rescue in dairy-free coconut baking."
+   },
+   {
+    "id": "coc-D-066",
+    "used": 0,
+    "text": "Coconut milk makes richer béchamel than dairy for pasta bakes."
+   },
+   {
+    "id": "coc-D-067",
+    "used": 0,
+    "text": "Coconut cream whisked into mash keeps it silky without dairy."
+   },
+   {
+    "id": "coc-D-068",
+    "used": 0,
+    "text": "Blend coconut cream into soups off the boil to prevent separation."
+   },
+   {
+    "id": "coc-D-069",
+    "used": 0,
+    "text": "Cold soups of coconut blend smoothest of all — chill before serving."
+   },
+   {
+    "id": "coc-D-070",
+    "used": 0,
+    "text": "Coconut rice: rinse the grain, warm the cream, never stir while steaming."
+   },
+   {
+    "id": "coc-D-071",
+    "used": 0,
+    "text": "Stirring steaming rice releases starch and turns the pot gluey."
+   },
+   {
+    "id": "coc-D-072",
+    "used": 0,
+    "text": "Coconut oil frying smoke point suits medium-high heat comfortably."
+   },
+   {
+    "id": "coc-D-073",
+    "used": 0,
+    "text": "Refined oil handles hotter pans; virgin oil suits gentle sautéing only."
+   },
+   {
+    "id": "coc-D-074",
+    "used": 0,
+    "text": "Toasting grated coconut first deepens any curry it joins later."
+   },
+   {
+    "id": "coc-D-075",
+    "used": 0,
+    "text": "Constant stirring while toasting prevents scorching within seconds."
+   },
+   {
+    "id": "coc-D-076",
+    "used": 0,
+    "text": "Carryover heat keeps browning after you remove the pan — pull a shade early."
+   },
+   {
+    "id": "coc-D-077",
+    "used": 0,
+    "text": "Spread toasted shreds on a rack so steam cannot soften the crunch."
+   },
+   {
+    "id": "coc-D-078",
+    "used": 0,
+    "text": "Seal toasted coconut only once fully cool or the crunch returns to chew."
+   },
+   {
+    "id": "coc-D-079",
+    "used": 0,
+    "text": "Salted coconut chips: brine first, roast second — seasoning then penetrates."
+   },
+   {
+    "id": "coc-D-080",
+    "used": 0,
+    "text": "Low and slow keeps coconut chips white and nutty instead of dark."
+   },
+   {
+    "id": "coc-D-081",
+    "used": 0,
+    "text": "Thin shreds brown fastest — cut thickness sets the roasting schedule."
+   },
+   {
+    "id": "coc-D-082",
+    "used": 0,
+    "text": "Oil-roasted shreds cook faster than dry-toasted — watch them like a hawk."
+   },
+   {
+    "id": "coc-D-083",
+    "used": 0,
+    "text": "Double frying oversaturates coconut snacks — one fry is plenty."
+   },
+   {
+    "id": "coc-D-084",
+    "used": 0,
+    "text": "Drain fried coconut on racks, never paper — paper steams the crispness back."
+   },
+   {
+    "id": "coc-D-085",
+    "used": 0,
+    "text": "Room-temperature shreds fry crisp; cold ones soak up grease instead."
+   },
+   {
+    "id": "coc-D-086",
+    "used": 0,
+    "text": "Oil thermometer removes guesswork — stable temperature means uniform colour."
+   },
+   {
+    "id": "coc-D-087",
+    "used": 0,
+    "text": "Batch cooling keeps the fryer hot for the next round."
+   },
+   {
+    "id": "coc-D-088",
+    "used": 0,
+    "text": "Squeeze fresh gratings in cheesecloth — excess moisture steams patties soft."
+   },
+   {
+    "id": "coc-D-089",
+    "used": 0,
+    "text": "Twisting cheesecloth harder extracts cream that whisking never reaches."
+   },
+   {
+    "id": "coc-D-090",
+    "used": 0,
+    "text": "Save the squeezed milk for curry base — nothing goes to waste."
+   },
+   {
+    "id": "coc-D-091",
+    "used": 0,
+    "text": "Coconut patties bind with rice flour and starch, not eggs."
+   },
+   {
+    "id": "coc-D-092",
+    "used": 0,
+    "text": "Test one patty first — if it holds, the batch will."
+   },
+   {
+    "id": "coc-D-093",
+    "used": 0,
+    "text": "Layered coconut sweets cut cleaner straight from the freezer."
+   },
+   {
+    "id": "coc-D-094",
+    "used": 0,
+    "text": "Warm, wiped blade between cuts keeps layers from smearing."
+   },
+   {
+    "id": "coc-D-095",
+    "used": 0,
+    "text": "Score trays before cutting so pieces break along the line."
+   },
+   {
+    "id": "coc-D-096",
+    "used": 0,
+    "text": "Wire cutters beat blades on sticky sweets — less drag, cleaner faces."
+   },
+   {
+    "id": "coc-D-097",
+    "used": 0,
+    "text": "Parchment over the rolling pin stops coconut dough from sticking."
+   },
+   {
+    "id": "coc-D-098",
+    "used": 0,
+    "text": "Guided cutters with spacers make identical bars for honest pricing."
+   },
+   {
+    "id": "coc-D-099",
+    "used": 0,
+    "text": "Uniform pieces mean less waste at the counter — margins live there."
+   },
+   {
+    "id": "coc-D-100",
+    "used": 0,
+    "text": "Pack sweets only after full cooling or condensation ruins the shelf life."
+   },
+   {
+    "id": "coc-D-101",
+    "used": 0,
+    "text": "Non-stick liners stop set sweets from bonding to old metal trays."
+   },
+   {
+    "id": "coc-D-102",
+    "used": 0,
+    "text": "Coconut ice sets in two layers — cool the first before pouring the second."
+   },
+   {
+    "id": "coc-D-103",
+    "used": 0,
+    "text": "Natural colour powders keep both layers setting at matching speeds."
+   },
+   {
+    "id": "coc-D-104",
+    "used": 0,
+    "text": "Clay pans heat gently for coconut sugar reduction — scorching stays away."
+   },
+   {
+    "id": "coc-D-105",
+    "used": 0,
+    "text": "Stir sugar constantly; a scorched pan turns bitter within seconds."
+   },
+   {
+    "id": "coc-D-106",
+    "used": 0,
+    "text": "Soft-ball stage is the invisible line between coconut sauce and coconut candy."
+   },
+   {
+    "id": "coc-D-107",
+    "used": 0,
+    "text": "Spread hot candy on cooling trays so steam cannot trap underneath."
+   },
+   {
+    "id": "coc-D-108",
+    "used": 0,
+    "text": "Boiled coconut water jelly clears with steady low heat and patient skimming."
+   },
+   {
+    "id": "coc-D-109",
+    "used": 0,
+    "text": "Add acidic fruit juice only after cooling or the set never firms."
+   },
+   {
+    "id": "coc-D-110",
+    "used": 0,
+    "text": "Set jelly inside the shell itself — mould and presentation in one."
+   },
+   {
+    "id": "coc-D-111",
+    "used": 0,
+    "text": "Fresh coconut milk: one shreds, warm water, three presses, thin to thick."
+   },
+   {
+    "id": "coc-D-112",
+    "used": 0,
+    "text": "First press runs thin for cooking vegetables; last press finishes curries."
+   },
+   {
+    "id": "coc-D-113",
+    "used": 0,
+    "text": "Soak shreds in hot water briefly to draw out maximum cream."
+   },
+   {
+    "id": "coc-D-114",
+    "used": 0,
+    "text": "Steeping too long pulls bitter tannins along with the cream."
+   },
+   {
+    "id": "coc-D-115",
+    "used": 0,
+    "text": "Cold-pressed cream tastes brightest; heat-treated cream lasts longest."
+   },
+   {
+    "id": "coc-D-116",
+    "used": 0,
+    "text": "Same-day processing or refrigeration — tropical heat gives fresh coconut hours only."
+   },
+   {
+    "id": "coc-D-117",
+    "used": 0,
+    "text": "Can coconut cream hot for vacuum; residual headspace shrinks spoilage odds."
+   },
+   {
+    "id": "coc-D-118",
+    "used": 0,
+    "text": "UHT coconut milk holds a year unopened without any refrigeration."
+   },
+   {
+    "id": "coc-D-119",
+    "used": 0,
+    "text": "Powdered coconut milk disperses fast when carriers keep fat from balling."
+   },
+   {
+    "id": "coc-D-120",
+    "used": 0,
+    "text": "Instant coconut mixes trade some aroma for that convenience."
+   },
+   {
+    "id": "coc-D-121",
+    "used": 0,
+    "text": "Glass jars preserve coconut aroma best but break easily in transit."
+   },
+   {
+    "id": "coc-D-122",
+    "used": 0,
+    "text": "Plastic pouches dominate street markets — cheap, light, single-serve."
+   },
+   {
+    "id": "coc-D-123",
+    "used": 0,
+    "text": "Single-serve water tetrapaks keep roadside openings hygienic."
+   },
+   {
+    "id": "coc-D-124",
+    "used": 0,
+    "text": "Freezing cream splits it on thaw — not spoilage, just fat separation."
+   },
+   {
+    "id": "coc-D-125",
+    "used": 0,
+    "text": "Exploit that split: clarified coconut oil comes from the same physics."
+   },
+   {
+    "id": "coc-D-126",
+    "used": 0,
+    "text": "Heating cream until water evaporates gives ghee-style coconut oil."
+   },
+   {
+    "id": "coc-D-127",
+    "used": 0,
+    "text": "Virgin oil starts from fresh meat instead of cream — different route, same fat."
+   },
+   {
+    "id": "coc-D-128",
+    "used": 0,
+    "text": "Cold expelling keeps aroma but yields less oil per kilo."
+   },
+   {
+    "id": "coc-D-129",
+    "used": 0,
+    "text": "Centrifugal separation clarifies cream far faster than overnight gravity settling."
+   },
+   {
+    "id": "coc-D-130",
+    "used": 0,
+    "text": "Reverse osmosis concentrates coconut water without heat — aroma survives intact."
+   },
+   {
+    "id": "coc-D-131",
+    "used": 0,
+    "text": "Evaporative concentration browns it; membrane concentration does not."
+   },
+   {
+    "id": "coc-D-132",
+    "used": 0,
+    "text": "Coconut water powder needs desiccant packs or humidity cakes it instantly."
+   },
+   {
+    "id": "coc-D-133",
+    "used": 0,
+    "text": "Maltodextrin carriers keep spray-dried coconut water flowing freely."
+   },
+   {
+    "id": "coc-D-134",
+    "used": 0,
+    "text": "Isotonic claims get tested by conductivity — minerals decide, sugar merely accompanies."
+   },
+   {
+    "id": "coc-D-135",
+    "used": 0,
+    "text": "Coconut water's mineral profile matches human plasma closer than most sports drinks."
+   },
+   {
+    "id": "coc-D-136",
+    "used": 0,
+    "text": "Sports-science reviews keep hydration evidence in credible-not-miraculous territory."
+   },
+   {
+    "id": "coc-D-137",
+    "used": 0,
+    "text": "No coconut product is a health cure — pattern of use matters more."
+   },
+   {
+    "id": "coc-D-138",
+    "used": 0,
+    "text": "Balanced diets use coconut as fat and flavour, not as medicine."
+   },
+   {
+    "id": "coc-D-139",
+    "used": 0,
+    "text": "Traditional diets ate the whole fruit — fibre intact — never isolated fractions."
+   },
+   {
+    "id": "coc-D-140",
+    "used": 0,
+    "text": "Eating grated meat with its fibre changes the glycaemic picture entirely."
+   },
+   {
+    "id": "coc-D-141",
+    "used": 0,
+    "text": "MCT oils distil the fast-absorbing fraction from coconut fat directly."
+   },
+   {
+    "id": "coc-D-142",
+    "used": 0,
+    "text": "Ketogenic communities prize coconut MCTs for quick fuel without glucose."
+   },
+   {
+    "id": "coc-D-143",
+    "used": 0,
+    "text": "Coffee-plus-MCT blends became a full movement in recent years."
+   },
+   {
+    "id": "coc-D-144",
+    "used": 0,
+    "text": "Blenders shear coconut oil into droplets small enough to stay suspended."
+   },
+   {
+    "id": "coc-D-145",
+    "used": 0,
+    "text": "Lecithin in egg yolks stabilises those blends considerably longer."
+   },
+   {
+    "id": "coc-D-146",
+    "used": 0,
+    "text": "Moderation rather than exclusion is the modern dietitian's line on coconut fat."
+   },
+   {
+    "id": "coc-D-147",
+    "used": 0,
+    "text": "Saturated-fat debate keeps coconut in headlines — evidence argues both ways."
+   },
+   {
+    "id": "coc-D-148",
+    "used": 0,
+    "text": "Fibre content in meat slows sugar absorption — a real glycaemic detail."
+   },
+   {
+    "id": "coc-D-149",
+    "used": 0,
+    "text": "Medium-chain fats supply quick energy rather than long-term storage fuel."
+   },
+   {
+    "id": "coc-D-150",
+    "used": 0,
+    "text": "Fresh meat carries modest protein but plenty of dietary fibre."
+   },
+   {
+    "id": "coc-D-151",
+    "used": 0,
+    "text": "Calorie density explains why a little cream flavours an entire pot."
+   },
+   {
+    "id": "coc-D-152",
+    "used": 0,
+    "text": "Portion wisdom applies more to coconut than to most plant foods."
+   },
+   {
+    "id": "coc-D-153",
+    "used": 0,
+    "text": "Macronutrient tables list coconut meat near thirty-three grams of fat per hundred."
+   },
+   {
+    "id": "coc-D-154",
+    "used": 0,
+    "text": "Coconut oil's solid state below twenty-five degrees is saturated fat's signature."
+   },
+   {
+    "id": "coc-D-155",
+    "used": 0,
+    "text": "Virgin oil's polyphenols survive gentle extraction and slow rancidity naturally."
+   },
+   {
+    "id": "coc-D-156",
+    "used": 0,
+    "text": "Lauric acid's antimicrobial action helps coconut fat resist spoilage longer."
+   },
+   {
+    "id": "coc-D-157",
+    "used": 0,
+    "text": "Oxidation, not microbes, eventually turns old coconut water sour."
+   },
+   {
+    "id": "coc-D-158",
+    "used": 0,
+    "text": "Rancid coconut smells like old paint — aldehydes give it away instantly."
+   },
+   {
+    "id": "coc-D-159",
+    "used": 0,
+    "text": "Cold storage extends life more than any preservative for fresh meat."
+   },
+   {
+    "id": "coc-D-160",
+    "used": 0,
+    "text": "Vacuum packaging slows rancidity by cutting oxygen, the oil's real enemy."
+   },
+   {
+    "id": "coc-D-161",
+    "used": 0,
+    "text": "Antioxidants in virgin oil slow rancidity without any additive at all."
+   },
+   {
+    "id": "coc-D-162",
+    "used": 0,
+    "text": "Freeze-dried coconut keeps aroma better than any other commercial form."
+   },
+   {
+    "id": "coc-D-163",
+    "used": 0,
+    "text": "Blanching grated meat sterilises the surface before desserts use it."
+   },
+   {
+    "id": "coc-D-164",
+    "used": 0,
+    "text": "Wiping the shell before cracking cuts contamination measurably."
+   },
+   {
+    "id": "coc-D-165",
+    "used": 0,
+    "text": "Street hygiene improved when vendors moved from shared blades to wrapped straws."
+   },
+   {
+    "id": "coc-D-166",
+    "used": 0,
+    "text": "Sealed nut water is clean inside — risk always lives on the outer surface."
+   },
+   {
+    "id": "coc-D-167",
+    "used": 0,
+    "text": "UV sun exposure on displayed nuts lowers surface microbes passively."
+   },
+   {
+    "id": "coc-D-168",
+    "used": 0,
+    "text": "Shaded displays need ice underneath to slow bacterial growth."
+   },
+   {
+    "id": "coc-D-169",
+    "used": 0,
+    "text": "Coconut water spoons fastest of all coconut products once opened."
+   },
+   {
+    "id": "coc-D-170",
+    "used": 0,
+    "text": "Refrigeration doubles its window; boiling extends it further for markets."
+   },
+   {
+    "id": "coc-D-171",
+    "used": 0,
+    "text": "Canned cream lasts months because heat sterilisation kills split-inducing microbes."
+   },
+   {
+    "id": "coc-D-172",
+    "used": 0,
+    "text": "Canning browns cream slightly — a small flavour trade for the safety."
+   },
+   {
+    "id": "coc-D-173",
+    "used": 0,
+    "text": "UHT plus aseptic packing equals shelf stability with no cold chain at all."
+   },
+   {
+    "id": "coc-D-174",
+    "used": 0,
+    "text": "Aseptic cartons rewrote tropical logistics for cream entirely."
+   },
+   {
+    "id": "coc-D-175",
+    "used": 0,
+    "text": "Can and carton flavours diverge — trained testers pick blind correctly."
+   },
+   {
+    "id": "coc-D-176",
+    "used": 0,
+    "text": "Plastic taints nothing if food-grade; old plastics off-flavour fast in heat."
+   },
+   {
+    "id": "coc-D-177",
+    "used": 0,
+    "text": "Frozen cream keeps months; thawing splits it into oil and solids."
+   },
+   {
+    "id": "coc-D-178",
+    "used": 0,
+    "text": "Coconut milk ice cream resists melting longer than dairy — saturated fat again."
+   },
+   {
+    "id": "coc-D-179",
+    "used": 0,
+    "text": "Overrun — churned-in air — lowers melting rates further."
+   },
+   {
+    "id": "coc-D-180",
+    "used": 0,
+    "text": "Sorbets without fat churn lighter; coconut cream versions churn denser."
+   },
+   {
+    "id": "coc-D-181",
+    "used": 0,
+    "text": "Coconut yoghurt sets firmer with longer steady incubation."
+   },
+   {
+    "id": "coc-D-182",
+    "used": 0,
+    "text": "Over-incubation turns yoghurt sour — bacterial acid keeps climbing."
+   },
+   {
+    "id": "coc-D-183",
+    "used": 0,
+    "text": "Fermentation time, not culture count, dominates the final tang."
+   },
+   {
+    "id": "coc-D-184",
+    "used": 0,
+    "text": "Coconut milk curdles visibly in acidic fruit soups — temper to prevent it."
+   },
+   {
+    "id": "coc-D-185",
+    "used": 0,
+    "text": "Tempering raises the cold liquid's temperature before it meets the hot pot."
+   },
+   {
+    "id": "coc-D-186",
+    "used": 0,
+    "text": "The same rescue technique works for any split coconut gravy."
+   },
+   {
+    "id": "coc-D-187",
+    "used": 0,
+    "text": "Coconut fat carries fat-soluble vitamins from spices into the bloodstream better."
+   },
+   {
+    "id": "coc-D-188",
+    "used": 0,
+    "text": "Turmeric's curcumin absorbs several times better in coconut curry than in boiled soup."
+   },
+   {
+    "id": "coc-D-189",
+    "used": 0,
+    "text": "Black pepper raises that absorption again — classic pairing, real chemistry."
+   },
+   {
+    "id": "coc-D-190",
+    "used": 0,
+    "text": "Whole spices bloom in warm fat before liquids arrive — a proper extraction step."
+   },
+   {
+    "id": "coc-D-191",
+    "used": 0,
+    "text": "Blooming releases terpenes that water alone would leave behind."
+   },
+   {
+    "id": "coc-D-192",
+    "used": 0,
+    "text": "Cold grating keeps surface oils from smearing on the blade."
+   },
+   {
+    "id": "coc-D-193",
+    "used": 0,
+    "text": "Freezing coconut before grating makes it powder instead of clump."
+   },
+   {
+    "id": "coc-D-194",
+    "used": 0,
+    "text": "Grate frozen shreds directly into the dish — no thawing needed."
+   },
+   {
+    "id": "coc-D-195",
+    "used": 0,
+    "text": "Microwaving a whole coconut for a minute makes meat pop out clean."
+   },
+   {
+    "id": "coc-D-196",
+    "used": 0,
+    "text": "Warm water soaking loosens mature meat from the shell after cracking."
+   },
+   {
+    "id": "coc-D-197",
+    "used": 0,
+    "text": "Score meat inside the shell into segments with the spoon's edge."
+   },
+   {
+    "id": "coc-D-198",
+    "used": 0,
+    "text": "The shell's inner ridges mark natural wedges for clean scooping."
+   },
+   {
+    "id": "coc-D-199",
+    "used": 0,
+    "text": "Crack along the equator to pry halves without chipping the meat."
+   },
+   {
+    "id": "coc-D-200",
+    "used": 0,
+    "text": "Households open young nuts with spoon-handle tapping on the soft eye."
+   },
+   {
+    "id": "coc-D-201",
+    "used": 0,
+    "text": "The soft eye yields to thumb pressure on the youngest nuts only."
+   },
+   {
+    "id": "coc-D-202",
+    "used": 0,
+    "text": "Older nuts need a drill or a sharpened steel punch instead."
+   },
+   {
+    "id": "coc-D-203",
+    "used": 0,
+    "text": "Screwdriver-and-hammer is the classic household opening kit worldwide."
+   },
+   {
+    "id": "coc-D-204",
+    "used": 0,
+    "text": "Drill the eye slightly downward so water pools at the hole, not away."
+   },
+   {
+    "id": "coc-D-205",
+    "used": 0,
+    "text": "Hold the nut over a jug — water finds the lowest point always."
+   },
+   {
+    "id": "coc-D-206",
+    "used": 0,
+    "text": "Rinse cracked shells thoroughly — shell dust grinds between teeth otherwise."
+   },
+   {
+    "id": "coc-D-207",
+    "used": 0,
+    "text": "Clean split halves rinse fast under running water with a brush pass."
+   },
+   {
+    "id": "coc-D-208",
+    "used": 0,
+    "text": "Shell fragments sell to craft buyers; smashed shells go to the kiln."
+   },
+   {
+    "id": "coc-D-209",
+    "used": 0,
+    "text": "Shell bowls last decades with oiling and gentle drying."
+   },
+   {
+    "id": "coc-D-210",
+    "used": 0,
+    "text": "Coconut shell ladles resist hot curry better than thin plastic spoons."
+   },
+   {
+    "id": "coc-D-211",
+    "used": 0,
+    "text": "Toasting releases the nutty aroma in minutes — watch it constantly."
+   },
+   {
+    "id": "coc-D-212",
+    "used": 0,
+    "text": "Oven toasting spreads heat evenly on trays with space between shreds."
+   },
+   {
+    "id": "coc-D-213",
+    "used": 0,
+    "text": "Oil-roasted shreds brown faster than dry ones — reduce the time."
+   },
+   {
+    "id": "coc-D-214",
+    "used": 0,
+    "text": "Brine roasting seasons the interior, not just the surface."
+   },
+   {
+    "id": "coc-D-215",
+    "used": 0,
+    "text": "Roasted coconut oil smokes earlier — heat already degraded some of it."
+   },
+   {
+    "id": "coc-D-216",
+    "used": 0,
+    "text": "Freshness reads through aroma long before colour gives it away."
+   },
+   {
+    "id": "coc-D-217",
+    "used": 0,
+    "text": "Colour pales under cold storage while flavour holds — aroma is the truer clock."
+   },
+   {
+    "id": "coc-D-218",
+    "used": 0,
+    "text": "Stale shreds release no oil and toast unevenly — that's the freshness test."
+   },
+   {
+    "id": "coc-D-219",
+    "used": 0,
+    "text": "Pale shreds colour slowly; fresh ones brown within minutes."
+   },
+   {
+    "id": "coc-D-220",
+    "used": 0,
+    "text": "Room temperature decides crumb quality more than any recipe ratio does."
+   },
+   {
+    "id": "coc-D-221",
+    "used": 0,
+    "text": "Chilled tools prevent butter-fats melting while you work coconut pastry."
+   },
+   {
+    "id": "coc-D-222",
+    "used": 0,
+    "text": "Pastry chefs towel-chill cutters before pressing coconut dough."
+   },
+   {
+    "id": "coc-D-223",
+    "used": 0,
+    "text": "Pressed crumbs hold shape better while the fat stays crystalline."
+   },
+   {
+    "id": "coc-D-224",
+    "used": 0,
+    "text": "Hot kitchens demand faster working windows for coconut sweets."
+   },
+   {
+    "id": "coc-D-225",
+    "used": 0,
+    "text": "Pre-chilled boards keep grated shreds from releasing surface oil."
+   },
+   {
+    "id": "coc-D-226",
+    "used": 0,
+    "text": "Oil release during grating is freshness showing, not a flaw."
+   },
+   {
+    "id": "coc-D-227",
+    "used": 0,
+    "text": "Sea-freight humidity nearly doubles a poor pack's spoilage odds."
+   },
+   {
+    "id": "coc-D-228",
+    "used": 0,
+    "text": "Desiccant bags inside containers absorb transit humidity swings."
+   },
+   {
+    "id": "coc-D-229",
+    "used": 0,
+    "text": "Warehouse racking keeps sacks off damp floors — bottom rows spoil first."
+   },
+   {
+    "id": "coc-D-230",
+    "used": 0,
+    "text": "Rotation by date in stores prevents old-stock sales from ever leaving."
+   },
+   {
+    "id": "coc-D-231",
+    "used": 0,
+    "text": "Rack labels with dates make rotation visible to every single worker."
+   },
+   {
+    "id": "coc-D-232",
+    "used": 0,
+    "text": "FIFO discipline written on bins beats any verbal reminder."
+   },
+   {
+    "id": "coc-D-233",
+    "used": 0,
+    "text": "Batch codes trace complaints back to the exact drying run."
+   },
+   {
+    "id": "coc-D-234",
+    "used": 0,
+    "text": "Date coding on packs builds buyer trust at every counter."
+   },
+   {
+    "id": "coc-D-235",
+    "used": 0,
+    "text": "Small packs turn stale waste into manageable household portions."
+   },
+   {
+    "id": "coc-D-236",
+    "used": 0,
+    "text": "Resealable zip bags earn repeat purchases for family sizes."
+   },
+   {
+    "id": "coc-D-237",
+    "used": 0,
+    "text": "Modified-atmosphere packs keep toasted coconut crunchy for months."
+   },
+   {
+    "id": "coc-D-238",
+    "used": 0,
+    "text": "Silica sachets buy time for long-distance crisp shipments."
+   },
+   {
+    "id": "coc-D-239",
+    "used": 0,
+    "text": "Flushing bags with nitrogen extends shelf life commercially."
+   },
+   {
+    "id": "coc-D-240",
+    "used": 0,
+    "text": "Packaging while warm invites condensation inside sealed bags."
+   },
+   {
+    "id": "coc-D-241",
+    "used": 0,
+    "text": "Full cooling before sealing is the crispest-chip rule there is."
+   },
+   {
+    "id": "coc-D-242",
+    "used": 0,
+    "text": "Dehumidifiers in packing rooms keep crisp products crisp."
+   },
+   {
+    "id": "coc-D-243",
+    "used": 0,
+    "text": "Steam from cooling trays raises kitchen humidity — fans help."
+   },
+   {
+    "id": "coc-D-244",
+    "used": 0,
+    "text": "Cooling space bottlenecks sweet production more than cooking does ever."
+   },
+   {
+    "id": "coc-D-245",
+    "used": 0,
+    "text": "Second cooling rack doubles output without any new stoves."
+   },
+   {
+    "id": "coc-D-246",
+    "used": 0,
+    "text": "Staggered batches keep output steady across all trading hours."
+   },
+   {
+    "id": "coc-D-247",
+    "used": 0,
+    "text": "Set-time staging prevents kitchen bottlenecks during mid-service rush."
+   },
+   {
+    "id": "coc-D-248",
+    "used": 0,
+    "text": "Prep lists for sweet stalls stage tasks by their set times."
+   },
+   {
+    "id": "coc-D-249",
+    "used": 0,
+    "text": "Scale weighing by piece removes guesswork for wholesale sweet orders."
+   },
+   {
+    "id": "coc-D-250",
+    "used": 0,
+    "text": "Cheesecloth squeezing yields the driest shreds for frying."
    }
   ]
  }
