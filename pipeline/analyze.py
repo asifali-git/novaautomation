@@ -271,7 +271,7 @@ def _api_key():
     return k
 
 
-def _call_nemotron(frames, title_hint="", duration=None, audio_b64=None):
+def _call_nemotron(frames, title_hint="", duration=None, audio_b64=None, correction=""):
     content = [{"type": "text", "text": PROMPT}]
     if title_hint:
         content.append({"type": "text", "text": f"Source title/context: {title_hint}"})
@@ -296,6 +296,8 @@ def _call_nemotron(frames, title_hint="", duration=None, audio_b64=None):
             "type": "image_url",
             "image_url": {"url": f"data:image/jpeg;base64,{b64}"},
         })
+    if correction:
+        content.append({"type": "text", "text": correction})
 
     headers = {"Authorization": f"Bearer {_api_key()}", "Content-Type": "application/json"}
     payload = {
@@ -327,7 +329,7 @@ def _gemini_key():
     return os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
 
 
-def _call_gemini(frames, title_hint="", duration=None, audio_b64=None):
+def _call_gemini(frames, title_hint="", duration=None, audio_b64=None, correction=""):
     """2nd-choice backend: same multimodal prompt -> Google Gemini generateContent."""
     key = _gemini_key()
     if not key:
@@ -344,6 +346,8 @@ def _call_gemini(frames, title_hint="", duration=None, audio_b64=None):
     for t, b64 in frames:
         parts.append({"text": f"[t={t:.2f}s]"})
         parts.append({"inline_data": {"mime_type": "image/jpeg", "data": b64}})
+    if correction:
+        parts.append({"text": correction})
     payload = {
         "contents": [{"role": "user", "parts": parts}],
         "generationConfig": {
@@ -523,6 +527,29 @@ def _fallback_plan(duration, title_hint=""):
     }
 
 
+def _min_narration(audio_type):
+    return 3 if (audio_type or "").lower() == "asmr" else 5
+
+
+def _narration_count(plan):
+    segs = plan.get("segments") or []
+    return sum(1 for s in segs if (s.get("narration") or "").strip())
+
+
+def _narration_fix_note(plan):
+    at = (plan.get("audio_type") or "asmr").lower()
+    need = _min_narration(at)
+    return (
+        "CORRECTION: your last plan put narration on too few segments. "
+        f"audio_type={at} REQUIRES at least {need} narrated segments "
+        "(asmr: 3-4, others: 5-8), each narration 10-15 words of factual spoken line. "
+        "All other segments must have narration=\"\". "
+        "Captions allowed ONLY on narrated segments (short <=5-word fact headline); "
+        "all other segments must have caption.text=\"\". "
+        "REWRITE the full segments array now and output only the JSON."
+    )
+
+
 def _normalize(plan, duration):
     dur = duration or 0
     segs = plan.get("segments") or []
@@ -546,6 +573,8 @@ def _normalize(plan, duration):
             color = s.get("color") or {}
             caption = s.get("caption") or {}
             narration = (s.get("narration") or "").strip()
+            if not narration:
+                caption = {}
             vs = s.get("voice_style") or {}
             vspeed = min(1.05, max(0.85, float(vs.get("speed", 1.0))))
             clean.append({
@@ -622,33 +651,60 @@ def analyze_video(path, title_hint="", fps=1.0, max_frames=10, allow_fallback=Tr
             return _normalize(_fallback_plan(dur, title_hint), dur)
         raise RuntimeError("no frames extracted")
     audio_b64 = extract_audio(path)
-    raw = None
+    plan = None
     first_err = None
+    corr = ""
     if os.getenv("NVIDIA_API_KEY"):
-        try:
-            raw = _call_nemotron(frames, title_hint=title_hint, duration=dur, audio_b64=audio_b64)
-            print("[analyze] nemotron ok")
-        except Exception as e:
-            first_err = f"nemotron: {e}"
-            print(f"[analyze] nemotron failed ({e}); trying gemini", file=sys.stderr)
+        for attempt in (0, 1):
+            try:
+                raw = _call_nemotron(frames, title_hint=title_hint, duration=dur,
+                                     audio_b64=audio_b64, correction=corr if attempt else "")
+                cand = _extract_json(raw)
+                n = _narration_count(cand)
+                need = _min_narration(cand.get("audio_type"))
+                if n < need:
+                    print(f"[analyze] nemotron narration {n} < {need}; corrective retry",
+                          file=sys.stderr)
+                    corr = _narration_fix_note(cand)
+                    continue
+                plan = cand
+                print("[analyze] nemotron ok")
+                break
+            except Exception as e:
+                first_err = f"nemotron: {e}"
+                print(f"[analyze] nemotron failed ({e}); trying gemini", file=sys.stderr)
+                break
     else:
         print("[analyze] no NVIDIA_API_KEY; trying gemini")
-    if raw is None:
+    if plan is None:
         if _gemini_key():
-            try:
-                raw = _call_gemini(frames, title_hint=title_hint, duration=dur, audio_b64=audio_b64)
-                print("[analyze] gemini ok")
-            except Exception as e:
-                first_err = f"{first_err}; gemini: {e}" if first_err else f"gemini: {e}"
-                print(f"[analyze] gemini failed ({e}); using simple fallback", file=sys.stderr)
+            for attempt in (0, 1):
+                try:
+                    raw = _call_gemini(frames, title_hint=title_hint, duration=dur,
+                                       audio_b64=audio_b64, correction=corr if attempt else "")
+                    cand = _extract_json(raw)
+                    n = _narration_count(cand)
+                    need = _min_narration(cand.get("audio_type"))
+                    if n < need:
+                        print(f"[analyze] gemini narration {n} < {need}; corrective retry",
+                              file=sys.stderr)
+                        corr = _narration_fix_note(cand)
+                        continue
+                    plan = cand
+                    print("[analyze] gemini ok")
+                    break
+                except Exception as e:
+                    first_err = f"{first_err}; gemini: {e}" if first_err else f"gemini: {e}"
+                    print(f"[analyze] gemini failed ({e}); using simple fallback", file=sys.stderr)
+                    break
         else:
             print("[analyze] no GEMINI/GOOGLE API key; using simple fallback")
-    if raw is None:
+    if plan is None:
         if allow_fallback:
             return _normalize(_fallback_plan(dur, title_hint), dur)
         raise RuntimeError(f"all AI backends failed ({first_err})")
-    plan = _extract_json(raw)
     plan = _normalize(plan, dur)
     print(f"[analyze] {len(plan['segments'])} segs, audio={plan['audio_type']}, "
-          f"mode={plan['audio_mode']}, style={plan.get('style')}")
+          f"mode={plan['audio_mode']}, style={plan.get('style')}, "
+          f"narrated={_narration_count(plan)}")
     return plan
