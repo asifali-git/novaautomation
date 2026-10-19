@@ -19,6 +19,7 @@ kokoro/
 __pycache__/
 *.pyc
 github api.txt
+gemini api key.txt
 firebase_service_account.json
 .playwright-mcp/
 uploader-fb/
