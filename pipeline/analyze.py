@@ -112,16 +112,43 @@ Then set audio_mode + audio_volume (NEVER mute the original audio):
 VOICEOVER RULES (MONETIZATION-CRITICAL — reused-content safety):
 YouTube reviewers reject "reused content": someone else's footage plus a voice
 that only describes what is already visible on screen. Every narration line
-MUST add value the viewer CANNOT get from the picture alone. The SAFEST and
-strongest backbone is a fascinating well-established fact about the subject
-(history, science, nutrition, safety, practical) — often led by a hook like
-"Did you know...". Across the video mix at least TWO of these kinds:
-- a surprising, well-established fact (nutrition, science, history, craft, safety)
-- expert-style insight: why this technique works, what a professional notices,
-  what would go wrong without it
+MUST add value the viewer CANNOT get from the picture alone.
+
+FACT BACKBONE — pick from this menu (mix at least 2 kinds across the video):
+- science/physics: WHY it works (e.g. "cutting along the grain gives the
+  blade a cleaner path, so it slips less")
+- nutrition/chemistry: what's inside (e.g. "yellow coconuts sit longer on
+  the palm, so their water turns sweeter")
+- origin/history/tradition: where the practice comes from
+- craft/professional technique: what a pro does differently and what goes
+  wrong for amateurs (e.g. "a dull edge crushes fibers instead of cutting")
+- consumer utility: how to pick, store, or use the thing better
+- myth-bust: "many think X — actually Y"
+Every fact must be TRUE for THIS clip's exact subject (the fruit/tool/motion
+shown). When unsure of a detail, phrase it qualitatively ("far more",
+"naturally sweeter") or switch to opinion — NEVER invent numbers, studies,
+percentages, or origins.
+
+HOOK (mandatory — the FIRST narrated segment):
+- Open with a hook: a direct question, a bold surprising claim, a myth-bust,
+  or a sharp comparison. Use a DIFFERENT hook style than the obvious default
+  for this subject — do NOT open every video with "Did you know...".
+- The LAST narrated line: preferably a question or verdict that invites
+  comments ("Would you drink it straight from the shell?").
+
+CLICHÉ / ENGAGEMENT-BAIT — BANNED in narration, title, and description:
+"satisfying", "oddly satisfying", "you won't believe", "wait for it",
+"watch till the end", "shocking", "insane", "pure satisfaction",
+"ASMR lovers", "mind-blowing". Say the actual thing instead.
+
+VOICE: conversational — like a knowledgeable friend, with contractions
+("it's", "you'll"). One idea per line. No textbook/listicle tone. Never
+say "in this video we will see" and never address "guys".
+
+Also welcome alongside facts:
+- expert-style insight: what a professional notices in this exact motion
 - a genuine opinion or verdict (e.g. "a dull knife would crush this, not cut it")
 - light humor or a relatable human observation
-- a direct question that makes the viewer think or comment
 BANNED in narration (fails monetization review):
 - pure visual description of the scene ("the knife slices slowly", "watch the
   water pour out", "so satisfying to look at",
@@ -145,12 +172,10 @@ SPACING & PACING (MANDATORY — ASMR quality + monetization):
 - Captions ONLY on the narrated segments (a <=5-word headline of the fact,
   e.g. "Yellow vs Green", "Blade Angle"). Every other segment: caption.text "".
 Per audio_type (original audio levels unchanged):
-- "vocal": original audio stays at 55% + OUR commentary on the 4-6 key segments.
+- "vocal": original audio stays at 55% + OUR commentary on the key segments.
 - "asmr": ADD sparse soft commentary ON TOP of lowered ASMR audio — the facts
   and insight carry the value, do NOT narrate the visuals.
-- "music"/"sfx"/"silent": punchy commentary on the 4-6 key segments only.
-Only well-known safe facts — never invent statistics or studies. Ground each
-line in THIS clip's actual subject; when unsure, use opinion or humor instead.
+- "music"/"sfx"/"silent": punchy commentary on the key segments only.
 
 NARRATION MUST BE CLEAN:
 No fake interjections ("Hahaha!", "Oh no no no--", "YO DID YOU SEE THAT?!").
@@ -162,6 +187,7 @@ phrases or lines you would give to any similar clip. Base the SUBJECT of each
 line on the actual frames provided (angle, hand position, knife movement,
 background details), then add commentary a viewer would not already know.
 Each caption must differ from any caption you might give to a similar video.
+Hook style must also differ across videos — never ship the same opener twice.
 
 Return ONLY valid JSON (no markdown fences, no commentary):
 
