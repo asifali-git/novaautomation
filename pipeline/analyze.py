@@ -119,13 +119,26 @@ strongest backbone is a fascinating well-established fact about the subject
 - a direct question that makes the viewer think or comment
 BANNED in narration (fails monetization review):
 - pure visual description of the scene ("the knife slices slowly", "watch the
-  water pour out", "so satisfying to look at")
+  water pour out", "so satisfying to look at",
+  "each layer comes off in thin, even strips", "the last peel reveals the
+  coconut's interior", "the perfectly peeled coconut awaits...")
 - restating the on-screen caption
+SPACING & PACING (MANDATORY — ASMR quality + monetization):
+- Do NOT narrate every segment. Provide narration for ONLY 4-6 key moments
+  across the ENTIRE video. All other segments MUST have narration "" (empty
+  string) so the natural audio (ASMR / cutting / splash / ambience) breathes
+  between facts.
+- Each spoken line: 10-15 words (under 3 seconds of speech).
+- Arc for a ~60s video: hook/surprising fact early -> natural-audio stretch
+  -> technique/expert insight mid-video -> another audio-only stretch ->
+  educational fact near the end -> final question/conclusion.
+- Captions ONLY on the narrated segments (a <=5-word headline of the fact,
+  e.g. "Yellow vs Green", "Blade Angle"). Every other segment: caption.text "".
 Per audio_type (original audio levels unchanged):
-- "vocal": original audio stays at 55% + OUR commentary on top; most segments.
+- "vocal": original audio stays at 55% + OUR commentary on the 4-6 key segments.
 - "asmr": ADD sparse soft commentary ON TOP of lowered ASMR audio — the facts
   and insight carry the value, do NOT narrate the visuals.
-- "music"/"sfx"/"silent": punchy commentary, not every segment.
+- "music"/"sfx"/"silent": punchy commentary on the 4-6 key segments only.
 Only well-known safe facts — never invent statistics or studies. Ground each
 line in THIS clip's actual subject; when unsure, use opinion or humor instead.
 
@@ -168,7 +181,7 @@ Return ONLY valid JSON (no markdown fences, no commentary):
       "sharpness": 0.10,
       "color": {"preset": "vivid"|"warm"|"cool"|"moody"|"noir"|"vintage"|"neon", "brightness": 0.0, "contrast": 1.06, "saturation": 1.12},
       "overlay": {"type": "none", "value": ""},
-      "caption": {"text": "<=5 words", "position": "top"|"center"|"bottom", "style": "outline"|"box"|"bold"},
+      "caption": {"text": "<=5 words on narrated segments, else empty", "position": "top"|"center"|"bottom", "style": "outline"|"box"|"bold"},
       "narration": "value-adding commentary (fact/insight/opinion/humor); empty=silent",
       "voice_style": {"speed": 1.0},
       "notes": "brief reason"
@@ -185,10 +198,13 @@ Rules:
   never crop), non-none color grade, speed != 1.0, sharpness 0.06-0.12 (subtle,
   never harsh). This is mandatory for copyright safety.
 - crop: ALWAYS use exactly {"top": 0.0, "bottom": 0.0, "left": 0.0, "right": 0.0}.
-- caption.text: <=5 words, ONE per segment, different wording each.
+- caption.text: <=5 words, ONLY on narrated segments (fact headline);
+  "" on every other segment. Different wording each time.
 - narration: value-adding commentary (fact, insight, opinion, humor, or a
   question) — NEVER a description of visible action, never a caption repeat.
-  Empty string = silent segment. Never repeat a line in consecutive segments.
+  Exactly 4-6 segments across the video get narration; ALL other segments
+  get "" (empty = silent, natural audio stays prominent). Never repeat a
+  line in consecutive segments.
 - source_captions: PERSISTENT burned-in text/logos/watermarks that belong to the
   ORIGINAL source video (old captions, channel names, "subscribe" overlays,
   watermarks, credit lines). They can appear ANYWHERE in the frame — top,
@@ -204,8 +220,9 @@ Rules:
   same video with a small logo top-right -> [{"top": 0.04, "bottom": 0.10, "kind": "logo"}]
 - title: distinct angle (fact-led, question-led, or bold hook) — never a
   paraphrase of the source title.
-- description: 2-3 sentences including at least one piece of added context
-  (fact/background/opinion). Never mention Facebook, reposting, or compilation.
+- description: 2-3 genuine sentences explaining the context/facts (no generic
+  spam). 3-5 real hashtags only. Never mention Facebook, reposting, or
+  compilation.
 - Do not invent visual facts. Base on frames + audio only.
 """
 

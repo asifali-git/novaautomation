@@ -575,7 +575,7 @@ async function retryVideo(id, force) {
 async function downloadPlan(key) {
   try {
     const r = await fetch(`${FASTPOLL}/api/plan/${key}.json`);
-    if (!r.ok) throw new Error('Plan JSON abhi save nahi hua (analysis ke baad aata hai)');
+    if (!r.ok) throw new Error('Plan JSON not available yet (it appears right after analysis)');
     const blob = await r.blob();
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);

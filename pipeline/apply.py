@@ -343,7 +343,12 @@ def mix_narration(src, plan, offsets, voice_wavs, out):
     """voice_wavs: dict {segment_index: wav_path}. Mix each at its offset.
     Segments are pre-extended by main.fit_segments_to_voices so narration plays
     at natural speed. Last segment narration gets full wav duration + fade so
-    it never cuts mid-word. Output duration = video duration (duration=first)."""
+    it never cuts mid-word. Output duration = video duration (duration=first).
+
+    Audio uses dynamic SIDECHAIN DUCKING: the original audio sits at
+    ~85% while the voiceover is silent (pure ASMR/natural sound feel)
+    and is compressed down to roughly 25-30% while the voiceover speaks
+    (crisp words). Empty-narration stretches play natural sound loud."""
     usable = {i: p for i, p in (voice_wavs or {}).items() if p and os.path.exists(p)}
     if not usable:
         print("[voice-mix] no usable voice wavs; skipping narration mix", file=__import__('sys').stderr)
@@ -353,12 +358,21 @@ def mix_narration(src, plan, offsets, voice_wavs, out):
     vgain = float(g.get("voice_gain", 1.0))
     # Boost voiceover to be clearly audible over original audio.
     vgain = max(vgain, 1.8)
-    # Original audio NEVER muted: force at least 40% (legacy plans may carry 0.0).
-    orig_vol = float(plan.get("audio_volume", 0.40) or 0.0)
-    if orig_vol <= 0.01:
-        orig_vol = 0.40
+    # Dynamic sidechain ducking (spec): while the voiceover speaks the
+    # original sits at ~25-30% (crisp words); during voiceover pauses it
+    # runs at ~85% so the natural ASMR/cutting/splash audio carries the
+    # video. Empty-narration stretches are pure natural sound.
+    base_vol = 0.85
+    duck_th, duck_ratio = 0.12, 6
 
-    print(f"[voice-mix] mixing {len(usable)} tracks, voice_gain={vgain:.2f}, orig_vol={orig_vol:.2f}")
+    # Video duration first: caps the sidechain key (padded to full length)
+    # and the final mix exactly.
+    vid_dur = analyze.probe_duration(src) or 0
+    if vid_dur <= 0:
+        vid_dur = _audio_duration(src)
+
+    print(f"[voice-mix] mixing {len(usable)} tracks, voice_gain={vgain:.2f}, "
+          f"base_vol={base_vol:.2f} (duck -> ~0.26, threshold={duck_th}, ratio={duck_ratio})")
 
     cmd = [FFMPEG, "-y", "-i", src]
     wavs = []
@@ -368,8 +382,9 @@ def mix_narration(src, plan, offsets, voice_wavs, out):
 
     last_idx = max(usable.keys())
     fc = []
-    fc.append(f"[0:a]volume={orig_vol:.3f}[a0]")
-    mix_inputs = ["[a0]"]
+    # Original: baseline volume for VO pauses (sidechain main input).
+    fc.append(f"[0:a]volume={base_vol:.3f}[a0]")
+    vo_inputs = []
     for n, (i, wav_path) in enumerate(wavs, start=1):
         delay_ms = int(offsets[i] * 1000)
         target = _seg_duration(plan["segments"][i])
@@ -390,22 +405,32 @@ def mix_narration(src, plan, offsets, voice_wavs, out):
             f"afade=t=out:st={fade_start:.3f}:d=0.15,"
             f"volume={vgain:.2f},adelay={delay_ms}|{delay_ms}[a{n}]"
         )
-        mix_inputs.append(f"[a{n}]")
+        vo_inputs.append(f"[a{n}]")
         print(f"[voice-mix] seg {i}: wav={wav_dur:.2f}s target={target:.2f}s delay={delay_ms}ms")
 
-    fc.append("".join(mix_inputs) + f"amix=inputs={len(mix_inputs)}:duration=first:dropout_transition=0:normalize=0[aout]")
-
-    # Get video duration to cap audio exactly.
-    vid_dur = analyze.probe_duration(src) or 0
-    if vid_dur <= 0:
-        vid_dur = _audio_duration(src)
-    # Trim BOTH video and audio to exact source duration in filter graph.
+    # VO bus = all delayed pieces; padded to full video length so the
+    # sidechain key covers the whole timeline (silence = no ducking).
+    fc.append(
+        "".join(vo_inputs)
+        + f"amix=inputs={len(vo_inputs)}:duration=longest:dropout_transition=0:normalize=0,"
+        + f"apad=whole_dur={vid_dur + 0.5:.3f}[vobus]"
+    )
+    fc.append("[vobus]asplit=2[vokey][voaud]")
+    # Dynamic duck: original dips only while the voiceover speaks.
+    fc.append(
+        f"[a0][vokey]sidechaincompress=threshold={duck_th}:ratio={duck_ratio}:"
+        f"attack=50:release=500[aduck]"
+    )
+    fc.append(
+        "[aduck][voaud]amix=inputs=2:duration=first:dropout_transition=0:normalize=0[aout]"
+    )
+    # Cap audio exactly to video duration.
     fc.append(f"[aout]atrim=0:{vid_dur:.3f},asetpts=PTS-STARTPTS[aout2]")
     cmd += ["-filter_complex", ";".join(fc), "-map", "0:v", "-map", "[aout2]",
             "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-map_metadata", "-1",
             "-shortest", out]
     _run(cmd)
-    print(f"[voice-mix] narration mixed -> {out}")
+    print(f"[voice-mix] narration mixed (sidechain ducked) -> {out}")
     return out
 
 
