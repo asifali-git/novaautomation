@@ -1,6 +1,7 @@
 /* ===== NOVA — Frontend Logic ===== */
 
 const WORKER = 'https://novaautomation.asifaliasmr05.workers.dev';
+const FASTPOLL = 'https://novapoll.onrender.com';
 const $ = id => document.getElementById(id);
 
 /* ===== API ===== */
@@ -544,6 +545,7 @@ function videoActions(v) {
   if (LIVE_STATUSES.includes(v.status)) {
     btns.push(`<button class="btn danger sm" onclick="cancelVideo(${v.id})" title="Cancel processing">⊘</button>`);
   }
+  btns.push(`<button class="btn ghost sm" onclick="downloadPlan('v${v.id}')" title="Download edit-plan JSON">⬇ JSON</button>`);
   if (v.status === 'failed' || v.status === 'cancelled') {
     const over = (v.retry_count || 0) >= 3;
     btns.push(`<button class="btn ghost sm" onclick="retryVideo(${v.id}${over ? ', true' : ''})" title="Retry (attempt ${(v.retry_count || 0) + 1}/3)${over ? ' — force beyond limit' : ''}">↻ Retry</button>`);
@@ -566,6 +568,39 @@ async function retryVideo(id, force) {
     if (d.dispatched) toast('Re-queued for processing');
     else toast('Re-queued' + (d.dispatch_error ? ` (dispatch pending: ${d.dispatch_error})` : ''), d.dispatched ? 'ok' : 'ok');
     refreshActiveViews();
+  } catch (e) { toast(e.message, 'err'); }
+}
+
+// Download the AI edit-plan JSON (stored by fastpoll; also in repo plans/).
+async function downloadPlan(key) {
+  try {
+    const r = await fetch(`${FASTPOLL}/api/plan/${key}.json`);
+    if (!r.ok) throw new Error('Plan JSON abhi save nahi hua (analysis ke baad aata hai)');
+    const blob = await r.blob();
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `nova_plan_${key}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+    toast('Plan JSON downloaded');
+  } catch (e) { toast(e.message, 'err'); }
+}
+
+// Cancel a running manual job (status flip -> pipeline stops at its stage gates).
+async function cancelManualJob(id) {
+  if (!confirm('Cancel this job? Processing will stop.')) return;
+  try {
+    const r = await fetch(`${FASTPOLL}/api/cancel`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ kind: 'manual', id }),
+    });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok || !d.ok) throw new Error(d.error || 'cancel failed');
+    toast('Job cancelled');
+    loadManualJobs();
   } catch (e) { toast(e.message, 'err'); }
 }
 
@@ -1433,9 +1468,11 @@ async function loadManualJobs() {
         }
       }
 
+      const LIVE_JOB = ['processing', 'downloading', 'analyzing', 'voiceover', 'editing', 'generating_metadata', 'uploading'].includes(j.status);
       const badge = j.status === 'done' ? '<span class="badge ok"><span class="badge-dot"></span> Done</span>'
         : j.status === 'failed' ? `<span class="badge err" title="${esc(j.error)}"><span class="badge-dot"></span> Failed</span>`
-        : ['processing', 'downloading', 'editing', 'uploading', 'generating_metadata'].includes(j.status)
+        : j.status === 'cancelled' ? '<span class="badge idle">⊘ Cancelled</span>'
+        : LIVE_JOB
         ? `<span class="badge run"><span class="badge-dot"></span> ${j.status.replace(/_/g,' ')}</span>`
         : '<span class="badge idle">Queued</span>';
 
@@ -1448,8 +1485,10 @@ async function loadManualJobs() {
         <td>${badge}</td>
         <td>${timing}</td>
         <td>${links.join(' ') || '<span class="muted">—</span>'}</td>
-        <td>
-          ${['queued','failed'].includes(j.status) ? `<button class="btn danger sm" onclick="delManualJob(${j.id})">✕</button>` : ''}
+        <td style="white-space:nowrap">
+          <button class="btn ghost sm" onclick="downloadPlan('j${j.id}')" title="Download edit-plan JSON">⬇ JSON</button>
+          ${LIVE_JOB ? `<button class="btn danger sm" onclick="cancelManualJob(${j.id})" title="Cancel job">⊘</button>` : ''}
+          ${['queued','failed'].includes(j.status) ? `<button class="btn danger sm" onclick="delManualJob(${j.id})" title="Delete job">✕</button>` : ''}
         </td>
       </tr>`;
     }).join('');

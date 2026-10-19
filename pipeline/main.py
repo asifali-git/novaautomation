@@ -75,6 +75,20 @@ def is_cancelled(video_id):
         return False
 
 
+def post_plan(kind, id_, plan):
+    """Send the edit-plan JSON to fastpoll for the dashboard's JSON download."""
+    try:
+        base = os.getenv("FASTPOLL_URL", "https://novapoll.onrender.com").rstrip("/")
+        requests.post(
+            f"{base}/api/plan",
+            headers={"x-token": TOKEN, "Content-Type": "application/json"},
+            json={"key": f"{kind[0]}{id_}", "kind": kind, "id": id_, "plan": plan},
+            timeout=10)
+        print(f"[plan] {kind}{id_} plan posted (download button)")
+    except Exception as e:
+        print(f"[plan] post failed: {e}", file=sys.stderr)
+
+
 def upload_with_retry(fn, *, attempts=3, backoff=15, label="upload"):
     """Run fn() up to `attempts` times with linear backoff. Returns result or raises last error."""
     last = None
@@ -328,6 +342,9 @@ def run():
     except Exception:
         plan.setdefault("caption_regions", [])
         print("[captions] detection failed; keeping plan regions", file=sys.stderr)
+
+    # 1c. Share the plan JSON with fastpoll (dashboard download button).
+    post_plan("video", vid, plan)
 
     # 2. Kokoro narration (AI path only; fallback = visual-only, no voice).
     voice_wavs = make_voices(plan, work, vid, used_ai=used_ai)

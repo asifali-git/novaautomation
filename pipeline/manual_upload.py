@@ -130,6 +130,30 @@ def detect_captions(src, plan):
         plan.setdefault("caption_regions", [])
 
 
+def post_plan(kind, id_, plan):
+    """Send the edit-plan JSON to fastpoll for the dashboard's JSON download."""
+    try:
+        base = os.getenv("FASTPOLL_URL", "https://novapoll.onrender.com").rstrip("/")
+        requests.post(
+            f"{base}/api/plan",
+            headers={"x-token": TOKEN, "Content-Type": "application/json"},
+            json={"key": f"{kind[0]}{id_}", "kind": kind, "id": id_, "plan": plan},
+            timeout=10)
+        print(f"[plan] {kind}{id_} plan posted (download button)")
+    except Exception as e:
+        print(f"[plan] post failed: {e}", file=sys.stderr)
+
+
+def job_is_cancelled(jid):
+    """True if the user cancelled this manual job in the panel."""
+    try:
+        d = worker_get(f"/api/internal/manual/{jid}")
+        return (d.get("job") or {}).get("status") == "cancelled"
+    except Exception as e:
+        print(f"[warn] cancel check failed: {e}", file=sys.stderr)
+        return False
+
+
 def make_voices(plan, work, used_ai=True):
     """Kokoro TTS narration. Only for AI path (fallback has no narration)."""
     wavs = {}
@@ -325,6 +349,12 @@ def main():
         # 2b. Detect burned-in captions for removal (crop/delogo).
         detect_captions(src_path, plan)
 
+        # 2b'. Share plan JSON (download button) + honor user cancel.
+        post_plan("job", job_id, plan)
+        if job_is_cancelled(job_id):
+            print(f"[cancel] job {job_id} cancelled by user — stopping before edit")
+            return
+
         # 2c. Kokoro voiceover (AI path only).
         voice_wavs = {}
         if used_ai:
@@ -355,6 +385,9 @@ def main():
             print(f"[meta] hashtags: {' '.join(meta['hashtags'][:5])}")
 
         # 5. Upload to platforms.
+        if job_is_cancelled(job_id):
+            print(f"[cancel] job {job_id} cancelled by user — stopping before upload")
+            return
         update_job(job_id, status="uploading")
         results = {
             "source": url,

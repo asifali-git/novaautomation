@@ -40,6 +40,12 @@ def _h():
     return {"x-token": TOKEN, "content-type": "application/json"}
 
 
+# Edit-plan JSONs posted by the pipeline (dashboard "Download JSON" button).
+# Key: "v<video_id>" / "j<manual_job_id>". Mirrored into the repo at
+# plans/<key>.json via the GitHub API so downloads survive Render restarts.
+_PLAN_STORE = {}
+
+
 def get_tasks():
     r = requests.get(f"{WORKER}/api/internal/tasks", headers=_h(), timeout=30)
     r.raise_for_status()
@@ -436,6 +442,38 @@ def trigger_fbcheck():
         return False
 
 
+def gh_save_plan(key, plan):
+    """Persist plan JSON into the repo (plans/<key>.json) for the download button."""
+    if not GH_TOKEN or not GH_REPO:
+        return False
+    import base64
+    api = f"https://api.github.com/repos/{GH_REPO}/contents/plans/{key}.json"
+    h = {"Authorization": f"token {GH_TOKEN}",
+         "Accept": "application/vnd.github+json"}
+    try:
+        sha = None
+        r = requests.get(api, headers=h, timeout=15)
+        if r.status_code == 200:
+            sha = (r.json() or {}).get("sha")
+        body = {
+            "message": f"plan {key}",
+            "content": base64.b64encode(
+                json.dumps(plan, ensure_ascii=False, indent=1).encode("utf-8")
+            ).decode("ascii"),
+            "branch": "master",
+        }
+        if sha:
+            body["sha"] = sha
+        r2 = requests.put(api, headers=h, json=body, timeout=25)
+        ok = r2.status_code in (200, 201)
+        if not ok:
+            log.warning("gh_save_plan %s -> %s %s", key, r2.status_code, r2.text[:200])
+        return ok
+    except Exception as e:
+        log.warning("gh_save_plan %s: %s", key, e)
+        return False
+
+
 _recent_triggers = {}  # key -> monotonic ts (in-process debounce)
 _state = {"last_poll": 0, "last_manual_check": 0, "last_manual_found": None}
 
@@ -642,7 +680,49 @@ def keepalive_loop():
 
 # Minimal HTTP server so Render keeps the instance alive (health check).
 class Handler(BaseHTTPRequestHandler):
+    def _send(self, code, body, extra=None, ctype="application/json"):
+        """Send a response with CORS (used by the dashboard on pages.dev)."""
+        if isinstance(body, str):
+            body = body.encode("utf-8")
+        elif not isinstance(body, bytes):
+            body = json.dumps(body).encode("utf-8")
+        self.send_response(code)
+        self.send_header("Content-Type", ctype)
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Access-Control-Allow-Origin", "*")
+        for k, v in (extra or {}).items():
+            self.send_header(k, v)
+        self.end_headers()
+        self.wfile.write(body)
+
+    def _serve_plan(self, key):
+        plan = _PLAN_STORE.get(key)
+        if plan is None and GH_REPO:
+            try:
+                r = requests.get(
+                    f"https://raw.githubusercontent.com/{GH_REPO}/master/plans/{key}.json",
+                    timeout=15)
+                if r.status_code == 200:
+                    self._send(200, r.content, {
+                        "Content-Disposition":
+                            f'attachment; filename="nova_plan_{key}.json"'})
+                    return
+            except Exception:
+                pass
+            self._send(404, {"error": "plan not found"})
+            return
+        if plan is None:
+            self._send(404, {"error": "plan not found"})
+            return
+        self._send(200, json.dumps(plan, ensure_ascii=False, indent=1), {
+            "Content-Disposition":
+                f'attachment; filename="nova_plan_{key}.json"'})
+
     def do_GET(self):
+        m = re.match(r"^/api/plan/([A-Za-z0-9_-]{1,40})\.json$", self.path)
+        if m:
+            self._serve_plan(m.group(1))
+            return
         if self.path == "/health":
             body = b'{"ok":true}'
             self.send_response(200)
@@ -659,6 +739,7 @@ class Handler(BaseHTTPRequestHandler):
                 "task_err": _state.get("task_err"),
                 "task_err_ts": _state.get("task_err_ts"),
                 "fb": _FB_DBG,
+                "plan_keys": list(_PLAN_STORE.keys())[-20:],
             }).encode()
             self.send_response(200)
         elif self.path == "/wake":
@@ -676,6 +757,86 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()
         self.wfile.write(body)
+
+    def do_POST(self):
+        if self.path not in ("/api/plan", "/api/cancel"):
+            self._send(404, {"error": "not found"})
+            return
+        try:
+            length = int(self.headers.get("Content-Length") or 0)
+        except ValueError:
+            length = 0
+        if length <= 0 or length > 600000:
+            self._send(400, {"error": "bad body size"})
+            return
+        raw = self.rfile.read(length)
+
+        if self.path == "/api/plan":
+            if (self.headers.get("x-token") or "") != TOKEN:
+                self._send(401, {"error": "bad token"})
+                return
+            try:
+                data = json.loads(raw)
+            except Exception:
+                self._send(400, {"error": "invalid json"})
+                return
+            key = str(data.get("key") or "")
+            plan = data.get("plan")
+            if not re.fullmatch(r"[A-Za-z0-9_-]{1,40}", key) or not isinstance(plan, dict):
+                self._send(400, {"error": "bad key/plan"})
+                return
+            _PLAN_STORE[key] = plan
+            while len(_PLAN_STORE) > 50:
+                _PLAN_STORE.pop(next(iter(_PLAN_STORE)))
+            saved = gh_save_plan(key, plan)
+            log.info("plan stored %s (%d bytes, gh=%s)", key, len(raw), saved)
+            self._send(200, {"ok": True, "key": key, "gh_saved": bool(saved)})
+            return
+
+        # /api/cancel — flips status to cancelled; the pipeline checks it
+        # at its stage gates (before edit / before upload) and stops.
+        # Browser CSRF guard: block cross-site browser POSTs, allow
+        # same-origin + curl (no Origin header).
+        origin = (self.headers.get("Origin") or "").rstrip("/")
+        allowed_origins = ("https://novaautomation.pages.dev",
+                           "https://www.novaautomation.pages.dev")
+        if origin and origin not in allowed_origins:
+            self._send(403, {"error": "origin not allowed"})
+            return
+        try:
+            data = json.loads(raw)
+        except Exception:
+            self._send(400, {"error": "invalid json"})
+            return
+        kind = str(data.get("kind") or "")
+        try:
+            jid = int(data.get("id") or 0)
+        except (TypeError, ValueError):
+            jid = 0
+        if kind not in ("video", "manual") or jid <= 0:
+            self._send(400, {"error": "bad kind/id"})
+            return
+        path = (f"/api/internal/videos/{jid}" if kind == "video"
+                else f"/api/internal/manual/{jid}")
+        try:
+            r = requests.patch(f"{WORKER}{path}", headers=_h(),
+                               json={"status": "cancelled"}, timeout=30)
+            ok = r.status_code == 200
+            detail = None if ok else r.text[:200]
+        except Exception as e:
+            ok, detail = False, str(e)[:200]
+        log.info("cancel %s %s -> ok=%s %s", kind, jid, ok, detail or "")
+        self._send(200 if ok else 502,
+                   {"ok": bool(ok), "kind": kind, "id": jid, "error": detail})
+
+    def do_OPTIONS(self):
+        self.send_response(204)
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "content-type, x-token")
+        self.send_header("Access-Control-Max-Age", "86400")
+        self.send_header("Content-Length", "0")
+        self.end_headers()
 
     def log_message(self, *args):
         pass  # silence default access log
