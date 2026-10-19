@@ -77,6 +77,9 @@ AND the audio track. Use BOTH visuals and audio.
 
 Analyze content, pacing, camera, lighting, audio mood, subject.
 Then produce an EDIT PLAN the render engine will execute.
+LANGUAGE (HARD RULE): EVERY output string — title, description, narration,
+captions, hashtags, tags, notes — must be in ENGLISH, regardless of the
+source video's language.
 
 CRITICAL - VARIETY: Do NOT reuse the same effect/caption/narration for every video.
 Each video must feel UNIQUE. A nature clip, action scene, cartoon, talking head,
@@ -101,24 +104,41 @@ Then set audio_mode + audio_volume (NEVER mute the original audio):
   "asmr" -> audio_mode "lower", audio_volume 0.35
   else   -> audio_mode "lower", audio_volume 0.55
 
-VOICEOVER RULES:
-- "vocal": original audio stays at 55% + add OUR narration on top. Write clean
-  natural commentary for most segments - a real person calmly
-  describing/reacting. Varied, never repeat the same line twice.
-- "asmr": ADD soft gentle narration ON TOP of lowered ASMR audio. Sparse.
-- "music"/"sfx"/"silent": punchy natural narration, not every segment.
+VOICEOVER RULES (MONETIZATION-CRITICAL — reused-content safety):
+YouTube reviewers reject "reused content": someone else's footage plus a voice
+that only describes what is already visible on screen. Every narration line
+MUST add value the viewer CANNOT get from the picture alone. The SAFEST and
+strongest backbone is a fascinating well-established fact about the subject
+(history, science, nutrition, safety, practical) — often led by a hook like
+"Did you know...". Across the video mix at least TWO of these kinds:
+- a surprising, well-established fact (nutrition, science, history, craft, safety)
+- expert-style insight: why this technique works, what a professional notices,
+  what would go wrong without it
+- a genuine opinion or verdict (e.g. "a dull knife would crush this, not cut it")
+- light humor or a relatable human observation
+- a direct question that makes the viewer think or comment
+BANNED in narration (fails monetization review):
+- pure visual description of the scene ("the knife slices slowly", "watch the
+  water pour out", "so satisfying to look at")
+- restating the on-screen caption
+Per audio_type (original audio levels unchanged):
+- "vocal": original audio stays at 55% + OUR commentary on top; most segments.
+- "asmr": ADD sparse soft commentary ON TOP of lowered ASMR audio — the facts
+  and insight carry the value, do NOT narrate the visuals.
+- "music"/"sfx"/"silent": punchy commentary, not every segment.
+Only well-known safe facts — never invent statistics or studies. Ground each
+line in THIS clip's actual subject; when unsure, use opinion or humor instead.
 
 NARRATION MUST BE CLEAN:
 No fake interjections ("Hahaha!", "Oh no no no--", "YO DID YOU SEE THAT?!").
 No screams, no exaggerated reactions. Just real natural spoken words.
 
 UNIQUENESS (MANDATORY):
-Every video gets UNIQUE narration and captions. Even if two videos show similar
-content (e.g. two coconut-opening clips), describe ONLY what YOU see in THESE
-specific frames — the exact angle, lighting, hand position, knife movement,
-background details. Never use generic template phrases. Each caption must be
-different from any caption you might give to a similar video. Base every word
-on the actual frames provided, not on assumptions about what "usually" happens.
+Every video gets UNIQUE narration and captions. Never use generic template
+phrases or lines you would give to any similar clip. Base the SUBJECT of each
+line on the actual frames provided (angle, hand position, knife movement,
+background details), then add commentary a viewer would not already know.
+Each caption must differ from any caption you might give to a similar video.
 
 Return ONLY valid JSON (no markdown fences, no commentary):
 
@@ -149,7 +169,7 @@ Return ONLY valid JSON (no markdown fences, no commentary):
       "color": {"preset": "vivid"|"warm"|"cool"|"moody"|"noir"|"vintage"|"neon", "brightness": 0.0, "contrast": 1.06, "saturation": 1.12},
       "overlay": {"type": "none", "value": ""},
       "caption": {"text": "<=5 words", "position": "top"|"center"|"bottom", "style": "outline"|"box"|"bold"},
-      "narration": "clean natural spoken line",
+      "narration": "value-adding commentary (fact/insight/opinion/humor); empty=silent",
       "voice_style": {"speed": 1.0},
       "notes": "brief reason"
     }
@@ -166,8 +186,9 @@ Rules:
   never harsh). This is mandatory for copyright safety.
 - crop: ALWAYS use exactly {"top": 0.0, "bottom": 0.0, "left": 0.0, "right": 0.0}.
 - caption.text: <=5 words, ONE per segment, different wording each.
-- narration: clean natural spoken line. Empty string = silent segment.
-  Never repeat the same line in consecutive segments.
+- narration: value-adding commentary (fact, insight, opinion, humor, or a
+  question) — NEVER a description of visible action, never a caption repeat.
+  Empty string = silent segment. Never repeat a line in consecutive segments.
 - source_captions: PERSISTENT burned-in text/logos/watermarks that belong to the
   ORIGINAL source video (old captions, channel names, "subscribe" overlays,
   watermarks, credit lines). They can appear ANYWHERE in the frame — top,
@@ -181,6 +202,10 @@ Rules:
   ONLY if it is clearly a persistent overlay band). [] if nothing is burned in.
   Example: a two-line white credit at the lower area -> [{"top": 0.84, "bottom": 0.91, "kind": "text"}]
   same video with a small logo top-right -> [{"top": 0.04, "bottom": 0.10, "kind": "logo"}]
+- title: distinct angle (fact-led, question-led, or bold hook) — never a
+  paraphrase of the source title.
+- description: 2-3 sentences including at least one piece of added context
+  (fact/background/opinion). Never mention Facebook, reposting, or compilation.
 - Do not invent visual facts. Base on frames + audio only.
 """
 

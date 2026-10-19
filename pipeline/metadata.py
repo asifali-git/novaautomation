@@ -50,9 +50,16 @@ def make_script(title, description="", lang="en", secs=20):
     prompt = (
         f"Write a punchy {n}-word voiceover narration for a short-form video. "
         f"Title: {title}. Context: {description[:400]}. "
-        f"Language: {lang}. Return ONLY the narration text, no quotes, no labels."
+        f"Language: {lang} (write everything in this language). "
+        "The narration must lead with a fascinating well-established fact about "
+        "the subject (history/science/nutrition/practical) or a strong insight, "
+        "then mix in opinion or a thought-provoking question. Never merely "
+        "describe the on-screen visuals, never invent statistics. "
+        "Return ONLY the narration text, no quotes, no labels."
     )
-    return _chat(prompt, system="You write viral short-form voiceover scripts.")
+    return _chat(prompt, system=(
+        "You write monetization-safe short-form voiceovers: value-adding "
+        "commentary led by fascinating facts, never scene description."))
 
 
 def make_metadata(title, description="", tags=None, lang="en"):
@@ -60,10 +67,17 @@ def make_metadata(title, description="", tags=None, lang="en"):
     prompt = (
         "Given this video, return JSON with keys: title (≤95 chars, catchy), "
         "description (2-4 sentences + a few hashtags), tags (array of 8-15 short strings). "
+        "Rules: title must use a distinct angle (fact-led, question-led, or bold hook), "
+        "not a paraphrase of the source title; description must include at least one "
+        "fascinating fact or piece of added context, never mention Facebook, "
+        "reposting, compilation, or another platform. "
+        f"Write output in language: {lang}. "
         f"Title: {title}. Description: {description[:400]}. "
-        f"Existing tags: {', '.join(tags[:10])}. Language: {lang}."
+        f"Existing tags: {', '.join(tags[:10])}."
     )
-    raw = _chat(prompt, system="You are an SEO expert for short-form video. Return valid JSON only.")
+    raw = _chat(prompt, system=(
+        "You are an SEO expert for short-form video. Monetization-safe framing: "
+        "original angles, facts-first, no repost traces. Return valid JSON only."))
     data = _json_or_text(raw)
     if not data:
         return {"title": title[:95], "description": description[:480], "tags": tags[:15]}

@@ -457,17 +457,23 @@ def _call_openrouter(feats, dur, seed):
             f"- Scene cuts detected: {feats['scene_cuts']}\n"
             f"- Content subcategory: {feats['subcategory']}\n\n"
             "CRITICAL INSTRUCTIONS:\n"
-            "1. Write narration that DESCRIBES what is likely happening based on the features. "
-            "For example, if motion=0.8 and subcategory=action, write lines like "
-            "'This is where the action peaks' or 'Things move so fast here'. "
-            "If subcategory=bright and colorfulness=0.6, write about the visuals. "
+            "1. Narration must ADD VALUE beyond the picture (reused-content safety): "
+            "the backbone is a fascinating well-established fact about the subject "
+            "(history, science, nutrition, practical), often led by a 'Did you know...'-"
+            "style hook; also mix expert insight, opinion/verdict, light humor, or a "
+            "thought-provoking question. BANNED: describing only what is visible "
+            "('the action peaks', 'watch the water pour') or restating captions. "
+            "Never invent statistics; when unsure, use opinion or humor. "
             "DO NOT write generic placeholder text. Every narration line must be UNIQUE "
             "and content-aware.\n"
             "2. Captions (on-screen text): SHORT punchy phrases <=5 words, different each segment.\n"
-            "3. Title/description/hashtags/tags: optimized for YouTube Shorts discoverability.\n"
+            "3. Title/description/hashtags/tags: optimized for YouTube Shorts discoverability; "
+            "title must use a distinct angle (fact/question/hook), description must add one "
+            "piece of context beyond the visuals; never mention Facebook or reposting.\n"
             "4. NO fake laughter, no 'Hahaha', no exaggerated reactions. Clean natural speech.\n"
-            "5. EVERY segment MUST have: zoom in or out, color preset (not none), speed 1.02-1.15, "
-            "sharpness >= 0.1. This is mandatory for copyright safety.\n\n"
+            "5. EVERY segment MUST have: zoom type 'none' (never zoom), crop all zeros, "
+            "color preset (not none), speed 1.02-1.15, sharpness >= 0.1.\n"
+            "6. ALL output (title, description, narration, captions, tags) must be in ENGLISH.\n\n"
             "Return ONLY a valid JSON object (no markdown, no explanation) with this structure:\n"
             "{\n"
             '  "audio_type": string,\n'
@@ -485,7 +491,7 @@ def _call_openrouter(feats, dur, seed):
             '    "action": "keep",\n'
             '    "speed": number,\n'
             '    "crop": {"top":number,"bottom":number,"left":number,"right":number},\n'
-            '    "zoom": {"type":"in" or "out","amount":number},\n'
+            '    "zoom": {"type":"none","amount":1.0},\n'
             '    "sharpness": number,\n'
             '    "color": {"preset":string,"brightness":number,"contrast":number,"saturation":number},\n'
             '    "caption": {"text":string,"position":"bottom" or "top","style":"outline"},\n'
