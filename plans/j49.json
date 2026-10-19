@@ -1,0 +1,829 @@
+{
+ "audio_type": "asmr",
+ "audio_mode": "lower",
+ "audio_volume": 0.4,
+ "has_speech": false,
+ "video_summary": "A skilled hand peels a fresh yellow coconut with a large knife, revealing its pure white flesh in a tropical setting.",
+ "style": "educational",
+ "title": "Secret Coconut Peeling Technique Revealed",
+ "description": "Watch how a master chef effortlessly peels a coconut with a single knife, showcasing a traditional skill. This method preserves the coconut's natural sweetness and texture.",
+ "hashtags": [
+  "#coconut",
+  "#peeling",
+  "#kitchen",
+  "#asmr",
+  "#foodprep",
+  "#tropical",
+  "#cooking",
+  "#nature",
+  "#handskills",
+  "#freshfood",
+  "#healthy",
+  "#greenliving",
+  "#farm",
+  "#outdoor",
+  "#DIY",
+  "#foodart"
+ ],
+ "tags": [
+  "coconut",
+  "peeling",
+  "knife",
+  "tropical",
+  "kitchen",
+  "food",
+  "asmr",
+  "hand",
+  "skill",
+  "fresh",
+  "healthy",
+  "cooking",
+  "tutorial",
+  "outdoor",
+  "DIY",
+  "nature"
+ ],
+ "segments": [
+  {
+   "index": 0,
+   "start": 0.0,
+   "end": 3.0,
+   "action": "keep",
+   "speed": 1.08,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.07,
+    "saturation": 1.14
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Fresh Coconut",
+    "position": "top",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Did you know yellow coconuts are sweeter and more mature than green ones?",
+   "notes": "Vivid color grade enhances the fruit's natural hue"
+  },
+  {
+   "index": 1,
+   "start": 3.0,
+   "end": 6.0,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.08,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Stable Stance",
+    "position": "top",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "This firm grip prevents the fruit from rolling during precise cuts",
+   "notes": "Close-up shows the hand's secure positioning"
+  },
+  {
+   "index": 2,
+   "start": 6.0,
+   "end": 9.0,
+   "action": "keep",
+   "speed": 1.07,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.07,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.13
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Initial Slice",
+    "position": "top",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "The knife's edge glides through the husk with minimal resistance",
+   "notes": "Sharpness highlights the clean separation"
+  },
+  {
+   "index": 3,
+   "start": 9.0,
+   "end": 12.0,
+   "action": "keep",
+   "speed": 1.13,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.05,
+    "saturation": 1.11
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Peeling Progress",
+    "position": "top",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Each layer comes off in thin, even strips revealing the pristine white meat",
+   "notes": "Warm tones emphasize the coconut's natural beauty"
+  },
+  {
+   "index": 4,
+   "start": 12.0,
+   "end": 15.0,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.07,
+    "saturation": 1.1
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Smooth Motion",
+    "position": "top",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "The rhythmic scraping sound is a signature of skilled coconut preparation",
+   "notes": "ASMR audio captures the tactile texture"
+  },
+  {
+   "index": 5,
+   "start": 15.0,
+   "end": 18.0,
+   "action": "keep",
+   "speed": 1.12,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "cool",
+    "brightness": 0.0,
+    "contrast": 1.08,
+    "saturation": 1.09
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Perfect Cut",
+    "position": "top",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "A dull knife would crush the fruit, but this blade slices cleanly",
+   "notes": "Cool tones contrast with the warm subject"
+  },
+  {
+   "index": 6,
+   "start": 18.0,
+   "end": 21.0,
+   "action": "keep",
+   "speed": 1.09,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.07,
+   "color": {
+    "preset": "cool",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.11
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Flesh Revealed",
+    "position": "top",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "The white interior is untouched, indicating expert technique",
+   "notes": "Cool color grade makes the flesh pop"
+  },
+  {
+   "index": 7,
+   "start": 21.0,
+   "end": 24.0,
+   "action": "keep",
+   "speed": 1.11,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "vintage",
+    "brightness": 0.0,
+    "contrast": 1.05,
+    "saturation": 1.08
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Natural Beauty",
+    "position": "top",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "This traditional method avoids plastic tools for pure flavor",
+   "notes": "Vintage filter adds rustic authenticity"
+  },
+  {
+   "index": 8,
+   "start": 24.0,
+   "end": 27.0,
+   "action": "keep",
+   "speed": 1.08,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "moody",
+    "brightness": 0.0,
+    "contrast": 1.07,
+    "saturation": 1.1
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Final Touch",
+    "position": "top",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "The last peel reveals the coconut's perfect, unblemished interior",
+   "notes": "Moody contrast draws focus to the result"
+  },
+  {
+   "index": 9,
+   "start": 27.0,
+   "end": 30.0,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "vibrant",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Ready to Enjoy",
+    "position": "top",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Fresh coconut is a hydrating snack perfect for tropical climates",
+   "notes": "Vibrant colors highlight freshness"
+  },
+  {
+   "index": 10,
+   "start": 30.0,
+   "end": 33.0,
+   "action": "keep",
+   "speed": 1.07,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.05,
+    "saturation": 1.11
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Nature Setting",
+    "position": "top",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Coconut palms thrive in warm, humid environments worldwide",
+   "notes": "Warm tones match the tropical backdrop"
+  },
+  {
+   "index": 11,
+   "start": 33.0,
+   "end": 36.0,
+   "action": "keep",
+   "speed": 1.12,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.08,
+    "saturation": 1.1
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Expert Hands",
+    "position": "top",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Mastery comes from years of practice and respect for the craft",
+   "notes": "Vivid colors emphasize skill and precision"
+  },
+  {
+   "index": 12,
+   "start": 36.0,
+   "end": 39.0,
+   "action": "keep",
+   "speed": 1.09,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.09
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Fruit Freshness",
+    "position": "top",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Peeling at peak ripeness locks in natural sugars and aroma",
+   "notes": "Warm tones enhance perceived freshness"
+  },
+  {
+   "index": 13,
+   "start": 39.0,
+   "end": 42.0,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "cool",
+    "brightness": 0.0,
+    "contrast": 1.07,
+    "saturation": 1.1
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Culinary Art",
+    "position": "top",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "This technique elevates simple fruit into a gourmet experience",
+   "notes": "Cool tones suggest refinement and quality"
+  },
+  {
+   "index": 14,
+   "start": 42.0,
+   "end": 45.0,
+   "action": "keep",
+   "speed": 1.11,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "vibrant",
+    "brightness": 0.0,
+    "contrast": 1.05,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Peel Perfection",
+    "position": "top",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "The smooth, continuous peel is a sign of professional execution",
+   "notes": "Vibrant colors make the action visually appealing"
+  },
+  {
+   "index": 15,
+   "start": 45.0,
+   "end": 48.0,
+   "action": "keep",
+   "speed": 1.08,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.07,
+   "color": {
+    "preset": "moody",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.09
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Nature's Gift",
+    "position": "top",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Coconuts are a sustainable, natural source of hydration and nutrition",
+   "notes": "Moody tones evoke appreciation for nature"
+  },
+  {
+   "index": 16,
+   "start": 48.0,
+   "end": 51.0,
+   "action": "keep",
+   "speed": 1.12,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.07,
+    "saturation": 1.11
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Final Reveal",
+    "position": "top",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "The perfectly peeled coconut awaits its refreshing drink",
+   "notes": "Vivid colors highlight the final product"
+  },
+  {
+   "index": 17,
+   "start": 51.0,
+   "end": 54.0,
+   "action": "keep",
+   "speed": 1.09,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.05,
+    "saturation": 1.1
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Tropical Scene",
+    "position": "top",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Coconut harvesting connects us to ancient tropical traditions",
+   "notes": "Warm tones create a welcoming atmosphere"
+  },
+  {
+   "index": 18,
+   "start": 54.0,
+   "end": 57.0,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "cool",
+    "brightness": 0.0,
+    "contrast": 1.07,
+    "saturation": 1.1
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Skillful Craft",
+    "position": "top",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Precision cutting transforms a tough shell into edible treasure",
+   "notes": "Cool tones emphasize the craft's expertise"
+  },
+  {
+   "index": 19,
+   "start": 57.0,
+   "end": 57.7,
+   "action": "keep",
+   "speed": 1.07,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "vintage",
+    "brightness": 0.0,
+    "contrast": 1.05,
+    "saturation": 1.08
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "End Result",
+    "position": "top",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Enjoy the pure taste of nature in every sip",
+   "notes": "Vintage filter gives a timeless feel"
+  }
+ ],
+ "global": {
+  "intro_effect": "fade",
+  "ending_effect": "fade",
+  "voice_gain": 1.0
+ },
+ "caption_regions": [
+  {
+   "band": "top",
+   "top_frac": 0.0,
+   "bottom_frac": 0.15,
+   "action": "crop",
+   "confidence": 0.95
+  },
+  {
+   "band": "bottom",
+   "top_frac": 0.8578,
+   "bottom_frac": 0.9031,
+   "action": "crop",
+   "confidence": 0.95
+  }
+ ]
+}
