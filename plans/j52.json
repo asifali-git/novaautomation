@@ -1,0 +1,424 @@
+{
+ "audio_type": "asmr",
+ "audio_mode": "lower",
+ "audio_volume": 0.4,
+ "has_speech": false,
+ "video_summary": "A person skillfully peels a vibrant purple coconut outdoors, revealing its white interior with satisfying ASMR sounds.",
+ "style": "raw",
+ "title": "Fresh Purple Coconut Cut 🥥💜 #coconut #coconutcutting #oddlysatisfying",
+ "description": "Watch as a gloved hand expertly peels a rare purple coconut, transforming its glossy skin into smooth white flesh. The satisfying ASMR sounds and vibrant colors make this a pure visual treat.",
+ "hashtags": [
+  "#coconut",
+  "#coconutcutting",
+  "#oddlysatisfying",
+  "#reels",
+  "#foodprep"
+ ],
+ "tags": [
+  "purple coconut",
+  "coconut peeling",
+  "ASMR",
+  "tropical fruit",
+  "food styling",
+  "knife skills",
+  "satisfying",
+  "nature",
+  "outdoor cooking"
+ ],
+ "segments": [
+  {
+   "index": 0,
+   "start": 0.0,
+   "end": 3.0,
+   "action": "keep",
+   "speed": 1.12,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.07,
+    "saturation": 1.15
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Fresh Purple",
+    "position": "bottom",
+    "style": "box"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Did you know purple coconuts are a rare tropical variety?",
+   "notes": "Opening shot with subtle speed boost for energy"
+  },
+  {
+   "index": 1,
+   "start": 3.0,
+   "end": 6.0,
+   "action": "keep",
+   "speed": 1.08,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.06,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.05,
+    "saturation": 1.08
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Glossy Texture",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "The skin glistens with water droplets from the tropical climate.",
+   "notes": "Slight slowdown to emphasize texture details"
+  },
+  {
+   "index": 2,
+   "start": 6.0,
+   "end": 9.0,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "cool",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.1
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Purple Hues",
+    "position": "bottom",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "This unique color comes from anthocyanin pigments in the husk.",
+   "notes": "Color grade shifts to cool tones for contrast"
+  },
+  {
+   "index": 3,
+   "start": 9.0,
+   "end": 12.0,
+   "action": "keep",
+   "speed": 1.07,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.08,
+    "saturation": 1.13
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Knife Ready",
+    "position": "bottom",
+    "style": "box"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "A sharp blade is essential to avoid crushing the delicate flesh.",
+   "notes": "Focus on tool preparation for ASMR clarity"
+  },
+  {
+   "index": 4,
+   "start": 12.0,
+   "end": 15.0,
+   "action": "keep",
+   "speed": 1.13,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.07,
+   "color": {
+    "preset": "moody",
+    "brightness": 0.0,
+    "contrast": 1.09,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "First Cut",
+    "position": "bottom",
+    "style": "box"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "The knife glides through the tough outer shell with precision.",
+   "notes": "Speed increase enhances the cutting sound's impact"
+  },
+  {
+   "index": 5,
+   "start": 15.0,
+   "end": 18.0,
+   "action": "keep",
+   "speed": 1.09,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.11
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "White Interior",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Beneath the purple is a creamy white flesh rarely seen.",
+   "notes": "Revealing the hidden treasure inside"
+  },
+  {
+   "index": 6,
+   "start": 18.0,
+   "end": 21.0,
+   "action": "keep",
+   "speed": 1.06,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.06,
+   "color": {
+    "preset": "cool",
+    "brightness": 0.0,
+    "contrast": 1.04,
+    "saturation": 1.07
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Peel Removal",
+    "position": "bottom",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Each strip of peel comes off in a thin, satisfying layer.",
+   "notes": "Slow pace allows ASMR sounds to dominate"
+  },
+  {
+   "index": 7,
+   "start": 21.0,
+   "end": 24.0,
+   "action": "keep",
+   "speed": 1.14,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.11,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.07,
+    "saturation": 1.14
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Smooth Flesh",
+    "position": "bottom",
+    "style": "box"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "The smooth texture promises a refreshing tropical taste.",
+   "notes": "Vivid colors enhance visual appeal during peeling"
+  },
+  {
+   "index": 8,
+   "start": 24.0,
+   "end": 27.0,
+   "action": "keep",
+   "speed": 1.05,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.07,
+   "color": {
+    "preset": "moody",
+    "brightness": 0.0,
+    "contrast": 1.05,
+    "saturation": 1.09
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Glistening Surface",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Water beads highlight the coconut's freshness and coolness.",
+   "notes": "Slight slowdown for sensory immersion"
+  },
+  {
+   "index": 9,
+   "start": 27.0,
+   "end": 30.0,
+   "action": "keep",
+   "speed": 1.11,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "cool",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Final Reveal",
+    "position": "bottom",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "The fully peeled coconut awaits its refreshing drink.",
+   "notes": "Closing shot with energetic pace for final impact"
+  }
+ ],
+ "global": {
+  "intro_effect": "fade",
+  "ending_effect": "fade",
+  "voice_gain": 1.0
+ },
+ "caption_regions": [
+  {
+   "band": "bottom",
+   "top_frac": 0.8594,
+   "bottom_frac": 0.8891,
+   "action": "crop",
+   "confidence": 0.95
+  }
+ ]
+}
