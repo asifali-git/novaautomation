@@ -1,0 +1,544 @@
+{
+ "audio_type": "asmr",
+ "audio_mode": "lower",
+ "audio_volume": 0.4,
+ "has_speech": false,
+ "video_summary": "A person skillfully peels a watermelon with a knife, revealing its green flesh and red interior, set against a tropical backdrop.",
+ "style": "cinematic",
+ "title": "The Secret Behind This Watermelon's Unique Color",
+ "description": "Watch as a knife expertly peels a vibrant watermelon, revealing its fresh interior. Discover the surprising fact about its green hue and what it means for freshness.",
+ "hashtags": [
+  "#watermelon",
+  "#peeling",
+  "#fresh",
+  "#tropical",
+  "#nature"
+ ],
+ "tags": [
+  "watermelon",
+  "peeling",
+  "tropical",
+  "green",
+  "fresh",
+  "nature",
+  "vegetable",
+  "peel",
+  "knife",
+  "freshness",
+  "healthy",
+  "summer",
+  "fruit",
+  "harvest",
+  "seasonal"
+ ],
+ "segments": [
+  {
+   "index": 0,
+   "start": 0.0,
+   "end": 3.0,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Green Rind",
+    "position": "top",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "What makes this watermelon's green skin special compared to others?",
+   "notes": "Hook with direct question about the subject's unique appearance."
+  },
+  {
+   "index": 1,
+   "start": 3.0,
+   "end": 6.0,
+   "action": "keep",
+   "speed": 1.12,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "top",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Focus on the cutting action and knife control."
+  },
+  {
+   "index": 2,
+   "start": 6.0,
+   "end": 9.0,
+   "action": "keep",
+   "speed": 1.08,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.12,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "top",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Fact about freshness and ripeness visible in the cut."
+  },
+  {
+   "index": 3,
+   "start": 9.0,
+   "end": 12.0,
+   "action": "keep",
+   "speed": 1.15,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.06,
+   "color": {
+    "preset": "cool",
+    "brightness": -0.05,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "top",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Myth-busting fact about green watermelon maturity."
+  },
+  {
+   "index": 4,
+   "start": 12.0,
+   "end": 15.0,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "top",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Contrast between exterior and interior color indicators."
+  },
+  {
+   "index": 5,
+   "start": 15.0,
+   "end": 18.0,
+   "action": "keep",
+   "speed": 1.13,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "top",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Opinion on growing conditions based on visual texture."
+  },
+  {
+   "index": 6,
+   "start": 18.0,
+   "end": 21.0,
+   "action": "keep",
+   "speed": 1.07,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.11,
+   "color": {
+    "preset": "cool",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Natural Ripeness",
+    "position": "top",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "This variety thrives in warm climates, making it sweeter than average.",
+   "notes": "Origin/history fact about the watermelon type."
+  },
+  {
+   "index": 7,
+   "start": 21.0,
+   "end": 24.0,
+   "action": "keep",
+   "speed": 1.14,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "top",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Professional technique tip regarding knife sharpness."
+  },
+  {
+   "index": 8,
+   "start": 24.0,
+   "end": 27.0,
+   "action": "keep",
+   "speed": 1.09,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.07,
+   "color": {
+    "preset": "cool",
+    "brightness": -0.05,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "top",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Nutritional benefit observation from visual cues."
+  },
+  {
+   "index": 9,
+   "start": 27.0,
+   "end": 30.0,
+   "action": "keep",
+   "speed": 1.11,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.12,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "top",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Fact about ripeness indicators."
+  },
+  {
+   "index": 10,
+   "start": 30.0,
+   "end": 33.0,
+   "action": "keep",
+   "speed": 1.08,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.06,
+   "color": {
+    "preset": "cool",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "top",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Consumer utility tip about usage and season."
+  },
+  {
+   "index": 11,
+   "start": 33.0,
+   "end": 36.0,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "top",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Consumer tip for selection."
+  },
+  {
+   "index": 12,
+   "start": 36.0,
+   "end": 37.567,
+   "action": "keep",
+   "speed": 1.05,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Would you try?",
+    "position": "top",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Would you drink this watermelon straight from the shell?",
+   "notes": "Ending question to engage viewers."
+  }
+ ],
+ "global": {
+  "intro_effect": "fade",
+  "ending_effect": "fade",
+  "voice_gain": 1.0
+ },
+ "caption_regions": [
+  {
+   "band": "bottom",
+   "top_frac": 0.8875,
+   "bottom_frac": 0.9125,
+   "action": "crop",
+   "confidence": 0.95
+  }
+ ]
+}
