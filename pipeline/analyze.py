@@ -136,10 +136,13 @@ HOOK (mandatory — the FIRST narrated segment):
 - The LAST narrated line: preferably a question or verdict that invites
   comments ("Would you drink it straight from the shell?").
 
-CLICHÉ / ENGAGEMENT-BAIT — BANNED in narration, title, and description:
-"satisfying", "oddly satisfying", "you won't believe", "wait for it",
-"watch till the end", "shocking", "insane", "pure satisfaction",
-"ASMR lovers", "mind-blowing". Say the actual thing instead.
+CLICHÉ / ENGAGEMENT-BAIT — BANNED in narration, title, description,
+hashtags, AND tags: "satisfying", "oddly satisfying", "you won't believe",
+"wait for it", "watch till the end", "shocking", "insane", "pure
+satisfaction", "ASMR lovers", "mind-blowing". Say the actual thing instead.
+In hashtags/tags replace them with SPECIFIC search terms (e.g. fruit
+preparation, knife technique, kitchen skills, food science, how to cut,
+fresh produce) — precise terms rank better than generic bait.
 
 VOICE: conversational — like a knowledgeable friend, with contractions
 ("it's", "you'll"). One idea per line. No textbook/listicle tone. Never
@@ -738,6 +741,24 @@ def _normalize(plan, duration):
     import smart as _smart
     plan["caption_regions"] = _smart.normalize_source_captions(plan.get("source_captions"))
     plan.pop("source_captions", None)
+    # Hard strip: cliché/bait words never ship in metadata — specific terms
+    # (knife technique, fruit preparation, ...) rank better anyway.
+    banned_meta = ("satisfying", "oddly satisfying", "you won't believe",
+                   "wait for it", "watch till the end", "shocking", "insane",
+                   "pure satisfaction", "asmr lovers", "mind-blowing")
+
+    def _clean_meta(vals):
+        out = []
+        for v in vals or []:
+            s = str(v).strip()
+            low = s.lower().lstrip("#")
+            if any(b in low for b in banned_meta):
+                continue
+            out.append(s)
+        return out
+
+    plan["hashtags"] = _clean_meta(plan.get("hashtags"))
+    plan["tags"] = _clean_meta(plan.get("tags"))
 
     g = plan.get("global") or {}
     if audio_type == "asmr":
