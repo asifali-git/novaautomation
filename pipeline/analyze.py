@@ -124,14 +124,19 @@ BANNED in narration (fails monetization review):
   coconut's interior", "the perfectly peeled coconut awaits...")
 - restating the on-screen caption
 SPACING & PACING (MANDATORY — ASMR quality + monetization):
-- Do NOT narrate every segment. Provide narration for ONLY 4-6 key moments
-  across the ENTIRE video. All other segments MUST have narration "" (empty
-  string) so the natural audio (ASMR / cutting / splash / ambience) breathes
-  between facts.
+- Narration count depends on audio_type (decide after listening):
+  * "asmr": ONLY 3-4 narrated segments in the entire video. ALL other
+    segments: narration "" (empty). The natural cutting/scraping/splash
+    audio must dominate (~80-90% of the runtime) — ASMR viewers came for
+    the sound, not a talking robot.
+  * "vocal" / "music" / "sfx" / "silent" (general/informative videos):
+    5-8 narrated segments forming a storyline — hook -> build -> expert
+    insight -> payoff/conclusion. Remaining segments "" so audio breathes.
+- Do NOT narrate every segment in either mode.
 - Each spoken line: 10-15 words (under 3 seconds of speech).
-- Arc for a ~60s video: hook/surprising fact early -> natural-audio stretch
-  -> technique/expert insight mid-video -> another audio-only stretch ->
-  educational fact near the end -> final question/conclusion.
+- Arc (~60s): hook/surprising fact early -> breathing room -> insight
+  mid-video -> educational fact near the end -> final question/conclusion
+  (ASMR uses the sparse subset of this arc; general videos cover it fully).
 - Captions ONLY on the narrated segments (a <=5-word headline of the fact,
   e.g. "Yellow vs Green", "Blade Angle"). Every other segment: caption.text "".
 Per audio_type (original audio levels unchanged):
@@ -202,9 +207,10 @@ Rules:
   "" on every other segment. Different wording each time.
 - narration: value-adding commentary (fact, insight, opinion, humor, or a
   question) — NEVER a description of visible action, never a caption repeat.
-  Exactly 4-6 segments across the video get narration; ALL other segments
-  get "" (empty = silent, natural audio stays prominent). Never repeat a
-  line in consecutive segments.
+  Count per audio_type: "asmr" -> 3-4 narrated segments only; general
+  (vocal/music/sfx/silent) -> 5-8 narrated segments as a storyline. ALL
+  other segments get "" (empty = silent, natural audio stays prominent).
+  Never repeat a line in consecutive segments.
 - source_captions: PERSISTENT burned-in text/logos/watermarks that belong to the
   ORIGINAL source video (old captions, channel names, "subscribe" overlays,
   watermarks, credit lines). They can appear ANYWHERE in the frame — top,

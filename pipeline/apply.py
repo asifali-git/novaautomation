@@ -12,6 +12,7 @@ Low-RAM: medium, 2 threads, bilinear scale — same levers as edit.py.
 import os
 import subprocess
 import json
+import re
 import shlex
 import analyze
 
@@ -24,16 +25,28 @@ W, H = 1080, 1920
 
 
 def _audio_duration(path):
-    """Probe audio duration in seconds via ffprobe."""
+    """Probe audio duration in seconds via ffprobe (ffmpeg header-parse fallback)."""
+    probes = [os.getenv("FFPROBE_BIN"), FFMPEG.replace("ffmpeg", "ffprobe")]
+    for probe in probes:
+        if not probe:
+            continue
+        try:
+            cmd = [
+                probe, "-v", "error",
+                "-show_entries", "format=duration",
+                "-of", "default=noprint_wrappers=1:nokey=1", path
+            ]
+            proc = subprocess.run(cmd, capture_output=True, text=True, timeout=10)
+            if proc.returncode == 0 and proc.stdout.strip():
+                return float(proc.stdout.strip())
+        except Exception:
+            pass
     try:
-        cmd = [
-            FFMPEG.replace("ffmpeg", "ffprobe"), "-v", "error",
-            "-show_entries", "format=duration",
-            "-of", "default=noprint_wrappers=1:nokey=1", path
-        ]
-        proc = subprocess.run(cmd, capture_output=True, text=True, timeout=10)
-        if proc.returncode == 0 and proc.stdout.strip():
-            return float(proc.stdout.strip())
+        proc = subprocess.run([FFMPEG, "-i", path],
+                              capture_output=True, text=True, timeout=10)
+        m = re.search(r"Duration:\s*(\d+):(\d+):(\d+(?:\.\d+)?)", proc.stderr or "")
+        if m:
+            return int(m.group(1)) * 3600 + int(m.group(2)) * 60 + float(m.group(3))
     except Exception:
         pass
     return 0.0
