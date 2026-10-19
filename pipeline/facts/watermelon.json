@@ -1,0 +1,219 @@
+{
+ "subject": "watermelon",
+ "angle_names": {
+  "A": "Botanical / Science",
+  "B": "Tool & Technique Breakdown",
+  "C": "Regional & Street Culture",
+  "D": "Consumer / Culinary"
+ },
+ "angles": {
+  "A": [
+   {
+    "id": "wat-A-01",
+    "used": 0,
+    "text": "Yellow watermelons simply lack lycopene, the pigment that turns ordinary melons red inside."
+   },
+   {
+    "id": "wat-A-02",
+    "used": 0,
+    "text": "Watermelon flesh is about ninety-two percent water, which is why it hydrates so fast."
+   },
+   {
+    "id": "wat-A-03",
+    "used": 0,
+    "text": "A cut watermelon never gets sweeter off the vine — the plant stops moving sugar into it at harvest."
+   },
+   {
+    "id": "wat-A-04",
+    "used": 0,
+    "text": "Citrulline, an amino acid studied for muscle recovery, concentrates in the rind just under the green skin."
+   },
+   {
+    "id": "wat-A-05",
+    "used": 0,
+    "text": "Seedless watermelons are triploid — three sets of chromosomes make their seeds sterile."
+   },
+   {
+    "id": "wat-A-06",
+    "used": 0,
+    "text": "Hollow, honeycomb centers form when pollination fails partway through the fruit's growth."
+   },
+   {
+    "id": "wat-A-07",
+    "used": 0,
+    "text": "Puffy, misshapen melons usually mean too few bee visits during the short bloom window."
+   },
+   {
+    "id": "wat-A-08",
+    "used": 0,
+    "text": "Watermelons started in the Kalahari region of southern Africa, where wild bitter relatives still grow."
+   },
+   {
+    "id": "wat-A-09",
+    "used": 0,
+    "text": "Archaeologists find watermelon seeds in ancient Egyptian sites, evidence of early cultivation."
+   },
+   {
+    "id": "wat-A-10",
+    "used": 0,
+    "text": "The rind stripes are only skin-deep — flesh color has nothing to do with the pattern outside."
+   }
+  ],
+  "B": [
+   {
+    "id": "wat-B-01",
+    "used": 0,
+    "text": "A deep, hollow thump when tapped usually means the melon ripened evenly all the way through."
+   },
+   {
+    "id": "wat-B-02",
+    "used": 0,
+    "text": "The creamy field spot shows exactly how long the melon rested on the ground ripening."
+   },
+   {
+    "id": "wat-B-03",
+    "used": 0,
+    "text": "Chilling dulls aroma — cold melon tastes flatter than the same melon served slightly cool."
+   },
+   {
+    "id": "wat-B-04",
+    "used": 0,
+    "text": "Standing each half flat on its cut face stops it from rolling while you work the wedges."
+   },
+   {
+    "id": "wat-B-05",
+    "used": 0,
+    "text": "Scoring the rind in shallow passes before the full cut stops thick skins from splitting sideways."
+   },
+   {
+    "id": "wat-B-06",
+    "used": 0,
+    "text": "The seed cavities sit along the center line, so splitting down the middle exposes them evenly."
+   },
+   {
+    "id": "wat-B-07",
+    "used": 0,
+    "text": "Vendors leave a strip of rind on each wedge as a natural handle so hands stay dry."
+   },
+   {
+    "id": "wat-B-08",
+    "used": 0,
+    "text": "Ten minutes on the counter brings a chilled melon back to the temperature where its aroma returns."
+   },
+   {
+    "id": "wat-B-09",
+    "used": 0,
+    "text": "A thinner blade drags less juice through the flesh than a thick chef's knife."
+   },
+   {
+    "id": "wat-B-10",
+    "used": 0,
+    "text": "Freezing leftover cubes bursts the cell walls, so they turn mealy the moment they thaw."
+   }
+  ],
+  "C": [
+   {
+    "id": "wat-C-01",
+    "used": 0,
+    "text": "Modern seedless varieties were largely perfected in Japan's twentieth-century breeding programs."
+   },
+   {
+    "id": "wat-C-02",
+    "used": 0,
+    "text": "Japanese farmers once grew melons inside box molds, producing square fruit sold purely as gifts."
+   },
+   {
+    "id": "wat-C-03",
+    "used": 0,
+    "text": "Watermelon has anchored American Southern summer gatherings for well over a century."
+   },
+   {
+    "id": "wat-C-04",
+    "used": 0,
+    "text": "Egypt ranks among the world's biggest exporters, shipping melons through winter into Europe."
+   },
+   {
+    "id": "wat-C-05",
+    "used": 0,
+    "text": "Spanish and Portuguese traders carried melon varieties out of Africa into Europe after the 1400s."
+   },
+   {
+    "id": "wat-C-06",
+    "used": 0,
+    "text": "In parts of China, flawless melons are sold as gift fruit, priced almost entirely by appearance."
+   },
+   {
+    "id": "wat-C-07",
+    "used": 0,
+    "text": "Seed-spitting contests have been a fixture of American county fairs since the early 1900s."
+   },
+   {
+    "id": "wat-C-08",
+    "used": 0,
+    "text": "Watermelon rind pickles were a standard entry in American pantry cookbooks by the 1800s."
+   },
+   {
+    "id": "wat-C-09",
+    "used": 0,
+    "text": "In Turkey, watermelon is commonly served as dessert alongside white cheese."
+   },
+   {
+    "id": "wat-C-10",
+    "used": 0,
+    "text": "Picnic folklore claims the sweetest melons grow at patch edges, where the vines had to struggle."
+   }
+  ],
+  "D": [
+   {
+    "id": "wat-D-01",
+    "used": 0,
+    "text": "Heavier melons for their size hold more juice — always compare two by weight, not size."
+   },
+   {
+    "id": "wat-D-02",
+    "used": 0,
+    "text": "A yellow, creamy field spot means it ripened on the vine; white or green means it was picked early."
+   },
+   {
+    "id": "wat-D-03",
+    "used": 0,
+    "text": "Dull, dark skin usually beats a glossy bright one — shine often means picked under-ripe."
+   },
+   {
+    "id": "wat-D-04",
+    "used": 0,
+    "text": "Fine brown webbing on the skin marks repeated bee visits to the blossom, often a sweeter-spot sign."
+   },
+   {
+    "id": "wat-D-05",
+    "used": 0,
+    "text": "Watermelon keeps best whole and cool — cut pieces start degrading within days."
+   },
+   {
+    "id": "wat-D-06",
+    "used": 0,
+    "text": "Dark, hard seeds mean full maturity; pale soft seeds are simply the young, undeveloped stage."
+   },
+   {
+    "id": "wat-D-07",
+    "used": 0,
+    "text": "You can cube a whole melon in under a minute by scoring a grid through the half while the rind holds it."
+   },
+   {
+    "id": "wat-D-08",
+    "used": 0,
+    "text": "Salt does not add sweetness — it suppresses bitterness, so the fruit's own sugar reads stronger."
+   },
+   {
+    "id": "wat-D-09",
+    "used": 0,
+    "text": "Melon balls scoop cleanly only from firm, chilled flesh; warm flesh collapses under the spoon."
+   },
+   {
+    "id": "wat-D-10",
+    "used": 0,
+    "text": "The sweetest bite usually sits just above the rind, where the sugar concentrates last."
+   }
+  ]
+ }
+}

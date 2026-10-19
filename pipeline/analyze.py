@@ -113,6 +113,9 @@ VOICEOVER RULES (MONETIZATION-CRITICAL — reused-content safety):
 YouTube reviewers reject "reused content": someone else's footage plus a voice
 that only describes what is already visible on screen. Every narration line
 MUST add value the viewer CANNOT get from the picture alone.
+When a "VERIFIED FACTS FOR THIS VIDEO" block is attached with the request, it
+REPLACES free fact generation: use ONLY those three facts (rewrite them into
+the narration as the block instructs), never swap in facts of your own.
 
 FACT BACKBONE — pick from this menu (mix at least 2 kinds across the video):
 - science/physics: WHY it works (e.g. "cutting along the grain gives the
@@ -279,8 +282,10 @@ Rules:
   ONLY if it is clearly a persistent overlay band). [] if nothing is burned in.
   Example: a two-line white credit at the lower area -> [{"top": 0.84, "bottom": 0.91, "kind": "text"}]
   same video with a small logo top-right -> [{"top": 0.04, "bottom": 0.10, "kind": "logo"}]
-- title: distinct angle (fact-led, question-led, or bold hook) — never a
-  paraphrase of the source title.
+- title: distinct angle — ideally built around the strongest VERIFIED FACT
+  of this video (e.g. "Why Street Vendors Tap Before Slicing", "The Secret
+  Behind the Equatorial Crack"); question-led or bold-hook also OK — never
+  a paraphrase of the source title.
 - description: 2-3 genuine sentences explaining the context/facts (no generic
   spam), ACCURATE to what the frames actually show (never misdescribe a
   visible color/subject, e.g. red interior is not "green hue"). 3-5 real
@@ -298,8 +303,10 @@ def _api_key():
     return k
 
 
-def _call_nemotron(frames, title_hint="", duration=None, audio_b64=None, correction=""):
+def _call_nemotron(frames, title_hint="", duration=None, audio_b64=None, correction="", extra=""):
     content = [{"type": "text", "text": PROMPT}]
+    if extra:
+        content.append({"type": "text", "text": extra})
     if title_hint:
         content.append({"type": "text", "text": f"Source title/context: {title_hint}"})
     if duration:
@@ -356,12 +363,14 @@ def _gemini_key():
     return os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
 
 
-def _call_gemini(frames, title_hint="", duration=None, audio_b64=None, correction=""):
+def _call_gemini(frames, title_hint="", duration=None, audio_b64=None, correction="", extra=""):
     """2nd-choice backend: same multimodal prompt -> Google Gemini generateContent."""
     key = _gemini_key()
     if not key:
         raise RuntimeError("GEMINI_API_KEY / GOOGLE_API_KEY not set")
     parts = [{"text": PROMPT}]
+    if extra:
+        parts.append({"text": extra})
     if title_hint:
         parts.append({"text": f"Source title/context: {title_hint}"})
     if duration:
@@ -427,13 +436,15 @@ OR_FREE_MODELS = [
 ]
 
 
-def _call_openrouter(frames, title_hint="", duration=None, correction="", model=None):
+def _call_openrouter(frames, title_hint="", duration=None, correction="", model=None, extra=""):
     """3rd-choice backend: OpenRouter free video-capable models (image+video input;
     these have NO audio modality so audio_b64 is intentionally not attached)."""
     key = os.getenv("OPENROUTER_API_KEY")
     if not key:
         raise RuntimeError("OPENROUTER_API_KEY not set")
     content = [{"type": "text", "text": PROMPT}]
+    if extra:
+        content.append({"type": "text", "text": extra})
     if title_hint:
         content.append({"type": "text", "text": f"Source title/context: {title_hint}"})
     if duration:
@@ -800,6 +811,13 @@ def analyze_video(path, title_hint="", fps=1.0, max_frames=10, allow_fallback=Tr
             return _normalize(_fallback_plan(dur, title_hint), dur)
         raise RuntimeError("no frames extracted")
     audio_b64 = extract_audio(path)
+    fact_note = ""
+    try:
+        import facts as _vault
+        fact_note = _vault.build_note(title_hint=title_hint,
+                                      video_key=title_hint or path)
+    except Exception as e:
+        print(f"[facts] vault skipped ({e})", file=sys.stderr)
     plan = None
     first_err = None
     corr = ""
@@ -807,7 +825,8 @@ def analyze_video(path, title_hint="", fps=1.0, max_frames=10, allow_fallback=Tr
         for attempt in (0, 1):
             try:
                 raw = _call_nemotron(frames, title_hint=title_hint, duration=dur,
-                                     audio_b64=audio_b64, correction=corr if attempt else "")
+                                     audio_b64=audio_b64, correction=corr if attempt else "",
+                                     extra=fact_note)
                 cand = _extract_json(raw)
                 n = _narration_count(cand)
                 need = _min_narration(cand.get("audio_type"))
@@ -830,7 +849,8 @@ def analyze_video(path, title_hint="", fps=1.0, max_frames=10, allow_fallback=Tr
             for attempt in (0, 1):
                 try:
                     raw = _call_gemini(frames, title_hint=title_hint, duration=dur,
-                                       audio_b64=audio_b64, correction=corr if attempt else "")
+                                       audio_b64=audio_b64, correction=corr if attempt else "",
+                                       extra=fact_note)
                     cand = _extract_json(raw)
                     n = _narration_count(cand)
                     need = _min_narration(cand.get("audio_type"))
@@ -854,7 +874,7 @@ def analyze_video(path, title_hint="", fps=1.0, max_frames=10, allow_fallback=Tr
                 try:
                     raw = _call_openrouter(frames, title_hint=title_hint, duration=dur,
                                            correction=corr if attempt else "",
-                                           model=or_model)
+                                           model=or_model, extra=fact_note)
                     cand = _extract_json(raw)
                     n = _narration_count(cand)
                     need = _min_narration(cand.get("audio_type"))

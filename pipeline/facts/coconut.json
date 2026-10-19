@@ -1,0 +1,259 @@
+{
+ "subject": "coconut",
+ "angle_names": {
+  "A": "Botanical / Science",
+  "B": "Tool & Technique Breakdown",
+  "C": "Regional & Street Culture",
+  "D": "Consumer / Culinary"
+ },
+ "angles": {
+  "A": [
+   {
+    "id": "coc-A-01",
+    "used": 0,
+    "text": "A coconut is a drupe, not a true nut — the hard shell is the endocarp wrapped around a single seed."
+   },
+   {
+    "id": "coc-A-02",
+    "used": 0,
+    "text": "The shell has three germination pores, the eyes, but usually only one of them ever sprouts."
+   },
+   {
+    "id": "coc-A-03",
+    "used": 0,
+    "text": "Coconut water is liquid endosperm — it slowly solidifies into the white meat as the fruit matures."
+   },
+   {
+    "id": "coc-A-04",
+    "used": 0,
+    "text": "A floating coconut can survive months at sea before washing ashore and sprouting on a new beach."
+   },
+   {
+    "id": "coc-A-05",
+    "used": 0,
+    "text": "The fibrous husk traps air pockets, which is exactly what keeps the fruit buoyant on ocean currents."
+   },
+   {
+    "id": "coc-A-06",
+    "used": 0,
+    "text": "Over half of coconut fat is lauric acid, a medium-chain fatty acid rare in most other foods."
+   },
+   {
+    "id": "coc-A-07",
+    "used": 0,
+    "text": "The meat grows thicker and the water volume shrinks the longer the nut stays ripening on the palm."
+   },
+   {
+    "id": "coc-A-08",
+    "used": 0,
+    "text": "Coconut comes from Portuguese coco, meaning skull, because the three pores look like a face."
+   },
+   {
+    "id": "coc-A-09",
+    "used": 0,
+    "text": "Sprouting happens through the softest of the three eyes, where the embryo sits just behind the shell."
+   },
+   {
+    "id": "coc-A-10",
+    "used": 0,
+    "text": "Salt-tolerant roots let coconut palms grow where ordinary fruit trees would die of stress."
+   },
+   {
+    "id": "coc-A-11",
+    "used": 0,
+    "text": "The palm takes close to a full year to carry one bunch of coconuts from flower to ripe nut."
+   },
+   {
+    "id": "coc-A-12",
+    "used": 0,
+    "text": "Each flower on the palm is either male or female, so the tree depends on insects to cross-pollinate it."
+   }
+  ],
+  "B": [
+   {
+    "id": "coc-B-01",
+    "used": 0,
+    "text": "Street vendors tap the equator of the nut — a hollow ring tone means plenty of water inside."
+   },
+   {
+    "id": "coc-B-02",
+    "used": 0,
+    "text": "A heavy cleaver cuts with its own weight; the wrist only guides the fall instead of pushing."
+   },
+   {
+    "id": "coc-B-03",
+    "used": 0,
+    "text": "Scoring a ring around the middle and then wedging it open gives the cleanest possible halves."
+   },
+   {
+    "id": "coc-B-04",
+    "used": 0,
+    "text": "Dull blades crush the fibers instead of slicing them, which is why shells shatter into ragged edges."
+   },
+   {
+    "id": "coc-B-05",
+    "used": 0,
+    "text": "Green young coconuts are shaved into a pyramid so the base sits flat and a straw finds the soft eye."
+   },
+   {
+    "id": "coc-B-06",
+    "used": 0,
+    "text": "The soft germination eye is the designed opening point — hardest to spot, easiest to pierce."
+   },
+   {
+    "id": "coc-B-07",
+    "used": 0,
+    "text": "Cutting with the fiber direction instead of across it lets the blade glide with far less drag."
+   },
+   {
+    "id": "coc-B-08",
+    "used": 0,
+    "text": "Vendors angle the blade at 45 degrees to pop a triangular drinking notch in a single practiced stroke."
+   },
+   {
+    "id": "coc-B-09",
+    "used": 0,
+    "text": "Machetes are ground asymmetrically so the flat side leaves a smooth plane on the finished cut."
+   },
+   {
+    "id": "coc-B-10",
+    "used": 0,
+    "text": "Tapping before every cut lets vendors sort water-heavy nuts from meat-heavy ones by ear alone."
+   },
+   {
+    "id": "coc-B-11",
+    "used": 0,
+    "text": "Prying with the blade tip after a ring cut splits the husk along its natural seams."
+   },
+   {
+    "id": "coc-B-12",
+    "used": 0,
+    "text": "Rolling the nut under a palm heel loosens the husk fibers before peeling, so the strands come away whole."
+   }
+  ],
+  "C": [
+   {
+    "id": "coc-C-01",
+    "used": 0,
+    "text": "Thai vendors shave green coconuts into smooth rounds, served ice-cold with a straw straight in."
+   },
+   {
+    "id": "coc-C-02",
+    "used": 0,
+    "text": "In Kerala, toddy tappers still climb with a rope loop instead of ladders or spikes."
+   },
+   {
+    "id": "coc-C-03",
+    "used": 0,
+    "text": "Notches cut into the trunk by generations of climbers become the palm's permanent staircase."
+   },
+   {
+    "id": "coc-C-04",
+    "used": 0,
+    "text": "Sri Lanka's king coconut has an orange shell and is drunk plain rather than cooked with."
+   },
+   {
+    "id": "coc-C-05",
+    "used": 0,
+    "text": "Caribbean jelly-cutting opens young nuts with one confident machete arc instead of ring scoring."
+   },
+   {
+    "id": "coc-C-06",
+    "used": 0,
+    "text": "Fermented coconut sap becomes toddy, and distilled further becomes arrack, an old colonial trade spirit."
+   },
+   {
+    "id": "coc-C-07",
+    "used": 0,
+    "text": "Coir rope spun from the husk once rigged sailing ships before synthetic fiber replaced it."
+   },
+   {
+    "id": "coc-C-08",
+    "used": 0,
+    "text": "In the Philippines, tender buko meat is scooped into salads and drinks instead of being grated dry."
+   },
+   {
+    "id": "coc-C-09",
+    "used": 0,
+    "text": "Vietnam's Ben Tre region turns coconut flesh into candy and uses every strand of the husk."
+   },
+   {
+    "id": "coc-C-10",
+    "used": 0,
+    "text": "Indian vendors sell tender coconut water with a slab of the soft meat floating in the same cup."
+   },
+   {
+    "id": "coc-C-11",
+    "used": 0,
+    "text": "Brazilian beach sellers drill the soft eye and serve agua de coco straight from the shell."
+   },
+   {
+    "id": "coc-C-12",
+    "used": 0,
+    "text": "In Java, sugar tapped from the coconut palm has been a standard sweetener long before cane arrived."
+   }
+  ],
+  "D": [
+   {
+    "id": "coc-D-01",
+    "used": 0,
+    "text": "Shake a young nut by your ear — a loud slosh means more water, a muted feel means more meat."
+   },
+   {
+    "id": "coc-D-02",
+    "used": 0,
+    "text": "Heavier nuts for their size hold more water; the lighter ones have set more flesh inside."
+   },
+   {
+    "id": "coc-D-03",
+    "used": 0,
+    "text": "Coconut milk splits when simmered too long — the plant proteins coalesce and release their fat."
+   },
+   {
+    "id": "coc-D-04",
+    "used": 0,
+    "text": "Toasting grated coconut browns its natural sugars and deepens the aroma within a couple of minutes."
+   },
+   {
+    "id": "coc-D-05",
+    "used": 0,
+    "text": "Traditional copra is just sun-dried coconut meat, pressed later for the oil."
+   },
+   {
+    "id": "coc-D-06",
+    "used": 0,
+    "text": "Coconut water oxidizes quickly — the clearer and colder it is, the cleaner it tastes."
+   },
+   {
+    "id": "coc-D-07",
+    "used": 0,
+    "text": "Coconut oil stays solid below about 25 degrees because over ninety percent of it is saturated fat."
+   },
+   {
+    "id": "coc-D-08",
+    "used": 0,
+    "text": "Freezing coconut before grating keeps the oils from smearing — it powders instead of clumping."
+   },
+   {
+    "id": "coc-D-09",
+    "used": 0,
+    "text": "Coconut water itself can set coconut milk into curds, the same acid-set principle as lemon cheese."
+   },
+   {
+    "id": "coc-D-10",
+    "used": 0,
+    "text": "A pinch of salt in coconut dessert suppresses bitterness, so the natural sugar reads even sweeter."
+   },
+   {
+    "id": "coc-D-11",
+    "used": 0,
+    "text": "A minute in the microwave makes the meat shrink and pop out of the shell in clean pieces."
+   },
+   {
+    "id": "coc-D-12",
+    "used": 0,
+    "text": "Cold dulls aroma, so coconut desserts taste richer slightly cooled than straight from the fridge."
+   }
+  ]
+ }
+}
