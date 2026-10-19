@@ -23,7 +23,7 @@ FFMPEG = os.getenv("FFMPEG_BIN", "ffmpeg")
 FFPROBE = os.getenv("FFPROBE_BIN", "ffprobe")
 MODEL = os.getenv("NVIDIA_MODEL", "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning")
 API = "https://integrate.api.nvidia.com/v1/chat/completions"
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.8-flash")
 GEMINI_API = ("https://generativelanguage.googleapis.com/v1beta/models/"
               f"{GEMINI_MODEL}:generateContent")
 
@@ -324,28 +324,41 @@ def _call_gemini(frames, title_hint="", duration=None, audio_b64=None):
             "temperature": 0.7,
             "topP": 0.95,
             "maxOutputTokens": 8192,
+            "thinkingConfig": {"thinkingBudget": 0},
         },
     }
-    url = f"{GEMINI_API}?key={key}"
+    models = []
+    for m in (GEMINI_MODEL, "gemini-flash-latest", "gemini-3.1-flash-lite"):
+        if m and m not in models:
+            models.append(m)
+    url_base = "https://generativelanguage.googleapis.com/v1beta/models/"
     import time
     last = None
-    for attempt in range(3):
-        try:
-            r = requests.post(url, json=payload, timeout=300)
-            if r.status_code == 429 or r.status_code >= 500:
-                last = RuntimeError(f"HTTP {r.status_code}: {(r.text or '')[:200]}")
+    for model in models:
+        url = f"{url_base}{model}:generateContent?key={key}"
+        for attempt in range(3):
+            try:
+                r = requests.post(url, json=payload, timeout=300)
+                if r.status_code == 400 and "thinkingConfig" in (r.text or ""):
+                    payload.get("generationConfig", {}).pop("thinkingConfig", None)
+                    continue
+                if r.status_code == 429 or r.status_code >= 500:
+                    last = RuntimeError(f"{model}: HTTP {r.status_code}: {(r.text or '')[:200]}")
+                    time.sleep(5 * (attempt + 1))
+                    continue
+                r.raise_for_status()
+                data = r.json()
+                cand = (data.get("candidates") or [{}])[0]
+                txt = "".join(p.get("text", "") for p in (cand.get("content") or {}).get("parts") or [])
+                if not txt:
+                    raise RuntimeError(f"gemini empty response: {str(data)[:300]}")
+                return txt
+            except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
+                last = e
                 time.sleep(5 * (attempt + 1))
-                continue
-            r.raise_for_status()
-            data = r.json()
-            cand = (data.get("candidates") or [{}])[0]
-            txt = "".join(p.get("text", "") for p in (cand.get("content") or {}).get("parts") or [])
-            if not txt:
-                raise RuntimeError(f"gemini empty response: {str(data)[:300]}")
-            return txt
-        except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
-            last = e
-            time.sleep(5 * (attempt + 1))
+            except requests.exceptions.HTTPError as e:
+                last = e
+                break
     raise last
 
 
