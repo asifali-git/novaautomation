@@ -10,7 +10,7 @@ Env:
   ANALYZE=true|false           use AI edit-plan (default true; Nemotron -> smart fallback)
   NVIDIA_API_KEY               Nemotron omni key (build.nvidia.com)
   VOICEOVER=true|false         add Kokoro narration from plan (default true)
-  MAX_SECS                     cap clip length (default 90)
+  MAX_SECS                     cap clip length (default 200 — allows 3-min Shorts)
   PRIVACY                      public|unlisted|private (default public)
   OPENROUTER_API_KEY           metadata fallback if plan lacks it
   YT_REFRESH_TOKEN/CLIENT_*    YouTube upload
@@ -35,7 +35,7 @@ import upload_social as us
 
 WORKER = os.getenv("WORKER_URL", "").rstrip("/")
 TOKEN = os.getenv("INTERNAL_TOKEN", "")
-MAX_SECS = float(os.getenv("MAX_SECS", "90"))
+MAX_SECS = float(os.getenv("MAX_SECS", "200"))
 ANALYZE = os.getenv("ANALYZE", "true").lower() in ("1", "true", "yes")
 VOICEOVER = os.getenv("VOICEOVER", "true").lower() in ("1", "true", "yes")
 PRIVACY = os.getenv("PRIVACY", "public")
@@ -227,6 +227,14 @@ def fit_segments_to_voices(plan, voice_wavs, src_duration=None):
     if deficit > 0.01:
         print(f"[fit] WARNING: {deficit:.2f}s over budget even after cuts",
               file=sys.stderr)
+    # HARD CAP (issue C): 0.5s floors can still leave the timeline past the
+    # source EOF — segments then render short video + full padded audio and
+    # the A/V streams drift for the rest of the clip. Compress uniformly.
+    if src_duration and sum(alloc.values()) > src_duration + 0.01:
+        f = src_duration / sum(alloc.values())
+        print(f"[fit] compressing timeline x{f:.3f} to fit source")
+        for idx in list(alloc.keys()):
+            alloc[idx] = alloc[idx] * f
 
     t = 0.0
     for seg in segs:
@@ -242,6 +250,18 @@ def fit_segments_to_voices(plan, voice_wavs, src_duration=None):
         t = seg["end"]
 
     total = t
+    # Final guarantee: floors above (0.5s min) may re-overflow the cap on
+    # many tiny segments — one last proportional squeeze.
+    if src_duration and total > src_duration + 0.01:
+        f = src_duration / total
+        print(f"[fit] final squeeze x{f:.3f} ({total:.2f}s -> {src_duration:.2f}s)")
+        t = 0.0
+        for seg in segs:
+            span = (float(seg["end"]) - float(seg["start"])) * f
+            seg["start"] = round(t, 3)
+            seg["end"] = round(t + span, 3)
+            t = seg["end"]
+        total = t
     print(f"[fit] total timeline: {total:.2f}s (source={src_duration:.2f}s)")
 
 

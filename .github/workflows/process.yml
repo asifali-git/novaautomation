@@ -89,7 +89,7 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
           PRIVACY: ${{ vars.PRIVACY || 'public' }}
-          MAX_SECS: ${{ vars.MAX_SECS || '90' }}
+          MAX_SECS: ${{ vars.MAX_SECS || '200' }}
         run: |
           echo "=== Processing manual job ${{ inputs.manual_job_id }} ==="
           MANUAL_JOB_ID="${{ inputs.manual_job_id }}" python pipeline/manual_upload.py
@@ -105,7 +105,7 @@ jobs:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
           ANALYZE: ${{ vars.ANALYZE || 'true' }}
           VOICEOVER: ${{ vars.VOICEOVER || 'true' }}
-          MAX_SECS: ${{ vars.MAX_SECS || '90' }}
+          MAX_SECS: ${{ vars.MAX_SECS || '200' }}
           PRIVACY: ${{ vars.PRIVACY || 'public' }}
           FB_PAGE_URL: ${{ vars.FB_PAGE_URL || '' }}
         run: |

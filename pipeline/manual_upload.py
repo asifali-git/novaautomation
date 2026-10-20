@@ -21,7 +21,7 @@ Env:
   KOKORO_DIR                    kokoro model cache dir
   YT_*                          YouTube upload
   PRIVACY                       public|unlisted|private
-  MAX_SECS                      cap clip length (default 60)
+  MAX_SECS                      cap clip length (default 200 — allows 3-min Shorts)
 """
 import os
 import sys
@@ -45,7 +45,7 @@ TOKEN = os.getenv("INTERNAL_TOKEN", "")
 OPENROUTER_KEY = os.getenv("OPENROUTER_API_KEY", "")
 NVIDIA_KEY = os.getenv("NVIDIA_API_KEY", "")
 PRIVACY = os.getenv("PRIVACY", "public")
-MAX_SECS = float(os.getenv("MAX_SECS", "60"))
+MAX_SECS = float(os.getenv("MAX_SECS", "200"))
 
 
 def _h():
@@ -239,6 +239,14 @@ def fit_segments_to_voices(plan, voice_wavs, src_duration=None):
             take = min(max(0.0, alloc[idx] - 1.0), deficit)
             alloc[idx] -= take
             deficit -= take
+    # HARD CAP (issue C): the 0.5s floors can still leave the timeline past
+    # the source EOF (the 82.27s job57 rendered an 83.54s timeline) — that
+    # over-read desynced audio from video. Compress uniformly to fit.
+    if src_duration and sum(alloc.values()) > src_duration + 0.01:
+        f = src_duration / sum(alloc.values())
+        print(f"[fit] compressing timeline x{f:.3f} to fit source")
+        for idx in list(alloc.keys()):
+            alloc[idx] = alloc[idx] * f
 
     t = 0.0
     for seg in segs:
@@ -250,6 +258,17 @@ def fit_segments_to_voices(plan, voice_wavs, src_duration=None):
         seg["start"] = round(t, 3)
         seg["end"] = round(t + actual, 3)
         t = seg["end"]
+    # Final guarantee (see main.py): 0.5s floors may re-overflow on many
+    # tiny segments — one last proportional squeeze keeps us <= source.
+    if src_duration and t > src_duration + 0.01:
+        f = src_duration / t
+        print(f"[fit] final squeeze x{f:.3f} ({t:.2f}s -> {src_duration:.2f}s)")
+        t = 0.0
+        for seg in segs:
+            span = (float(seg["end"]) - float(seg["start"])) * f
+            seg["start"] = round(t, 3)
+            seg["end"] = round(t + span, 3)
+            t = seg["end"]
     print(f"[fit] total timeline: {t:.2f}s (source={src_duration:.2f}s)")
 
 

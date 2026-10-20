@@ -179,28 +179,30 @@ def pick_facts(title_hint="", video_key="", n=3, subject="", context=""):
     return label, [str(f.get("text", "")).strip() for f in picked if f.get("text")]
 
 
-def build_note(title_hint="", video_key="", subject="", context=""):
+def build_note(title_hint="", video_key="", subject="", context="", n=3):
     """Prompt block handed to the AI: use ONLY these verified facts."""
     try:
         angle, facts = pick_facts(title_hint=title_hint, video_key=video_key,
-                                  subject=subject, context=context)
+                                  subject=subject, context=context, n=max(1, int(n or 3)))
     except Exception as e:
         print(f"[facts] vault error ({e})")
         return ""
     if not facts:
         return ""
     lines = "\n".join(f"{i + 1}) {t}" for i, t in enumerate(facts))
-    print(f"[facts] angle={angle} n={len(facts)}")
+    nf = len(facts)
+    print(f"[facts] angle={angle} n={nf}")
     return (
         f"VERIFIED FACTS FOR THIS VIDEO (angle: {angle}):\n{lines}\n"
-        "USE ALL THREE — they REPLACE free fact generation: rewrite each into "
-        "ONE natural 10-15-word narration line, same meaning, no new claims, "
-        "no invented numbers. First narrated segment = hook (lead with fact 1 "
-        "as a bold claim or question), middle narrated segment = fact 2 stated "
-        "plainly, last narrated segment = wrap fact 3 into a comment-inviting "
-        "question that ENDS the video (voice runs to the final seconds, never "
-        "stops early leaving silence). Build the TITLE around the strongest of "
-        "these three facts (e.g. 'Why Street Vendors Tap Before Slicing'). "
+        f"USE ALL {nf} — they REPLACE free fact generation: rewrite each into "
+        f"ONE natural 10-15-word narration line, same meaning, no new claims, "
+        f"no invented numbers. First narrated segment = hook (lead with fact 1 "
+        f"as a bold claim or question), middle narrated segments = facts 2..{max(2, nf - 1)} "
+        f"stated plainly and spread evenly across the video, last narrated segment "
+        f"= wrap fact {nf} into a comment-inviting "
+        f"question that ENDS the video (voice runs to the final seconds, never "
+        f"stops early leaving silence). Build the TITLE around the strongest of "
+        f"these facts (e.g. 'Why Street Vendors Tap Before Slicing'). "
         "CONTEXT: the facts must FIT what the frames actually show (fresh "
         "coconut-water video gets water/tender-pulp facts, dry-copra videos "
         "get processing facts). SAFETY: if a given fact is wrong for the "

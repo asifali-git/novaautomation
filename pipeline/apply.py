@@ -502,6 +502,32 @@ def apply_plan(src, plan, workdir="work", voice_wavs=None, out_name="final_edit.
     voice_wavs = new_wavs
     segs = plan["segments"]
 
+    # SYNC GUARD (issue C): never read past the source EOF. A segment that
+    # starts beyond the end yields video-less frames while its padded audio
+    # keeps playing — the streams then drift out of sync for the rest of the
+    # clip (user feedback: "voiceover khatam hoti hai, audio drift karti hai").
+    try:
+        src_dur = analyze.probe_duration(src)
+    except Exception:
+        src_dur = None
+    if src_dur:
+        changed = False
+        for seg in segs:
+            st = float(seg.get("start", 0) or 0)
+            en = float(seg.get("end", st + 1) or st + 1)
+            if st >= src_dur - 0.15:
+                st = max(0.0, src_dur - 0.3)
+            en = min(en, src_dur)
+            if en - st < 0.2:
+                en = min(src_dur, st + 0.3)
+            if abs(st - float(seg.get("start", 0) or 0)) > 0.001 \
+                    or abs(en - float(seg.get("end", 0) or 0)) > 0.001:
+                changed = True
+            seg["start"] = round(st, 3)
+            seg["end"] = round(en, 3)
+        if changed:
+            print(f"[apply] clamped segment windows to source (dur={src_dur:.2f}s)")
+
     # Compute caption crop fractions. Uses UNION (max) across regions of the
     # same band so multiple text lines don't sum into over-cropping.
     #   top region    [t, b] -> crop top down to b        (crop_top = b)

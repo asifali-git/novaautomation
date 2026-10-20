@@ -114,8 +114,8 @@ YouTube reviewers reject "reused content": someone else's footage plus a voice
 that only describes what is already visible on screen. Every narration line
 MUST add value the viewer CANNOT get from the picture alone.
 When a "VERIFIED FACTS FOR THIS VIDEO" block is attached with the request, it
-REPLACES free fact generation: use ONLY those three facts (rewrite them into
-the narration as the block instructs), never swap in facts of your own.
+REPLACES free fact generation: use ONLY those facts (rewrite them into the
+narration as the block instructs), never swap in facts of your own.
 
 FACT BACKBONE — pick from this menu (mix at least 2 kinds across the video):
 - science/physics: WHY it works (e.g. "cutting along the grain gives the
@@ -133,7 +133,7 @@ shown). When unsure of a detail, phrase it qualitatively ("far more",
 percentages, or origins.
 
 FACT QUALITY BAR (YouTube's reused-content reviewer decides on THIS):
-Each of the 3 narration lines must be a DEEP transformative fact. Apply the
+Each narration line must be a DEEP transformative fact. Apply the
 reviewer test: "Could a viewer derive this sentence just by looking at the
 clip?" If YES — reject the line and pick a different angle.
 - ❌ WEAK / visual-derived (gets flagged as minimal commentary):
@@ -145,7 +145,7 @@ clip?" If YES — reject the line and pick a different angle.
   watermelons lack lycopene, the pigment that turns regular melons red."
   Chemistry/botany terms, where the practice originates, what professionals
   do differently and WHY, myth-busts that explain the real mechanism.
-Aim for at least one named concept or mechanism across the 3 lines. Never
+Aim for at least one named concept or mechanism across the narration lines. Never
 pad with observation to hit the count — if the subject is thin, go for the
 deepest true fact you know instead.
 
@@ -179,21 +179,21 @@ BANNED in narration (fails monetization review):
   coconut's interior", "the perfectly peeled coconut awaits...")
 - restating the on-screen caption
 SPACING & PACING (MANDATORY — ASMR quality + monetization):
-- STRICT SEGMENT LIMIT (hard rule, no exceptions):
-  * "asmr": EXACTLY 3 segments in the entire video may have a narration
-    line — one hook early, one fact mid-video, one question at the end.
-    ALL OTHER segments: narration "" (empty string). Writing narration on
-    more than 3 asmr segments REJECTS the plan.
+- NARRATION BUDGET (hard rule): follow the narrated-segment count given with
+  the source duration.
+  * "asmr": exactly that count — one hook early, facts spread across the
+    middle, one question at the end. ALL OTHER segments: narration ""
+    (empty string). Exceeding the asmr budget REJECTS the plan.
     Natural cutting/scraping/splash audio must dominate (~70-80% of runtime).
-  * general (vocal/music/sfx/silent): 5-8 narrated segments max (hook ->
-    build -> insight -> payoff). Remaining "" so audio breathes.
+  * general (vocal/music/sfx/silent): up to budget+2 narrated segments
+    (hook -> build -> insight -> payoff). Remaining "" so audio breathes.
 - NEVER narrate visible actions ("the hand grips", "the knife cuts", "the
   blade glides", "the inside is yellow"). Narration must state information
   NOT visible on screen: history, botany, nutrition, origin, technique WHY,
   consumer tips, myth-busting.
 - Do NOT narrate every segment in either mode.
 - Each spoken line: 10-15 words (under 3 seconds of speech).
-- Arc (~60s): hook/surprising fact early -> breathing room -> insight
+- Arc (whole video length): hook/surprising fact early -> breathing room -> insight
   mid-video -> educational fact near the end -> final question/conclusion
   (ASMR uses the sparse subset of this arc; general videos cover it fully).
 - OUTRO / AUDIO LOOP (hard rule): your LAST narrated line must END within
@@ -261,8 +261,9 @@ Return ONLY valid JSON (no markdown fences, no commentary):
 }
 
 Rules:
-- segments cover timeline contiguously (first start=0, each start=previous end).
-- 8 to 16 short segments.
+- segments cover timeline contiguously (first start=0, each start=previous
+  end, LAST end == source duration — never stop early at half the clip).
+- segment count target is given with the source duration (~4-6s each).
 - speed: 1.0=normal, >1=faster. Vary per segment (1.08-1.15 typical).
 - EVERY segment: zoom=none (MANDATORY), crop all zeros (MANDATORY — full frame,
   never crop), non-none color grade, speed != 1.0, sharpness 0.06-0.12 (subtle,
@@ -272,9 +273,9 @@ Rules:
   "" on every other segment. Different wording each time.
 - narration: value-adding commentary (fact, insight, opinion, humor, or a
   question) — NEVER a description of visible action, never a caption repeat.
-  Count per audio_type: "asmr" -> EXACTLY 3 narrated segments (hook, mid
-  fact, end question); general (vocal/music/sfx/silent) -> 5-8 narrated
-  segments as a storyline. ALL other segments get "" (empty = silent,
+  Count: use the NARRATION BUDGET given with the source duration ("asmr" ->
+  exactly that many: hook, spread facts, end question; general -> up to
+  budget+2 as a storyline). ALL other segments get "" (empty = silent,
   natural audio stays prominent). Never repeat a line in consecutive segments.
 - source_captions: PERSISTENT burned-in text/logos/watermarks that belong to the
   ORIGINAL source video (old captions, channel names, "subscribe" overlays,
@@ -317,7 +318,7 @@ def _call_nemotron(frames, title_hint="", duration=None, audio_b64=None, correct
     if title_hint:
         content.append({"type": "text", "text": f"Source title/context: {title_hint}"})
     if duration:
-        content.append({"type": "text", "text": f"Source duration: {duration:.1f}s"})
+        content.append({"type": "text", "text": _duration_note(duration)})
     if audio_b64:
         content.append({
             "type": "audio_url",
@@ -381,7 +382,7 @@ def _call_gemini(frames, title_hint="", duration=None, audio_b64=None, correctio
     if title_hint:
         parts.append({"text": f"Source title/context: {title_hint}"})
     if duration:
-        parts.append({"text": f"Source duration: {duration:.1f}s"})
+        parts.append({"text": _duration_note(duration)})
     if audio_b64:
         parts.append({"inline_data": {"mime_type": "audio/wav", "data": audio_b64}})
         parts.append({"text": "Audio attached. Listen to decide audio_type and narration."})
@@ -455,7 +456,7 @@ def _call_openrouter(frames, title_hint="", duration=None, correction="", model=
     if title_hint:
         content.append({"type": "text", "text": f"Source title/context: {title_hint}"})
     if duration:
-        content.append({"type": "text", "text": f"Source duration: {duration:.1f}s"})
+        content.append({"type": "text", "text": _duration_note(duration)})
     content.append({
         "type": "text",
         "text": ("Audio track is NOT attached for this model. Infer audio_type "
@@ -704,7 +705,7 @@ def _transform_floor(seg, idx):
 
 def _fallback_plan(duration, title_hint=""):
     dur = duration or 15.0
-    n = 8
+    n = max(8, min(36, int(round(dur / 5.0))))
     seg_len = dur / n
     segs = []
     for i in range(n):
@@ -741,7 +742,44 @@ def _fallback_plan(duration, title_hint=""):
     }
 
 
-def _min_narration(audio_type):
+def _narr_target(duration, audio_type="asmr"):
+    """Narrated-segment budget scaled to clip length (3-min Shorts need more)."""
+    d = float(duration or 30.0)
+    if (audio_type or "").lower() == "asmr":
+        if d <= 45:
+            return 3
+        if d <= 90:
+            return 4
+        if d <= 150:
+            return 6
+        return 8
+    if d <= 45:
+        return 5
+    if d <= 90:
+        return 6
+    if d <= 150:
+        return 8
+    return 10
+
+
+def _duration_note(duration):
+    """Duration line sent to the AI: segment count + narration budget."""
+    dur = float(duration or 30.0)
+    n_seg = max(8, min(40, int(round(dur / 5.0))))
+    n = _narr_target(dur, "asmr")
+    return (
+        f"Source duration: {dur:.1f}s. "
+        f"SEGMENT TARGET: about {n_seg} segments of ~4-6s each covering the FULL "
+        f"duration (first start=0.0, last end=={dur:.1f}s — NEVER stop early at "
+        f"half the clip). NARRATION BUDGET (hard): exactly {n} narrated segments "
+        f"if audio_type=asmr, {n} to {n + 2} if general (hook first, "
+        f"question last, rest spread evenly across the whole video)."
+    )
+
+
+def _min_narration(audio_type, duration=None):
+    if duration:
+        return _narr_target(duration, audio_type)
     return 3 if (audio_type or "").lower() == "asmr" else 5
 
 
@@ -750,13 +788,14 @@ def _narration_count(plan):
     return sum(1 for s in segs if (s.get("narration") or "").strip())
 
 
-def _narration_fix_note(plan):
+def _narration_fix_note(plan, duration=None):
     at = (plan.get("audio_type") or "asmr").lower()
-    need = _min_narration(at)
+    need = _min_narration(at, duration)
     return (
         "CORRECTION: your last plan put narration on too few segments. "
         f"audio_type={at} REQUIRES at least {need} narrated segments "
-        "(asmr: 3-4, others: 5-8), each narration 10-15 words of factual spoken line. "
+        "(follow the NARRATION BUDGET given with the source duration), "
+        "each narration 10-15 words of factual spoken line. "
         "All other segments must have narration=\"\". "
         "Captions allowed ONLY on narrated segments (short <=5-word fact headline); "
         "all other segments must have caption.text=\"\". "
@@ -825,6 +864,23 @@ def _normalize(plan, duration):
             continue
     if not clean:
         clean = _fallback_plan(dur)["segments"]
+    # FULL-SOURCE COVERAGE (issue A): AI plans often cover only the first
+    # half of the clip (e.g. 42s of an 82s source) — the upload then lost
+    # the entire second half. Close internal gaps first, then stretch all
+    # boundaries proportionally so the plan always spans 0..source duration.
+    if dur and clean:
+        for i in range(1, len(clean)):
+            if clean[i]["start"] - clean[i - 1]["end"] > 0.05:
+                clean[i - 1]["end"] = round(clean[i]["start"], 3)
+        last_end = clean[-1]["end"]
+        if last_end < dur - 0.3 and last_end > 0.5:
+            f = dur / last_end
+            for s in clean:
+                s["start"] = round(s["start"] * f, 3)
+                s["end"] = round(s["end"] * f, 3)
+            clean[-1]["end"] = round(dur, 3)
+            print(f"[analyze] coverage stretched x{f:.3f} "
+                  f"({last_end:.1f}s -> {dur:.1f}s)")
     for idx, seg in enumerate(clean):
         _transform_floor(seg, idx)
     plan["segments"] = clean
@@ -838,11 +894,17 @@ def _normalize(plan, duration):
     plan["audio_volume"] = 0.40 if audio_type == "asmr" else 0.55
     plan["has_speech"] = audio_type == "vocal"
     # HARD TRIM: asmr must stay sparse — if the model over-narrated, keep
-    # only the hook (first), mid fact, and end question; blank the rest.
+    # only the NARRATION BUDGET worth of lines, evenly spread over the clip.
     narr_idx = [i for i, s in enumerate(clean) if s["narration"].strip()]
-    max_n = 4 if audio_type == "asmr" else 8
+    n_tgt = _narr_target(dur, audio_type) if dur else (3 if audio_type == "asmr" else 5)
+    max_n = n_tgt + 1
     if len(narr_idx) > max_n:
-        keep = {narr_idx[0], narr_idx[len(narr_idx) // 2], narr_idx[-1]}
+        k = min(n_tgt, len(narr_idx))
+        if k <= 1:
+            keep = {narr_idx[0]}
+        else:
+            keep = {narr_idx[round(i * (len(narr_idx) - 1) / (k - 1))]
+                    for i in range(k)}
         dropped = 0
         for i in narr_idx:
             if i not in keep:
@@ -851,7 +913,7 @@ def _normalize(plan, duration):
                 dropped += 1
         if dropped:
             print(f"[analyze] trimmed narration on {dropped} segs "
-                  f"(kept {len(keep)} of {len(narr_idx)}, max={max_n})")
+                  f"(kept {len(keep)} of {len(narr_idx)}, budget={n_tgt})")
     # Narrated segments need room for the spoken line (~10-15 words = ~3s).
     # Steal time from the neighbour segment (keeps timeline contiguous) so
     # the final question/hook never gets clipped in the rendered audio.
@@ -979,13 +1041,14 @@ def analyze_video(path, title_hint="", fps=1.0, max_frames=10, allow_fallback=Tr
             ctx = (cls.get("context") or "").strip()
             print(f"[facts] micro subject={subj!r} category={cat!r} "
                   f"context={ctx!r}", file=sys.stderr)
+        n_f = _narr_target(dur, "asmr") if dur else 3
         fact_note = _vault.build_note(title_hint=title_hint,
                                       video_key=title_hint or path,
-                                      subject=subj, context=ctx)
+                                      subject=subj, context=ctx, n=n_f)
         if not fact_note and cat and cat != "other":
             fact_note = _vault.build_note(title_hint=title_hint,
                                           video_key=title_hint or path,
-                                          subject=cat, context=ctx)
+                                          subject=cat, context=ctx, n=n_f)
     except Exception as e:
         print(f"[facts] vault skipped ({e})", file=sys.stderr)
     plan = None
@@ -999,11 +1062,11 @@ def analyze_video(path, title_hint="", fps=1.0, max_frames=10, allow_fallback=Tr
                                      extra=fact_note)
                 cand = _extract_json(raw)
                 n = _narration_count(cand)
-                need = _min_narration(cand.get("audio_type"))
+                need = _min_narration(cand.get("audio_type"), dur)
                 if n < need:
                     print(f"[analyze] nemotron narration {n} < {need}; corrective retry",
                           file=sys.stderr)
-                    corr = _narration_fix_note(cand)
+                    corr = _narration_fix_note(cand, dur)
                     continue
                 plan = cand
                 print("[analyze] nemotron ok")
@@ -1023,11 +1086,11 @@ def analyze_video(path, title_hint="", fps=1.0, max_frames=10, allow_fallback=Tr
                                        extra=fact_note)
                     cand = _extract_json(raw)
                     n = _narration_count(cand)
-                    need = _min_narration(cand.get("audio_type"))
+                    need = _min_narration(cand.get("audio_type"), dur)
                     if n < need:
                         print(f"[analyze] gemini narration {n} < {need}; corrective retry",
                               file=sys.stderr)
-                        corr = _narration_fix_note(cand)
+                        corr = _narration_fix_note(cand, dur)
                         continue
                     plan = cand
                     print("[analyze] gemini ok")
@@ -1047,11 +1110,11 @@ def analyze_video(path, title_hint="", fps=1.0, max_frames=10, allow_fallback=Tr
                                            model=or_model, extra=fact_note)
                     cand = _extract_json(raw)
                     n = _narration_count(cand)
-                    need = _min_narration(cand.get("audio_type"))
+                    need = _min_narration(cand.get("audio_type"), dur)
                     if n < need:
                         print(f"[analyze] openrouter {or_model} narration {n} < {need}; "
                               "corrective retry", file=sys.stderr)
-                        corr = _narration_fix_note(cand)
+                        corr = _narration_fix_note(cand, dur)
                         continue
                     plan = cand
                     print(f"[analyze] openrouter ok ({or_model})")
