@@ -1,0 +1,515 @@
+{
+ "audio_type": "asmr",
+ "audio_mode": "lower",
+ "audio_volume": 0.4,
+ "has_speech": false,
+ "video_summary": "A skilled hand uses a large knife to expertly peel a yellow coconut on a wooden stump in a tropical outdoor setting.",
+ "style": "educational",
+ "title": "Why Street Vendors Tap Before Slicing",
+ "description": "Watch the expert technique as a yellow coconut is peeled on a wooden stump. Learn Ghanaian candy traditions, dwarf coconut choices, and Rajasthani laddus.",
+ "hashtags": [
+  "#coconut",
+  "#asmr",
+  "#peeling",
+  "#foodtech",
+  "#greekcandy",
+  "#dwarfcoconut",
+  "#rajasthaindesserts"
+ ],
+ "tags": [
+  "coconut peeling",
+  "street food",
+  "peeling technique",
+  "Ghanaian candy",
+  "coconut traditions",
+  "Rajasthani sweets",
+  "knife skills",
+  "tropical fruit",
+  "food preparation",
+  "natural ingredients",
+  "culinary craft",
+  "organic produce",
+  "food science",
+  "peeling method",
+  "coconut water"
+ ],
+ "segments": [
+  {
+   "index": 0,
+   "start": 0.0,
+   "end": 6.0,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Ghanaian Candy Secret",
+    "position": "top",
+    "style": "box"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Why street vendors tap coconuts before slicing for candy?",
+   "notes": "Hook: bold claim using verified fact 1"
+  },
+  {
+   "index": 1,
+   "start": 6.0,
+   "end": 12.0,
+   "action": "keep",
+   "speed": 1.08,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "center",
+    "style": "box"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Mid-video fact: verified fact 2 stated plainly"
+  },
+  {
+   "index": 2,
+   "start": 12.0,
+   "end": 18.0,
+   "action": "keep",
+   "speed": 1.12,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "box"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Fact 3 integrated as insight"
+  },
+  {
+   "index": 3,
+   "start": 18.0,
+   "end": 24.0,
+   "action": "keep",
+   "speed": 1.05,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.07,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.04,
+    "saturation": 1.09
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "top",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Expert observation on knife technique"
+  },
+  {
+   "index": 4,
+   "start": 24.0,
+   "end": 30.0,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Yellow Coconut",
+    "position": "bottom",
+    "style": "box"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Yellow coconuts sit longer on the palm, so their water turns naturally sweeter.",
+   "notes": "Chemistry fact about water sweetness"
+  },
+  {
+   "index": 5,
+   "start": 30.0,
+   "end": 36.0,
+   "action": "keep",
+   "speed": 1.07,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.07,
+   "color": {
+    "preset": "cool",
+    "brightness": 0.0,
+    "contrast": 1.05,
+    "saturation": 1.1
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "center",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "ASMR segment with silent narration"
+  },
+  {
+   "index": 6,
+   "start": 36.0,
+   "end": 42.0,
+   "action": "keep",
+   "speed": 1.15,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "top",
+    "style": "box"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Visual payoff with no narration"
+  },
+  {
+   "index": 7,
+   "start": 42.0,
+   "end": 48.0,
+   "action": "keep",
+   "speed": 1.09,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Opinion on knife quality"
+  },
+  {
+   "index": 8,
+   "start": 48.0,
+   "end": 54.0,
+   "action": "keep",
+   "speed": 1.04,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.07,
+   "color": {
+    "preset": "cool",
+    "brightness": 0.0,
+    "contrast": 1.05,
+    "saturation": 1.1
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Coconut Water",
+    "position": "center",
+    "style": "box"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Would you drink it straight from the shell?",
+   "notes": "Ending question per ASMR rules"
+  },
+  {
+   "index": 9,
+   "start": 54.0,
+   "end": 60.0,
+   "action": "keep",
+   "speed": 1.11,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Silent segment with natural audio dominance"
+  },
+  {
+   "index": 10,
+   "start": 60.0,
+   "end": 66.0,
+   "action": "keep",
+   "speed": 1.06,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.07,
+   "color": {
+    "preset": "moody",
+    "brightness": 0.0,
+    "contrast": 1.04,
+    "saturation": 1.09
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Closing silence for ASMR quality"
+  },
+  {
+   "index": 11,
+   "start": 66.0,
+   "end": 71.357,
+   "action": "keep",
+   "speed": 1.02,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.06,
+   "color": {
+    "preset": "neon",
+    "brightness": 0.0,
+    "contrast": 1.08,
+    "saturation": 1.15
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Final frame with source credit"
+  }
+ ],
+ "global": {
+  "intro_effect": "fade",
+  "ending_effect": "fade",
+  "voice_gain": 1.0
+ },
+ "caption_regions": [
+  {
+   "band": "top",
+   "top_frac": 0.0797,
+   "bottom_frac": 0.1641,
+   "action": "crop",
+   "confidence": 0.95
+  },
+  {
+   "band": "bottom",
+   "top_frac": 0.8688,
+   "bottom_frac": 0.9125,
+   "action": "crop",
+   "confidence": 0.95
+  }
+ ]
+}
