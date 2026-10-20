@@ -210,13 +210,41 @@ def fit_segments_to_voices(plan, voice_wavs, src_duration=None):
         (s.get("index") for s in segs if s.get("index") in voice_wavs),
         default=None)
 
+    # Budget: narration segs get full need FIRST; shortfall comes from silent
+    # segs (floor 0.6s), then non-final narrated (floor 1.0s). Final narration
+    # is never cut — chopped sentences sound like corrupt audio (feedback).
+    alloc = {}
+    for seg in segs:
+        idx = seg.get("index")
+        cur = float(seg["end"]) - float(seg["start"])
+        alloc[idx] = extensions.get(idx, cur)
+    deficit = sum(alloc.values()) - src_duration
+    if deficit > 0.01:
+        for seg in segs:
+            if deficit <= 0.01:
+                break
+            idx = seg.get("index")
+            if idx in voice_wavs:
+                continue
+            take = min(max(0.0, alloc[idx] - 0.6), deficit)
+            alloc[idx] -= take
+            deficit -= take
+    if deficit > 0.01:
+        for seg in segs:
+            if deficit <= 0.01:
+                break
+            idx = seg.get("index")
+            if idx not in voice_wavs or idx == last_with_wav:
+                continue
+            take = min(max(0.0, alloc[idx] - 1.0), deficit)
+            alloc[idx] -= take
+            deficit -= take
+
     t = 0.0
     for seg in segs:
         idx = seg.get("index")
-        current_src = float(seg["end"]) - float(seg["start"])
-        needed = extensions.get(idx, current_src)
-        remaining = src_duration - t
-        actual = min(needed, remaining)
+        cur = float(seg["end"]) - float(seg["start"])
+        actual = alloc.get(idx, cur)
         if actual < 0.5:
             actual = 0.5
         seg["start"] = round(t, 3)

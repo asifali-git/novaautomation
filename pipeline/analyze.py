@@ -196,6 +196,13 @@ SPACING & PACING (MANDATORY — ASMR quality + monetization):
 - Arc (~60s): hook/surprising fact early -> breathing room -> insight
   mid-video -> educational fact near the end -> final question/conclusion
   (ASMR uses the sparse subset of this arc; general videos cover it fully).
+- OUTRO / AUDIO LOOP (hard rule): your LAST narrated line must END within
+  the final 2-3 seconds of the video — place it on the FINAL segment (the
+  one running to the very end). Never leave more than ~3 seconds of dead
+  air after the last voiceover line (a long silent tail kills retention).
+  Spread narration evenly: hook early, mid fact around the middle, outro
+  question in the closing seconds — the voice must run to the end, never
+  stop early. Keep pacing tight; no dragged silent stretches anywhere.
 - Captions ONLY on the narrated segments (a <=5-word headline of the fact,
   e.g. "Yellow vs Green", "Blade Angle"). Every other segment: caption.text "".
 Per audio_type (original audio levels unchanged):
@@ -495,6 +502,110 @@ def _call_openrouter(frames, title_hint="", duration=None, correction="", model=
     raise last
 
 
+CLASSIFY_PROMPT = (
+    "Look at these video frames and return ONLY minified JSON, no explanation: "
+    '{"subject":"<main physical subject, 1-2 lowercase words>",'
+    '"category":"<exactly one of: coconut,watermelon,food,animals,asmr,other>",'
+    '"context":"<what is ACTUALLY happening in <=8 lowercase words, e.g. '
+    'fresh coconut water being poured from a cut shell>"}'
+)
+_CLASSIFY_CATS = {"coconut", "watermelon", "food", "animals", "asmr", "other"}
+
+
+def _norm_class(raw):
+    d = _extract_json(raw)
+    cat = str(d.get("category") or "").strip().lower()
+    sub = str(d.get("subject") or "").strip().lower()
+    ctx = str(d.get("context") or "").strip().lower()
+    if cat not in _CLASSIFY_CATS:
+        cat = "other"
+    if not sub or len(sub) > 40:
+        sub = ""
+    ctx = " ".join(ctx.split())[:80]
+    return {"subject": sub, "category": cat, "context": ctx}
+
+
+def _classify_nemotron(frames):
+    content = [{"type": "text", "text": CLASSIFY_PROMPT}]
+    for t, b64 in frames:
+        content.append({
+            "type": "image_url",
+            "image_url": {"url": f"data:image/jpeg;base64,{b64}"},
+        })
+    payload = {
+        "model": MODEL,
+        "messages": [{"role": "user", "content": content}],
+        "max_tokens": 80,
+        "temperature": 0,
+    }
+    r = requests.post(API, headers={"Authorization": f"Bearer {_api_key()}",
+                                    "Content-Type": "application/json"},
+                      json=payload, timeout=90)
+    r.raise_for_status()
+    return _norm_class(r.json()["choices"][0]["message"]["content"])
+
+
+def _classify_gemini(frames):
+    key = _gemini_key()
+    if not key:
+        raise RuntimeError("GEMINI/GOOGLE key not set")
+    parts = [{"text": CLASSIFY_PROMPT}]
+    for t, b64 in frames:
+        parts.append({"inline_data": {"mime_type": "image/jpeg", "data": b64}})
+    url = ("https://generativelanguage.googleapis.com/v1beta/models/"
+           "gemini-flash-latest:generateContent?key=" + key)
+    r = requests.post(url, json={
+        "contents": [{"role": "user", "parts": parts}],
+        "generationConfig": {"maxOutputTokens": 80, "temperature": 0},
+    }, timeout=90)
+    r.raise_for_status()
+    cand = (r.json().get("candidates") or [{}])[0]
+    txt = "".join(p.get("text", "") for p in (cand.get("content") or {}).get("parts") or [])
+    if not txt:
+        raise RuntimeError("gemini classify empty")
+    return _norm_class(txt)
+
+
+def _classify_openrouter(frames):
+    key = os.getenv("OPENROUTER_API_KEY")
+    if not key:
+        raise RuntimeError("OPENROUTER key not set")
+    content = [{"type": "text", "text": CLASSIFY_PROMPT}]
+    for t, b64 in frames:
+        content.append({
+            "type": "image_url",
+            "image_url": {"url": f"data:image/jpeg;base64,{b64}"},
+        })
+    r = requests.post("https://openrouter.ai/api/v1/chat/completions",
+                      headers={"Authorization": f"Bearer {key}",
+                               "Content-Type": "application/json"},
+                      json={"model": OR_FREE_MODELS[0],
+                            "messages": [{"role": "user", "content": content}],
+                            "max_tokens": 80, "temperature": 0}, timeout=90)
+    r.raise_for_status()
+    txt = ((r.json().get("choices") or [{}])[0].get("message") or {}).get("content") or ""
+    if not txt:
+        raise RuntimeError("openrouter classify empty")
+    return _norm_class(txt)
+
+
+def _classify_subject(frames):
+    """Stage-1 micro analysis: 2-3 frames, no audio -> {subject, category}.
+    Provider failover Nemotron -> Gemini -> OpenRouter; None if all fail."""
+    if not frames:
+        return None
+    step = max(1, len(frames) // 3)
+    pick = frames[::step][:3]
+    for fn in (_classify_nemotron, _classify_gemini, _classify_openrouter):
+        try:
+            res = fn(pick)
+            print(f"[facts] micro {fn.__name__} -> {res}")
+            return res
+        except Exception as e:
+            print(f"[facts] micro {fn.__name__} failed ({e})", file=sys.stderr)
+    return None
+
+
 def _extract_json(text):
     if not text:
         raise RuntimeError("empty model response")
@@ -765,6 +876,50 @@ def _normalize(plan, duration):
             if take > 0:
                 seg["end"] = round(seg["end"] + take, 3)
                 nxt["start"] = seg["end"]
+    # OUTRO ENFORCEMENT (feedback): a long silent tail after the last
+    # voiceover line tanks retention — the closing line must land in the
+    # final seconds. If the last narration ends early, MOVE it onto the
+    # final segment so the voice runs to the very end of the video.
+    if clean and dur:
+        nidx = [i for i, s in enumerate(clean) if s["narration"].strip()]
+        if nidx:
+            last_i = nidx[-1]
+            tail = dur - clean[last_i]["end"]
+            tgt = clean[-1]
+            if tail > 3.5 and tgt is not clean[last_i] \
+                    and not tgt["narration"].strip():
+                need = 3.0 - (tgt["end"] - tgt["start"])
+                if need > 0 and len(clean) > 1:
+                    prev = clean[-2]
+                    take = min(need, max(0.0, (prev["end"] - prev["start"]) - 1.0))
+                    if take > 0:
+                        prev["end"] = round(prev["end"] - take, 3)
+                        tgt["start"] = prev["end"]
+                if tgt["end"] - tgt["start"] >= 2.0:
+                    src = clean[last_i]
+                    cap = src.get("caption") or {}
+                    tgt["narration"] = src["narration"][:400]
+                    tgt["caption"] = {
+                        "text": (cap.get("text") or "")[:80],
+                        "position": cap.get("position", "bottom"),
+                        "style": cap.get("style", "outline"),
+                    }
+                    src["narration"] = ""
+                    src["caption"]["text"] = ""
+                    print(f"[analyze] outro moved to final segment "
+                          f"(was {tail:.1f}s silent tail)")
+            elif tail > 3.5 and tgt is clean[last_i]:
+                # Final segment IS the outro but ends before video end:
+                # stretch it to the end (pull start back for room).
+                need = 3.0 - (tgt["end"] - tgt["start"])
+                if need > 0 and len(clean) > 1:
+                    prev = clean[-2]
+                    take = min(need, max(0.0, (prev["end"] - prev["start"]) - 1.0))
+                    if take > 0 and not prev["narration"].strip():
+                        prev["end"] = round(prev["end"] - take, 3)
+                        tgt["start"] = prev["end"]
+                tgt["end"] = round(dur, 3)
+                print(f"[analyze] outro segment stretched to video end")
     # AI-observed source text (any position) -> regions to remove; [] if none.
     import smart as _smart
     plan["caption_regions"] = _smart.normalize_source_captions(plan.get("source_captions"))
@@ -814,8 +969,23 @@ def analyze_video(path, title_hint="", fps=1.0, max_frames=10, allow_fallback=Tr
     fact_note = ""
     try:
         import facts as _vault
+        cls = _classify_subject(frames)
+        subj = ""
+        cat = ""
+        ctx = ""
+        if cls:
+            subj = (cls.get("subject") or "").strip()
+            cat = (cls.get("category") or "").strip()
+            ctx = (cls.get("context") or "").strip()
+            print(f"[facts] micro subject={subj!r} category={cat!r} "
+                  f"context={ctx!r}", file=sys.stderr)
         fact_note = _vault.build_note(title_hint=title_hint,
-                                      video_key=title_hint or path)
+                                      video_key=title_hint or path,
+                                      subject=subj, context=ctx)
+        if not fact_note and cat and cat != "other":
+            fact_note = _vault.build_note(title_hint=title_hint,
+                                          video_key=title_hint or path,
+                                          subject=cat, context=ctx)
     except Exception as e:
         print(f"[facts] vault skipped ({e})", file=sys.stderr)
     plan = None

@@ -188,71 +188,58 @@ def fit_segments_to_voices(plan, voice_wavs, src_duration=None):
         if needed_src > current_src:
             extensions[idx] = min(needed_src, current_src * 2.2)
 
-    # 2. Apply extensions with CUMULATIVE cap at src_duration.
-    #    LAST segment gets priority — steal time from earlier if needed so
-    #    the final narration never cuts mid-word.
-    last_with_wav = max(usable_indices) if (usable_indices := [s.get("index") for s in segs if s.get("index") in voice_wavs]) else None
+    # 2. Budget allocation: narration segments get their full needed length
+    #    FIRST; shortfall is taken from SILENT segments, then non-final
+    #    narrated ones. The final narration NEVER gets cut — a cut-off
+    #    sentence sounds like a corrupted render (user feedback: "Would"...
+    #    silence..."you drink it...").
+    last_with_wav = max((s.get("index") for s in segs
+                         if s.get("index") in voice_wavs), default=None)
+    alloc = {}
+    for seg in segs:
+        idx = seg.get("index")
+        cur = float(seg["end"]) - float(seg["start"])
+        alloc[idx] = extensions.get(idx, cur)
+    deficit = sum(alloc.values()) - src_duration
+    if deficit > 0.01:
+        # Take from SILENT segments first (floor 0.6s each).
+        for seg in segs:
+            if deficit <= 0.01:
+                break
+            idx = seg.get("index")
+            if idx in voice_wavs:
+                continue
+            take = min(max(0.0, alloc[idx] - 0.6), deficit)
+            alloc[idx] -= take
+            deficit -= take
+    if deficit > 0.01:
+        # Then non-final narrated segments (floor 1.0s) — their voice still
+        # plays in full at mix time (slight overlap >> cut words).
+        for seg in segs:
+            if deficit <= 0.01:
+                break
+            idx = seg.get("index")
+            if idx not in voice_wavs or idx == last_with_wav:
+                continue
+            take = min(max(0.0, alloc[idx] - 1.0), deficit)
+            alloc[idx] -= take
+            deficit -= take
+    if deficit > 0.01:
+        print(f"[fit] WARNING: {deficit:.2f}s over budget even after cuts",
+              file=sys.stderr)
 
     t = 0.0
     for seg in segs:
         idx = seg.get("index")
-        current_src = float(seg["end"]) - float(seg["start"])
-        needed = extensions.get(idx, current_src)
-        remaining = src_duration - t
-
-        # For the last segment with narration: guarantee full needed time.
-        if idx == last_with_wav and idx in extensions:
-            # Steal from remaining budget — give it what it needs.
-            actual = min(needed, remaining)
-        else:
-            actual = min(needed, remaining)
-
+        cur = float(seg["end"]) - float(seg["start"])
+        actual = alloc.get(idx, cur)
         if actual < 0.5:
             actual = 0.5
         seg["start"] = round(t, 3)
         seg["end"] = round(t + actual, 3)
-        if idx in extensions and actual < extensions[idx]:
-            print(f"[fit] seg {idx}: capped {current_src:.2f}s -> {actual:.2f}s "
-                  f"(needed {extensions[idx]:.2f}s, remaining {remaining:.2f}s)")
-        elif idx in extensions:
-            print(f"[fit] seg {idx}: extended {current_src:.2f}s -> {actual:.2f}s")
+        if idx in extensions and abs(actual - cur) > 0.01:
+            print(f"[fit] seg {idx}: {cur:.2f}s -> {actual:.2f}s (voice need)")
         t = seg["end"]
-
-    # 3. If last narration segment was still capped, steal time from earlier segments.
-    if last_with_wav is not None and last_with_wav in extensions:
-        last_seg = None
-        for s in segs:
-            if s.get("index") == last_with_wav:
-                last_seg = s
-                break
-        if last_seg:
-            last_needed = extensions[last_with_wav]
-            last_actual = float(last_seg["end"]) - float(last_seg["start"])
-            if last_actual < last_needed * 0.95:
-                deficit = last_needed - last_actual
-                earlier = [s for s in segs if s.get("index") != last_with_wav]
-                stealable = sum(max(0, (float(s["end"]) - float(s["start"])) - 0.8) for s in earlier)
-                if stealable >= deficit * 0.5:
-                    for s in earlier:
-                        d = float(s["end"]) - float(s["start"])
-                        extra = max(0, d - 0.8)
-                        give = min(extra, deficit * (extra / stealable if stealable > 0 else 0))
-                        s["end"] = round(float(s["end"]) - give, 3)
-                        deficit -= give
-                    # Renormalize: all segments except last_with_wav, then append last.
-                    t = 0.0
-                    for s in segs:
-                        if s.get("index") == last_with_wav:
-                            continue
-                        d = float(s["end"]) - float(s["start"])
-                        s["start"] = round(t, 3)
-                        s["end"] = round(t + d, 3)
-                        t = s["end"]
-                    last_seg["start"] = round(t, 3)
-                    last_seg["end"] = round(t + min(last_needed, src_duration - t), 3)
-                    t = last_seg["end"]
-                    print(f"[fit] last seg {last_with_wav}: stole time -> "
-                          f"{last_seg['end']-last_seg['start']:.2f}s")
 
     total = t
     print(f"[fit] total timeline: {total:.2f}s (source={src_duration:.2f}s)")

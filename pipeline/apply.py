@@ -403,13 +403,16 @@ def mix_narration(src, plan, offsets, voice_wavs, out):
         target = _seg_duration(plan["segments"][i])
         wav_dur = _audio_duration(wav_path)
         tempo = 1.0
-        if wav_dur > 0.01 and target > 0.01:
-            if wav_dur > target * 1.15:
-                tempo = min(1.15, wav_dur / target)
-        # Last segment: allow full wav duration so narration never cuts mid-word.
-        # Non-last: cap at target to avoid overlap with next segment.
-        if i == last_idx and wav_dur > target:
-            target_audio = wav_dur + 0.05
+        if wav_dur > 0.01 and target > 0.01 and wav_dur > target * 1.15:
+            tempo = min(1.15, wav_dur / target)
+        natural = wav_dur / tempo if tempo > 0.01 else wav_dur
+        # NEVER hard-cut narration mid-sentence (feedback: lone "Would" at
+        # 00:28 + rest at 00:44 sounded like a corrupt render). If the wav
+        # does not fit the segment window, let it play out in full — a short
+        # overrun into the following silent stretch is invisible; a chopped
+        # word is not. The last narration always gets full natural length.
+        if i == last_idx or natural > target:
+            target_audio = natural + 0.05
         else:
             target_audio = target
         fade_start = max(0.0, target_audio - 0.15)
