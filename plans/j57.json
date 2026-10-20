@@ -1,0 +1,1127 @@
+{
+ "audio_type": "asmr",
+ "audio_mode": "lower",
+ "audio_volume": 0.4,
+ "has_speech": false,
+ "video_summary": "A person skillfully peels a green coconut with a large knife on a wooden stump in a lush outdoor setting.",
+ "style": "educational",
+ "title": "Why Street Vendors Tap Before Slicing",
+ "description": "Watch how a single confident strike peels a fresh green coconut, revealing its inner layers for curry use.",
+ "hashtags": [
+  "#coconut",
+  "#peeling",
+  "#knife",
+  "#kitchen",
+  "#foodprep"
+ ],
+ "tags": [
+  "coconut",
+  "knife",
+  "peeling",
+  "food",
+  "technique",
+  "DIY",
+  "outdoor",
+  "tropical",
+  "cuisine",
+  "preparation",
+  "how to",
+  "cutting",
+  "prep",
+  "fresh"
+ ],
+ "segments": [
+  {
+   "index": 0,
+   "start": 0.0,
+   "end": 3.0,
+   "action": "keep",
+   "speed": 1.08,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "One Confident Strike",
+    "position": "top",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Cream grades separate by dilution — one shreds, three waters, three presses.",
+   "notes": "Hook uses Fact 1 as a bold claim, matches opening frame."
+  },
+  {
+   "index": 1,
+   "start": 3.0,
+   "end": 6.0,
+   "action": "keep",
+   "speed": 1.12,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.04,
+    "saturation": 1.09
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Natural ASMR sounds dominate, no narration."
+  },
+  {
+   "index": 2,
+   "start": 6.0,
+   "end": 9.0,
+   "action": "keep",
+   "speed": 1.08,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "cool",
+    "brightness": 0.0,
+    "contrast": 1.07,
+    "saturation": 1.11
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Maintains ASMR focus, no spoken words."
+  },
+  {
+   "index": 3,
+   "start": 9.0,
+   "end": 12.0,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.05,
+    "saturation": 1.13
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Continuous peeling action, visual detail emphasized."
+  },
+  {
+   "index": 4,
+   "start": 12.0,
+   "end": 15.0,
+   "action": "keep",
+   "speed": 1.07,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.11,
+   "color": {
+    "preset": "moody",
+    "brightness": 0.0,
+    "contrast": 1.03,
+    "saturation": 1.08
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Transition to curry usage fact."
+  },
+  {
+   "index": 5,
+   "start": 15.0,
+   "end": 18.0,
+   "action": "keep",
+   "speed": 1.15,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.07,
+   "color": {
+    "preset": "neon",
+    "brightness": 0.0,
+    "contrast": 1.09,
+    "saturation": 1.15
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Single Strike",
+    "position": "center",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "One confident strike beats three tentative taps — hesitation shatters shells raggedly.",
+   "notes": "Middle fact (Fact 2) delivered as required for ASMR."
+  },
+  {
+   "index": 6,
+   "start": 18.0,
+   "end": 21.0,
+   "action": "keep",
+   "speed": 1.09,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.1
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Visual focus on shell breaking, silent ASMR."
+  },
+  {
+   "index": 7,
+   "start": 21.0,
+   "end": 24.0,
+   "action": "keep",
+   "speed": 1.11,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "cool",
+    "brightness": 0.0,
+    "contrast": 1.04,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Peeling continues, no narration to preserve audio texture."
+  },
+  {
+   "index": 8,
+   "start": 24.0,
+   "end": 27.0,
+   "action": "keep",
+   "speed": 1.08,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "moody",
+    "brightness": 0.0,
+    "contrast": 1.05,
+    "saturation": 1.09
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Prepares viewer for final fact connection."
+  },
+  {
+   "index": 9,
+   "start": 27.0,
+   "end": 30.0,
+   "action": "keep",
+   "speed": 1.12,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.07,
+    "saturation": 1.13
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Visual emphasis on zero waste aspect."
+  },
+  {
+   "index": 10,
+   "start": 30.0,
+   "end": 33.0,
+   "action": "keep",
+   "speed": 1.07,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.1
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Curry Base",
+    "position": "top",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "The squeezed milk from that step becomes curry base — nothing is wasted.",
+   "notes": "Ends with Fact 3 as a question-inviting comment."
+  },
+  {
+   "index": 11,
+   "start": 33.0,
+   "end": 36.0,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "cool",
+    "brightness": 0.0,
+    "contrast": 1.05,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Curry Use",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Would you drink it straight from the shell?",
+   "notes": "Final question per ASMR rule set, invites engagement."
+  },
+  {
+   "index": 12,
+   "start": 36.0,
+   "end": 39.0,
+   "action": "keep",
+   "speed": 1.08,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "moody",
+    "brightness": 0.0,
+    "contrast": 1.04,
+    "saturation": 1.08
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Video concludes with visual fade-out."
+  },
+  {
+   "index": 13,
+   "start": 39.0,
+   "end": 42.0,
+   "action": "keep",
+   "speed": 1.11,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "neon",
+    "brightness": 0.0,
+    "contrast": 1.07,
+    "saturation": 1.15
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Extra segment for pacing before fade."
+  },
+  {
+   "index": 14,
+   "start": 42.0,
+   "end": 45.0,
+   "action": "keep",
+   "speed": 1.09,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.1
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Maintains ASMR silence until video end."
+  },
+  {
+   "index": 15,
+   "start": 45.0,
+   "end": 48.0,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "cool",
+    "brightness": 0.0,
+    "contrast": 1.05,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Last visual segment before fade."
+  },
+  {
+   "index": 16,
+   "start": 48.0,
+   "end": 51.0,
+   "action": "keep",
+   "speed": 1.08,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "moody",
+    "brightness": 0.0,
+    "contrast": 1.04,
+    "saturation": 1.09
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Pacing continues with natural sound."
+  },
+  {
+   "index": 17,
+   "start": 51.0,
+   "end": 54.0,
+   "action": "keep",
+   "speed": 1.12,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.07,
+    "saturation": 1.13
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Visual focus on curry utility."
+  },
+  {
+   "index": 18,
+   "start": 54.0,
+   "end": 57.0,
+   "action": "keep",
+   "speed": 1.07,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.05,
+    "saturation": 1.1
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Continues peeling motion."
+  },
+  {
+   "index": 19,
+   "start": 57.0,
+   "end": 60.0,
+   "action": "keep",
+   "speed": 1.11,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "cool",
+    "brightness": 0.0,
+    "contrast": 1.04,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Sustains ASMR rhythm."
+  },
+  {
+   "index": 20,
+   "start": 60.0,
+   "end": 63.0,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "moody",
+    "brightness": 0.0,
+    "contrast": 1.05,
+    "saturation": 1.08
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Maintains visual continuity."
+  },
+  {
+   "index": 21,
+   "start": 63.0,
+   "end": 66.0,
+   "action": "keep",
+   "speed": 1.09,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "neon",
+    "brightness": 0.0,
+    "contrast": 1.07,
+    "saturation": 1.13
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Prepares for end."
+  },
+  {
+   "index": 22,
+   "start": 66.0,
+   "end": 69.0,
+   "action": "keep",
+   "speed": 1.11,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.1
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Visual focus on utility."
+  },
+  {
+   "index": 23,
+   "start": 69.0,
+   "end": 72.0,
+   "action": "keep",
+   "speed": 1.12,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "cool",
+    "brightness": 0.0,
+    "contrast": 1.04,
+    "saturation": 1.13
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Continues peeling."
+  },
+  {
+   "index": 24,
+   "start": 72.0,
+   "end": 75.0,
+   "action": "keep",
+   "speed": 1.08,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "moody",
+    "brightness": 0.0,
+    "contrast": 1.04,
+    "saturation": 1.09
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Maintains ASMR sound."
+  },
+  {
+   "index": 25,
+   "start": 75.0,
+   "end": 78.0,
+   "action": "keep",
+   "speed": 1.11,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.07,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Continues to end."
+  },
+  {
+   "index": 26,
+   "start": 78.0,
+   "end": 81.0,
+   "action": "keep",
+   "speed": 1.07,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.05,
+    "saturation": 1.1
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Visual emphasis on curry."
+  },
+  {
+   "index": 27,
+   "start": 81.0,
+   "end": 82.27,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "cool",
+    "brightness": 0.0,
+    "contrast": 1.04,
+    "saturation": 1.13
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Maintains rhythm."
+  }
+ ],
+ "global": {
+  "intro_effect": "fade",
+  "ending_effect": "fade",
+  "voice_gain": 1.0
+ },
+ "caption_regions": [
+  {
+   "band": "top",
+   "top_frac": 0.0203,
+   "bottom_frac": 0.0688,
+   "action": "crop",
+   "confidence": 0.95
+  },
+  {
+   "band": "top",
+   "top_frac": 0.1688,
+   "bottom_frac": 0.1953,
+   "action": "crop",
+   "confidence": 0.95
+  },
+  {
+   "band": "bottom",
+   "top_frac": 0.84,
+   "bottom_frac": 0.89,
+   "action": "crop",
+   "confidence": 0.95
+  }
+ ]
+}
