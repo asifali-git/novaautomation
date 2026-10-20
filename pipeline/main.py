@@ -152,13 +152,34 @@ def make_voices(plan, work, vid, used_ai=True):
     return wavs
 
 
+def _wav_duration(path):
+    """Wav length in seconds — Python wave header first (no subprocess, can't
+    time out), ffprobe fallback for non-PCM files."""
+    try:
+        import wave as _w
+        with _w.open(path, "rb") as w:
+            fr = w.getframerate() or 1
+            return w.getnframes() / float(fr)
+    except Exception:
+        pass
+    import subprocess
+    try:
+        r = subprocess.run(
+            [os.getenv("FFPROBE_BIN", "ffprobe"), "-v", "error",
+             "-show_entries", "format=duration",
+             "-of", "default=noprint_wrappers=1:nokey=1", path],
+            capture_output=True, text=True, timeout=10)
+        return float(r.stdout.strip())
+    except Exception:
+        return None
+
+
 def fit_segments_to_voices(plan, voice_wavs, src_duration=None):
     """Extend segment durations so narration plays at natural speed (no atempo crush).
     Also renormalizes segments to stay contiguous on the timeline.
     src_duration: max source seconds — total timeline NEVER exceeds this."""
     if not voice_wavs:
         return
-    ffprobe = os.getenv("FFPROBE_BIN", "ffprobe")
     segs = plan["segments"]
     if src_duration is None:
         src_duration = max(float(s.get("end", 0)) for s in segs) if segs else 30.0
@@ -170,15 +191,9 @@ def fit_segments_to_voices(plan, voice_wavs, src_duration=None):
         if idx not in voice_wavs:
             continue
         wav_path = voice_wavs[idx]
-        try:
-            import subprocess
-            r = subprocess.run(
-                [ffprobe, "-v", "error", "-show_entries", "format=duration",
-                 "-of", "default=noprint_wrappers=1:nokey=1", wav_path],
-                capture_output=True, text=True, timeout=10)
-            wav_dur = float(r.stdout.strip())
-        except Exception as e:
-            print(f"[fit] seg {idx}: ffprobe failed ({e}); skip", file=sys.stderr)
+        wav_dur = _wav_duration(wav_path)
+        if not wav_dur or wav_dur <= 0:
+            print(f"[fit] seg {idx}: wav probe failed; skip", file=sys.stderr)
             continue
         speed = abs(float(seg.get("speed", 1.0)) or 1.0)
         if speed < 0.01:
@@ -262,6 +277,13 @@ def fit_segments_to_voices(plan, voice_wavs, src_duration=None):
             seg["end"] = round(t + span, 3)
             t = seg["end"]
         total = t
+    # End-adjust: pin the timeline to the EXACT source end (millisecond
+    # precision) so the video never stops fractionally early — works for
+    # any random clip length.
+    if src_duration and segs and total < src_duration - 0.01:
+        segs[-1]["end"] = round(src_duration, 3)
+        total = src_duration
+        print(f"[fit] last segment pinned to exact source end ({src_duration:.3f}s)")
     print(f"[fit] total timeline: {total:.2f}s (source={src_duration:.2f}s)")
 
 

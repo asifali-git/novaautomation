@@ -705,7 +705,7 @@ def _transform_floor(seg, idx):
 
 def _fallback_plan(duration, title_hint=""):
     dur = duration or 15.0
-    n = max(8, min(36, int(round(dur / 5.0))))
+    n = _seg_target(dur)
     seg_len = dur / n
     segs = []
     for i in range(n):
@@ -743,9 +743,17 @@ def _fallback_plan(duration, title_hint=""):
 
 
 def _narr_target(duration, audio_type="asmr"):
-    """Narrated-segment budget scaled to clip length (3-min Shorts need more)."""
+    """Narrated-segment budget scaled to clip length — works for ANY random
+    1-200s source: very short clips get 1-0 lines (a 4s video cannot hold
+    even one 10-15 word line), long clips get more."""
     d = float(duration or 30.0)
+    if d <= 5:
+        return 0
     if (audio_type or "").lower() == "asmr":
+        if d <= 8:
+            return 1
+        if d <= 15:
+            return 2
         if d <= 45:
             return 3
         if d <= 90:
@@ -753,6 +761,14 @@ def _narr_target(duration, audio_type="asmr"):
         if d <= 150:
             return 6
         return 8
+    if d <= 10:
+        return 1
+    if d <= 17:
+        return 2
+    if d <= 26:
+        return 3
+    if d <= 36:
+        return 4
     if d <= 45:
         return 5
     if d <= 90:
@@ -762,18 +778,29 @@ def _narr_target(duration, audio_type="asmr"):
     return 10
 
 
+def _seg_target(duration):
+    """Segment count target (~5s each) — tiny clips get fewer segments so
+    narration windows still fit inside the source."""
+    dur = float(duration or 30.0)
+    n = int(round(dur / 5.0))
+    return max(3 if dur < 15 else 8, min(40, n))
+
+
 def _duration_note(duration):
     """Duration line sent to the AI: segment count + narration budget."""
     dur = float(duration or 30.0)
-    n_seg = max(8, min(40, int(round(dur / 5.0))))
+    n_seg = _seg_target(dur)
     n = _narr_target(dur, "asmr")
+    n2 = n + (2 if dur > 45 else (1 if dur > 25 else 0))
+    zero = (" (0 = leave EVERY segment's narration empty for this clip)"
+            if n == 0 else "")
     return (
         f"Source duration: {dur:.1f}s. "
-        f"SEGMENT TARGET: about {n_seg} segments of ~4-6s each covering the FULL "
+        f"SEGMENT TARGET: about {n_seg} segments covering the FULL "
         f"duration (first start=0.0, last end=={dur:.1f}s — NEVER stop early at "
         f"half the clip). NARRATION BUDGET (hard): exactly {n} narrated segments "
-        f"if audio_type=asmr, {n} to {n + 2} if general (hook first, "
-        f"question last, rest spread evenly across the whole video)."
+        f"if audio_type=asmr, {n} to {n2} if general (hook first, "
+        f"question last, rest spread evenly across the whole video){zero}."
     )
 
 
@@ -866,21 +893,27 @@ def _normalize(plan, duration):
         clean = _fallback_plan(dur)["segments"]
     # FULL-SOURCE COVERAGE (issue A): AI plans often cover only the first
     # half of the clip (e.g. 42s of an 82s source) — the upload then lost
-    # the entire second half. Close internal gaps first, then stretch all
-    # boundaries proportionally so the plan always spans 0..source duration.
+    # the entire second half. Force start at 0, close every internal gap,
+    # stretch proportionally so the plan spans 0..source duration, and pin
+    # the last end to EXACTLY the source (millisecond precision) so the
+    # video always ends on the source's real end — any random 1-200s clip.
     if dur and clean:
+        clean[0]["start"] = 0.0
         for i in range(1, len(clean)):
-            if clean[i]["start"] - clean[i - 1]["end"] > 0.05:
+            if clean[i]["start"] - clean[i - 1]["end"] > 0.0005:
                 clean[i - 1]["end"] = round(clean[i]["start"], 3)
         last_end = clean[-1]["end"]
-        if last_end < dur - 0.3 and last_end > 0.5:
+        if last_end < dur - 0.05 and last_end > 0.5:
             f = dur / last_end
             for s in clean:
                 s["start"] = round(s["start"] * f, 3)
                 s["end"] = round(s["end"] * f, 3)
-            clean[-1]["end"] = round(dur, 3)
             print(f"[analyze] coverage stretched x{f:.3f} "
                   f"({last_end:.1f}s -> {dur:.1f}s)")
+        clean[-1]["end"] = round(dur, 3)
+        for s in clean:
+            if s["end"] > dur:
+                s["end"] = round(dur, 3)
     for idx, seg in enumerate(clean):
         _transform_floor(seg, idx)
     plan["segments"] = clean
@@ -897,10 +930,12 @@ def _normalize(plan, duration):
     # only the NARRATION BUDGET worth of lines, evenly spread over the clip.
     narr_idx = [i for i, s in enumerate(clean) if s["narration"].strip()]
     n_tgt = _narr_target(dur, audio_type) if dur else (3 if audio_type == "asmr" else 5)
-    max_n = n_tgt + 1
+    max_n = 0 if n_tgt == 0 else n_tgt + 1
     if len(narr_idx) > max_n:
         k = min(n_tgt, len(narr_idx))
-        if k <= 1:
+        if k <= 0:
+            keep = set()
+        elif k == 1:
             keep = {narr_idx[0]}
         else:
             keep = {narr_idx[round(i * (len(narr_idx) - 1) / (k - 1))]

@@ -192,13 +192,17 @@ def build_note(title_hint="", video_key="", subject="", context="", n=3):
     lines = "\n".join(f"{i + 1}) {t}" for i, t in enumerate(facts))
     nf = len(facts)
     print(f"[facts] angle={angle} n={nf}")
+    if nf == 1:
+        mid = "the single line carries the whole fact"
+    else:
+        mid = (f"middle narrated segments = facts 2..{max(2, nf - 1)} "
+               f"stated plainly and spread evenly across the video, ")
     return (
         f"VERIFIED FACTS FOR THIS VIDEO (angle: {angle}):\n{lines}\n"
         f"USE ALL {nf} — they REPLACE free fact generation: rewrite each into "
         f"ONE natural 10-15-word narration line, same meaning, no new claims, "
         f"no invented numbers. First narrated segment = hook (lead with fact 1 "
-        f"as a bold claim or question), middle narrated segments = facts 2..{max(2, nf - 1)} "
-        f"stated plainly and spread evenly across the video, last narrated segment "
+        f"as a bold claim or question), {mid}last narrated segment "
         f"= wrap fact {nf} into a comment-inviting "
         f"question that ENDS the video (voice runs to the final seconds, never "
         f"stops early leaving silence). Build the TITLE around the strongest of "
