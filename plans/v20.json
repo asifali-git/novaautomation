@@ -1,0 +1,290 @@
+{
+ "audio_type": "asmr",
+ "audio_mode": "lower",
+ "audio_volume": 0.4,
+ "has_speech": false,
+ "video_summary": "A hand skillfully peels a yellow coconut on a wooden stump outdoors, with palm trees in the background.",
+ "style": "educational",
+ "title": "Why Delhi Halwai Sells Copra Laddus in Winter",
+ "description": "A masterful coconut peel demonstrates traditional Indian techniques. These facts reveal the cultural and seasonal reasons behind the practice.",
+ "hashtags": [
+  "#coconut",
+  "#peeling",
+  "#india",
+  "#winter",
+  "#streetfood",
+  "#halwai",
+  "#coconutpeeling",
+  "#tradition",
+  "#foodprep",
+  "#culturalheritage"
+ ],
+ "tags": [
+  "coconut peeling",
+  "indian street food",
+  "halwai",
+  "winter food",
+  "coconut tradition",
+  "peeling technique",
+  "cultural food",
+  "seasonal fruit",
+  "coconut laddus",
+  "food science",
+  "traditional cooking",
+  "fresh produce",
+  "knife skills",
+  "coconut preparation",
+  "natural coconut"
+ ],
+ "segments": [
+  {
+   "index": 0,
+   "start": 0.0,
+   "end": 3.0,
+   "action": "keep",
+   "speed": 1.08,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.07,
+    "saturation": 1.14
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Halwai Winter Secret",
+    "position": "top",
+    "style": "box"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Delhi's halwai counters sell copra laddus as winter standard.",
+   "notes": "Hook segment: bold claim about winter tradition with visual of pristine coconut."
+  },
+  {
+   "index": 1,
+   "start": 3.0,
+   "end": 15.0,
+   "action": "keep",
+   "speed": 1.12,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.07,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.05,
+    "saturation": 1.1
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "center",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Mid-video fact: factual statement about cultural practice without visual description."
+  },
+  {
+   "index": 2,
+   "start": 15.0,
+   "end": 27.0,
+   "action": "keep",
+   "speed": 1.06,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.11,
+   "color": {
+    "preset": "cool",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.08
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Temple Oil Lamps",
+    "position": "bottom",
+    "style": "box"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Kerala's temple festivals light thousands of coconut-oil lamps at dusk.",
+   "notes": "Mid-video fact: factual statement about cultural practice without visual description."
+  },
+  {
+   "index": 3,
+   "start": 27.0,
+   "end": 39.0,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "vibrant",
+    "brightness": 0.0,
+    "contrast": 1.09,
+    "saturation": 1.11
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "center",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Educational insight: explains the purpose of tapping in street culture."
+  },
+  {
+   "index": 4,
+   "start": 39.0,
+   "end": 53.0,
+   "action": "keep",
+   "speed": 1.05,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.04,
+    "saturation": 1.09
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Winter Coconut Laddus",
+    "position": "bottom",
+    "style": "box"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Would you drink it straight from the shell?",
+   "notes": "Final question: invites viewer engagement while wrapping cultural context."
+  },
+  {
+   "index": 5,
+   "start": 53.0,
+   "end": 53.9,
+   "action": "remove",
+   "speed": 1.08,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.06,
+   "color": {
+    "preset": "moody",
+    "brightness": 0.0,
+    "contrast": 1.03,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Silent ending for natural audio fade-out."
+  }
+ ],
+ "global": {
+  "intro_effect": "fade",
+  "ending_effect": "fade",
+  "voice_gain": 1.0
+ },
+ "caption_regions": [
+  {
+   "band": "top",
+   "top_frac": 0.0844,
+   "bottom_frac": 0.1484,
+   "action": "crop",
+   "confidence": 0.95
+  },
+  {
+   "band": "bottom",
+   "top_frac": 0.8578,
+   "bottom_frac": 0.8984,
+   "action": "crop",
+   "confidence": 0.95
+  }
+ ]
+}
