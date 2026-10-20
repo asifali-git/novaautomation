@@ -1,0 +1,5019 @@
+{
+ "subject": "asmr",
+ "angle_names": {
+  "A": "Sensory Science & Psychology",
+  "B": "Creator & Audio Craft",
+  "C": "Satisfying Crafts & Traditions",
+  "D": "Trigger Objects & Textures"
+ },
+ "angles": {
+  "A": [
+   {
+    "id": "as-A-001",
+    "used": 0,
+    "text": "ASMR means autonomous sensory meridian response — a gentle tingling that usually starts at the scalp."
+   },
+   {
+    "id": "as-A-002",
+    "used": 0,
+    "text": "The tingle often travels down the neck and upper spine — many people call it a brain tingle."
+   },
+   {
+    "id": "as-A-003",
+    "used": 0,
+    "text": "ASMR is not a medical condition — it is a pleasant sensory experience, not a disorder."
+   },
+   {
+    "id": "as-A-004",
+    "used": 0,
+    "text": "Roughly one in five people report experiencing ASMR tingles from video triggers."
+   },
+   {
+    "id": "as-A-005",
+    "used": 0,
+    "text": "Not everyone feels ASMR — sensitivity varies, but many still find the sounds relaxing."
+   },
+   {
+    "id": "as-A-006",
+    "used": 0,
+    "text": "Common ASMR triggers include whispering, tapping, scratching and slow deliberate hand movements."
+   },
+   {
+    "id": "as-A-007",
+    "used": 0,
+    "text": "Repetitive gentle sounds are the most reported trigger across ASMR videos worldwide."
+   },
+   {
+    "id": "as-A-008",
+    "used": 0,
+    "text": "Soft spoken voices trigger ASMR more often than complete silence for most viewers."
+   },
+   {
+    "id": "as-A-009",
+    "used": 0,
+    "text": "The term ASMR was coined online in 2010 to describe the feeling viewers kept reporting."
+   },
+   {
+    "id": "as-A-010",
+    "used": 0,
+    "text": "ASMR research is young but growing — studies link it to lowered heart rate in viewers."
+   },
+   {
+    "id": "as-A-011",
+    "used": 0,
+    "text": "ASMR videos measurably lower heart rate in some viewers — science is catching up to reports."
+   },
+   {
+    "id": "as-A-012",
+    "used": 0,
+    "text": "Viewers report ASMR helps with sleep — relaxation videos are watched in bed worldwide."
+   },
+   {
+    "id": "as-A-013",
+    "used": 0,
+    "text": "ASMR and binaural audio overlap — spatial sound heightens the tingling sensation."
+   },
+   {
+    "id": "as-A-014",
+    "used": 0,
+    "text": "Slow hand movements matter as much as sound — visual calm is a trigger itself."
+   },
+   {
+    "id": "as-A-015",
+    "used": 0,
+    "text": "Soft close-up sounds like crinkling plastic rank among the most requested triggers."
+   },
+   {
+    "id": "as-A-016",
+    "used": 0,
+    "text": "Unintentional ASMR happens in daily life — a soft-spoken librarian or slow painting demo."
+   },
+   {
+    "id": "as-A-017",
+    "used": 0,
+    "text": "ASMR artists are often called ASMRtists — the community coined its own title."
+   },
+   {
+    "id": "as-A-018",
+    "used": 0,
+    "text": "ASMR communities formed around shared triggers — people compare what makes them tingle."
+   },
+   {
+    "id": "as-A-019",
+    "used": 0,
+    "text": "Triggers stack — one video layers whispering, tapping and brushing to build the tingle."
+   },
+   {
+    "id": "as-A-020",
+    "used": 0,
+    "text": "Individual triggers vary wildly — one viewer's favorite sound is another's annoyance."
+   },
+   {
+    "id": "as-A-021",
+    "used": 0,
+    "text": "Misophonia exists alongside ASMR — some sounds that tingle others irritate deeply."
+   },
+   {
+    "id": "as-A-022",
+    "used": 0,
+    "text": "ASMR videos often double as sleep aids — background tingles replace counting sheep."
+   },
+   {
+    "id": "as-A-023",
+    "used": 0,
+    "text": "Tingling can fade with habituation — regular viewers sometimes need new triggers."
+   },
+   {
+    "id": "as-A-024",
+    "used": 0,
+    "text": "ASMR triggers learned through association — a soothing routine can start tingles later."
+   },
+   {
+    "id": "as-A-025",
+    "used": 0,
+    "text": "Anticipation plays a role — slow build-ups heighten the eventual tingle response."
+   },
+   {
+    "id": "as-A-026",
+    "used": 0,
+    "text": "Visual triggers include slow hand motions, precise drawing and careful organizing."
+   },
+   {
+    "id": "as-A-027",
+    "used": 0,
+    "text": "Crinkle sounds trigger many viewers — thin plastic wrappers are a community favorite."
+   },
+   {
+    "id": "as-A-028",
+    "used": 0,
+    "text": "Tapping on glass produces clear high tones — glass is a favorite ASMR surface."
+   },
+   {
+    "id": "as-A-029",
+    "used": 0,
+    "text": "Woody taps warm the sound — wooden objects are staples of tapping videos."
+   },
+   {
+    "id": "as-A-030",
+    "used": 0,
+    "text": "Scratching textured surfaces — fabric, sandpaper, sponges — builds layered scratch sounds."
+   },
+   {
+    "id": "as-A-031",
+    "used": 0,
+    "text": "Brushing sounds against the microphone mimic a haircut or face cleaning experience."
+   },
+   {
+    "id": "as-A-032",
+    "used": 0,
+    "text": "Rain and water sounds are among the oldest relaxation sounds humans seek out."
+   },
+   {
+    "id": "as-A-033",
+    "used": 0,
+    "text": "White noise blankets sudden sounds — the brain relaxes when audio stays even."
+   },
+   {
+    "id": "as-A-034",
+    "used": 0,
+    "text": "Pink noise — deeper than white — many listeners find gentler for sleep."
+   },
+   {
+    "id": "as-A-035",
+    "used": 0,
+    "text": "Nature soundscapes evolved as safe background noise — forests and streams signal no danger."
+   },
+   {
+    "id": "as-A-036",
+    "used": 0,
+    "text": "Binaural recording uses two microphones like human ears — listeners wear headphones to feel it."
+   },
+   {
+    "id": "as-A-037",
+    "used": 0,
+    "text": "Binaural ASMR needs headphones — the 3D effect disappears on single speakers."
+   },
+   {
+    "id": "as-A-038",
+    "used": 0,
+    "text": "Close-mic whispering sounds intimate because the voice sits near the ear's natural range."
+   },
+   {
+    "id": "as-A-039",
+    "used": 0,
+    "text": "Low volume is essential to ASMR — loud sounds break the tingle entirely."
+   },
+   {
+    "id": "as-A-040",
+    "used": 0,
+    "text": "Most ASMR is consumed at low volume, often at night before sleep."
+   },
+   {
+    "id": "as-A-041",
+    "used": 0,
+    "text": "Slow speech lowers arousal — the brain reads unhurried voices as safe."
+   },
+   {
+    "id": "as-A-042",
+    "used": 0,
+    "text": "Repetition signals predictability — predictable audio lets the nervous system settle."
+   },
+   {
+    "id": "as-A-043",
+    "used": 0,
+    "text": "ASMR can be triggered by attention — being watched over gently with care."
+   },
+   {
+    "id": "as-A-044",
+    "used": 0,
+    "text": "Personal attention roleplays — barber, doctor, spa — simulate cared-for attention."
+   },
+   {
+    "id": "as-A-045",
+    "used": 0,
+    "text": "ASMR roleplays borrow from real service experiences — haircuts and facials are top themes."
+   },
+   {
+    "id": "as-A-046",
+    "used": 0,
+    "text": "Massage roleplays show slow hands and soft brushes — visual relaxation cues."
+   },
+   {
+    "id": "as-A-047",
+    "used": 0,
+    "text": "Head massage videos pair tapping sounds with scalp visuals for double triggers."
+   },
+   {
+    "id": "as-A-048",
+    "used": 0,
+    "text": "Makeup brush videos whisper through powder sounds — soft bristle audio."
+   },
+   {
+    "id": "as-A-049",
+    "used": 0,
+    "text": "Ear cleaning roleplays — close mic scraping — a niche but loyal trigger community."
+   },
+   {
+    "id": "as-A-050",
+    "used": 0,
+    "text": "Drawing sounds — pencil on paper — are unintentional ASMR classics."
+   },
+   {
+    "id": "as-A-051",
+    "used": 0,
+    "text": "Painting videos with soft brush strokes relax without any speaking at all."
+   },
+   {
+    "id": "as-A-052",
+    "used": 0,
+    "text": "Calligraphy videos slow and precise — ink and paper whisper together."
+   },
+   {
+    "id": "as-A-053",
+    "used": 0,
+    "text": "Colouring book videos gentle repetitive motion — visual rhythm calms viewers."
+   },
+   {
+    "id": "as-A-054",
+    "used": 0,
+    "text": "Knitting and crochet sounds — yarn and needles — soft rhythmic clicks."
+   },
+   {
+    "id": "as-A-055",
+    "used": 0,
+    "text": "Sewing machine hums steady — mechanical rhythm as relaxation audio."
+   },
+   {
+    "id": "as-A-056",
+    "used": 0,
+    "text": "Woodworking hand plane shavings — long soft curls of sound."
+   },
+   {
+    "id": "as-A-057",
+    "used": 0,
+    "text": "Pottery wheel sounds — wet clay spinning — a growing ASMR favorite."
+   },
+   {
+    "id": "as-A-058",
+    "used": 0,
+    "text": "Slime ASMR combines stretch visuals with squelchy audio — top searched category."
+   },
+   {
+    "id": "as-A-059",
+    "used": 0,
+    "text": "Slime textures named by fans — glossy, butter, cloud, crunch — each sounds different."
+   },
+   {
+    "id": "as-A-060",
+    "used": 0,
+    "text": "Cloud slime drizzle sounds like soft rain — airy texture audio."
+   },
+   {
+    "id": "as-A-061",
+    "used": 0,
+    "text": "Clear slime crunch with beads — crisp pops pressed near the microphone."
+   },
+   {
+    "id": "as-A-062",
+    "used": 0,
+    "text": "Kinetic sand ASMR — cutting and squishing sand that flows like liquid."
+   },
+   {
+    "id": "as-A-063",
+    "used": 0,
+    "text": "Kinetic sand is regular sand coated with polymer — it never dries out."
+   },
+   {
+    "id": "as-A-064",
+    "used": 0,
+    "text": "Soap cutting ASMR — blade gliding through bars — a viral sound trend."
+   },
+   {
+    "id": "as-A-065",
+    "used": 0,
+    "text": "Gummy candy cutting — slow slices through jiggly texture — visual and audio trigger."
+   },
+   {
+    "id": "as-A-066",
+    "used": 0,
+    "text": "Jelly cake cutting — layered wobble then slice — a colorful ASMR staple."
+   },
+   {
+    "id": "as-A-067",
+    "used": 0,
+    "text": "Fruit cutting ASMR — watermelon and citrus slices — ASMR meets cooking content."
+   },
+   {
+    "id": "as-A-068",
+    "used": 0,
+    "text": "Knife tapping on cutting boards — rhythmic wooden beats before any chopping starts."
+   },
+   {
+    "id": "as-A-069",
+    "used": 0,
+    "text": "Chopping sounds crisp because fresh vegetables burst water-filled cells under blades."
+   },
+   {
+    "id": "as-A-070",
+    "used": 0,
+    "text": "Peeling sounds — potato and orange skins — continuous soft tearing audio."
+   },
+   {
+    "id": "as-A-071",
+    "used": 0,
+    "text": "Scratching surfaces with nails — classic intentional ASMR trigger near the mic."
+   },
+   {
+    "id": "as-A-072",
+    "used": 0,
+    "text": "Finger tapping sequences — fast and slow patterns — vary the tingle pace."
+   },
+   {
+    "id": "as-A-073",
+    "used": 0,
+    "text": "Pencil tapping on paper — light wooden clicks — a school supply trigger."
+   },
+   {
+    "id": "as-A-074",
+    "used": 0,
+    "text": "Page turning sounds — paper whispering — books as ASMR objects."
+   },
+   {
+    "id": "as-A-075",
+    "used": 0,
+    "text": "Typing on mechanical keyboards — switch clicks — beloved by work-with-me viewers."
+   },
+   {
+    "id": "as-A-076",
+    "used": 0,
+    "text": "Mouse clicks and scroll wheels — digital sounds become triggers in quiet rooms."
+   },
+   {
+    "id": "as-A-077",
+    "used": 0,
+    "text": "Coin dropping and sorting — metal clinks in careful sequence."
+   },
+   {
+    "id": "as-A-078",
+    "used": 0,
+    "text": "Pen clicking — small sharp triggers — divisive across the ASMR community."
+   },
+   {
+    "id": "as-A-079",
+    "used": 0,
+    "text": "Water dripping steady — each drop isolated near the mic — rain substitute."
+   },
+   {
+    "id": "as-A-080",
+    "used": 0,
+    "text": "Pouring sounds — tea, water, lotion — liquid arcs make gentle audio."
+   },
+   {
+    "id": "as-A-081",
+    "used": 0,
+    "text": "Lotion and cream sounds — sticky soft pumps — a popular personal attention trigger."
+   },
+   {
+    "id": "as-A-082",
+    "used": 0,
+    "text": "Makeup sounds — brushes swirling powder, caps clicking — cosmetics ASMR."
+   },
+   {
+    "id": "as-A-083",
+    "used": 0,
+    "text": "Perfume spraying close mic — soft mist burst — niche scent ASMR."
+   },
+   {
+    "id": "as-A-084",
+    "used": 0,
+    "text": "Electric razor hums — haircut roleplay standard — steady motor drone."
+   },
+   {
+    "id": "as-A-085",
+    "used": 0,
+    "text": "Scissors snipping — sharp crisp cuts — barber roleplay signature sound."
+   },
+   {
+    "id": "as-A-086",
+    "used": 0,
+    "text": "Hair brushing sounds — bristle through strands — one of the oldest triggers."
+   },
+   {
+    "id": "as-A-087",
+    "used": 0,
+    "text": "Fabric folding and sorting — soft cloth rustle — organization ASMR."
+   },
+   {
+    "id": "as-A-088",
+    "used": 0,
+    "text": "Paper origami creases — sharp folds pressed flat — crisp geometry sounds."
+   },
+   {
+    "id": "as-A-089",
+    "used": 0,
+    "text": "Sticker peeling — slow adhesive release — tiny satisfying tear."
+   },
+   {
+    "id": "as-A-090",
+    "used": 0,
+    "text": "Washi tape unrolling — patterned paper tape — craft ASMR staple."
+   },
+   {
+    "id": "as-A-091",
+    "used": 0,
+    "text": "Marker colouring broad strokes — felt squeak on paper."
+   },
+   {
+    "id": "as-A-092",
+    "used": 0,
+    "text": "Chalkboard writing — chalk clicks and scrapes — classroom nostalgia trigger."
+   },
+   {
+    "id": "as-A-093",
+    "used": 0,
+    "text": "Glass marble runs — rolling clinks down tracks — chain reaction visuals."
+   },
+   {
+    "id": "as-A-094",
+    "used": 0,
+    "text": "Dominoes toppling — sequential clicks — satisfying pattern collapse."
+   },
+   {
+    "id": "as-A-095",
+    "used": 0,
+    "text": "Fidget toy sounds — spinners, popits, switches — handheld trigger objects."
+   },
+   {
+    "id": "as-A-096",
+    "used": 0,
+    "text": "Pop it silicone pops — bubble wrap replica — kid-friendly ASMR trend."
+   },
+   {
+    "id": "as-A-097",
+    "used": 0,
+    "text": "Antistress putty squishing — soft kneading audio close mic."
+   },
+   {
+    "id": "as-A-098",
+    "used": 0,
+    "text": "Orbeez water beads squish — wet glossy pops — colorful tactile ASMR."
+   },
+   {
+    "id": "as-A-099",
+    "used": 0,
+    "text": "Snow videos — shaving snow fake or real — sculpt and slice content."
+   },
+   {
+    "id": "as-A-100",
+    "used": 0,
+    "text": "Sandcastle cutting — layered kinetic sand towers — slice and crumble sounds."
+   },
+   {
+    "id": "as-A-101",
+    "used": 0,
+    "text": "Household cleaning ASMR — scrubbing, wiping, organizing — clean with me content."
+   },
+   {
+    "id": "as-A-102",
+    "used": 0,
+    "text": "Vacuum sounds steady drone — some viewers sleep to machine hums."
+   },
+   {
+    "id": "as-A-103",
+    "used": 0,
+    "text": "Dishwashing water sounds — bubbles and rinse streams — kitchen calm."
+   },
+   {
+    "id": "as-A-104",
+    "used": 0,
+    "text": "Coffee grinding and pouring — bean crunch then liquid stream — morning ASMR."
+   },
+   {
+    "id": "as-A-105",
+    "used": 0,
+    "text": "Tea steeping visuals — leaves unfurling in glass — slow motion calm."
+   },
+   {
+    "id": "as-A-106",
+    "used": 0,
+    "text": "Candle making and wax pouring — smooth liquid setting — craft ASMR."
+   },
+   {
+    "id": "as-A-107",
+    "used": 0,
+    "text": "Resin art pouring — glossy liquid spreading — slow process videos."
+   },
+   {
+    "id": "as-A-108",
+    "used": 0,
+    "text": "Glass blowing and cutting — hot glass hiss and crack — industrial ASMR."
+   },
+   {
+    "id": "as-A-109",
+    "used": 0,
+    "text": "Metal lathe and machining — precise shavings curling — workshop sound content."
+   },
+   {
+    "id": "as-A-110",
+    "used": 0,
+    "text": "Blacksmith hammer rhythm — ringing anvil beats — power and precision audio."
+   },
+   {
+    "id": "as-A-111",
+    "used": 0,
+    "text": "Wood lathe turning — ribbons of shavings — hand crafted ASMR."
+   },
+   {
+    "id": "as-A-112",
+    "used": 0,
+    "text": "Leather stitching sounds — needle pull through waxed thread."
+   },
+   {
+    "id": "as-A-113",
+    "used": 0,
+    "text": "Book binding — gluing, pressing, sewing pages — craft process ASMR."
+   },
+   {
+    "id": "as-A-114",
+    "used": 0,
+    "text": "Wax sealing letters — stamp pressing soft thud — stationery ASMR."
+   },
+   {
+    "id": "as-A-115",
+    "used": 0,
+    "text": "Ink swatching — brush loaded with color dragged across paper."
+   },
+   {
+    "id": "as-A-116",
+    "used": 0,
+    "text": "Watercolor blending — pigment blooming in water — visual ASMR as well."
+   },
+   {
+    "id": "as-A-117",
+    "used": 0,
+    "text": "Fountain pen scratching — nib whisper across paper — writing trigger classic."
+   },
+   {
+    "id": "as-A-118",
+    "used": 0,
+    "text": "Origami paper rustle — square sheets folding — geometric calm."
+   },
+   {
+    "id": "as-A-119",
+    "used": 0,
+    "text": "Jewelry making — beads clicking, pliers gripping — tabletop trigger."
+   },
+   {
+    "id": "as-A-120",
+    "used": 0,
+    "text": "Bead sorting sounds — glass and plastic clinks — organizing ASMR."
+   },
+   {
+    "id": "as-A-121",
+    "used": 0,
+    "text": "Coin stacking — metal discs balanced then toppled."
+   },
+   {
+    "id": "as-A-122",
+    "used": 0,
+    "text": "Puzzle pieces clicking — cardboard snap — assembly satisfaction."
+   },
+   {
+    "id": "as-A-123",
+    "used": 0,
+    "text": "LEGO building sounds — plastic clicks in rhythm — builder ASMR."
+   },
+   {
+    "id": "as-A-124",
+    "used": 0,
+    "text": "Model kit snapping — no glue pieces fitting — hobby calm."
+   },
+   {
+    "id": "as-A-125",
+    "used": 0,
+    "text": "Keyboard building — switches lubing and snapping — enthusiast ASMR."
+   },
+   {
+    "id": "as-A-126",
+    "used": 0,
+    "text": "Switch typing tests — a whole genre comparing keyboard sound signatures."
+   },
+   {
+    "id": "as-A-127",
+    "used": 0,
+    "text": "Mouse switch clicking tests — sharp short triggers in a quiet room."
+   },
+   {
+    "id": "as-A-128",
+    "used": 0,
+    "text": "Headphone and gear unboxing — plastic peel, box slide — tech ASMR."
+   },
+   {
+    "id": "as-A-129",
+    "used": 0,
+    "text": "Screen protector application — dust pick, sticker peel, smooth press."
+   },
+   {
+    "id": "as-A-130",
+    "used": 0,
+    "text": "Phone case snapping — soft thuds of rubber seating."
+   },
+   {
+    "id": "as-A-131",
+    "used": 0,
+    "text": "Watch winding — gear clicks — horology ASMR niche."
+   },
+   {
+    "id": "as-A-132",
+    "used": 0,
+    "text": "Camera lens clicking — focus rings turning — photography gear audio."
+   },
+   {
+    "id": "as-A-133",
+    "used": 0,
+    "text": "Tool organization — sockets onto rails — workshop satisfaction."
+   },
+   {
+    "id": "as-A-134",
+    "used": 0,
+    "text": "Garden sounds — soil pouring, seeds dropping — earthy calming audio."
+   },
+   {
+    "id": "as-A-135",
+    "used": 0,
+    "text": "Bird feeding — seed pours and wing flutter — nature tabletop ASMR."
+   },
+   {
+    "id": "as-A-136",
+    "used": 0,
+    "text": "Aquarium maintenance — water change pours — bubble and flow sounds."
+   },
+   {
+    "id": "as-A-137",
+    "used": 0,
+    "text": "Pet grooming videos — brushing fur — viewers report deep relaxation."
+   },
+   {
+    "id": "as-A-138",
+    "used": 0,
+    "text": "Nail art tapping — polished tips clicking — beauty ASMR trigger."
+   },
+   {
+    "id": "as-A-139",
+    "used": 0,
+    "text": "Manicure process sounds — file rasps and polish brush strokes."
+   },
+   {
+    "id": "as-A-140",
+    "used": 0,
+    "text": "Facial treatment visuals — masks peeling — spa relaxation content."
+   },
+   {
+    "id": "as-A-141",
+    "used": 0,
+    "text": "Micro dermaplaning close ups — blade soft strokes — skincare ASMR."
+   },
+   {
+    "id": "as-A-142",
+    "used": 0,
+    "text": "Teeth cleaning roleplay — soft brushing — dentist attention roleplay."
+   },
+   {
+    "id": "as-A-143",
+    "used": 0,
+    "text": "Skincare routine tapping — bottles, pumps, patting — routine calm."
+   },
+   {
+    "id": "as-A-144",
+    "used": 0,
+    "text": "Yoga and stretching quiet — mat sounds and breath — mindful movement ASMR."
+   },
+   {
+    "id": "as-A-145",
+    "used": 0,
+    "text": "Meditation guidance whisper — soft instructions — sleep aid overlap."
+   },
+   {
+    "id": "as-A-146",
+    "used": 0,
+    "text": "Sleep story whispering — slow narration — bedtime ASMR genre."
+   },
+   {
+    "id": "as-A-147",
+    "used": 0,
+    "text": "Counting and listing whisper — repetitive soft numbers — attention ASMR."
+   },
+   {
+    "id": "as-A-148",
+    "used": 0,
+    "text": "Reading aloud softly — storybook rhythm — library voice content."
+   },
+   {
+    "id": "as-A-149",
+    "used": 0,
+    "text": "Language sounds soft — pronunciation videos — phonetic ASMR niche."
+   },
+   {
+    "id": "as-A-150",
+    "used": 0,
+    "text": "Whispered recipe tutorials — cooking in soft voice — kitchen ASMR."
+   },
+   {
+    "id": "as-A-151",
+    "used": 0,
+    "text": "Coffee shop ambience — clinks and hums — study with me background."
+   },
+   {
+    "id": "as-A-152",
+    "used": 0,
+    "text": "Rain on window sounds — classic sleep track — nature's white noise."
+   },
+   {
+    "id": "as-A-153",
+    "used": 0,
+    "text": "Thunderstorm distant rumbles — low frequency comfort — storm ASMR."
+   },
+   {
+    "id": "as-A-154",
+    "used": 0,
+    "text": "Fireplace crackling — wood pops and hiss — winter comfort sound."
+   },
+   {
+    "id": "as-A-155",
+    "used": 0,
+    "text": "Campfire sounds — log snaps — outdoor memory audio."
+   },
+   {
+    "id": "as-A-156",
+    "used": 0,
+    "text": "Forest morning birds — gradual chorus — gentle wake content."
+   },
+   {
+    "id": "as-A-157",
+    "used": 0,
+    "text": "Ocean waves steady — cyclical crash and retreat — infinite loop calm."
+   },
+   {
+    "id": "as-A-158",
+    "used": 0,
+    "text": "Stream brook babble — constant light water over stones."
+   },
+   {
+    "id": "as-A-159",
+    "used": 0,
+    "text": "Wind through grass — soft rushing — prairie calm audio."
+   },
+   {
+    "id": "as-A-160",
+    "used": 0,
+    "text": "Snowfall silence — muffled quiet — the sound of no sound."
+   },
+   {
+    "id": "as-A-161",
+    "used": 0,
+    "text": "Clock ticking steady — metronome calm — time as rhythm."
+   },
+   {
+    "id": "as-A-162",
+    "used": 0,
+    "text": "Fan hum white drone — appliance background — underrated sleep audio."
+   },
+   {
+    "id": "as-A-163",
+    "used": 0,
+    "text": "Train track rhythm — clickety clack — travel sleep classic."
+   },
+   {
+    "id": "as-A-164",
+    "used": 0,
+    "text": "Airplane cabin drone — steady engine hum — travel white noise."
+   },
+   {
+    "id": "as-A-165",
+    "used": 0,
+    "text": "Car rain driving — wipers and patter — road trip calm."
+   },
+   {
+    "id": "as-A-166",
+    "used": 0,
+    "text": "Boat rocking creaks — water lapping — harbor sleep sounds."
+   },
+   {
+    "id": "as-A-167",
+    "used": 0,
+    "text": "Library page sounds — hushed paper turns — quiet focus audio."
+   },
+   {
+    "id": "as-A-168",
+    "used": 0,
+    "text": "Pencil shading texture — graphite on tooth of paper."
+   },
+   {
+    "id": "as-A-169",
+    "used": 0,
+    "text": "Sewing needle thread pulls — fabric puncture soft pops."
+   },
+   {
+    "id": "as-A-170",
+    "used": 0,
+    "text": "Boot steps on gravel — slow crunchy rhythm."
+   },
+   {
+    "id": "as-A-171",
+    "used": 0,
+    "text": "Shoes on fresh snow — squeaky compression — winter texture."
+   },
+   {
+    "id": "as-A-172",
+    "used": 0,
+    "text": "Leaves crunch walking — autumn rhythm — seasonal sound memory."
+   },
+   {
+    "id": "as-A-173",
+    "used": 0,
+    "text": "Sand footsteps desert — soft grain give — dry calm audio."
+   },
+   {
+    "id": "as-A-174",
+    "used": 0,
+    "text": "Grass mowing distant — steady engine pass — summer afternoon drone."
+   },
+   {
+    "id": "as-A-175",
+    "used": 0,
+    "text": "Tingling often begins when a trigger feels both unexpected and safe at once."
+   },
+   {
+    "id": "as-A-176",
+    "used": 0,
+    "text": "Familiar triggers lose power over time — novelty keeps the tingle response alive."
+   },
+   {
+    "id": "as-A-177",
+    "used": 0,
+    "text": "ASMR playlists function like bedtime routines — ritual amplifies relaxation."
+   },
+   {
+    "id": "as-A-178",
+    "used": 0,
+    "text": "Anticipatory tingles appear before a known trigger even starts — the brain learns cues."
+   },
+   {
+    "id": "as-A-179",
+    "used": 0,
+    "text": "ASMR and frisson both tingle — frisson is chills from music, ASMR from gentle stimuli."
+   },
+   {
+    "id": "as-A-180",
+    "used": 0,
+    "text": "Autonomous in the name means the feeling arises on its own — no effort required."
+   },
+   {
+    "id": "as-A-181",
+    "used": 0,
+    "text": "ASMR videos flood search engines at night — viewing peaks after bedtime hours."
+   },
+   {
+    "id": "as-A-182",
+    "used": 0,
+    "text": "ASMR's community overlaps with meditation audiences — shared calm-seeking viewers."
+   },
+   {
+    "id": "as-A-183",
+    "used": 0,
+    "text": "Slow motion hands feel safe — evolutionary comfort in careful deliberate movement."
+   },
+   {
+    "id": "as-A-184",
+    "used": 0,
+    "text": "Personal attention scripts borrow from caregiving psychology — soothing parental cadence."
+   },
+   {
+    "id": "as-A-185",
+    "used": 0,
+    "text": "Whispered affirmations — you are doing well — mirror comforting childhood speech."
+   },
+   {
+    "id": "as-A-186",
+    "used": 0,
+    "text": "Repetitive tasks quiet the mind's worry loop — monotony as anxiety relief."
+   },
+   {
+    "id": "as-A-187",
+    "used": 0,
+    "text": "ASMR recordings substitute for human grooming — brushing sounds echo social bonding."
+   },
+   {
+    "id": "as-A-188",
+    "used": 0,
+    "text": "Primates groom quietly together — soft touch sounds may echo that ancient calm."
+   },
+   {
+    "id": "as-A-189",
+    "used": 0,
+    "text": "ASMR taps the same calm system as deep breathing — parasympathetic relaxation overlap."
+   },
+   {
+    "id": "as-A-190",
+    "used": 0,
+    "text": "Viewers describe ASMR as being gently addressed one on one — attention without demand."
+   },
+   {
+    "id": "as-A-191",
+    "used": 0,
+    "text": "ASMR's quiet sets contrast loud internet culture — silence became countercultural content."
+   },
+   {
+    "id": "as-A-192",
+    "used": 0,
+    "text": "Sound sensitivity varies — hyperacusis sufferers find loud triggers painful not calming."
+   },
+   {
+    "id": "as-A-193",
+    "used": 0,
+    "text": "Autonomous means unforced — you cannot will a tingle into existence easily."
+   },
+   {
+    "id": "as-A-194",
+    "used": 0,
+    "text": "ASMR helps some with needle phobia videos — medical roleplay desensitization stories."
+   },
+   {
+    "id": "as-A-195",
+    "used": 0,
+    "text": "Therapeutic applications studied — ASMR adjunct for anxiety discussions ongoing."
+   },
+   {
+    "id": "as-A-196",
+    "used": 0,
+    "text": "ASMR music merges lofi beats with trigger sounds — study playlists with tingles."
+   },
+   {
+    "id": "as-A-197",
+    "used": 0,
+    "text": "ASMR games — quiet mobile titles — let players trigger tingles by tapping."
+   },
+   {
+    "id": "as-A-198",
+    "used": 0,
+    "text": "ASMR frisson overlap explains why choir videos tingle non-ASMR people too."
+   },
+   {
+    "id": "as-A-199",
+    "used": 0,
+    "text": "Music ASMR — solo instrument close mic — borders classical recording craft."
+   },
+   {
+    "id": "as-A-200",
+    "used": 0,
+    "text": "ASMR and mindfulness share attention anchoring — single focus, wandering release."
+   },
+   {
+    "id": "as-A-201",
+    "used": 0,
+    "text": "Breathing cues in roleplays slow viewer breathing unconsciously — cadence matching."
+   },
+   {
+    "id": "as-A-202",
+    "used": 0,
+    "text": "ASMR cannot replace medical treatment — viewers report relief not cures."
+   },
+   {
+    "id": "as-A-203",
+    "used": 0,
+    "text": "Sleep headphones made for bed — flat speakers under pillows play ASMR comfortably."
+   },
+   {
+    "id": "as-A-204",
+    "used": 0,
+    "text": "Bone conduction headbands let ears rest while audio plays through cheekbones."
+   },
+   {
+    "id": "as-A-205",
+    "used": 0,
+    "text": "ASMR alarm culture — gentle tingle videos as wake ups — soft beginnings."
+   },
+   {
+    "id": "as-A-206",
+    "used": 0,
+    "text": "ASMR study community pairs tingles with focus — background calm for homework."
+   },
+   {
+    "id": "as-A-207",
+    "used": 0,
+    "text": "ASMR compilation videos curate top triggers — beginner entry points to the niche."
+   },
+   {
+    "id": "as-A-208",
+    "used": 0,
+    "text": "ASMR reaction videos — tingles explained on camera — introduce skeptics gently."
+   },
+   {
+    "id": "as-A-209",
+    "used": 0,
+    "text": "ASMR scholarship began appearing in psychology journals — curiosity became research."
+   },
+   {
+    "id": "as-A-210",
+    "used": 0,
+    "text": "The autonomous sensory meridian response name was assembled from precise word roots."
+   },
+   {
+    "id": "as-A-211",
+    "used": 0,
+    "text": "Meridian means peak or pathway — the word evokes the tingle's traveling route."
+   },
+   {
+    "id": "as-A-212",
+    "used": 0,
+    "text": "Sensory marks the feeling as touch-like — heard through ears felt on skin."
+   },
+   {
+    "id": "as-A-213",
+    "used": 0,
+    "text": "Response emphasizes it happens to you — stimulus then reaction, not performance."
+   },
+   {
+    "id": "as-A-214",
+    "used": 0,
+    "text": "ASMR clips use trigger stacking — each layer deepens the last for escalation."
+   },
+   {
+    "id": "as-A-215",
+    "used": 0,
+    "text": "Relaxation response theory — gentle repetition switches off fight or flight."
+   },
+   {
+    "id": "as-A-216",
+    "used": 0,
+    "text": "ASMR sits opposite stress audio — alarms sharp vs whispering soft, body reads both."
+   },
+   {
+    "id": "as-A-217",
+    "used": 0,
+    "text": "Low frequency rumble like purring calms mammals — cat videos double as ASMR."
+   },
+   {
+    "id": "as-A-218",
+    "used": 0,
+    "text": "Purring at twenty-five hertz overlaps frequencies studied for relaxation effects."
+   },
+   {
+    "id": "as-A-219",
+    "used": 0,
+    "text": "Human humming soothes infants across cultures — low steady voice as safety signal."
+   },
+   {
+    "id": "as-A-220",
+    "used": 0,
+    "text": "Rhythm entrainment — slow sound slows breathing — heartbeat follows the beat."
+   },
+   {
+    "id": "as-A-221",
+    "used": 0,
+    "text": "ASMR pacing deliberately sits below speech rhythm — extra slow, extra safe."
+   },
+   {
+    "id": "as-A-222",
+    "used": 0,
+    "text": "Silence between taps gives each sound room — negative space is a design element."
+   },
+   {
+    "id": "as-A-223",
+    "used": 0,
+    "text": "Triggers work best unexpected within predictability — pattern then gentle variation."
+   },
+   {
+    "id": "as-A-224",
+    "used": 0,
+    "text": "ASMR whispers activate language processing without volume threat — listening soft."
+   },
+   {
+    "id": "as-A-225",
+    "used": 0,
+    "text": "ASMR expands internationally — Japanese mukbang and Korean whisper channels thrive."
+   },
+   {
+    "id": "as-A-226",
+    "used": 0,
+    "text": "ASMR chefs cook in near silence — sound of food becomes the narration."
+   },
+   {
+    "id": "as-A-227",
+    "used": 0,
+    "text": "ASMR gardening — soil and water sounds — connects viewers to slow nature rhythms."
+   },
+   {
+    "id": "as-A-228",
+    "used": 0,
+    "text": "ASMR stargazing — quiet night voice — rare low stimulus astronomy content."
+   },
+   {
+    "id": "as-A-229",
+    "used": 0,
+    "text": "ASMR hospital roleplay — gentle nurse attention — comfort through simulated care."
+   },
+   {
+    "id": "as-A-230",
+    "used": 0,
+    "text": "ASMR teacher roleplay — soft marking and writing — nostalgic classroom calm."
+   },
+   {
+    "id": "as-A-231",
+    "used": 0,
+    "text": "ASMR librarian roleplay — page turns and quiet shush — library as sanctuary."
+   },
+   {
+    "id": "as-A-232",
+    "used": 0,
+    "text": "ASMR flight attendant roleplay — hushed service — travel attention fantasy."
+   },
+   {
+    "id": "as-A-233",
+    "used": 0,
+    "text": "ASMR diner roleplay — soft clinks and menu whispers — eating place comfort."
+   },
+   {
+    "id": "as-A-234",
+    "used": 0,
+    "text": "ASMR spa reception — booking whispered — arrival relaxation begins early."
+   },
+   {
+    "id": "as-A-235",
+    "used": 0,
+    "text": "ASMR makeover — brushes and compliments — beauty as attention care."
+   },
+   {
+    "id": "as-A-236",
+    "used": 0,
+    "text": "ASMR pet vet — gentle animal handling sounds — care for creature calm."
+   },
+   {
+    "id": "as-A-237",
+    "used": 0,
+    "text": "ASMR tattoo artist roleplay — machine buzz soft — niche attention content."
+   },
+   {
+    "id": "as-A-238",
+    "used": 0,
+    "text": "ASMR piercing roleplay — quiet clicks — taboo trigger with loyal fans."
+   },
+   {
+    "id": "as-A-239",
+    "used": 0,
+    "text": "ASMR haircut full service — wash, cut, dry — the platform's most cloned format."
+   },
+   {
+    "id": "as-A-240",
+    "used": 0,
+    "text": "ASMR ear check — otoscope clicks — doctor attention micro niche."
+   },
+   {
+    "id": "as-A-241",
+    "used": 0,
+    "text": "ASMR face massage — oil and palm sounds — skincare relaxation overlap."
+   },
+   {
+    "id": "as-A-242",
+    "used": 0,
+    "text": "ASMR hand massage — lotion rubs — touch without texture noise."
+   },
+   {
+    "id": "as-A-243",
+    "used": 0,
+    "text": "ASMR reflexology — pressure maps — foot care attention roleplay."
+   },
+   {
+    "id": "as-A-244",
+    "used": 0,
+    "text": "ASMR tooth brushing — soft bristle audio — dental hygiene calm."
+   },
+   {
+    "id": "as-A-245",
+    "used": 0,
+    "text": "ASMR hair braiding — strand separation — woven sound texture."
+   },
+   {
+    "id": "as-A-246",
+    "used": 0,
+    "text": "ASMR nail technician — file and polish — manicure table content."
+   },
+   {
+    "id": "as-A-247",
+    "used": 0,
+    "text": "ASMR shoe shining — cloth buffing — leather care rhythm."
+   },
+   {
+    "id": "as-A-248",
+    "used": 0,
+    "text": "ASMR watch repair — tiny tools click — precision attention calm."
+   },
+   {
+    "id": "as-A-249",
+    "used": 0,
+    "text": "ASMR bookshop browsing — spine touches, page fans — literary quiet."
+   },
+   {
+    "id": "as-A-250",
+    "used": 0,
+    "text": "ASMR museum tour — hushed guide voice — gallery calm content."
+   }
+  ],
+  "B": [
+   {
+    "id": "as-B-001",
+    "used": 0,
+    "text": "ASMR videos are usually shot close to the microphone — proximity makes tiny sounds huge."
+   },
+   {
+    "id": "as-B-002",
+    "used": 0,
+    "text": "Large diaphragm condenser mics pick up whisper detail — the ASMRtist's main tool."
+   },
+   {
+    "id": "as-B-003",
+    "used": 0,
+    "text": "Binaural microphones sit in a dummy head — ears apart create real 3D sound."
+   },
+   {
+    "id": "as-B-004",
+    "used": 0,
+    "text": "Binaural setups need headphones on the viewer side to work as intended."
+   },
+   {
+    "id": "as-B-005",
+    "used": 0,
+    "text": "Pop filters stop breath blasts — soft plosives stay controlled near the mic."
+   },
+   {
+    "id": "as-B-006",
+    "used": 0,
+    "text": "Shock mounts suspend mics — table taps cannot travel into recordings."
+   },
+   {
+    "id": "as-B-007",
+    "used": 0,
+    "text": "Wind screens soften mouth noise — close whispering needs foam protection."
+   },
+   {
+    "id": "as-B-008",
+    "used": 0,
+    "text": "Mouth clicks and smacks get amplified close up — ASMRtists manage them with water and pacing."
+   },
+   {
+    "id": "as-B-009",
+    "used": 0,
+    "text": "Room treatment kills echo — soft walls make dry intimate audio."
+   },
+   {
+    "id": "as-B-010",
+    "used": 0,
+    "text": "Blankets and pillows double as instant sound treatment — bedroom studios work."
+   },
+   {
+    "id": "as-B-011",
+    "used": 0,
+    "text": "Silent camera mode prevents shutter clicks — visuals never interrupt quiet audio."
+   },
+   {
+    "id": "as-B-012",
+    "used": 0,
+    "text": "Condenser mics need phantom power — 48 volts drives their sensitive capsules."
+   },
+   {
+    "id": "as-B-013",
+    "used": 0,
+    "text": "Lavalier mics hide close to the chest — wearable audio for movement videos."
+   },
+   {
+    "id": "as-B-014",
+    "used": 0,
+    "text": "Shotgun mics focus sound forward — reject room noise in craft videos."
+   },
+   {
+    "id": "as-B-015",
+    "used": 0,
+    "text": "Stereo pairs spaced widely capture ambience — rain and room recordings."
+   },
+   {
+    "id": "as-B-016",
+    "used": 0,
+    "text": "High sample rate recordings keep tiny sounds detailed — 48 kilohertz is a common standard."
+   },
+   {
+    "id": "as-B-017",
+    "used": 0,
+    "text": "Clean gain staging keeps hiss out — preamps pushed just enough never too far."
+   },
+   {
+    "id": "as-B-018",
+    "used": 0,
+    "text": "Audio interfaces convert analog whispers to digital — the clean bridge in the chain."
+   },
+   {
+    "id": "as-B-019",
+    "used": 0,
+    "text": "Noise gates can cut soft sounds — ASMR engineers avoid aggressive gating."
+   },
+   {
+    "id": "as-B-020",
+    "used": 0,
+    "text": "Compression evens quiet and loud — whisper levels stay consistently audible."
+   },
+   {
+    "id": "as-B-021",
+    "used": 0,
+    "text": "EQ lifting highs adds crispness — scratching detail sparkles with gentle boost."
+   },
+   {
+    "id": "as-B-022",
+    "used": 0,
+    "text": "Low cut filters remove rumble — AC hums and traffic never reach the ears."
+   },
+   {
+    "id": "as-B-023",
+    "used": 0,
+    "text": "De-essers tame harsh sibilance — close s and t sounds stay soft."
+   },
+   {
+    "id": "as-B-024",
+    "used": 0,
+    "text": "Sidechain ducking lowers music under whisper — voice always leads the mix."
+   },
+   {
+    "id": "as-B-025",
+    "used": 0,
+    "text": "ASMR audio mastered quieter overall — viewers listen at low night volume."
+   },
+   {
+    "id": "as-B-026",
+    "used": 0,
+    "text": "Headphone checks matter — mono speakers hide binaural positioning errors."
+   },
+   {
+    "id": "as-B-027",
+    "used": 0,
+    "text": "Speeding up ASMR kills relaxation — slow pacing is structural, not decoration."
+   },
+   {
+    "id": "as-B-028",
+    "used": 0,
+    "text": "Slow edits leave space — pauses are part of the trigger design."
+   },
+   {
+    "id": "as-B-029",
+    "used": 0,
+    "text": "Long unbroken takes build immersion — jump cuts break the tingles."
+   },
+   {
+    "id": "as-B-030",
+    "used": 0,
+    "text": "Macro lenses show texture detail — viewers see the surface producing the sound."
+   },
+   {
+    "id": "as-B-031",
+    "used": 0,
+    "text": "Shallow depth of field blurs backgrounds — attention stays on hands and objects."
+   },
+   {
+    "id": "as-B-032",
+    "used": 0,
+    "text": "Top down rigs film tabletop crafts — the classic overhead ASMR angle."
+   },
+   {
+    "id": "as-B-033",
+    "used": 0,
+    "text": "Tripods and friction heads keep shots steady — micro shake ruins calm visuals."
+   },
+   {
+    "id": "as-B-034",
+    "used": 0,
+    "text": "Ring lights give even shadowless illumination — soft glow suits close work."
+   },
+   {
+    "id": "as-B-035",
+    "used": 0,
+    "text": "Soft boxes wrap hands in gentle light — no harsh specular distractions."
+   },
+   {
+    "id": "as-B-036",
+    "used": 0,
+    "text": "Natural window light flatters texture — morning shoots get warm soft rays."
+   },
+   {
+    "id": "as-B-037",
+    "used": 0,
+    "text": "Practical warm lamps set cozy moods — color temperature sells the calm."
+   },
+   {
+    "id": "as-B-038",
+    "used": 0,
+    "text": "Slow focus pulls guide attention — the lens decides what the viewer notices."
+   },
+   {
+    "id": "as-B-039",
+    "used": 0,
+    "text": "Frame rates of 60 fps smooth slow motion — slicing b-roll glides."
+   },
+   {
+    "id": "as-B-040",
+    "used": 0,
+    "text": "Slow motion slicing multiplies texture detail — crumb and spray become visible."
+   },
+   {
+    "id": "as-B-041",
+    "used": 0,
+    "text": "Crop framing removes clutter — only hands and object remain on screen."
+   },
+   {
+    "id": "as-B-042",
+    "used": 0,
+    "text": "Consistent framing across a series builds recognition — viewers know the setup."
+   },
+   {
+    "id": "as-B-043",
+    "used": 0,
+    "text": "Neutral backgrounds keep eyes on the trigger — busy sets distract from sounds."
+   },
+   {
+    "id": "as-B-044",
+    "used": 0,
+    "text": "Solid color backdrops — pastels dominate ASMR thumbnails — calm color coding."
+   },
+   {
+    "id": "as-B-045",
+    "used": 0,
+    "text": "Hand modeling requires steady grace — slow deliberate motion is a trained skill."
+   },
+   {
+    "id": "as-B-046",
+    "used": 0,
+    "text": "Manicured nails on camera — tapping sounds read visually before audio arrives."
+   },
+   {
+    "id": "as-B-047",
+    "used": 0,
+    "text": "Gloves signal clinical roleplays — latex snaps are their own trigger."
+   },
+   {
+    "id": "as-B-048",
+    "used": 0,
+    "text": "Sleeves and fabric muffle handling — texture choice changes the sound."
+   },
+   {
+    "id": "as-B-049",
+    "used": 0,
+    "text": "Table surfaces define the soundboard — wood, glass and stone each color the audio."
+   },
+   {
+    "id": "as-B-050",
+    "used": 0,
+    "text": "Felt and leather desk pads soften impacts — quiet workspace audio base."
+   },
+   {
+    "id": "as-B-051",
+    "used": 0,
+    "text": "Object arrangement matters — symmetrical layouts read as organized calm."
+   },
+   {
+    "id": "as-B-052",
+    "used": 0,
+    "text": "ASMR props return across videos — fans recognize favorite objects instantly."
+   },
+   {
+    "id": "as-B-053",
+    "used": 0,
+    "text": "Unboxing new triggers keeps channels fresh — novelty re-engages habituated viewers."
+   },
+   {
+    "id": "as-B-054",
+    "used": 0,
+    "text": "Series formats — making slime, cutting soap — give viewers predictable comfort."
+   },
+   {
+    "id": "as-B-055",
+    "used": 0,
+    "text": "Roleplay scripts plan the attention beats — checkup, massage, haircut, cafe."
+   },
+   {
+    "id": "as-B-056",
+    "used": 0,
+    "text": "First person perspective places the viewer in the chair — attention feels directed at them."
+   },
+   {
+    "id": "as-B-057",
+    "used": 0,
+    "text": "Winking and eye contact with lens — simulated personal attention."
+   },
+   {
+    "id": "as-B-058",
+    "used": 0,
+    "text": "Hand gestures in frame — offering, pointing, presenting — visual conversation."
+   },
+   {
+    "id": "as-B-059",
+    "used": 0,
+    "text": "Quiet narration describes actions — soft commentary reinforces calm focus."
+   },
+   {
+    "id": "as-B-060",
+    "used": 0,
+    "text": "Numbered list whisper — reading items slowly — organization as relaxation."
+   },
+   {
+    "id": "as-B-061",
+    "used": 0,
+    "text": "Personal attention repeats — being told you are doing well — comfort content."
+   },
+   {
+    "id": "as-B-062",
+    "used": 0,
+    "text": "Trigger words work like anchors — tapping, brushing, scratching announced softly."
+   },
+   {
+    "id": "as-B-063",
+    "used": 0,
+    "text": "Titles and thumbnails promise specific triggers — viewers choose by sound type."
+   },
+   {
+    "id": "as-B-064",
+    "used": 0,
+    "text": "Chapters help viewers jump to favorite triggers — meta design for trigger variety."
+   },
+   {
+    "id": "as-B-065",
+    "used": 0,
+    "text": "ASMR creators test triggers on themselves — tingle response guides production."
+   },
+   {
+    "id": "as-B-066",
+    "used": 0,
+    "text": "Community comments reveal favorite moments — audience shapes future videos."
+   },
+   {
+    "id": "as-B-067",
+    "used": 0,
+    "text": "Polls ask which trigger next — viewers co-direct channel direction."
+   },
+   {
+    "id": "as-B-068",
+    "used": 0,
+    "text": "Subtle sound design layers ambience under foreground — room tone keeps audio alive."
+   },
+   {
+    "id": "as-B-069",
+    "used": 0,
+    "text": "Room tone prevents dead silence gaps — digital silence feels unnaturally empty."
+   },
+   {
+    "id": "as-B-070",
+    "used": 0,
+    "text": "Foley adds crispness — everyday sounds recreated closer and cleaner than life."
+   },
+   {
+    "id": "as-B-071",
+    "used": 0,
+    "text": "Everyday objects double as foley — brushes, coins, keys all become props."
+   },
+   {
+    "id": "as-B-072",
+    "used": 0,
+    "text": "Wet sounds need careful mic protection — droplets damage sensitive capsules."
+   },
+   {
+    "id": "as-B-073",
+    "used": 0,
+    "text": "Food triggers walk a line — eating sounds please some, disgust others."
+   },
+   {
+    "id": "as-B-074",
+    "used": 0,
+    "text": "Chewing and crunching audio divides the community — mukbang overlaps ASMR."
+   },
+   {
+    "id": "as-B-075",
+    "used": 0,
+    "text": "Whisper speaking needs breath control — long soft sentences without gasps."
+   },
+   {
+    "id": "as-B-076",
+    "used": 0,
+    "text": "Vocal care for whispering artists — hydration and rest protect the instrument."
+   },
+   {
+    "id": "as-B-077",
+    "used": 0,
+    "text": "Recording late at night gets the quietest house — neighbors and traffic asleep."
+   },
+   {
+    "id": "as-B-078",
+    "used": 0,
+    "text": "Appliances off during takes — fridges and ACs hum into sensitive mics."
+   },
+   {
+    "id": "as-B-079",
+    "used": 0,
+    "text": "Clicky switches taped over — small mechanical noises get dampened."
+   },
+   {
+    "id": "as-B-080",
+    "used": 0,
+    "text": "Cardboard and fabric panels — cheap DIY acoustic panels work surprisingly well."
+   },
+   {
+    "id": "as-B-081",
+    "used": 0,
+    "text": "Closets full of clothes make natural vocal booths — soft surfaces everywhere."
+   },
+   {
+    "id": "as-B-082",
+    "used": 0,
+    "text": "Staggered shooting schedules avoid street noise peaks — quiet hour hunting."
+   },
+   {
+    "id": "as-B-083",
+    "used": 0,
+    "text": "Street ASMR trades control for atmosphere — market sounds become content."
+   },
+   {
+    "id": "as-B-084",
+    "used": 0,
+    "text": "Nature recording means weather watching — rain forecasts become production plans."
+   },
+   {
+    "id": "as-B-085",
+    "used": 0,
+    "text": "Wind ruins outdoor audio — blimps and foam covers save takes."
+   },
+   {
+    "id": "as-B-086",
+    "used": 0,
+    "text": "Camera audio rarely cuts it — dedicated recorders keep whisper fidelity."
+   },
+   {
+    "id": "as-B-087",
+    "used": 0,
+    "text": "Sync between audio and video keeps taps crisp on impact frames."
+   },
+   {
+    "id": "as-B-088",
+    "used": 0,
+    "text": "Clap sync marks align dual systems — simple classic fix in post."
+   },
+   {
+    "id": "as-B-089",
+    "used": 0,
+    "text": "Transcribing nothing — ASMR usually stays wordless or near wordless."
+   },
+   {
+    "id": "as-B-090",
+    "used": 0,
+    "text": "Music beds kept minimal — melodies compete with the tingles for attention."
+   },
+   {
+    "id": "as-B-091",
+    "used": 0,
+    "text": "Occasional ambient music suits visual-only craft videos — never under whisper."
+   },
+   {
+    "id": "as-B-092",
+    "used": 0,
+    "text": "Volume normalization keeps binge sessions even — no jump scare loudness."
+   },
+   {
+    "id": "as-B-093",
+    "used": 0,
+    "text": "Loudness targets for streaming stay conservative — ASMR lives below average."
+   },
+   {
+    "id": "as-B-094",
+    "used": 0,
+    "text": "Thumbnails show hands and textures close — the promise of touch and sound."
+   },
+   {
+    "id": "as-B-095",
+    "used": 0,
+    "text": "Titles name the trigger — tapping, cutting, brushing — search finds the niche."
+   },
+   {
+    "id": "as-B-096",
+    "used": 0,
+    "text": "Tags stack trigger keywords — ASMR roleplay whisper tapping scrubbing."
+   },
+   {
+    "id": "as-B-097",
+    "used": 0,
+    "text": "Playlists group triggers — viewers queue their favorites for sleep."
+   },
+   {
+    "id": "as-B-098",
+    "used": 0,
+    "text": "Upload timing matters — night releases catch bedtime audiences."
+   },
+   {
+    "id": "as-B-099",
+    "used": 0,
+    "text": "Community tab polls and clips keep fans engaged between uploads."
+   },
+   {
+    "id": "as-B-100",
+    "used": 0,
+    "text": "Collaborations cross audiences — two ASMRtists double the trigger vocabulary."
+   },
+   {
+    "id": "as-B-101",
+    "used": 0,
+    "text": "Merch mics and brushes turn tools into fan artifacts — community identity."
+   },
+   {
+    "id": "as-B-102",
+    "used": 0,
+    "text": "Behind the scenes speed builds trust — showing setup humanizes the artist."
+   },
+   {
+    "id": "as-B-103",
+    "used": 0,
+    "text": "Shorts cut the strongest ten seconds — hooks pull viewers to full videos."
+   },
+   {
+    "id": "as-B-104",
+    "used": 0,
+    "text": "Loop design — videos that end softly — encourages playlist continuation."
+   },
+   {
+    "id": "as-B-105",
+    "used": 0,
+    "text": "Binaural re-releases of mono videos extend catalog life — remix value."
+   },
+   {
+    "id": "as-B-106",
+    "used": 0,
+    "text": "Consistent calm branding — soft colors, gentle fonts — identity matches content."
+   },
+   {
+    "id": "as-B-107",
+    "used": 0,
+    "text": "Patron communities fund long takes — niche support keeps quiet channels alive."
+   },
+   {
+    "id": "as-B-108",
+    "used": 0,
+    "text": "Algorithm favors watch time — relaxing length matches platform incentives."
+   },
+   {
+    "id": "as-B-109",
+    "used": 0,
+    "text": "Sleep streams run hours — ambient live loops as digital night lights."
+   },
+   {
+    "id": "as-B-110",
+    "used": 0,
+    "text": "Live ASMR chat stays muted typed — the audience keeps its own quiet."
+   },
+   {
+    "id": "as-B-111",
+    "used": 0,
+    "text": "ASMR channels test dozens of objects before finding keeper triggers — trial by ear."
+   },
+   {
+    "id": "as-B-112",
+    "used": 0,
+    "text": "The most requested trigger objects rotate yearly — trends cycle through textures."
+   },
+   {
+    "id": "as-B-113",
+    "used": 0,
+    "text": "Fans gift props to creators — community-supplied trigger objects appear on camera."
+   },
+   {
+    "id": "as-B-114",
+    "used": 0,
+    "text": "Prop makers sell ASMR kits — curated boxes of tapping and scratching surfaces."
+   },
+   {
+    "id": "as-B-115",
+    "used": 0,
+    "text": "Microphone dust covers keep condenser capsules clean during messy trigger sessions."
+   },
+   {
+    "id": "as-B-116",
+    "used": 0,
+    "text": "Recording slime near mics needs plastic shields — sticky splatter ruins capsules."
+   },
+   {
+    "id": "as-B-117",
+    "used": 0,
+    "text": "Close up cameras focus centimeters away — macro lenses minimum focus distance matters."
+   },
+   {
+    "id": "as-B-118",
+    "used": 0,
+    "text": "Autofocus hunts on tiny movements — manual focus locks trigger action in frame."
+   },
+   {
+    "id": "as-B-119",
+    "used": 0,
+    "text": "White balance consistency keeps skin and props true across a video — calm color drift."
+   },
+   {
+    "id": "as-B-120",
+    "used": 0,
+    "text": "Overhead rigs clamp to desk edges — stable triangle for tabletop trigger shoots."
+   },
+   {
+    "id": "as-B-121",
+    "used": 0,
+    "text": "Gimbal shots gliding over crafts — smooth motion without handheld shake."
+   },
+   {
+    "id": "as-B-122",
+    "used": 0,
+    "text": "Battery swaps between takes prevent shutdown mid whisper — spare power always ready."
+   },
+   {
+    "id": "as-B-123",
+    "used": 0,
+    "text": "SD cards formatted in camera reduce file errors — boring discipline saves footage."
+   },
+   {
+    "id": "as-B-124",
+    "used": 0,
+    "text": "Two camera angles — wide and macro — cut together for rhythm without jumps."
+   },
+   {
+    "id": "as-B-125",
+    "used": 0,
+    "text": "Lavalier hidden under clothing for roleplays — body movement audio captured."
+   },
+   {
+    "id": "as-B-126",
+    "used": 0,
+    "text": "Contact mics attached to surfaces turn tables into speakers' microphones — tapping amplified."
+   },
+   {
+    "id": "as-B-127",
+    "used": 0,
+    "text": "Hydrophones record underwater sounds — submerged triggers for water videos."
+   },
+   {
+    "id": "as-B-128",
+    "used": 0,
+    "text": "Slow zooms during long takes add movement without breaking calm — gentle approach."
+   },
+   {
+    "id": "as-B-129",
+    "used": 0,
+    "text": "Screen recording for digital triggers — typing, clicking, scrolling — software ASMR."
+   },
+   {
+    "id": "as-B-130",
+    "used": 0,
+    "text": "Game audio captured clean — quiet games make playable ASMR experiences."
+   },
+   {
+    "id": "as-B-131",
+    "used": 0,
+    "text": "Text to speech whispered — synthetic soft voices — niche content overlap."
+   },
+   {
+    "id": "as-B-132",
+    "used": 0,
+    "text": "Layered takes — separate whisper and object tracks — mixed for clarity in post."
+   },
+   {
+    "id": "as-B-133",
+    "used": 0,
+    "text": "Noise reduction applied gently — aggressive settings chew whisper detail alive."
+   },
+   {
+    "id": "as-B-134",
+    "used": 0,
+    "text": "Room reverb left slightly in — complete dryness feels unnatural and clinical."
+   },
+   {
+    "id": "as-B-135",
+    "used": 0,
+    "text": "Fade ins avoid abrupt starts — videos begin from silence into gentle sound."
+   },
+   {
+    "id": "as-B-136",
+    "used": 0,
+    "text": "Outros fade slowly — snapping viewers awake would break the whole promise."
+   },
+   {
+    "id": "as-B-137",
+    "used": 0,
+    "text": "Sleep timer friendly endings — no loud end cards to jolt drowsy viewers."
+   },
+   {
+    "id": "as-B-138",
+    "used": 0,
+    "text": "Volume boost for soft object sounds — whisper stays primary though — balance tuned."
+   },
+   {
+    "id": "as-B-139",
+    "used": 0,
+    "text": "Monitoring with closed back headphones — no mic feedback loops on recordings."
+   },
+   {
+    "id": "as-B-140",
+    "used": 0,
+    "text": "Closed backs isolate — the artist hears exactly what the mic hears."
+   },
+   {
+    "id": "as-B-141",
+    "used": 0,
+    "text": "Gain staging taught through comments — creators compare settings openly in community."
+   },
+   {
+    "id": "as-B-142",
+    "used": 0,
+    "text": "Microphone angles change tone — front addressed whisper vs side rejected room."
+   },
+   {
+    "id": "as-B-143",
+    "used": 0,
+    "text": "Proximity effect boosts bass close up — whisper intimacy comes from capsule physics."
+   },
+   {
+    "id": "as-B-144",
+    "used": 0,
+    "text": "Figure eight mics capture both sides — flipping the pattern widens the room sound."
+   },
+   {
+    "id": "as-B-145",
+    "used": 0,
+    "text": "Omni mics sound natural close — capsule hears evenly all directions — soft choice."
+   },
+   {
+    "id": "as-B-146",
+    "used": 0,
+    "text": "Shotgun rejection keeps street noise out — directional focus for outdoor shoots."
+   },
+   {
+    "id": "as-B-147",
+    "used": 0,
+    "text": "Portable recorders capture location ambience — market and rain field recordings."
+   },
+   {
+    "id": "as-B-148",
+    "used": 0,
+    "text": "Field recordings licensed for rain videos — some creators buy nature audio libraries."
+   },
+   {
+    "id": "as-B-149",
+    "used": 0,
+    "text": "Loopable ambience beds — seamless hour long rain — playlist sleep engineering."
+   },
+   {
+    "id": "as-B-150",
+    "used": 0,
+    "text": "Loudness matched across uploads — switching videos never jolts volume levels."
+   },
+   {
+    "id": "as-B-151",
+    "used": 0,
+    "text": "Comment pinned with headphones recommended — binaural reminder for new viewers."
+   },
+   {
+    "id": "as-B-152",
+    "used": 0,
+    "text": "FAQ answers which side is which — setup transparency builds viewer trust."
+   },
+   {
+    "id": "as-B-153",
+    "used": 0,
+    "text": "Gear lists in descriptions — aspiring creators copy proven rigs."
+   },
+   {
+    "id": "as-B-154",
+    "used": 0,
+    "text": "Tutorial ASMR channels teach recording — meta content feeding the community."
+   },
+   {
+    "id": "as-B-155",
+    "used": 0,
+    "text": "Collab trigger trades — creators swap signature objects across channels."
+   },
+   {
+    "id": "as-B-156",
+    "used": 0,
+    "text": "Guest appearances in roleplays — two voices alternating attention layers."
+   },
+   {
+    "id": "as-B-157",
+    "used": 0,
+    "text": "Community events — charity quiet streams — fundraising through calm broadcasts."
+   },
+   {
+    "id": "as-B-158",
+    "used": 0,
+    "text": "Anniversary marathons reward long time viewers with rare trigger compilations."
+   },
+   {
+    "id": "as-B-159",
+    "used": 0,
+    "text": "Subscriber milestones marked with special triggers — cake cutting for celebration."
+   },
+   {
+    "id": "as-B-160",
+    "used": 0,
+    "text": "Milestones in whispered numbers — achievement read softly not shouted."
+   },
+   {
+    "id": "as-B-161",
+    "used": 0,
+    "text": "Behind the scenes shorts — desk setup tours — curiosity content for fans."
+   },
+   {
+    "id": "as-B-162",
+    "used": 0,
+    "text": "Unboxing new microphone — the community's own favorite trigger meta."
+   },
+   {
+    "id": "as-B-163",
+    "used": 0,
+    "text": "Desk tours showing trigger collections — shelf tours of past props."
+   },
+   {
+    "id": "as-B-164",
+    "used": 0,
+    "text": "Priority lists from comments — request fulfillment keeps engagement looping."
+   },
+   {
+    "id": "as-B-165",
+    "used": 0,
+    "text": "Viewer names whispered in shout outs — personal attention at scale."
+   },
+   {
+    "id": "as-B-166",
+    "used": 0,
+    "text": "Calendars posted — upload schedules — viewers plan bedtime around releases."
+   },
+   {
+    "id": "as-B-167",
+    "used": 0,
+    "text": "Playlists named by mood — sleep, focus, tingle — mood based navigation."
+   },
+   {
+    "id": "as-B-168",
+    "used": 0,
+    "text": "End screens link calm sequels — binge paths designed without loud promotion."
+   },
+   {
+    "id": "as-B-169",
+    "used": 0,
+    "text": "Community guidelines on kindness — trigger opinions stay respectful in comments."
+   },
+   {
+    "id": "as-B-170",
+    "used": 0,
+    "text": "Sensitive trigger warnings listed — misophonia viewers choose safely."
+   },
+   {
+    "id": "as-B-171",
+    "used": 0,
+    "text": "No talk versions published — viewers wanting pure sound get options."
+   },
+   {
+    "id": "as-B-172",
+    "used": 0,
+    "text": "Translated titles — multilingual reach — ASMR crosses language easily."
+   },
+   {
+    "id": "as-B-173",
+    "used": 0,
+    "text": "Auto captions off for whispers — misheard words annoy — manual fixes applied."
+   },
+   {
+    "id": "as-B-174",
+    "used": 0,
+    "text": "Chapters timestamped by trigger type — direct jumps to favorite segments."
+   },
+   {
+    "id": "as-B-175",
+    "used": 0,
+    "text": "Polls vote next week's object — audience directed programming."
+   },
+   {
+    "id": "as-B-176",
+    "used": 0,
+    "text": "Patron early access — supporters see videos first — quiet early club."
+   },
+   {
+    "id": "as-B-177",
+    "used": 0,
+    "text": "Merch photographs soft textures — fabric itself becomes brand statement."
+   },
+   {
+    "id": "as-B-178",
+    "used": 0,
+    "text": "Shop tags in videos — prop links — affiliate income for creators."
+   },
+   {
+    "id": "as-B-179",
+    "used": 0,
+    "text": "Equipment failures documented — mic death videos mourn gently with humor."
+   },
+   {
+    "id": "as-B-180",
+    "used": 0,
+    "text": "Recycling props into new combos — old triggers reborn layered together."
+   },
+   {
+    "id": "as-B-181",
+    "used": 0,
+    "text": "Seasonal specials — holiday triggers — snow, gift wrap, candles cycle annually."
+   },
+   {
+    "id": "as-B-182",
+    "used": 0,
+    "text": "Night versions of day videos — recolored re-edited for evening calm."
+   },
+   {
+    "id": "as-B-183",
+    "used": 0,
+    "text": "Algorithm friendly first seconds — immediate trigger sound not talking intro."
+   },
+   {
+    "id": "as-B-184",
+    "used": 0,
+    "text": "Thumbnail hands mid action — motion promise — clicking driven by curiosity."
+   },
+   {
+    "id": "as-B-185",
+    "used": 0,
+    "text": "Titles front loaded with trigger words — tapping scratching whispering first."
+   },
+   {
+    "id": "as-B-186",
+    "used": 0,
+    "text": "Search tags stacked deep — every synonym of every trigger listed."
+   },
+   {
+    "id": "as-B-187",
+    "used": 0,
+    "text": "Play count data guides series — winners get sequels losers retired."
+   },
+   {
+    "id": "as-B-188",
+    "used": 0,
+    "text": "Retention graphs studied — drop off points reveal boring sections."
+   },
+   {
+    "id": "as-B-189",
+    "used": 0,
+    "text": "Studio corners permanent — no teardown between videos — consistent ritual space."
+   },
+   {
+    "id": "as-B-190",
+    "used": 0,
+    "text": "Chair and desk worn comfortable — hours of quiet work need ergonomics."
+   },
+   {
+    "id": "as-B-191",
+    "used": 0,
+    "text": "Hydration stations near mic — water sips muted off camera between takes."
+   },
+   {
+    "id": "as-B-192",
+    "used": 0,
+    "text": "Session breaks prevent whisper strain — vocal rest is scheduled production time."
+   },
+   {
+    "id": "as-B-193",
+    "used": 0,
+    "text": "Script cards soft whispered cues — prompts without paper rustle in takes."
+   },
+   {
+    "id": "as-B-194",
+    "used": 0,
+    "text": "Teleprompter apps scrolling slow — eyes stay near lens for attention feel."
+   },
+   {
+    "id": "as-B-195",
+    "used": 0,
+    "text": "Practice runs silent — timing learned before recording lights on."
+   },
+   {
+    "id": "as-B-196",
+    "used": 0,
+    "text": "Backup recordings always made — takes never trusted to a single capture."
+   },
+   {
+    "id": "as-B-197",
+    "used": 0,
+    "text": "Cloud uploads nightly — footage protected from local drive failures."
+   },
+   {
+    "id": "as-B-198",
+    "used": 0,
+    "text": "File naming discipline — dated categorized — editors find takes fast."
+   },
+   {
+    "id": "as-B-199",
+    "used": 0,
+    "text": "Editors trained in calm pacing — cutting slower than instinct says."
+   },
+   {
+    "id": "as-B-200",
+    "used": 0,
+    "text": "Thumbnail photographers shoot frame grabs — stills pulled from strongest visuals."
+   },
+   {
+    "id": "as-B-201",
+    "used": 0,
+    "text": "Community managers answer gently — tone matches channel calm everywhere."
+   },
+   {
+    "id": "as-B-202",
+    "used": 0,
+    "text": "Thirty-two bit float capture makes accidental clipping recoverable in post."
+   },
+   {
+    "id": "as-B-203",
+    "used": 0,
+    "text": "Whisper vocals sit far below speech - raising them lifts hiss with them."
+   },
+   {
+    "id": "as-B-204",
+    "used": 0,
+    "text": "Loudness targets near minus fourteen LUFS match YouTube normalization - uploads stop jumping."
+   },
+   {
+    "id": "as-B-205",
+    "used": 0,
+    "text": "Sample rate forty-eight kilohertz is video standard - audio stays in sync."
+   },
+   {
+    "id": "as-B-206",
+    "used": 0,
+    "text": "Twenty-four bit depth keeps quiet detail - sixteen bit trims the softest whispers."
+   },
+   {
+    "id": "as-B-207",
+    "used": 0,
+    "text": "Noise floors under minus sixty decibels demand silence - air conditioners get switched off."
+   },
+   {
+    "id": "as-B-208",
+    "used": 0,
+    "text": "Pop filters sit a fist from the mic - plosives lose their punch."
+   },
+   {
+    "id": "as-B-209",
+    "used": 0,
+    "text": "Shock mounts isolate desk taps - stand vibrations never reach the capsule."
+   },
+   {
+    "id": "as-B-210",
+    "used": 0,
+    "text": "Reflection filters wrap the mic's back - room slap stays out of takes."
+   },
+   {
+    "id": "as-B-211",
+    "used": 0,
+    "text": "Acoustic panels target first reflection points - bare walls double every whisper."
+   },
+   {
+    "id": "as-B-212",
+    "used": 0,
+    "text": "Moving blankets hang temporarily - renters treat rooms without drilling."
+   },
+   {
+    "id": "as-B-213",
+    "used": 0,
+    "text": "Bass traps sit in corners - low rumble piles up there."
+   },
+   {
+    "id": "as-B-214",
+    "used": 0,
+    "text": "Egg cartons barely help - density beats kitchen texture."
+   },
+   {
+    "id": "as-B-215",
+    "used": 0,
+    "text": "Carpets and curtains kill flutter echo - bare rooms ring like bathrooms."
+   },
+   {
+    "id": "as-B-216",
+    "used": 0,
+    "text": "Dynamic mics reject room noise - condensers capture voice and room alike."
+   },
+   {
+    "id": "as-B-217",
+    "used": 0,
+    "text": "Ribbon mics soften highs - silky whisper tone, vintage style."
+   },
+   {
+    "id": "as-B-218",
+    "used": 0,
+    "text": "Diaphragm size shapes tone - small capsules stay bright, large ones warm."
+   },
+   {
+    "id": "as-B-219",
+    "used": 0,
+    "text": "Singers angle off-axis - breath blasts miss the capsule deliberately."
+   },
+   {
+    "id": "as-B-220",
+    "used": 0,
+    "text": "Consistent mic distance keeps levels flat - fixed chair, fixed boom."
+   },
+   {
+    "id": "as-B-221",
+    "used": 0,
+    "text": "Color temperature matched to skin - warm light flatters calm content."
+   },
+   {
+    "id": "as-B-222",
+    "used": 0,
+    "text": "Soft boxes at forty-five degrees - shadows sculpt hands gently."
+   },
+   {
+    "id": "as-B-223",
+    "used": 0,
+    "text": "Ring lights flatten texture - macro work prefers raking side light."
+   },
+   {
+    "id": "as-B-224",
+    "used": 0,
+    "text": "Practical lights like candles set mood - glow sells calm."
+   },
+   {
+    "id": "as-B-225",
+    "used": 0,
+    "text": "Frame rate twenty-four feels filmic - sixty reads like home video."
+   },
+   {
+    "id": "as-B-226",
+    "used": 0,
+    "text": "Shutter speed at double frame rate - motion blur stays natural."
+   },
+   {
+    "id": "as-B-227",
+    "used": 0,
+    "text": "Speed ramps ease clips in and out - abrupt cuts break trance."
+   },
+   {
+    "id": "as-B-228",
+    "used": 0,
+    "text": "Crossfades join talking and triggers - silence never pops mid video."
+   },
+   {
+    "id": "as-B-229",
+    "used": 0,
+    "text": "J cuts bring audio before picture - scenes breathe like conversation."
+   },
+   {
+    "id": "as-B-230",
+    "used": 0,
+    "text": "B roll of props covers edits - talking heads feel less static."
+   },
+   {
+    "id": "as-B-231",
+    "used": 0,
+    "text": "Jump cuts jar calm channels - dissolves and holds suit the genre."
+   },
+   {
+    "id": "as-B-232",
+    "used": 0,
+    "text": "Grades with lifted blacks feel gentler - crushed shadows read harsh at night."
+   },
+   {
+    "id": "as-B-233",
+    "used": 0,
+    "text": "Warm highlights against cool shadows - the ASMR palette repeats because it works."
+   },
+   {
+    "id": "as-B-234",
+    "used": 0,
+    "text": "Export bitrates balanced - overkill files choke phones at bedtime."
+   },
+   {
+    "id": "as-B-235",
+    "used": 0,
+    "text": "Captions burned in - most feed viewers watch muted."
+   },
+   {
+    "id": "as-B-236",
+    "used": 0,
+    "text": "Thumbnail eyes lead the click - gaze points toward the title."
+   },
+   {
+    "id": "as-B-237",
+    "used": 0,
+    "text": "Two thumbnail fonts maximum - cluttered text dies at feed size."
+   },
+   {
+    "id": "as-B-238",
+    "used": 0,
+    "text": "Test covers with polls - audiences choose thumbnails honestly."
+   },
+   {
+    "id": "as-B-239",
+    "used": 0,
+    "text": "Click-through under three percent - rework the opening frame."
+   },
+   {
+    "id": "as-B-240",
+    "used": 0,
+    "text": "Retention dips at rituals - cold opens beat hello introductions."
+   },
+   {
+    "id": "as-B-241",
+    "used": 0,
+    "text": "Playlists lift session time - one video feeds the next."
+   },
+   {
+    "id": "as-B-242",
+    "used": 0,
+    "text": "Shorts funnel to long form - pin the full version below."
+   },
+   {
+    "id": "as-B-243",
+    "used": 0,
+    "text": "Sleep streams loop for hours - watch time accumulates while viewers rest."
+   },
+   {
+    "id": "as-B-244",
+    "used": 0,
+    "text": "Memberships sell ad-free uploads - a quiet premium tier for loyal fans."
+   },
+   {
+    "id": "as-B-245",
+    "used": 0,
+    "text": "Sponsors read in soft voice - loud reads get skipped."
+   },
+   {
+    "id": "as-B-246",
+    "used": 0,
+    "text": "Royalty-free libraries carry license terms - some tracks require attribution."
+   },
+   {
+    "id": "as-B-247",
+    "used": 0,
+    "text": "DMCA strikes delete work - cleared music saves channels from ruin."
+   },
+   {
+    "id": "as-B-248",
+    "used": 0,
+    "text": "Creator burnout hides in gap weeks - rest gets scheduled, not improvised."
+   },
+   {
+    "id": "as-B-249",
+    "used": 0,
+    "text": "Voice rest days prevent strain - whispering for hours still tires cords."
+   },
+   {
+    "id": "as-B-250",
+    "used": 0,
+    "text": "Steam before sessions hydrates folds - warm humid air soothes."
+   }
+  ],
+  "C": [
+   {
+    "id": "as-C-001",
+    "used": 0,
+    "text": "Green wood carves easily - it dries into splits if rushed."
+   },
+   {
+    "id": "as-C-002",
+    "used": 0,
+    "text": "Whittling cuts away from the body - control beats brute force."
+   },
+   {
+    "id": "as-C-003",
+    "used": 0,
+    "text": "Dovetail joints interlock without nails - tails grip pins under load."
+   },
+   {
+    "id": "as-C-004",
+    "used": 0,
+    "text": "Mortise and tenon joinery predates screws - chairs still use it today."
+   },
+   {
+    "id": "as-C-005",
+    "used": 0,
+    "text": "Wood glue bonds stronger than the fibers - clamps hold until cured."
+   },
+   {
+    "id": "as-C-006",
+    "used": 0,
+    "text": "Razor sharp chisels slice end grain - dull tools crush it flat."
+   },
+   {
+    "id": "as-C-007",
+    "used": 0,
+    "text": "Plane shavings curl unbroken - sharp iron plus steady angle."
+   },
+   {
+    "id": "as-C-008",
+    "used": 0,
+    "text": "Sandpaper grits climb by doubling - skip a grade and scratches show."
+   },
+   {
+    "id": "as-C-009",
+    "used": 0,
+    "text": "Shellac dries in minutes - French polish builds glass depth by rubbing."
+   },
+   {
+    "id": "as-C-010",
+    "used": 0,
+    "text": "Wood burning pens draw with heat - pressure sets every shade."
+   },
+   {
+    "id": "as-C-011",
+    "used": 0,
+    "text": "Gilding lays gold leaf with breath - static sends sheets flying."
+   },
+   {
+    "id": "as-C-012",
+    "used": 0,
+    "text": "Kintsugi mends breaks with gold - repair becomes the decoration."
+   },
+   {
+    "id": "as-C-013",
+    "used": 0,
+    "text": "Forge heat shows color - cherry red is steel's working window."
+   },
+   {
+    "id": "as-C-014",
+    "used": 0,
+    "text": "Hammer blows move hot metal - the anvil rings with each strike."
+   },
+   {
+    "id": "as-C-015",
+    "used": 0,
+    "text": "Quenching hardens steel - too fast it cracks, too slow it softens."
+   },
+   {
+    "id": "as-C-016",
+    "used": 0,
+    "text": "Knife bevels set geometry - edge angle trades sharpness for strength."
+   },
+   {
+    "id": "as-C-017",
+    "used": 0,
+    "text": "Pattern welding folds layers - Damascus patterns emerge from twisted strata."
+   },
+   {
+    "id": "as-C-018",
+    "used": 0,
+    "text": "Files cut on forward strokes - lifting preserves the teeth."
+   },
+   {
+    "id": "as-C-019",
+    "used": 0,
+    "text": "Rivets mushroom their ends - permanent joins with no heat."
+   },
+   {
+    "id": "as-C-020",
+    "used": 0,
+    "text": "Patina forms on copper - time's skin colors bronze green."
+   },
+   {
+    "id": "as-C-021",
+    "used": 0,
+    "text": "Brazing joins with brass filler - gentler heat than welding."
+   },
+   {
+    "id": "as-C-022",
+    "used": 0,
+    "text": "Soldering tin wets copper - flux cleans so the bond takes."
+   },
+   {
+    "id": "as-C-023",
+    "used": 0,
+    "text": "Sheet metal bends need scoring - cracks appear without a groove."
+   },
+   {
+    "id": "as-C-024",
+    "used": 0,
+    "text": "Lost wax casting encases form in plaster - metal replaces the wax."
+   },
+   {
+    "id": "as-C-025",
+    "used": 0,
+    "text": "Sand casting packs green sand - impressions hold until the pour."
+   },
+   {
+    "id": "as-C-026",
+    "used": 0,
+    "text": "Cloisonne wires separate enamel colors - kiln fuses powder to metal."
+   },
+   {
+    "id": "as-C-027",
+    "used": 0,
+    "text": "Jeweler's saws pierce sheet metal - blades thread through drilled holes."
+   },
+   {
+    "id": "as-C-028",
+    "used": 0,
+    "text": "Bezels cup stones - rims burnish flush against the gem."
+   },
+   {
+    "id": "as-C-029",
+    "used": 0,
+    "text": "Wire wrapping twists cages - stones set with no tools at all."
+   },
+   {
+    "id": "as-C-030",
+    "used": 0,
+    "text": "Temple joinery interlocks notches - beams hold through earthquakes."
+   },
+   {
+    "id": "as-C-031",
+    "used": 0,
+    "text": "Coopering steamed staves bend - barrels seal by swelling alone."
+   },
+   {
+    "id": "as-C-032",
+    "used": 0,
+    "text": "Woodturning spins blanks on lathes - gouges peel bowls in ribbons."
+   },
+   {
+    "id": "as-C-033",
+    "used": 0,
+    "text": "Band saw boxes cut nested drawers - grain stays continuous around corners."
+   },
+   {
+    "id": "as-C-034",
+    "used": 0,
+    "text": "Chip carving removes triangles - geometric trays from a single knife."
+   },
+   {
+    "id": "as-C-035",
+    "used": 0,
+    "text": "Scroll saws turn tight corners - blades pivot inside intricate curves."
+   },
+   {
+    "id": "as-C-036",
+    "used": 0,
+    "text": "Waterstones progress grits - edges polish to mirror before strops."
+   },
+   {
+    "id": "as-C-037",
+    "used": 0,
+    "text": "Honing strops charge leather with compound - final pass removes the burr."
+   },
+   {
+    "id": "as-C-038",
+    "used": 0,
+    "text": "Repousse hammers relief from the reverse - silver balloons into pattern."
+   },
+   {
+    "id": "as-C-039",
+    "used": 0,
+    "text": "Chasing refines metal from the front - tool marks become texture."
+   },
+   {
+    "id": "as-C-040",
+    "used": 0,
+    "text": "Granulation fuses tiny gold spheres - ancient technique still sparkles."
+   },
+   {
+    "id": "as-C-041",
+    "used": 0,
+    "text": "Centering clay is the battle - wobble follows every unsteady hand."
+   },
+   {
+    "id": "as-C-042",
+    "used": 0,
+    "text": "Coil pots rise spiral by spiral - smoothing hides the seams."
+   },
+   {
+    "id": "as-C-043",
+    "used": 0,
+    "text": "Slab building rolls flat sheets - cut edges join into boxes."
+   },
+   {
+    "id": "as-C-044",
+    "used": 0,
+    "text": "Leather hard clay carves clean - too wet tears, too dry crumbles."
+   },
+   {
+    "id": "as-C-045",
+    "used": 0,
+    "text": "Bisque firing sets the shape - glaze then melts glass over clay."
+   },
+   {
+    "id": "as-C-046",
+    "used": 0,
+    "text": "Raku pulls glowing pots from kilns - smoke cracks glaze into veins."
+   },
+   {
+    "id": "as-C-047",
+    "used": 0,
+    "text": "Sgraffito scratches through slip - contrast reveals the clay beneath."
+   },
+   {
+    "id": "as-C-048",
+    "used": 0,
+    "text": "Burnishing rubs clay to shine - no glaze, just patient pressure."
+   },
+   {
+    "id": "as-C-049",
+    "used": 0,
+    "text": "Glaze chemistry balances silica and flux - color melts out of minerals."
+   },
+   {
+    "id": "as-C-050",
+    "used": 0,
+    "text": "Kiln shelves need spacing - touching pieces fuse together forever."
+   },
+   {
+    "id": "as-C-051",
+    "used": 0,
+    "text": "Porcelain fires near thirteen hundred degrees - thin walls glow translucent."
+   },
+   {
+    "id": "as-C-052",
+    "used": 0,
+    "text": "Terracotta stays porous - planters breathe through their own walls."
+   },
+   {
+    "id": "as-C-053",
+    "used": 0,
+    "text": "Pressed tiles release from plaster molds - glaze pools in relief."
+   },
+   {
+    "id": "as-C-054",
+    "used": 0,
+    "text": "Slip trailing draws raised lines - bottles decorate wet clay directly."
+   },
+   {
+    "id": "as-C-055",
+    "used": 0,
+    "text": "Delftware paints cobalt under glaze - the kiln fires it blue."
+   },
+   {
+    "id": "as-C-056",
+    "used": 0,
+    "text": "Majolica's tin glaze gives white canvas - painted colors stay bright."
+   },
+   {
+    "id": "as-C-057",
+    "used": 0,
+    "text": "Glassblowers gather molten bubbles - gravity and breath shape the vessel."
+   },
+   {
+    "id": "as-C-058",
+    "used": 0,
+    "text": "Lampworking melts rods over flame - beads form around steel mandrels."
+   },
+   {
+    "id": "as-C-059",
+    "used": 0,
+    "text": "Stained glass grounds every edge - copper foil wraps each shard."
+   },
+   {
+    "id": "as-C-060",
+    "used": 0,
+    "text": "Frit flakes fuse flat - kiln-formed glass colors without blowing."
+   },
+   {
+    "id": "as-C-061",
+    "used": 0,
+    "text": "Mosaic tesserae hide their grout - spacing makes the image read."
+   },
+   {
+    "id": "as-C-062",
+    "used": 0,
+    "text": "Neon tubes bend over ribbon fires - argon glows red, neon burns orange."
+   },
+   {
+    "id": "as-C-063",
+    "used": 0,
+    "text": "Hot glass slumps into molds - gravity does most of the forming."
+   },
+   {
+    "id": "as-C-064",
+    "used": 0,
+    "text": "Marbles gather on rods - scissors snip molten globules free."
+   },
+   {
+    "id": "as-C-065",
+    "used": 0,
+    "text": "Fusing kilns tack pieces together - full fuse flattens into sheet."
+   },
+   {
+    "id": "as-C-066",
+    "used": 0,
+    "text": "Soap carving curls ribbons - temple craft travels the world now."
+   },
+   {
+    "id": "as-C-067",
+    "used": 0,
+    "text": "Chalk carving only crumbles - one slip cannot be undone."
+   },
+   {
+    "id": "as-C-068",
+    "used": 0,
+    "text": "Gem faceting follows crystal angles - light exits through calculated planes."
+   },
+   {
+    "id": "as-C-069",
+    "used": 0,
+    "text": "Lapidary wheels grind with diamond grit - polish arrives in stages."
+   },
+   {
+    "id": "as-C-070",
+    "used": 0,
+    "text": "Fossil preparation frees bone - air scribes lift stone from history."
+   },
+   {
+    "id": "as-C-071",
+    "used": 0,
+    "text": "Rock tumbling runs weeks of grit - stones emerge glassy smooth."
+   },
+   {
+    "id": "as-C-072",
+    "used": 0,
+    "text": "Sandstone carving saws with diamond - profiles drawn before the first cut."
+   },
+   {
+    "id": "as-C-073",
+    "used": 0,
+    "text": "Alabaster cuts soft - translucent stone takes fine detail."
+   },
+   {
+    "id": "as-C-074",
+    "used": 0,
+    "text": "Lettering chisels cut V grooves - carved words catch raking light."
+   },
+   {
+    "id": "as-C-075",
+    "used": 0,
+    "text": "Quilt blocks nest seams - pressing direction keeps tops flat."
+   },
+   {
+    "id": "as-C-076",
+    "used": 0,
+    "text": "Free-motion quilting steers fabric - the needle draws while hands guide."
+   },
+   {
+    "id": "as-C-077",
+    "used": 0,
+    "text": "Rug hooking pulls loops through burlap - patterns grow row by row."
+   },
+   {
+    "id": "as-C-078",
+    "used": 0,
+    "text": "Needle felting tangles wool - barbed needles sculpt without thread."
+   },
+   {
+    "id": "as-C-079",
+    "used": 0,
+    "text": "Wet felting shrinks fabric with soap - friction and heat bind fibers."
+   },
+   {
+    "id": "as-C-080",
+    "used": 0,
+    "text": "Sashiko stitches run even - white thread decorates indigo strength."
+   },
+   {
+    "id": "as-C-081",
+    "used": 0,
+    "text": "Darning weaves patches over holes - visible mending celebrates the repair."
+   },
+   {
+    "id": "as-C-082",
+    "used": 0,
+    "text": "Batik wax resists dye - cracked wax lines become pattern signatures."
+   },
+   {
+    "id": "as-C-083",
+    "used": 0,
+    "text": "Tie-dye folds decide the spiral - rubber bands map the geometry."
+   },
+   {
+    "id": "as-C-084",
+    "used": 0,
+    "text": "Indigo vats breathe yellow-green - fabric turns blue in open air."
+   },
+   {
+    "id": "as-C-085",
+    "used": 0,
+    "text": "Ikat ties bundles before dyeing - blur marks the hand process."
+   },
+   {
+    "id": "as-C-086",
+    "used": 0,
+    "text": "Block printing inks the carved stamp - repeat registration builds borders."
+   },
+   {
+    "id": "as-C-087",
+    "used": 0,
+    "text": "Screen printing pushes ink through mesh - one color per pull."
+   },
+   {
+    "id": "as-C-088",
+    "used": 0,
+    "text": "Tapestry weft builds color fields - weavers pack rows with a fork."
+   },
+   {
+    "id": "as-C-089",
+    "used": 0,
+    "text": "Velvet cutting raises the nap - blades leave directional sheen."
+   },
+   {
+    "id": "as-C-090",
+    "used": 0,
+    "text": "Lace bobbins twist pinned threads - the pillow holds the pattern."
+   },
+   {
+    "id": "as-C-091",
+    "used": 0,
+    "text": "Embroidery hoops hold fabric drum-tight - slack stitches wander off line."
+   },
+   {
+    "id": "as-C-092",
+    "used": 0,
+    "text": "Crewel work uses wool yarn on linen - Jacobean vines bloom in stitch."
+   },
+   {
+    "id": "as-C-093",
+    "used": 0,
+    "text": "Drop spindles twist fiber into yarn - gravity does the spinning."
+   },
+   {
+    "id": "as-C-094",
+    "used": 0,
+    "text": "Spinning wheels draft fiber - treadles keep twist flowing steadily."
+   },
+   {
+    "id": "as-C-095",
+    "used": 0,
+    "text": "Skeins wind onto niddy noddies - yarn relaxes into loose hanks."
+   },
+   {
+    "id": "as-C-096",
+    "used": 0,
+    "text": "Sewing machines feed with dogs - presser foot pressure prevents puckers."
+   },
+   {
+    "id": "as-C-097",
+    "used": 0,
+    "text": "Applique shapes blanket-stitch onto base layers - patches hold flat."
+   },
+   {
+    "id": "as-C-098",
+    "used": 0,
+    "text": "Tatting shuttles flip knots - rings and chains build lace."
+   },
+   {
+    "id": "as-C-099",
+    "used": 0,
+    "text": "Bobbin lace pillows hold pins - threads cross in travelling pairs."
+   },
+   {
+    "id": "as-C-100",
+    "used": 0,
+    "text": "Toiles mock garments in cheap cloth - fitting happens before fashion fabric."
+   },
+   {
+    "id": "as-C-101",
+    "used": 0,
+    "text": "Bias strips cut at forty-five degrees - tape stretches around curves."
+   },
+   {
+    "id": "as-C-102",
+    "used": 0,
+    "text": "Selvedge edges never fray - woven borders skip the hem."
+   },
+   {
+    "id": "as-C-103",
+    "used": 0,
+    "text": "Hemp rope locks by over-spinning - untwisting releases the lay."
+   },
+   {
+    "id": "as-C-104",
+    "used": 0,
+    "text": "Dye pots treat fibers differently - wool and cotton drink unevenly."
+   },
+   {
+    "id": "as-C-105",
+    "used": 0,
+    "text": "Paper making suspends pulp in water - screens lift flat sheets."
+   },
+   {
+    "id": "as-C-106",
+    "used": 0,
+    "text": "Marbled ink floats on carrageenan - paper touches and lifts the swirl."
+   },
+   {
+    "id": "as-C-107",
+    "used": 0,
+    "text": "Quilling rolls thin strips - coils pinch into petals and scrolls."
+   },
+   {
+    "id": "as-C-108",
+    "used": 0,
+    "text": "Bookbinding stitches signatures - needle and thread make spines lie flat."
+   },
+   {
+    "id": "as-C-109",
+    "used": 0,
+    "text": "Letterpress presses inked type - the impression leaves a debossed bite."
+   },
+   {
+    "id": "as-C-110",
+    "used": 0,
+    "text": "Lithography separates grease from water - stones print thousands of copies."
+   },
+   {
+    "id": "as-C-111",
+    "used": 0,
+    "text": "Kirigami cuts fold-out patterns - snowflakes emerge from pure symmetry."
+   },
+   {
+    "id": "as-C-112",
+    "used": 0,
+    "text": "Iris folding layers paper spirals - card windows reveal coiled strips."
+   },
+   {
+    "id": "as-C-113",
+    "used": 0,
+    "text": "Papier mache strips paste over molds - balloons become hollow masks."
+   },
+   {
+    "id": "as-C-114",
+    "used": 0,
+    "text": "Pop-up mechanics use tabs and boxes - pages turn into theaters."
+   },
+   {
+    "id": "as-C-115",
+    "used": 0,
+    "text": "Deckled edges form where paper dries - the torn look sells handmade."
+   },
+   {
+    "id": "as-C-116",
+    "used": 0,
+    "text": "Washi uses kozo bark - long fibers outlast wood pulp sheets."
+   },
+   {
+    "id": "as-C-117",
+    "used": 0,
+    "text": "Scrolls roll against rod ends - illustrations travel without creasing."
+   },
+   {
+    "id": "as-C-118",
+    "used": 0,
+    "text": "Stencil bridges hold islands - spray paint needs tiny connectors."
+   },
+   {
+    "id": "as-C-119",
+    "used": 0,
+    "text": "Handmade paper carries watermarks - laid lines glow in backlight."
+   },
+   {
+    "id": "as-C-120",
+    "used": 0,
+    "text": "Jianzhi scissors cut red paper - characters and zodiacs emerge."
+   },
+   {
+    "id": "as-C-121",
+    "used": 0,
+    "text": "Paper snowflake cuts follow mirror rules - one fold, six blades."
+   },
+   {
+    "id": "as-C-122",
+    "used": 0,
+    "text": "Gummed stamps lick and stick - water reactivates old adhesive."
+   },
+   {
+    "id": "as-C-123",
+    "used": 0,
+    "text": "Japanese stab binding pierces stacks - four holes bind whole books."
+   },
+   {
+    "id": "as-C-124",
+    "used": 0,
+    "text": "Chiyogami sheets print woodblock patterns - gold accents on colored paper."
+   },
+   {
+    "id": "as-C-125",
+    "used": 0,
+    "text": "Bread scoring slashes before the oven - cuts direct the rising burst."
+   },
+   {
+    "id": "as-C-126",
+    "used": 0,
+    "text": "Croissant lamination folds butter into dough - layers steam apart."
+   },
+   {
+    "id": "as-C-127",
+    "used": 0,
+    "text": "Bagels boil in malt water - the chew sets before baking."
+   },
+   {
+    "id": "as-C-128",
+    "used": 0,
+    "text": "Pretzels dip in lye - dark crust and distinctive flavor result."
+   },
+   {
+    "id": "as-C-129",
+    "used": 0,
+    "text": "Mochi pounds glutinous rice - rhythmic mallets stretch the mass."
+   },
+   {
+    "id": "as-C-130",
+    "used": 0,
+    "text": "Candy pulling aerates sugar - taffy turns satin white on hooks."
+   },
+   {
+    "id": "as-C-131",
+    "used": 0,
+    "text": "Cocoa butter crystallizes in molds - white streaks mean a heat slip."
+   },
+   {
+    "id": "as-C-132",
+    "used": 0,
+    "text": "Cheese caves control humidity - rinds breathe while cores age."
+   },
+   {
+    "id": "as-C-133",
+    "used": 0,
+    "text": "Mozzarella stretches in hot water - pasta filata pulls the curd."
+   },
+   {
+    "id": "as-C-134",
+    "used": 0,
+    "text": "Sushi rice seasons with vinegar - folding and fanning cool it fast."
+   },
+   {
+    "id": "as-C-135",
+    "used": 0,
+    "text": "Ladoo rolls warm between palms - ghee binds every crumb."
+   },
+   {
+    "id": "as-C-136",
+    "used": 0,
+    "text": "Halwa stirs until ghee separates - that sheen marks doneness."
+   },
+   {
+    "id": "as-C-137",
+    "used": 0,
+    "text": "Mooncakes press into carved molds - patterns stamp before baking."
+   },
+   {
+    "id": "as-C-138",
+    "used": 0,
+    "text": "Modak pleats close like garlic bulbs - sweet filling hides inside."
+   },
+   {
+    "id": "as-C-139",
+    "used": 0,
+    "text": "Jalebi spirals fry then soak - syrup sizzles on contact."
+   },
+   {
+    "id": "as-C-140",
+    "used": 0,
+    "text": "Roti puffs on the tawa - steam inflates the layers."
+   },
+   {
+    "id": "as-C-141",
+    "used": 0,
+    "text": "Alkali kansui makes noodles springy - hand-pulled strands chew without egg."
+   },
+   {
+    "id": "as-C-142",
+    "used": 0,
+    "text": "Ice cream rolls on cold plates - the spatula curls the sheet."
+   },
+   {
+    "id": "as-C-143",
+    "used": 0,
+    "text": "Ghee simmers until milk solids toast - nutty aroma marks the finish."
+   },
+   {
+    "id": "as-C-144",
+    "used": 0,
+    "text": "Fermenting jars burp daily - carbon dioxide escapes the brine."
+   },
+   {
+    "id": "as-C-145",
+    "used": 0,
+    "text": "Kimchi weights keep vegetables submerged - anaerobic brine blocks mold."
+   },
+   {
+    "id": "as-C-146",
+    "used": 0,
+    "text": "Sourdough starters feed on schedule - wild yeast cultures raise bread."
+   },
+   {
+    "id": "as-C-147",
+    "used": 0,
+    "text": "Cold fermentation deepens flavor - dough blisters in fiercely hot ovens."
+   },
+   {
+    "id": "as-C-148",
+    "used": 0,
+    "text": "Meringue dries in low ovens - crisp shells keep for weeks."
+   },
+   {
+    "id": "as-C-149",
+    "used": 0,
+    "text": "Nougat whips hot sugar into egg whites - patience makes it chew."
+   },
+   {
+    "id": "as-C-150",
+    "used": 0,
+    "text": "Candy stages read in cold water - soft ball to hard crack."
+   },
+   {
+    "id": "as-C-151",
+    "used": 0,
+    "text": "Fudge crystals stirred small - smooth or grainy decided while cooling."
+   },
+   {
+    "id": "as-C-152",
+    "used": 0,
+    "text": "Gum paste rolls paper thin - sugar flowers dry hard as porcelain."
+   },
+   {
+    "id": "as-C-153",
+    "used": 0,
+    "text": "Piping bags twist shut - pressure lives at the cuff."
+   },
+   {
+    "id": "as-C-154",
+    "used": 0,
+    "text": "Croquembouche stacks cream puffs - caramel threads glue the tower."
+   },
+   {
+    "id": "as-C-155",
+    "used": 0,
+    "text": "Challah braids egg bread - three strands weave tradition."
+   },
+   {
+    "id": "as-C-156",
+    "used": 0,
+    "text": "Pizza stones preheat for an hour - dough seizes on contact."
+   },
+   {
+    "id": "as-C-157",
+    "used": 0,
+    "text": "Rangoli powders color thresholds - designs welcome every guest."
+   },
+   {
+    "id": "as-C-158",
+    "used": 0,
+    "text": "Kolam rice flour feeds ants - art doubles as offering."
+   },
+   {
+    "id": "as-C-159",
+    "used": 0,
+    "text": "Diwali diyas line the rooftops - rows of flames mark the night."
+   },
+   {
+    "id": "as-C-160",
+    "used": 0,
+    "text": "Sand mandalas sweep away after ceremony - impermanence drawn in color."
+   },
+   {
+    "id": "as-C-161",
+    "used": 0,
+    "text": "Papel picado cuts tissue banners - wind animates the perforations."
+   },
+   {
+    "id": "as-C-162",
+    "used": 0,
+    "text": "Pysanky wax-resists eggs - each line layers another dye bath."
+   },
+   {
+    "id": "as-C-163",
+    "used": 0,
+    "text": "Wycinanki scissors bloom symmetrically - Polish paper flowers open flat."
+   },
+   {
+    "id": "as-C-164",
+    "used": 0,
+    "text": "Scherenschnitte cuts silhouettes whole - scissors draw portraits in paper."
+   },
+   {
+    "id": "as-C-165",
+    "used": 0,
+    "text": "Straw ornaments bundle golden stems - village harvests become stars."
+   },
+   {
+    "id": "as-C-166",
+    "used": 0,
+    "text": "Gingerbread architecture holds with royal icing - glue sets stiff."
+   },
+   {
+    "id": "as-C-167",
+    "used": 0,
+    "text": "Ice lanterns carve from buckets - candles glow through translucent walls."
+   },
+   {
+    "id": "as-C-168",
+    "used": 0,
+    "text": "Cascarones fill eggshells with confetti - cracked heads celebrate loudly."
+   },
+   {
+    "id": "as-C-169",
+    "used": 0,
+    "text": "Wreath making spirals evergreen - cut stems tuck into wire frames."
+   },
+   {
+    "id": "as-C-170",
+    "used": 0,
+    "text": "Marigold garlands thread on long needles - genda phool dry and keep."
+   },
+   {
+    "id": "as-C-171",
+    "used": 0,
+    "text": "Ikebana trims stems short - negative space carries the design."
+   },
+   {
+    "id": "as-C-172",
+    "used": 0,
+    "text": "Flower pressing takes weeks - petals flatten between blotting sheets."
+   },
+   {
+    "id": "as-C-173",
+    "used": 0,
+    "text": "Wind chimes tune by tube length - cut one and the pitch rises."
+   },
+   {
+    "id": "as-C-174",
+    "used": 0,
+    "text": "Kite spars balance cross-grain - bamboo flexes without snapping."
+   },
+   {
+    "id": "as-C-175",
+    "used": 0,
+    "text": "Marionettes articulate on five lines - gestures start at the wrist."
+   },
+   {
+    "id": "as-C-176",
+    "used": 0,
+    "text": "Venetian masks build from papier mache - gold leaf finishes carnival faces."
+   },
+   {
+    "id": "as-C-177",
+    "used": 0,
+    "text": "Noh masks carve shifting expressions - a tilt changes the emotion."
+   },
+   {
+    "id": "as-C-178",
+    "used": 0,
+    "text": "Wayang kulit puppets pierce leather - rods cast stories on screens."
+   },
+   {
+    "id": "as-C-179",
+    "used": 0,
+    "text": "Prayer flags print mantras - wind reads the blessings aloud."
+   },
+   {
+    "id": "as-C-180",
+    "used": 0,
+    "text": "Dreamcatcher webs spiral from the center - beads trap the bad dreams."
+   },
+   {
+    "id": "as-C-181",
+    "used": 0,
+    "text": "Pinata shells layer paste paper - fringed strips dry on molds."
+   },
+   {
+    "id": "as-C-182",
+    "used": 0,
+    "text": "Sugar skulls press in molds - icing draws the folk faces."
+   },
+   {
+    "id": "as-C-183",
+    "used": 0,
+    "text": "Hand-rolled incense dries in frames - powders hold their stick."
+   },
+   {
+    "id": "as-C-184",
+    "used": 0,
+    "text": "Dipped candles rise by rhythm - repeated wick dips build layers."
+   },
+   {
+    "id": "as-C-185",
+    "used": 0,
+    "text": "Carved candles shave spiral channels - colored layers reveal as curls."
+   },
+   {
+    "id": "as-C-186",
+    "used": 0,
+    "text": "Beeswax sheets mold with warmth - palms shape wraps over bowls."
+   },
+   {
+    "id": "as-C-187",
+    "used": 0,
+    "text": "Soap cures six weeks - lather mellows as water evaporates."
+   },
+   {
+    "id": "as-C-188",
+    "used": 0,
+    "text": "Resin pours level themselves - bubbles rise under a warm gun."
+   },
+   {
+    "id": "as-C-189",
+    "used": 0,
+    "text": "Air plants need no soil - roots anchor loosely to driftwood."
+   },
+   {
+    "id": "as-C-190",
+    "used": 0,
+    "text": "Pumpkin carving scrapes walls thin - candle light glows longer."
+   },
+   {
+    "id": "as-C-191",
+    "used": 0,
+    "text": "Dried gourds sanded to polish - birdhouses swing from garden vines."
+   },
+   {
+    "id": "as-C-192",
+    "used": 0,
+    "text": "Luthiers read the grain - spruce tops vibrate, hardwood backs reflect."
+   },
+   {
+    "id": "as-C-193",
+    "used": 0,
+    "text": "Kalimba tines tune by sliding - thumb pianos bend under pressure."
+   },
+   {
+    "id": "as-C-194",
+    "used": 0,
+    "text": "Handpans hammer dimples - each note tuned into nitrided steel."
+   },
+   {
+    "id": "as-C-195",
+    "used": 0,
+    "text": "Ocarina chambers size by volume - hole placement sets the pitch."
+   },
+   {
+    "id": "as-C-196",
+    "used": 0,
+    "text": "Drum skins soak before lacing - tension rises as the hide dries."
+   },
+   {
+    "id": "as-C-197",
+    "used": 0,
+    "text": "Didgeridoos start as termite tunnels - people just finish the job."
+   },
+   {
+    "id": "as-C-198",
+    "used": 0,
+    "text": "Recorder bores cut conical - scale depends on hole math."
+   },
+   {
+    "id": "as-C-199",
+    "used": 0,
+    "text": "Banjo heads stretch like drums - bright snap from plastic film."
+   },
+   {
+    "id": "as-C-200",
+    "used": 0,
+    "text": "Harp strings color-code by pitch - red is C, blue is F."
+   },
+   {
+    "id": "as-C-201",
+    "used": 0,
+    "text": "Music box combs pluck tuned teeth - cylinders pin the melody."
+   },
+   {
+    "id": "as-C-202",
+    "used": 0,
+    "text": "Willow soaks to bend - dry rods snap inside the weave."
+   },
+   {
+    "id": "as-C-203",
+    "used": 0,
+    "text": "Coil baskets stitch over grass - coils hide where they began."
+   },
+   {
+    "id": "as-C-204",
+    "used": 0,
+    "text": "Water hyacinth braids into mats - invasive weed becomes furniture."
+   },
+   {
+    "id": "as-C-205",
+    "used": 0,
+    "text": "Raffia palm strips dry pale - Madagascar weaves from its leaves."
+   },
+   {
+    "id": "as-C-206",
+    "used": 0,
+    "text": "Miniature food sculpts from polymer clay - dollhouse meals bake hard."
+   },
+   {
+    "id": "as-C-207",
+    "used": 0,
+    "text": "Dollhouse scale stays one to twelve - mismatched furniture breaks illusion."
+   },
+   {
+    "id": "as-C-208",
+    "used": 0,
+    "text": "Heirloom spinning tops need balance - perfect lathes make them sleep."
+   },
+   {
+    "id": "as-C-209",
+    "used": 0,
+    "text": "Vegetable tanned leather darkens with touch - hands oil the patina."
+   },
+   {
+    "id": "as-C-210",
+    "used": 0,
+    "text": "Leather tooling stamps crescents - awls map the border first."
+   },
+   {
+    "id": "as-C-211",
+    "used": 0,
+    "text": "Whittled chains carve from one stick - blades free linked wood."
+   },
+   {
+    "id": "as-C-212",
+    "used": 0,
+    "text": "Model sprue parts clip free - nippers leave clean gates."
+   },
+   {
+    "id": "as-C-213",
+    "used": 0,
+    "text": "Matchstick bridges glue layer by layer - sticks span without steel."
+   },
+   {
+    "id": "as-C-214",
+    "used": 0,
+    "text": "Toothpick sculptures stack trusses - glue dries between each tier."
+   },
+   {
+    "id": "as-C-215",
+    "used": 0,
+    "text": "Pyrography shading runs slow - heat blooms without pressure."
+   },
+   {
+    "id": "as-C-216",
+    "used": 0,
+    "text": "Glass etching creams bite surfaces - stencils keep the edges sharp."
+   },
+   {
+    "id": "as-C-217",
+    "used": 0,
+    "text": "Wax rubs highlight relief - raised carvings catch the shine."
+   },
+   {
+    "id": "as-C-218",
+    "used": 0,
+    "text": "Polishing compounds cut by grit - green then white then rouge."
+   },
+   {
+    "id": "as-C-219",
+    "used": 0,
+    "text": "Straw plaiting spirals stalks - braided hats start flat ribbons."
+   },
+   {
+    "id": "as-C-220",
+    "used": 0,
+    "text": "Stone stacking finds balance points - friction holds the impossible."
+   },
+   {
+    "id": "as-C-221",
+    "used": 0,
+    "text": "Candle sand layers hold wicks - colored grains build strata."
+   },
+   {
+    "id": "as-C-222",
+    "used": 0,
+    "text": "Perfume blending accords stage - top heart and base unfold over hours."
+   },
+   {
+    "id": "as-C-223",
+    "used": 0,
+    "text": "Lip balm pours at warm temperature - tubes fill before the set."
+   },
+   {
+    "id": "as-C-224",
+    "used": 0,
+    "text": "Bath bomb molds clamp powder - citric acid waits for water."
+   },
+   {
+    "id": "as-C-225",
+    "used": 0,
+    "text": "Resin geodes rim crushed glass - crystals glitter inside epoxy."
+   },
+   {
+    "id": "as-C-226",
+    "used": 0,
+    "text": "Terrazzo chips cast in cement - ground surfaces reveal confetti stone."
+   },
+   {
+    "id": "as-C-227",
+    "used": 0,
+    "text": "Macaron shells rest before baking - skins let feet rise."
+   },
+   {
+    "id": "as-C-228",
+    "used": 0,
+    "text": "Chocolate sculptures temper as they build - warm rooms collapse detail."
+   },
+   {
+    "id": "as-C-229",
+    "used": 0,
+    "text": "Sugar glass pulls clear - isomalt resists clouding better than sucrose."
+   },
+   {
+    "id": "as-C-230",
+    "used": 0,
+    "text": "Ice cream roll-ins press into the base - toppings freeze on contact."
+   },
+   {
+    "id": "as-C-231",
+    "used": 0,
+    "text": "Noodle dough rests twice - hydration finishes what kneading starts."
+   },
+   {
+    "id": "as-C-232",
+    "used": 0,
+    "text": "Flatbread saj griddles thin - dome heat cooks in seconds."
+   },
+   {
+    "id": "as-C-233",
+    "used": 0,
+    "text": "Tandoor clay walls preheat for hours - bread sticks and blisters."
+   },
+   {
+    "id": "as-C-234",
+    "used": 0,
+    "text": "Clay oven igloos hold heat - coals rake out before baking."
+   },
+   {
+    "id": "as-C-235",
+    "used": 0,
+    "text": "Salt block grills season food - pink slabs sear and cure."
+   },
+   {
+    "id": "as-C-236",
+    "used": 0,
+    "text": "Bamboo tube rice steams in jungle - leaves seal the forest kitchen."
+   },
+   {
+    "id": "as-C-237",
+    "used": 0,
+    "text": "Banana leaf plates fold fresh - nature wraps every meal."
+   },
+   {
+    "id": "as-C-238",
+    "used": 0,
+    "text": "Coconut grating stools scrape shells - hooked blades turn halves to flakes."
+   },
+   {
+    "id": "as-C-239",
+    "used": 0,
+    "text": "Stone grinders mash spices - volcanoes of powder circle the slab."
+   },
+   {
+    "id": "as-C-240",
+    "used": 0,
+    "text": "Cast iron seasons with oil - layers polymerize into nonstick skin."
+   },
+   {
+    "id": "as-C-241",
+    "used": 0,
+    "text": "Copper pots tin-lined for life - retinning saves heirloom cookware."
+   },
+   {
+    "id": "as-C-242",
+    "used": 0,
+    "text": "Wok hei breath of fire - gas flames lick seasoned steel nightly."
+   },
+   {
+    "id": "as-C-243",
+    "used": 0,
+    "text": "Cheesecloth strains curds slow - whey drips clear by morning."
+   },
+   {
+    "id": "as-C-244",
+    "used": 0,
+    "text": "Butter molds carve scenes - blocks stamp stories before slicing."
+   },
+   {
+    "id": "as-C-245",
+    "used": 0,
+    "text": "Honeycomb frames lift golden - beekeepers harvest without crushing larvae."
+   },
+   {
+    "id": "as-C-246",
+    "used": 0,
+    "text": "Wine amphorae breathe clay - Georgia still ferments in buried jars."
+   },
+   {
+    "id": "as-C-247",
+    "used": 0,
+    "text": "Maple syrup boils forty to one - sap thickens only at snowmelt."
+   },
+   {
+    "id": "as-C-248",
+    "used": 0,
+    "text": "Olive presses crush stone - first cold extraction keeps the pepper."
+   },
+   {
+    "id": "as-C-249",
+    "used": 0,
+    "text": "Pomegranate arils jeweled - membranes separate the ruby seeds."
+   },
+   {
+    "id": "as-C-250",
+    "used": 0,
+    "text": "Saffron threads dry shaded - three blooms pick one gram."
+   }
+  ],
+  "D": [
+   {
+    "id": "as-D-001",
+    "used": 0,
+    "text": "Oak taps deep - dense hardwoods ring low and warm."
+   },
+   {
+    "id": "as-D-002",
+    "used": 0,
+    "text": "Maple taps bright - tight grain throws crisp high notes."
+   },
+   {
+    "id": "as-D-003",
+    "used": 0,
+    "text": "Pine knocks hollow - softwoods thud with little sustain."
+   },
+   {
+    "id": "as-D-004",
+    "used": 0,
+    "text": "Glass thickness sets pitch - thin tumblers sing higher than thick."
+   },
+   {
+    "id": "as-D-005",
+    "used": 0,
+    "text": "Ceramic rings hollow - glazed pots sustain longer than wood."
+   },
+   {
+    "id": "as-D-006",
+    "used": 0,
+    "text": "Aluminum clacks fast and light - steel sustains into a ring."
+   },
+   {
+    "id": "as-D-007",
+    "used": 0,
+    "text": "Copper knocks warm - soft metals deaden quickly."
+   },
+   {
+    "id": "as-D-008",
+    "used": 0,
+    "text": "Acrylic sheets clack plastic-bright - resonance dies at the edge."
+   },
+   {
+    "id": "as-D-009",
+    "used": 0,
+    "text": "Bamboo chambers divide sound - nodes split every knock."
+   },
+   {
+    "id": "as-D-010",
+    "used": 0,
+    "text": "Resin casts click solid - density kills sustain."
+   },
+   {
+    "id": "as-D-011",
+    "used": 0,
+    "text": "Slate tiles clack thin - marble rings where slate just taps."
+   },
+   {
+    "id": "as-D-012",
+    "used": 0,
+    "text": "Shells ring sea-bright - calcium layers vibrate cleanly."
+   },
+   {
+    "id": "as-D-013",
+    "used": 0,
+    "text": "Coconut halves knock woody - hollow chambers carry the tap."
+   },
+   {
+    "id": "as-D-014",
+    "used": 0,
+    "text": "Leather thuds absorb - no ring, pure texture."
+   },
+   {
+    "id": "as-D-015",
+    "used": 0,
+    "text": "Metal bowls sustain a tone - rim taps bloom into hum."
+   },
+   {
+    "id": "as-D-016",
+    "used": 0,
+    "text": "Glass jars grind at the lid - threads click as they close."
+   },
+   {
+    "id": "as-D-017",
+    "used": 0,
+    "text": "Cork pops sudden - vacuum releases with a wooden knock."
+   },
+   {
+    "id": "as-D-018",
+    "used": 0,
+    "text": "Bottle caps crimp and pop - pressure escapes under the thumb."
+   },
+   {
+    "id": "as-D-019",
+    "used": 0,
+    "text": "Can tabs snap then fizz - aluminum tears along score lines."
+   },
+   {
+    "id": "as-D-020",
+    "used": 0,
+    "text": "Wooden spoons knock together - kitchen percussion needs no kit."
+   },
+   {
+    "id": "as-D-021",
+    "used": 0,
+    "text": "Metal whisk loops spring-twang - wires wobble after release."
+   },
+   {
+    "id": "as-D-022",
+    "used": 0,
+    "text": "Silicone spatulas slap quiet - rubber mutes every strike."
+   },
+   {
+    "id": "as-D-023",
+    "used": 0,
+    "text": "Brass hammers deaden, steel rings, rubber whispers - faces set the tone."
+   },
+   {
+    "id": "as-D-024",
+    "used": 0,
+    "text": "Tuning forks sustain pure pitch - one strike, one frequency."
+   },
+   {
+    "id": "as-D-025",
+    "used": 0,
+    "text": "Singing bowls circle-sustain - rim friction grows the tone."
+   },
+   {
+    "id": "as-D-026",
+    "used": 0,
+    "text": "Sandpaper changes character with grit - eighty screams, four hundred whispers."
+   },
+   {
+    "id": "as-D-027",
+    "used": 0,
+    "text": "Denim twill scratches ridged - fingernails ride the diagonal weave."
+   },
+   {
+    "id": "as-D-028",
+    "used": 0,
+    "text": "Velvet changes with stroke direction - one way glides, the other drags."
+   },
+   {
+    "id": "as-D-029",
+    "used": 0,
+    "text": "Corduroy ribs hum under nails - wale spacing sets the rhythm."
+   },
+   {
+    "id": "as-D-030",
+    "used": 0,
+    "text": "Canvas scratches with woven tooth - artist cloth resists the nail."
+   },
+   {
+    "id": "as-D-031",
+    "used": 0,
+    "text": "Burlap scratches rough jute - sacking texture amplified."
+   },
+   {
+    "id": "as-D-032",
+    "used": 0,
+    "text": "Loofah fibers abrade dry - plant skeletons scrub."
+   },
+   {
+    "id": "as-D-033",
+    "used": 0,
+    "text": "Suede naps lift and mark - brushing erases the strokes."
+   },
+   {
+    "id": "as-D-034",
+    "used": 0,
+    "text": "Leather grain differs - pebbled prints scratch irregular."
+   },
+   {
+    "id": "as-D-035",
+    "used": 0,
+    "text": "Nail files grind grit - synthetic rasps read as squeak."
+   },
+   {
+    "id": "as-D-036",
+    "used": 0,
+    "text": "Concrete scrapes mineral-dry - sand aggregate scratches the surface."
+   },
+   {
+    "id": "as-D-037",
+    "used": 0,
+    "text": "Carpet loops catch nails - berber texture pulls back."
+   },
+   {
+    "id": "as-D-038",
+    "used": 0,
+    "text": "Wicker scratches woven - rattan rods snap-tickle the finger."
+   },
+   {
+    "id": "as-D-039",
+    "used": 0,
+    "text": "Hemp rope rasps twisted - lay lines scratch the palm."
+   },
+   {
+    "id": "as-D-040",
+    "used": 0,
+    "text": "Cellophane crackle stays high - thin films snap bright."
+   },
+   {
+    "id": "as-D-041",
+    "used": 0,
+    "text": "Aluminum foil crinkles metallic sharp - folds never soften."
+   },
+   {
+    "id": "as-D-042",
+    "used": 0,
+    "text": "Wax paper crumples soft - thick muted crinkle."
+   },
+   {
+    "id": "as-D-043",
+    "used": 0,
+    "text": "Parchment scrunches deep - baking paper drums under fists."
+   },
+   {
+    "id": "as-D-044",
+    "used": 0,
+    "text": "Packing paper crunches loud - kraft folds crack coarse."
+   },
+   {
+    "id": "as-D-045",
+    "used": 0,
+    "text": "Bubble wrap pops sequential - trapped air bursts under thumbs."
+   },
+   {
+    "id": "as-D-046",
+    "used": 0,
+    "text": "Candy wrapper flicks high - glossy film rings light."
+   },
+   {
+    "id": "as-D-047",
+    "used": 0,
+    "text": "Straw wrappers flutter fast - spiral cuts trill."
+   },
+   {
+    "id": "as-D-048",
+    "used": 0,
+    "text": "Tissue paper compresses soft - gift fill sighs."
+   },
+   {
+    "id": "as-D-049",
+    "used": 0,
+    "text": "Magazine pages rustle glossy - coated stock crackles above newsprint."
+   },
+   {
+    "id": "as-D-050",
+    "used": 0,
+    "text": "Newspaper crumples dry - wood pulp crunches coarse."
+   },
+   {
+    "id": "as-D-051",
+    "used": 0,
+    "text": "Plastic bags hush-scrunch - stiff bags squeak where soft ones whisper."
+   },
+   {
+    "id": "as-D-052",
+    "used": 0,
+    "text": "Chip bags metallized crinkle - foil laminate snaps high."
+   },
+   {
+    "id": "as-D-053",
+    "used": 0,
+    "text": "Wrapping paper tears with grain - across fibers it zips, with them it stops."
+   },
+   {
+    "id": "as-D-054",
+    "used": 0,
+    "text": "Creased paper has memory - repeated bends soften into silence."
+   },
+   {
+    "id": "as-D-055",
+    "used": 0,
+    "text": "Clear slime degasses bubbles - patience turns it glass."
+   },
+   {
+    "id": "as-D-056",
+    "used": 0,
+    "text": "Butter slime spreads like frosting - soft clay mixed through."
+   },
+   {
+    "id": "as-D-057",
+    "used": 0,
+    "text": "Cloud slime drizzles snowy - instant snow fluffs the base."
+   },
+   {
+    "id": "as-D-058",
+    "used": 0,
+    "text": "Jelly slime wobbles clear - jiggle without the stick."
+   },
+   {
+    "id": "as-D-059",
+    "used": 0,
+    "text": "Glossy slime mirrors light - clear base, high shine."
+   },
+   {
+    "id": "as-D-060",
+    "used": 0,
+    "text": "Floam beads crunch - foam spheres suspended in clear base."
+   },
+   {
+    "id": "as-D-061",
+    "used": 0,
+    "text": "Bingsu beads click - tiny rods add sharp crunch."
+   },
+   {
+    "id": "as-D-062",
+    "used": 0,
+    "text": "Foam slime pokes airy - shaving cream fluffs the mass."
+   },
+   {
+    "id": "as-D-063",
+    "used": 0,
+    "text": "PVA slimes stay glossy - glue formulas stretch without borax."
+   },
+   {
+    "id": "as-D-064",
+    "used": 0,
+    "text": "Borax crosslinks glue chains - too much activator snaps brittle."
+   },
+   {
+    "id": "as-D-065",
+    "used": 0,
+    "text": "Kinetic sand holds cut faces - coated grains stay put."
+   },
+   {
+    "id": "as-D-066",
+    "used": 0,
+    "text": "Moon sand shapes dry - flour and oil never harden."
+   },
+   {
+    "id": "as-D-067",
+    "used": 0,
+    "text": "Oobleck resists fast hits - cornstarch water turns solid on impact."
+   },
+   {
+    "id": "as-D-068",
+    "used": 0,
+    "text": "Playdough softens with warmth - hand heat makes it pliable."
+   },
+   {
+    "id": "as-D-069",
+    "used": 0,
+    "text": "Silicone putty copies detail - press it and textures imprint."
+   },
+   {
+    "id": "as-D-070",
+    "used": 0,
+    "text": "Magnetic putty swallows paperclips - iron dust obeys the magnet."
+   },
+   {
+    "id": "as-D-071",
+    "used": 0,
+    "text": "Cloud dough powders then packs - cornstarch and oil do both."
+   },
+   {
+    "id": "as-D-072",
+    "used": 0,
+    "text": "Scented slimes add aroma - smell doubles the trigger."
+   },
+   {
+    "id": "as-D-073",
+    "used": 0,
+    "text": "Foam clay beads stick - lightweight sculpture without weight."
+   },
+   {
+    "id": "as-D-074",
+    "used": 0,
+    "text": "Fan brushes sweep light - feathers of paint across canvas."
+   },
+   {
+    "id": "as-D-075",
+    "used": 0,
+    "text": "Kabuki brushes dense-spin - powder pickup starts with the swirl."
+   },
+   {
+    "id": "as-D-076",
+    "used": 0,
+    "text": "Boar bristle holds water - shave brushes whip lather rich."
+   },
+   {
+    "id": "as-D-077",
+    "used": 0,
+    "text": "Detail brushes map hairs - one stroke, one hair wide."
+   },
+   {
+    "id": "as-D-078",
+    "used": 0,
+    "text": "Angled brushes cut edges - straight lines without masking tape."
+   },
+   {
+    "id": "as-D-079",
+    "used": 0,
+    "text": "Hair brushing counts strokes - boar bristles spread scalp oils."
+   },
+   {
+    "id": "as-D-080",
+    "used": 0,
+    "text": "Pet brushes de-shed - undercoat clouds release in tufts."
+   },
+   {
+    "id": "as-D-081",
+    "used": 0,
+    "text": "Nail brushes scrub bristle-stiff - crescent shape fits cuticles."
+   },
+   {
+    "id": "as-D-082",
+    "used": 0,
+    "text": "Shoe brushes polish by friction - horsehair spreads wax thin."
+   },
+   {
+    "id": "as-D-083",
+    "used": 0,
+    "text": "Feather dusters whisper - ostrich barbs displace dust gently."
+   },
+   {
+    "id": "as-D-084",
+    "used": 0,
+    "text": "Paint rollers stipple texture - nap length sets the orange peel."
+   },
+   {
+    "id": "as-D-085",
+    "used": 0,
+    "text": "Bottle brushes spring - narrow loops clean deep jars."
+   },
+   {
+    "id": "as-D-086",
+    "used": 0,
+    "text": "Wire brushes scour rust - steel bristles flay the scale."
+   },
+   {
+    "id": "as-D-087",
+    "used": 0,
+    "text": "Dishwand bristles splay - scrubbing squeaks glass clean."
+   },
+   {
+    "id": "as-D-088",
+    "used": 0,
+    "text": "Broom straw swishes - corn brooms mark driveways."
+   },
+   {
+    "id": "as-D-089",
+    "used": 0,
+    "text": "Beauty blenders bounce - damp sponges shear foundation smooth."
+   },
+   {
+    "id": "as-D-090",
+    "used": 0,
+    "text": "Foam brushes swallow varnish - disposable applicators apply thin."
+   },
+   {
+    "id": "as-D-091",
+    "used": 0,
+    "text": "Water pours glass-clear - laminar flow breaks into chaos."
+   },
+   {
+    "id": "as-D-092",
+    "used": 0,
+    "text": "Droplets drum surfaces - pitch follows the puddle's depth."
+   },
+   {
+    "id": "as-D-093",
+    "used": 0,
+    "text": "Spray bottles hiss fine - nozzle shear atomizes the stream."
+   },
+   {
+    "id": "as-D-094",
+    "used": 0,
+    "text": "Soda fizzes release - nucleation sites stream bubbles upward."
+   },
+   {
+    "id": "as-D-095",
+    "used": 0,
+    "text": "Ice cubes crack in warmth - thermal stress snaps them apart."
+   },
+   {
+    "id": "as-D-096",
+    "used": 0,
+    "text": "Condensation runs in rivulets - cold glass sweats the room."
+   },
+   {
+    "id": "as-D-097",
+    "used": 0,
+    "text": "Bubbles pop skin-light - soap film fails at weak points."
+   },
+   {
+    "id": "as-D-098",
+    "used": 0,
+    "text": "Molasses pours slow - viscosity climbs with the sugar."
+   },
+   {
+    "id": "as-D-099",
+    "used": 0,
+    "text": "Oil swirls refuse water - density paints marbled interfaces."
+   },
+   {
+    "id": "as-D-100",
+    "used": 0,
+    "text": "Syrup clings as it pours - sugar flow trails the bottle."
+   },
+   {
+    "id": "as-D-101",
+    "used": 0,
+    "text": "Ink blooms in water - diffusion clouds every soft edge."
+   },
+   {
+    "id": "as-D-102",
+    "used": 0,
+    "text": "Soap films rainbow - thin oil layers split light into colors."
+   },
+   {
+    "id": "as-D-103",
+    "used": 0,
+    "text": "Glitter suspends in glue - swirls hold sparkle still."
+   },
+   {
+    "id": "as-D-104",
+    "used": 0,
+    "text": "Steam curls unseen - condensation reveals its paths."
+   },
+   {
+    "id": "as-D-105",
+    "used": 0,
+    "text": "Rain rings puddles - each drop impact writes a circle."
+   },
+   {
+    "id": "as-D-106",
+    "used": 0,
+    "text": "Eggshells crush brittle - calcium lace collapses to flakes."
+   },
+   {
+    "id": "as-D-107",
+    "used": 0,
+    "text": "Dry pasta snaps clean - semolina reports the break."
+   },
+   {
+    "id": "as-D-108",
+    "used": 0,
+    "text": "Bean jars shake percussive - legumes drum against glass."
+   },
+   {
+    "id": "as-D-109",
+    "used": 0,
+    "text": "Popcorn kernels rattle hard - before heat, they are marbles."
+   },
+   {
+    "id": "as-D-110",
+    "used": 0,
+    "text": "Fresh grounds clump - coffee oils make particles cling."
+   },
+   {
+    "id": "as-D-111",
+    "used": 0,
+    "text": "Peppercorns mill-crackle - cracked shells release their oil."
+   },
+   {
+    "id": "as-D-112",
+    "used": 0,
+    "text": "Sugar crystals grind glassy - spoon against crystal sings."
+   },
+   {
+    "id": "as-D-113",
+    "used": 0,
+    "text": "Flour sifts airy - mesh snows powder into bowls."
+   },
+   {
+    "id": "as-D-114",
+    "used": 0,
+    "text": "Cocoa dusts soft - sieve taps puff brown clouds."
+   },
+   {
+    "id": "as-D-115",
+    "used": 0,
+    "text": "Salt grinders pop coarse - pink crystals crush unevenly."
+   },
+   {
+    "id": "as-D-116",
+    "used": 0,
+    "text": "Crackers shard-snap - baked layers delaminate."
+   },
+   {
+    "id": "as-D-117",
+    "used": 0,
+    "text": "Cocoa nibs grind gritty - chocolate begins as rough crumbs."
+   },
+   {
+    "id": "as-D-118",
+    "used": 0,
+    "text": "Breadcrumbs rasp dry - stale bread grates soft."
+   },
+   {
+    "id": "as-D-119",
+    "used": 0,
+    "text": "Mustard seeds pop in hot oil - little explosions before curry."
+   },
+   {
+    "id": "as-D-120",
+    "used": 0,
+    "text": "Chili flakes crumble dry - sun-dried peppers turn powdery."
+   },
+   {
+    "id": "as-D-121",
+    "used": 0,
+    "text": "Hard cheese rasps the grater - shreds curl off the teeth."
+   },
+   {
+    "id": "as-D-122",
+    "used": 0,
+    "text": "Butter curls ribbon - cold pats plane into scrolls."
+   },
+   {
+    "id": "as-D-123",
+    "used": 0,
+    "text": "Pop its dimple-snap silicone - push-pop rhythm loops forever."
+   },
+   {
+    "id": "as-D-124",
+    "used": 0,
+    "text": "Fidget cubes click with mixed switches - five textures one hand."
+   },
+   {
+    "id": "as-D-125",
+    "used": 0,
+    "text": "Fidget spinners hum on bearings - weight keeps them wheeling."
+   },
+   {
+    "id": "as-D-126",
+    "used": 0,
+    "text": "Tangle joints rotate forever - linked tubes curl in hands."
+   },
+   {
+    "id": "as-D-127",
+    "used": 0,
+    "text": "Worry stones pocket-polish - thumb grooves deepen with carrying."
+   },
+   {
+    "id": "as-D-128",
+    "used": 0,
+    "text": "Begleri swing beads on cord - Greek skill toy clacks."
+   },
+   {
+    "id": "as-D-129",
+    "used": 0,
+    "text": "Spinner rings roll on fingers - hidden bearing under the band."
+   },
+   {
+    "id": "as-D-130",
+    "used": 0,
+    "text": "Squeeze stress balls rebound - gel cores resist the grip."
+   },
+   {
+    "id": "as-D-131",
+    "used": 0,
+    "text": "Retractable pens click-loop - thumb feeds the spring forever."
+   },
+   {
+    "id": "as-D-132",
+    "used": 0,
+    "text": "Gua sha stones scrape light - oil lets them glide."
+   },
+   {
+    "id": "as-D-133",
+    "used": 0,
+    "text": "Jade rollers cool touch - stone holds heat away."
+   },
+   {
+    "id": "as-D-134",
+    "used": 0,
+    "text": "Dry brushing sweeps toward the heart - bristles prick-tickle."
+   },
+   {
+    "id": "as-D-135",
+    "used": 0,
+    "text": "Derma rollers micro-prickle - tiny needles roll the skin."
+   },
+   {
+    "id": "as-D-136",
+    "used": 0,
+    "text": "Eyelash curlers clamp squeeze - silicone pads cushion the grip."
+   },
+   {
+    "id": "as-D-137",
+    "used": 0,
+    "text": "Nail buffers grit-shine - four sides from file to gloss."
+   },
+   {
+    "id": "as-D-138",
+    "used": 0,
+    "text": "Cuticle nippers snip tiny - precision clips trail hangnails."
+   },
+   {
+    "id": "as-D-139",
+    "used": 0,
+    "text": "Face rollers chatter unlubricated - dry wheels squeak on skin."
+   },
+   {
+    "id": "as-D-140",
+    "used": 0,
+    "text": "Hair rollers grab by hook - velcro loops self-grip strands."
+   },
+   {
+    "id": "as-D-141",
+    "used": 0,
+    "text": "Mixing palettes scrape-click - metal blades smear product."
+   },
+   {
+    "id": "as-D-142",
+    "used": 0,
+    "text": "Sticky notes peel tacky - adhesive strips resist then release."
+   },
+   {
+    "id": "as-D-143",
+    "used": 0,
+    "text": "Index cards riffle stiff - card stock snaps back flat."
+   },
+   {
+    "id": "as-D-144",
+    "used": 0,
+    "text": "Tissue blots soft - plies separate into translucent sheets."
+   },
+   {
+    "id": "as-D-145",
+    "used": 0,
+    "text": "Construction paper rasps matte - pulp texture drinks glue."
+   },
+   {
+    "id": "as-D-146",
+    "used": 0,
+    "text": "Postage stamps pop along perforations - dot edges surrender to thumbs."
+   },
+   {
+    "id": "as-D-147",
+    "used": 0,
+    "text": "Playing cards flick snap - laminated stock springs from thumbs."
+   },
+   {
+    "id": "as-D-148",
+    "used": 0,
+    "text": "Tarot cards shuffle soft - linen finish glides on the bridge."
+   },
+   {
+    "id": "as-D-149",
+    "used": 0,
+    "text": "Comics pages gloss-crinkle - coated panels resist the fold."
+   },
+   {
+    "id": "as-D-150",
+    "used": 0,
+    "text": "Notepads tear along perforations - dot lines pop as pages leave."
+   },
+   {
+    "id": "as-D-151",
+    "used": 0,
+    "text": "Corrugated cardboard flutes grate - finger rides the wavy core."
+   },
+   {
+    "id": "as-D-152",
+    "used": 0,
+    "text": "Zippers teeth mesh - coil zips smoother than metal."
+   },
+   {
+    "id": "as-D-153",
+    "used": 0,
+    "text": "Snap buttons pop loud - socket and stud part with a click."
+   },
+   {
+    "id": "as-D-154",
+    "used": 0,
+    "text": "Belt buckles clank heavy - prong frames ring hollow."
+   },
+   {
+    "id": "as-D-155",
+    "used": 0,
+    "text": "Chain links clatter - each oval strikes its neighbor."
+   },
+   {
+    "id": "as-D-156",
+    "used": 0,
+    "text": "Signet rings tap personal - flat faces knock desks."
+   },
+   {
+    "id": "as-D-157",
+    "used": 0,
+    "text": "Watch links clink fine - micro pins hold the bracelet."
+   },
+   {
+    "id": "as-D-158",
+    "used": 0,
+    "text": "Lock tumblers click shear - pins set to the key."
+   },
+   {
+    "id": "as-D-159",
+    "used": 0,
+    "text": "Gear ratchets click - pawl skips tooth by tooth."
+   },
+   {
+    "id": "as-D-160",
+    "used": 0,
+    "text": "Key ring spirals resist threading - wire coils fight every key."
+   },
+   {
+    "id": "as-D-161",
+    "used": 0,
+    "text": "Safety pins snap tension - spring steel guards its point."
+   },
+   {
+    "id": "as-D-162",
+    "used": 0,
+    "text": "Metal rulers twang - free edge flicks vibrate the note."
+   },
+   {
+    "id": "as-D-163",
+    "used": 0,
+    "text": "Pinecones rasp woody - scales open dry."
+   },
+   {
+    "id": "as-D-164",
+    "used": 0,
+    "text": "Shells at the ear echo surf - chambers hum the ocean back."
+   },
+   {
+    "id": "as-D-165",
+    "used": 0,
+    "text": "Driftwood knocks hollow - salt-bleached wood rings dull."
+   },
+   {
+    "id": "as-D-166",
+    "used": 0,
+    "text": "Acorns rattle in caps - mast crop drums together."
+   },
+   {
+    "id": "as-D-167",
+    "used": 0,
+    "text": "Feathers stroke silent - barbs zip apart then heal."
+   },
+   {
+    "id": "as-D-168",
+    "used": 0,
+    "text": "Dandelion clocks blow seed - parachutes scatter on breath."
+   },
+   {
+    "id": "as-D-169",
+    "used": 0,
+    "text": "Dry leaves crush brittle - autumn chips to powder."
+   },
+   {
+    "id": "as-D-170",
+    "used": 0,
+    "text": "Bark furrows scratch - cork ridges resist nails."
+   },
+   {
+    "id": "as-D-171",
+    "used": 0,
+    "text": "Moss compresses soft - forest floor gives way slow."
+   },
+   {
+    "id": "as-D-172",
+    "used": 0,
+    "text": "River stones clack rounded - pebbles chip if struck hard."
+   },
+   {
+    "id": "as-D-173",
+    "used": 0,
+    "text": "Seed pods rattle - dried capsules drum their harvest."
+   },
+   {
+    "id": "as-D-174",
+    "used": 0,
+    "text": "Twigs snap crisp - green wood bends, dry breaks."
+   },
+   {
+    "id": "as-D-175",
+    "used": 0,
+    "text": "Pine needles rustle dry - conifer litter whispers underfoot."
+   },
+   {
+    "id": "as-D-176",
+    "used": 0,
+    "text": "Cattails pop their fluff - reed heads explode seed."
+   },
+   {
+    "id": "as-D-177",
+    "used": 0,
+    "text": "Pillows fluff slow - down clusters resettle airy."
+   },
+   {
+    "id": "as-D-178",
+    "used": 0,
+    "text": "Plush toys squish soft - stuffing compresses then blooms."
+   },
+   {
+    "id": "as-D-179",
+    "used": 0,
+    "text": "Towels loop-rub - terry cloth squeaks dry."
+   },
+   {
+    "id": "as-D-180",
+    "used": 0,
+    "text": "Fleece pills soft - synthetic nap muffles touch."
+   },
+   {
+    "id": "as-D-181",
+    "used": 0,
+    "text": "Wool roving drafts airy - unspun cloud pulls apart."
+   },
+   {
+    "id": "as-D-182",
+    "used": 0,
+    "text": "Cotton bolls fiber-white - raw lint stretches thin."
+   },
+   {
+    "id": "as-D-183",
+    "used": 0,
+    "text": "Quilt layers shift-swish - cotton batting murmurs inside."
+   },
+   {
+    "id": "as-D-184",
+    "used": 0,
+    "text": "Bean bags rustle grain - pellets cascade when tipped."
+   },
+   {
+    "id": "as-D-185",
+    "used": 0,
+    "text": "Memory foam wells slowly - warmth returns the impression late."
+   },
+   {
+    "id": "as-D-186",
+    "used": 0,
+    "text": "Sponge squeeze hiss - porous foam exhales trapped air."
+   },
+   {
+    "id": "as-D-187",
+    "used": 0,
+    "text": "Microfiber clings dust - charged synthetic grips what it touches."
+   },
+   {
+    "id": "as-D-188",
+    "used": 0,
+    "text": "Latex foam snaps bouncy - rubber rebounds faster than memory foam."
+   },
+   {
+    "id": "as-D-189",
+    "used": 0,
+    "text": "Blue switches click tactile - loud bumps announce every press."
+   },
+   {
+    "id": "as-D-190",
+    "used": 0,
+    "text": "Brown switches whisper bump - feedback without the clack."
+   },
+   {
+    "id": "as-D-191",
+    "used": 0,
+    "text": "Red switches smooth linear - silence prized by night typists."
+   },
+   {
+    "id": "as-D-192",
+    "used": 0,
+    "text": "Mouse clicks shell-tap - microswitches register in milliseconds."
+   },
+   {
+    "id": "as-D-193",
+    "used": 0,
+    "text": "Trackpads glass-tap - haptics fake the mechanical."
+   },
+   {
+    "id": "as-D-194",
+    "used": 0,
+    "text": "Cassette buttons clunk - transport keys engage with weight."
+   },
+   {
+    "id": "as-D-195",
+    "used": 0,
+    "text": "Camera shutters mirror-slap - mechanical curtains time the exposure."
+   },
+   {
+    "id": "as-D-196",
+    "used": 0,
+    "text": "Audio jacks insert click - tip ring sleeve ground the signal."
+   },
+   {
+    "id": "as-D-197",
+    "used": 0,
+    "text": "Lighter wheels strike spark - flint screeches before the flame."
+   },
+   {
+    "id": "as-D-198",
+    "used": 0,
+    "text": "Toggle switches snap - spring force defines the throw."
+   },
+   {
+    "id": "as-D-199",
+    "used": 0,
+    "text": "TV remotes rubber-dome mush - conductive pads close circles."
+   },
+   {
+    "id": "as-D-200",
+    "used": 0,
+    "text": "Rainsticks invert tubes - beads cascade past thorn baffles."
+   },
+   {
+    "id": "as-D-201",
+    "used": 0,
+    "text": "Ocean drums ripple - beads wash like waves under tilt."
+   },
+   {
+    "id": "as-D-202",
+    "used": 0,
+    "text": "Kalimba tines pluck soft - metal tongues sing under thumbs."
+   },
+   {
+    "id": "as-D-203",
+    "used": 0,
+    "text": "Triangles ping pure - hold the cord, let it ring."
+   },
+   {
+    "id": "as-D-204",
+    "used": 0,
+    "text": "Shaker eggs rattle - seeds drum inside plastic shells."
+   },
+   {
+    "id": "as-D-205",
+    "used": 0,
+    "text": "Castanets clack pairs - finger choreography clicks flamenco."
+   },
+   {
+    "id": "as-D-206",
+    "used": 0,
+    "text": "Finger cymbals shimmer - bronze disks ring in trills."
+   },
+   {
+    "id": "as-D-207",
+    "used": 0,
+    "text": "Jingle bells cluster-ring - loops tinkle together."
+   },
+   {
+    "id": "as-D-208",
+    "used": 0,
+    "text": "Chime bars tune by length - mallets draw pure metal tone."
+   },
+   {
+    "id": "as-D-209",
+    "used": 0,
+    "text": "Gong mallets thud low - felt heads bloom the crash."
+   },
+   {
+    "id": "as-D-210",
+    "used": 0,
+    "text": "Harmonica reeds vibrate on breath - lips choose the holes."
+   },
+   {
+    "id": "as-D-211",
+    "used": 0,
+    "text": "Pen clicks loop - plunger feeds spring forever."
+   },
+   {
+    "id": "as-D-212",
+    "used": 0,
+    "text": "Pencil taps wood-dry - hex barrels knock desks."
+   },
+   {
+    "id": "as-D-213",
+    "used": 0,
+    "text": "Ruler twangs when flicked - free end vibrates its note."
+   },
+   {
+    "id": "as-D-214",
+    "used": 0,
+    "text": "Erasers rub grit - rubber crumbles into shavings."
+   },
+   {
+    "id": "as-D-215",
+    "used": 0,
+    "text": "Whiteboard markers squeak - felt tips protest dry boards."
+   },
+   {
+    "id": "as-D-216",
+    "used": 0,
+    "text": "Highlighter caps snap - chisel tips drag neon ink."
+   },
+   {
+    "id": "as-D-217",
+    "used": 0,
+    "text": "Scissors snip shear - blades cross-cut paper ribbon."
+   },
+   {
+    "id": "as-D-218",
+    "used": 0,
+    "text": "Tweezers click tips - spring steel aligns every grip."
+   },
+   {
+    "id": "as-D-219",
+    "used": 0,
+    "text": "Binder clips snap strong - folded steel bites stacks hard."
+   },
+   {
+    "id": "as-D-220",
+    "used": 0,
+    "text": "Clothespins spring clamp - two-piece grips pinch lines dry."
+   },
+   {
+    "id": "as-D-221",
+    "used": 0,
+    "text": "Rubber bands twang - latex snaps its note when plucked."
+   },
+   {
+    "id": "as-D-222",
+    "used": 0,
+    "text": "Matches strike whoosh - phosphorus flares against grit."
+   },
+   {
+    "id": "as-D-223",
+    "used": 0,
+    "text": "Velcro rips hook and loop - micro hooks surrender in waves."
+   },
+   {
+    "id": "as-D-224",
+    "used": 0,
+    "text": "Cable ties zip one way - ratchets tighten and never reverse."
+   },
+   {
+    "id": "as-D-225",
+    "used": 0,
+    "text": "Magnet stacks clack - neodymium discs leap together."
+   },
+   {
+    "id": "as-D-226",
+    "used": 0,
+    "text": "Ice cube trays crack-twist - silicone peels cubes free."
+   },
+   {
+    "id": "as-D-227",
+    "used": 0,
+    "text": "Crackling fires pop resin - pine snaps louder than oak."
+   },
+   {
+    "id": "as-D-228",
+    "used": 0,
+    "text": "Rain on tin drums - metal roofs tattoo the storm."
+   },
+   {
+    "id": "as-D-229",
+    "used": 0,
+    "text": "Wind through grass hushes - meadow noise without a source."
+   },
+   {
+    "id": "as-D-230",
+    "used": 0,
+    "text": "Footsteps crunch gravel - weight reads through the grit."
+   },
+   {
+    "id": "as-D-231",
+    "used": 0,
+    "text": "Knuckles crack bubble - joint gas releases in sequence."
+   },
+   {
+    "id": "as-D-232",
+    "used": 0,
+    "text": "Whispered counting keeps rhythm - numbers tick like a metronome."
+   },
+   {
+    "id": "as-D-233",
+    "used": 0,
+    "text": "Heartbeats thump steady - bass rhythm under stethoscope mics."
+   },
+   {
+    "id": "as-D-234",
+    "used": 0,
+    "text": "Ocean waves loop - white noise built from collisions."
+   },
+   {
+    "id": "as-D-235",
+    "used": 0,
+    "text": "Book fanning riffles pages - thumb releases the block in bursts."
+   },
+   {
+    "id": "as-D-236",
+    "used": 0,
+    "text": "Dry sponge crumbles - foam turns to powder under fingers."
+   },
+   {
+    "id": "as-D-237",
+    "used": 0,
+    "text": "Snow squeaks underfoot - cold crystals grind dry."
+   },
+   {
+    "id": "as-D-238",
+    "used": 0,
+    "text": "Table tennis balls bounce light - hollow celluloid rings thin."
+   },
+   {
+    "id": "as-D-239",
+    "used": 0,
+    "text": "Dice tumble-clatter - resin cubes drum in cups."
+   },
+   {
+    "id": "as-D-240",
+    "used": 0,
+    "text": "Chess pieces slide felt-quiet - felt bases muffle their moves."
+   },
+   {
+    "id": "as-D-241",
+    "used": 0,
+    "text": "Wind-up toys gear-whir - clockwork springs release in ticks."
+   },
+   {
+    "id": "as-D-242",
+    "used": 0,
+    "text": "Cat purrs vibrate idle - a living rumble under the palm."
+   },
+   {
+    "id": "as-D-243",
+    "used": 0,
+    "text": "Bead boards rain - marble runs dropped through a peg grid."
+   },
+   {
+    "id": "as-D-244",
+    "used": 0,
+    "text": "Rubbing alcohol chills as it evaporates - swab strokes hiss faintly."
+   },
+   {
+    "id": "as-D-245",
+    "used": 0,
+    "text": "Paperclips unbend and rethread - wire memory resists the loop."
+   },
+   {
+    "id": "as-D-246",
+    "used": 0,
+    "text": "Toothbrush bristles flick - nylon snaps back when plucked."
+   },
+   {
+    "id": "as-D-247",
+    "used": 0,
+    "text": "Lego bricks clutch-click - ABS studs grab then release."
+   },
+   {
+    "id": "as-D-248",
+    "used": 0,
+    "text": "Bagpipes drone steady - chanters sing over the constant hum."
+   },
+   {
+    "id": "as-D-249",
+    "used": 0,
+    "text": "Zipper pulls dangle-metal - sliders chime when bags swing."
+   },
+   {
+    "id": "as-D-250",
+    "used": 0,
+    "text": "Rubber duck valves honk - squeeze releases a flat squeal."
+   }
+  ]
+ }
+}

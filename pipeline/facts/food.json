@@ -1,0 +1,5019 @@
+{
+ "subject": "food",
+ "angle_names": {
+  "A": "Food Science & Botany",
+  "B": "Street Food & Regional Culture",
+  "C": "Spices, Sauces & Global Flavors",
+  "D": "Selection, Storage & Kitchen Safety"
+ },
+ "angles": {
+  "A": [
+   {
+    "id": "fd-A-001",
+    "used": 0,
+    "text": "Fruits and vegetables are botanically different — culinary 'vegetables' include roots, stems, leaves and even flowers."
+   },
+   {
+    "id": "fd-A-002",
+    "used": 0,
+    "text": "Botanically, a fruit develops from a flower's ovary; roots and leaves never become fruit."
+   },
+   {
+    "id": "fd-A-003",
+    "used": 0,
+    "text": "Tomatoes, cucumbers, peppers and eggplants are all botanical fruits, treated as vegetables in kitchens."
+   },
+   {
+    "id": "fd-A-004",
+    "used": 0,
+    "text": "Bananas are berries botanically; strawberries and raspberries are not."
+   },
+   {
+    "id": "fd-A-005",
+    "used": 0,
+    "text": "A watermelon is a pepo — a berry with a hard rind, the largest of its botanical family."
+   },
+   {
+    "id": "fd-A-006",
+    "used": 0,
+    "text": "Pineapple is a multiple fruit — it forms from a whole cluster of flowers fusing together."
+   },
+   {
+    "id": "fd-A-007",
+    "used": 0,
+    "text": "Apples and pears are pome fruits — the crunchy flesh comes from the flower's receptacle, not the ovary."
+   },
+   {
+    "id": "fd-A-008",
+    "used": 0,
+    "text": "Stone fruits like peaches and cherries share one hard pit protecting a single seed."
+   },
+   {
+    "id": "fd-A-009",
+    "used": 0,
+    "text": "Avocado flesh is essentially a single large seed surrounded by nutrient-rich tissue."
+   },
+   {
+    "id": "fd-A-010",
+    "used": 0,
+    "text": "Ripe fruit softens because enzymes dismantle the pectin gluing cell walls together."
+   },
+   {
+    "id": "fd-A-011",
+    "used": 0,
+    "text": "Ethylene gas released by ripening fruit triggers nearby produce to ripen faster."
+   },
+   {
+    "id": "fd-A-012",
+    "used": 0,
+    "text": "Bananas release heavy ethylene — storing them near leafy greens wilts the greens early."
+   },
+   {
+    "id": "fd-A-013",
+    "used": 0,
+    "text": "Climacteric fruits like bananas, apples and tomatoes keep ripening after harvest."
+   },
+   {
+    "id": "fd-A-014",
+    "used": 0,
+    "text": "Non-climacteric fruits like grapes and citrus must ripen fully on the plant."
+   },
+   {
+    "id": "fd-A-015",
+    "used": 0,
+    "text": "Bananas ripen faster in a closed bag because trapped ethylene concentrates."
+   },
+   {
+    "id": "fd-A-016",
+    "used": 0,
+    "text": "Refrigeration slows ripening but can chill-damage tropical fruits like bananas and mangoes."
+   },
+   {
+    "id": "fd-A-017",
+    "used": 0,
+    "text": "Banana skins blacken in the cold because chill injures the peel's cells — the fruit inside is often still fine."
+   },
+   {
+    "id": "fd-A-018",
+    "used": 0,
+    "text": "Cut apple flesh browns because polyphenol oxidase enzymes react with oxygen the moment cells break."
+   },
+   {
+    "id": "fd-A-019",
+    "used": 0,
+    "text": "Lemon juice slows browning because vitamin C and acid fight that same oxidation."
+   },
+   {
+    "id": "fd-A-020",
+    "used": 0,
+    "text": "Submerged slices brown slower because oxygen contact is physically blocked."
+   },
+   {
+    "id": "fd-A-021",
+    "used": 0,
+    "text": "Ripeness tests differ by fruit — give, color and aroma each tell a different stage."
+   },
+   {
+    "id": "fd-A-022",
+    "used": 0,
+    "text": "Aromatic fruits signal readiness through smell before their color fully changes."
+   },
+   {
+    "id": "fd-A-023",
+    "used": 0,
+    "text": "Sugar content rises steadily as starches convert during ripening."
+   },
+   {
+    "id": "fd-A-024",
+    "used": 0,
+    "text": "Green tomatoes redden off the plant because ethylene keeps driving pigment change once picked."
+   },
+   {
+    "id": "fd-A-025",
+    "used": 0,
+    "text": "Chlorophyll breaks down as fruit ripens, unmasking the yellow and red pigments underneath."
+   },
+   {
+    "id": "fd-A-026",
+    "used": 0,
+    "text": "Carotenoids give carrots, mangoes and sweet potatoes their orange tones — they are heat-stable pigments."
+   },
+   {
+    "id": "fd-A-027",
+    "used": 0,
+    "text": "Betalains color beets red-violet — a pigment family found almost only in this plant group."
+   },
+   {
+    "id": "fd-A-028",
+    "used": 0,
+    "text": "Anthocyanins paint berries purple and blue and shift color with pH — acid makes them redder."
+   },
+   {
+    "id": "fd-A-029",
+    "used": 0,
+    "text": "Blueberries bloom with a natural dusty coating called bloom — it protects against moisture loss."
+   },
+   {
+    "id": "fd-A-030",
+    "used": 0,
+    "text": "That powdery bloom on grapes and plums is a natural wax barrier, not a spray residue."
+   },
+   {
+    "id": "fd-A-031",
+    "used": 0,
+    "text": "Leafy greens wilt when cells lose water pressure — crispness is really turgor pressure."
+   },
+   {
+    "id": "fd-A-032",
+    "used": 0,
+    "text": "Ice water re-crisps wilted greens by refilling cells with moisture."
+   },
+   {
+    "id": "fd-A-033",
+    "used": 0,
+    "text": "Root vegetables stay firm for weeks because their dense tissues store water and starch together."
+   },
+   {
+    "id": "fd-A-034",
+    "used": 0,
+    "text": "Potatoes produce glucose from cold storage — cold sweetens them, a process called cold-induced sweetening."
+   },
+   {
+    "id": "fd-A-035",
+    "used": 0,
+    "text": "Stored potatoes should stay dark — light turns their skins green and builds bitter compounds."
+   },
+   {
+    "id": "fd-A-036",
+    "used": 0,
+    "text": "Green potato skins signal solanine — bitter taste and stomach upset in large amounts."
+   },
+   {
+    "id": "fd-A-037",
+    "used": 0,
+    "text": "Garlic and onions keep for months because their dry skins shield moist storage leaves inside."
+   },
+   {
+    "id": "fd-A-038",
+    "used": 0,
+    "text": "Asparagus stored upright drinks water like cut flowers and stays firm far longer."
+   },
+   {
+    "id": "fd-A-039",
+    "used": 0,
+    "text": "Mushrooms are neither plant nor animal — they belong to a kingdom of their own."
+   },
+   {
+    "id": "fd-A-040",
+    "used": 0,
+    "text": "Mushrooms darken in the fridge because their cells keep making pigment even after harvest."
+   },
+   {
+    "id": "fd-A-041",
+    "used": 0,
+    "text": "Celery strings are vascular bundles — the plant's water-transport plumbing running along each stalk."
+   },
+   {
+    "id": "fd-A-042",
+    "used": 0,
+    "text": "Broccoli is a flower head — the tiny buds open into yellow flowers if left too long."
+   },
+   {
+    "id": "fd-A-043",
+    "used": 0,
+    "text": "Cauliflower curds stay white because growers tie outer leaves around the head to block sunlight."
+   },
+   {
+    "id": "fd-A-044",
+    "used": 0,
+    "text": "Artichokes are unopened flower buds — the fuzzy choke at the center is immature florets."
+   },
+   {
+    "id": "fd-A-045",
+    "used": 0,
+    "text": "Rhubarb leaves carry high oxalic acid — stalks are eaten, leaves are discarded."
+   },
+   {
+    "id": "fd-A-046",
+    "used": 0,
+    "text": "Spinach wilts dramatically when cooked because its cells collapse and release internal water."
+   },
+   {
+    "id": "fd-A-047",
+    "used": 0,
+    "text": "One cup of raw spinach cooks down to a few spoonfuls — cell volume is mostly water."
+   },
+   {
+    "id": "fd-A-048",
+    "used": 0,
+    "text": "Carrots sweeten in the ground as starches convert when nights turn cold."
+   },
+   {
+    "id": "fd-A-049",
+    "used": 0,
+    "text": "Roasting concentrates vegetable flavor because heat evaporates water and browning creates new aroma compounds."
+   },
+   {
+    "id": "fd-A-050",
+    "used": 0,
+    "text": "Caramelization happens near 160 degrees Celsius — dry sugar turns nutty and brown on its own."
+   },
+   {
+    "id": "fd-A-051",
+    "used": 0,
+    "text": "Maillard browning needs amino acids plus reducing sugars — it starts around 140 degrees and builds complex flavors."
+   },
+   {
+    "id": "fd-A-052",
+    "used": 0,
+    "text": "Searing meat seals nothing — it creates a flavorful brown crust through Maillard reactions."
+   },
+   {
+    "id": "fd-A-053",
+    "used": 0,
+    "text": "The gray scum when boiling meat is denatured protein — skimming it clarifies broths."
+   },
+   {
+    "id": "fd-A-054",
+    "used": 0,
+    "text": "Salt draws water out of vegetables through osmosis — the basis of every pickle and slaw."
+   },
+   {
+    "id": "fd-A-055",
+    "used": 0,
+    "text": "Pickling in acid preserves food by dropping pH below the level spoilage bacteria tolerate."
+   },
+   {
+    "id": "fd-A-056",
+    "used": 0,
+    "text": "Fermentation uses live microbes instead of acid — yogurt, kimchi and sourdough all rely on them."
+   },
+   {
+    "id": "fd-A-057",
+    "used": 0,
+    "text": "Yogurt sets because bacterial cultures convert lactose into lactic acid, curdling the milk proteins."
+   },
+   {
+    "id": "fd-A-058",
+    "used": 0,
+    "text": "Sourdough rises on wild yeast and bacteria captive in the starter, not on packaged yeast."
+   },
+   {
+    "id": "fd-A-059",
+    "used": 0,
+    "text": "Kneading develops gluten — elastic protein networks that trap gas and give bread its structure."
+   },
+   {
+    "id": "fd-A-060",
+    "used": 0,
+    "text": "Resting dough lets gluten relax and flour hydrate, so it shapes without springing back."
+   },
+   {
+    "id": "fd-A-061",
+    "used": 0,
+    "text": "Yeast feeding on sugar releases carbon dioxide — the bubbles that lift every loaf."
+   },
+   {
+    "id": "fd-A-062",
+    "used": 0,
+    "text": "Baking soda needs acid to react; baking powder carries its own acid and reacts twice."
+   },
+   {
+    "id": "fd-A-063",
+    "used": 0,
+    "text": "Whipped egg whites trap air in protein films — the foam that lightens soufflés and meringues."
+   },
+   {
+    "id": "fd-A-064",
+    "used": 0,
+    "text": "Fats coat flour proteins and shorten gluten strands — that is why pastry turns tender."
+   },
+   {
+    "id": "fd-A-065",
+    "used": 0,
+    "text": "Overmixing muffin batter develops too much gluten and turns them tough instead of tender."
+   },
+   {
+    "id": "fd-A-066",
+    "used": 0,
+    "text": "Carryover cooking keeps heating food after it leaves the stove — rest meat before slicing."
+   },
+   {
+    "id": "fd-A-067",
+    "used": 0,
+    "text": "Resting cooked meat lets juices redistribute — cutting too early spills them onto the board."
+   },
+   {
+    "id": "fd-A-068",
+    "used": 0,
+    "text": "Thermometers remove guesswork — internal temperature, not color, tells true doneness."
+   },
+   {
+    "id": "fd-A-069",
+    "used": 0,
+    "text": "Poultry is safely cooked through at seventy-four degrees Celsius throughout."
+   },
+   {
+    "id": "fd-A-070",
+    "used": 0,
+    "text": "Acids brighten dull cooked flavors — a squeeze of lime can lift an entire pot."
+   },
+   {
+    "id": "fd-A-071",
+    "used": 0,
+    "text": "Salt suppresses bitterness, which is why a pinch improves chocolate, coffee and grapefruit."
+   },
+   {
+    "id": "fd-A-072",
+    "used": 0,
+    "text": "Fat carries aroma — low-fat dishes often taste flat even when perfectly seasoned."
+   },
+   {
+    "id": "fd-A-073",
+    "used": 0,
+    "text": "Toasting whole spices in dry heat wakes their volatile oils before grinding."
+   },
+   {
+    "id": "fd-A-074",
+    "used": 0,
+    "text": "Fresh herbs added at the end keep aroma; dried herbs need early cooking to unfurl."
+   },
+   {
+    "id": "fd-A-075",
+    "used": 0,
+    "text": "Hardy herbs like rosemary survive long simmering; delicate basil and cilantro fade quickly."
+   },
+   {
+    "id": "fd-A-076",
+    "used": 0,
+    "text": "Onions release sulfur compounds when cut — cold water and sharp knives reduce the eye sting."
+   },
+   {
+    "id": "fd-A-077",
+    "used": 0,
+    "text": "Garlic's signature aroma only forms after cell walls break — chopping starts the chemistry."
+   },
+   {
+    "id": "fd-A-078",
+    "used": 0,
+    "text": "Letting chopped garlic rest briefly lets its protective compounds fully develop."
+   },
+   {
+    "id": "fd-A-079",
+    "used": 0,
+    "text": "Browning butter toasts milk solids — nutty aroma appears just before it burns."
+   },
+   {
+    "id": "fd-A-080",
+    "used": 0,
+    "text": "Oil catches fire in a pan because its smoke point has been passed — lid first, never water."
+   },
+   {
+    "id": "fd-A-081",
+    "used": 0,
+    "text": "Water on burning oil splashes and spreads flame instantly — smother it instead."
+   },
+   {
+    "id": "fd-A-082",
+    "used": 0,
+    "text": "Deep frying boils the food's surface water violently — that bubbling is steam escaping."
+   },
+   {
+    "id": "fd-A-083",
+    "used": 0,
+    "text": "Food crowded into a pan steams instead of browning — space lets moisture escape."
+   },
+   {
+    "id": "fd-A-084",
+    "used": 0,
+    "text": "A hot pan before oil prevents sticking because proteins release once a crust forms."
+   },
+   {
+    "id": "fd-A-085",
+    "used": 0,
+    "text": "Cold butter cuts into flour in pea-sized pieces — steam pockets create flaky layers."
+   },
+   {
+    "id": "fd-A-086",
+    "used": 0,
+    "text": "Chilled dough keeps fat solid until baking — that solid fat makes pastry flaky, not soggy."
+   },
+   {
+    "id": "fd-A-087",
+    "used": 0,
+    "text": "Rice ratios change with grain type — long grain drinks less water than soft short grain."
+   },
+   {
+    "id": "fd-A-088",
+    "used": 0,
+    "text": "Rinsing rice washes surface starch off, keeping grains separate instead of sticky."
+   },
+   {
+    "id": "fd-A-089",
+    "used": 0,
+    "text": "Soaking beans softens them evenly and shortens cooking — old beans still refuse to soften."
+   },
+   {
+    "id": "fd-A-090",
+    "used": 0,
+    "text": "Salt early draws moisture, salt late seasons the surface only — timing changes texture."
+   },
+   {
+    "id": "fd-A-091",
+    "used": 0,
+    "text": "Marinating with acid tenderizes the surface but too long turns it mealy."
+   },
+   {
+    "id": "fd-A-092",
+    "used": 0,
+    "text": "Oil-based marinades carry fat-soluble flavors deeper than water-based ones."
+   },
+   {
+    "id": "fd-A-093",
+    "used": 0,
+    "text": "Resting baked bread on a rack prevents steam from sogging the bottom crust."
+   },
+   {
+    "id": "fd-A-094",
+    "used": 0,
+    "text": "Bread keeps cut-side down on a board — it loses moisture far slower that way."
+   },
+   {
+    "id": "fd-A-095",
+    "used": 0,
+    "text": "Freezing halts almost all spoilage chemistry — quality fades slowly, not safety."
+   },
+   {
+    "id": "fd-A-096",
+    "used": 0,
+    "text": "Thawing in cold water is faster and safer than on the counter where bacteria multiply."
+   },
+   {
+    "id": "fd-A-097",
+    "used": 0,
+    "text": "Refreezing thawed produce degrades texture as ice crystals rupture more cells."
+   },
+   {
+    "id": "fd-A-098",
+    "used": 0,
+    "text": "Stainless pans stick more when cold; nonstick coatings degrade above medium heat."
+   },
+   {
+    "id": "fd-A-099",
+    "used": 0,
+    "text": "Cast iron holds heat steadily — mass, not coating, is what sears so well."
+   },
+   {
+    "id": "fd-A-100",
+    "used": 0,
+    "text": "Acid in tomato sauces can leach metallic taste from poorly seasoned iron pans."
+   },
+   {
+    "id": "fd-A-101",
+    "used": 0,
+    "text": "Knives stay sharper honed regularly — steel realigns the edge, stone restores it."
+   },
+   {
+    "id": "fd-A-102",
+    "used": 0,
+    "text": "A sharp knife is safer because it bites instead of slipping off rounded surfaces."
+   },
+   {
+    "id": "fd-A-103",
+    "used": 0,
+    "text": "Cutting boards groove with use — grooves harbor bacteria and deserve deep scrubbing."
+   },
+   {
+    "id": "fd-A-104",
+    "used": 0,
+    "text": "Wash produce under running water and rub skins — rinsing alone misses clinging microbes."
+   },
+   {
+    "id": "fd-A-105",
+    "used": 0,
+    "text": "Melon rinds carry bacteria from field and knife into the flesh — rinse before cutting."
+   },
+   {
+    "id": "fd-A-106",
+    "used": 0,
+    "text": "Cross-contamination on cutting boards is the most common home kitchen food-safety error."
+   },
+   {
+    "id": "fd-A-107",
+    "used": 0,
+    "text": "Separate boards for raw meat and produce prevent dangerous microbes hitching rides."
+   },
+   {
+    "id": "fd-A-108",
+    "used": 0,
+    "text": "Perishable food left out over two hours enters the bacterial danger zone of growth."
+   },
+   {
+    "id": "fd-A-109",
+    "used": 0,
+    "text": "Room temperature is where bacteria multiply fastest — refrigeration slows them to a crawl."
+   },
+   {
+    "id": "fd-A-110",
+    "used": 0,
+    "text": "Fridges keep quality and safety by slowing microbial growth, not by sterilizing food."
+   },
+   {
+    "id": "fd-A-111",
+    "used": 0,
+    "text": "Freezer burn is dehydration and oxidation from air contact — safe but quality lost."
+   },
+   {
+    "id": "fd-A-112",
+    "used": 0,
+    "text": "Airtight containers extend nearly every leftover's good-eating window significantly."
+   },
+   {
+    "id": "fd-A-113",
+    "used": 0,
+    "text": "Leftovers cool faster spread thin — deep pots stay warm too long in the center."
+   },
+   {
+    "id": "fd-A-114",
+    "used": 0,
+    "text": "Reheating once to steaming hot is safer than repeated partial warming cycles."
+   },
+   {
+    "id": "fd-A-115",
+    "used": 0,
+    "text": "Herbs wilt in the fridge crisper drawer where humidity stays highest."
+   },
+   {
+    "id": "fd-A-116",
+    "used": 0,
+    "text": "Store tomatoes at room temperature — cold kills their aroma compounds permanently."
+   },
+   {
+    "id": "fd-A-117",
+    "used": 0,
+    "text": "Citrus keeps for weeks in the fridge because its acidic juice resists spoilage."
+   },
+   {
+    "id": "fd-A-118",
+    "used": 0,
+    "text": "Bananas hang apart from other produce to keep ethylene exposure low."
+   },
+   {
+    "id": "fd-A-119",
+    "used": 0,
+    "text": "Freshness of eggs tested in water — sinks means fresh, floating means old."
+   },
+   {
+    "id": "fd-A-120",
+    "used": 0,
+    "text": "Egg whites stiffen more cleanly at room temperature than straight from the fridge."
+   },
+   {
+    "id": "fd-A-121",
+    "used": 0,
+    "text": "Yolks emulsify oil and water — the reason Caesar and hollandaise hold together."
+   },
+   {
+    "id": "fd-A-122",
+    "used": 0,
+    "text": "Mayonnaise is a cold emulsion stabilized by lecithin in egg yolk."
+   },
+   {
+    "id": "fd-A-123",
+    "used": 0,
+    "text": "Vinaigrette separates because oil and water reject each other — shake before pouring."
+   },
+   {
+    "id": "fd-A-124",
+    "used": 0,
+    "text": "Honey never spoils — low moisture and acidity starve microbes completely."
+   },
+   {
+    "id": "fd-A-125",
+    "used": 0,
+    "text": "Maple syrup molds in the fridge if diluted — boiling rescues sealed bottles."
+   },
+   {
+    "id": "fd-A-126",
+    "used": 0,
+    "text": "Vanilla extract is alcohol holding hundreds of aroma molecules from the bean."
+   },
+   {
+    "id": "fd-A-127",
+    "used": 0,
+    "text": "Cocoa butter melts just below body temperature — why chocolate melts on the tongue."
+   },
+   {
+    "id": "fd-A-128",
+    "used": 0,
+    "text": "Chocolate seizes when water hits melted chocolate — the sugars and solids clump."
+   },
+   {
+    "id": "fd-A-129",
+    "used": 0,
+    "text": "Cocoa butter crystals form in six forms; tempering builds the stable glossy one."
+   },
+   {
+    "id": "fd-A-130",
+    "used": 0,
+    "text": "Sugar syrup stages track temperature — soft ball, hard ball, crack and caramel map by heat."
+   },
+   {
+    "id": "fd-A-131",
+    "used": 0,
+    "text": "Candy making is precision chemistry — a few degrees change the entire texture."
+   },
+   {
+    "id": "fd-A-132",
+    "used": 0,
+    "text": "Cornstarch thickens only when heated and thins again if boiled too long."
+   },
+   {
+    "id": "fd-A-133",
+    "used": 0,
+    "text": "Roux cooks flour in fat first so the finished sauce tastes nutty, not powdery."
+   },
+   {
+    "id": "fd-A-134",
+    "used": 0,
+    "text": "Slurrying starch in cold water before adding prevents lumps in any sauce."
+   },
+   {
+    "id": "fd-A-135",
+    "used": 0,
+    "text": "Acid curdles milk instantly — that is the same chemistry behind paneer and ricotta."
+   },
+   {
+    "id": "fd-A-136",
+    "used": 0,
+    "text": "Paneer is fresh acid-set cheese that holds shape because it is never aged."
+   },
+   {
+    "id": "fd-A-137",
+    "used": 0,
+    "text": "Aging cheese relies on controlled microbes and enzymes transforming texture over months."
+   },
+   {
+    "id": "fd-A-138",
+    "used": 0,
+    "text": "Yeast dough proofs until doubled — pressing leaves a dent that slowly springs back."
+   },
+   {
+    "id": "fd-A-139",
+    "used": 0,
+    "text": "Baking at high heat first gives oven spring before the crust sets."
+   },
+   {
+    "id": "fd-A-140",
+    "used": 0,
+    "text": "Steam in the first baking minutes keeps crust flexible so loaves rise fully."
+   },
+   {
+    "id": "fd-A-141",
+    "used": 0,
+    "text": "Scoring bread directs where the loaf expands so it bursts predictably."
+   },
+   {
+    "id": "fd-A-142",
+    "used": 0,
+    "text": "Overbaked edges turn bitter as bitter compounds dominate burnt sugars and proteins."
+   },
+   {
+    "id": "fd-A-143",
+    "used": 0,
+    "text": "A pinch of acid brightens stews that taste flat from too much simmering."
+   },
+   {
+    "id": "fd-A-144",
+    "used": 0,
+    "text": "Tasting as you cook beats any written recipe's timing instructions."
+   },
+   {
+    "id": "fd-A-145",
+    "used": 0,
+    "text": "Layering salt in stages builds deeper flavor than one large addition at the end."
+   },
+   {
+    "id": "fd-A-146",
+    "used": 0,
+    "text": "Mise en place — every ingredient prepped before heat starts — prevents rushed mistakes."
+   },
+   {
+    "id": "fd-A-147",
+    "used": 0,
+    "text": "Sharpened prep and clean station cut kitchen accidents more than any other habit."
+   },
+   {
+    "id": "fd-A-148",
+    "used": 0,
+    "text": "Cast iron seasoning is polymerized oil — a plastic-like layer bonded to the metal."
+   },
+   {
+    "id": "fd-A-149",
+    "used": 0,
+    "text": "Acidic tomato simmered long in cast iron can strip that seasoning layer."
+   },
+   {
+    "id": "fd-A-150",
+    "used": 0,
+    "text": "Wooden spoons do not scratch pans or react with acids — kitchen multitool classic."
+   },
+   {
+    "id": "fd-A-151",
+    "used": 0,
+    "text": "Copper cookware conducts heat fastest — sauces respond almost instantly to temperature change."
+   },
+   {
+    "id": "fd-A-152",
+    "used": 0,
+    "text": "Steam burns hurt more than boiling water burns because of the hidden heat release."
+   },
+   {
+    "id": "fd-A-153",
+    "used": 0,
+    "text": "Oven mitts soaked with water conduct heat — dry mitts protect, wet ones burn."
+   },
+   {
+    "id": "fd-A-154",
+    "used": 0,
+    "text": "A splatter guard stops oil spit while keeping pan heat and moisture balanced."
+   },
+   {
+    "id": "fd-A-155",
+    "used": 0,
+    "text": "Pressure cookers raise boiling point with pressure — beans cook in a fraction of time."
+   },
+   {
+    "id": "fd-A-156",
+    "used": 0,
+    "text": "Slow cookers stay below boiling — collagen in tough cuts melts into gelatin over hours."
+   },
+   {
+    "id": "fd-A-157",
+    "used": 0,
+    "text": "Gelatin from collagen is what makes braised meat feel silky on the tongue."
+   },
+   {
+    "id": "fd-A-158",
+    "used": 0,
+    "text": "Tough cuts need time, not heat — low slow cooking transforms connective tissue."
+   },
+   {
+    "id": "fd-A-159",
+    "used": 0,
+    "text": "Quick high heat suits tender cuts — they dry out with long cooking."
+   },
+   {
+    "id": "fd-A-160",
+    "used": 0,
+    "text": "Marbling — the streaks of fat inside meat — melts during cooking for juiciness."
+   },
+   {
+    "id": "fd-A-161",
+    "used": 0,
+    "text": "Grass-fed and grain-fed fats differ in flavor because the animals' diets differ."
+   },
+   {
+    "id": "fd-A-162",
+    "used": 0,
+    "text": "Restoring stale bread in a low oven revives crust as water re-crisps it."
+   },
+   {
+    "id": "fd-A-163",
+    "used": 0,
+    "text": "Day-old bread makes better croutons and breadcrumbs because moisture has already left."
+   },
+   {
+    "id": "fd-A-164",
+    "used": 0,
+    "text": "Breadcrumbs toast fast — constant tossing prevents sudden burning."
+   },
+   {
+    "id": "fd-A-165",
+    "used": 0,
+    "text": "Cream separates into butter and buttermilk when churned past the emulsion point."
+   },
+   {
+    "id": "fd-A-166",
+    "used": 0,
+    "text": "Butter is about eighty percent fat — the rest is water and milk solids."
+   },
+   {
+    "id": "fd-A-167",
+    "used": 0,
+    "text": "Ghee is butter cooked until water evaporates and solids brown, then strained."
+   },
+   {
+    "id": "fd-A-168",
+    "used": 0,
+    "text": "Ghee's high smoke point comes from removing those fragile milk solids."
+   },
+   {
+    "id": "fd-A-169",
+    "used": 0,
+    "text": "Cooking oils differ in saturation — saturated fats resist oxidation and heat longer."
+   },
+   {
+    "id": "fd-A-170",
+    "used": 0,
+    "text": "Olive oil's peppery bite comes from polyphenols, not from spoilage or heat."
+   },
+   {
+    "id": "fd-A-171",
+    "used": 0,
+    "text": "Extra virgin olive oil suits medium heat and finishing; smoke point is moderate."
+   },
+   {
+    "id": "fd-A-172",
+    "used": 0,
+    "text": "Sesame oil flavors dishes at the end — its aroma cooks off with long heat."
+   },
+   {
+    "id": "fd-A-173",
+    "used": 0,
+    "text": "Nuts go rancid as their oils oxidize — astringent smell means discard them."
+   },
+   {
+    "id": "fd-A-174",
+    "used": 0,
+    "text": "Roasting nuts deepens flavor as their natural oils toast inside the cells."
+   },
+   {
+    "id": "fd-A-175",
+    "used": 0,
+    "text": "Citrus zest carries aromatic oils in the colored outer peel only — white pith is bitter."
+   },
+   {
+    "id": "fd-A-176",
+    "used": 0,
+    "text": "Zesting before juicing saves the aromatic peel while the fruit is still firm."
+   },
+   {
+    "id": "fd-A-177",
+    "used": 0,
+    "text": "Lemon and lime juice differ mainly in acidity — lime is mellower, lemon brighter."
+   },
+   {
+    "id": "fd-A-178",
+    "used": 0,
+    "text": "Vinegar is dilute acetic acid from fermented sugar — every type starts with fermentation."
+   },
+   {
+    "id": "fd-A-179",
+    "used": 0,
+    "text": "Balsamic vinegar thickens and sweetens as grape must concentrates over years in barrels."
+   },
+   {
+    "id": "fd-A-180",
+    "used": 0,
+    "text": "Fish sauce smells strong but tastes umami — fermentation breaks fish proteins into amino acids."
+   },
+   {
+    "id": "fd-A-181",
+    "used": 0,
+    "text": "Umami is the fifth taste — glutamates in cheese, tomatoes and mushrooms trigger it."
+   },
+   {
+    "id": "fd-A-182",
+    "used": 0,
+    "text": "Kombu dashi extracts glutamate from seaweed — the foundation of Japanese stock."
+   },
+   {
+    "id": "fd-A-183",
+    "used": 0,
+    "text": "MSG is simply concentrated umami — the same molecules tomatoes and cheese provide naturally."
+   },
+   {
+    "id": "fd-A-184",
+    "used": 0,
+    "text": "Monosodium glutamate sensitivity myths were tested repeatedly and never confirmed in blinded trials."
+   },
+   {
+    "id": "fd-A-185",
+    "used": 0,
+    "text": "Turmeric stains everything yellow because curcumin binds tightly to proteins and surfaces."
+   },
+   {
+    "id": "fd-A-186",
+    "used": 0,
+    "text": "Black pepper boosts curcumin absorption — a classic pairing with real chemistry behind it."
+   },
+   {
+    "id": "fd-A-187",
+    "used": 0,
+    "text": "Cinnamon comes from tree bark; true Ceylon cinnamon differs from common cassia bark."
+   },
+   {
+    "id": "fd-A-188",
+    "used": 0,
+    "text": "Vanilla is the fermented seed pod of an orchid — hand-pollination makes it labor-intensive."
+   },
+   {
+    "id": "fd-A-189",
+    "used": 0,
+    "text": "Saffron threads are the dried stigmas of a crocus — each flower yields only three."
+   },
+   {
+    "id": "fd-A-190",
+    "used": 0,
+    "text": "Cardamom pods hide seeds carrying eucalyptus-like coolness — pods crush to release them."
+   },
+   {
+    "id": "fd-A-191",
+    "used": 0,
+    "text": "Cloves are dried flower buds — eugenol oil gives their numbing warmth."
+   },
+   {
+    "id": "fd-A-192",
+    "used": 0,
+    "text": "Nutmeg is grated fresh because pre-grated loses volatile oils within weeks."
+   },
+   {
+    "id": "fd-A-193",
+    "used": 0,
+    "text": "Mustard seeds only pungent when crushed with water — the enzyme needs activation."
+   },
+   {
+    "id": "fd-A-194",
+    "used": 0,
+    "text": "Wasabi's heat is volatile and fades within minutes of grating."
+   },
+   {
+    "id": "fd-A-195",
+    "used": 0,
+    "text": "Chili heat lives in capsaicinoids concentrated in the placenta, not the seeds."
+   },
+   {
+    "id": "fd-A-196",
+    "used": 0,
+    "text": "Removing seeds lowers heat only slightly — the white ribs carry most of it."
+   },
+   {
+    "id": "fd-A-197",
+    "used": 0,
+    "text": "Dairy milk eases chili burn because casein washes capsaicin off receptors."
+   },
+   {
+    "id": "fd-A-198",
+    "used": 0,
+    "text": "Water spreads chili burn — capsaicin is oil-soluble and needs fat or dairy."
+   },
+   {
+    "id": "fd-A-199",
+    "used": 0,
+    "text": "Coffee bitterness mellows with a pinch of salt — sodium suppresses bitter notes."
+   },
+   {
+    "id": "fd-A-200",
+    "used": 0,
+    "text": "Blooming cocoa in hot liquid before mixing deepens chocolate flavor in baking."
+   },
+   {
+    "id": "fd-A-201",
+    "used": 0,
+    "text": "Espresso extraction under pressure pulls flavor in about twenty-five to thirty seconds."
+   },
+   {
+    "id": "fd-A-202",
+    "used": 0,
+    "text": "Grind size controls extraction rate — finer grinds expose more surface to water."
+   },
+   {
+    "id": "fd-A-203",
+    "used": 0,
+    "text": "Over-extracted coffee turns harsh and bitter; under-extracted tastes sour and thin."
+   },
+   {
+    "id": "fd-A-204",
+    "used": 0,
+    "text": "Tea steeps by temperature — boiling water scorches delicate green tea leaves."
+   },
+   {
+    "id": "fd-A-205",
+    "used": 0,
+    "text": "Green tea wants cooler water around seventy degrees; black tea wants a full boil."
+   },
+   {
+    "id": "fd-A-206",
+    "used": 0,
+    "text": "Caffeine extraction happens fast — the first minute carries most of it."
+   },
+   {
+    "id": "fd-A-207",
+    "used": 0,
+    "text": "Milk proteins bind tannins — why milk softens the astringency of strong black tea."
+   },
+   {
+    "id": "fd-A-208",
+    "used": 0,
+    "text": "Bread flour's higher protein builds stronger gluten than cake flour's low protein."
+   },
+   {
+    "id": "fd-A-209",
+    "used": 0,
+    "text": "Cake flour is chlorinated to weaken gluten and tenderize crumb."
+   },
+   {
+    "id": "fd-A-210",
+    "used": 0,
+    "text": "Whole wheat flour includes bran that cuts gluten strands — denser loaves result."
+   },
+   {
+    "id": "fd-A-211",
+    "used": 0,
+    "text": "Vital wheat gluten can boost rise in hearty whole-grain doughs."
+   },
+   {
+    "id": "fd-A-212",
+    "used": 0,
+    "text": "Hydration percentage — water relative to flour — is the baker's main dough control."
+   },
+   {
+    "id": "fd-A-213",
+    "used": 0,
+    "text": "Starter hydration determines whether sourdough behaves stiff or pourable."
+   },
+   {
+    "id": "fd-A-214",
+    "used": 0,
+    "text": "Bulk fermentation builds flavor and structure before shaping final loaves."
+   },
+   {
+    "id": "fd-A-215",
+    "used": 0,
+    "text": "Cold retarding dough overnight slows yeast and deepens flavor complexity."
+   },
+   {
+    "id": "fd-A-216",
+    "used": 0,
+    "text": "Steam ovens give bakery crusts their shine and blistered texture."
+   },
+   {
+    "id": "fd-A-217",
+    "used": 0,
+    "text": "Lamination layers butter and dough dozens of times — croissant honeycomb depends on it."
+   },
+   {
+    "id": "fd-A-218",
+    "used": 0,
+    "text": "Puff pastry relies entirely on trapped butter-steam layers — no yeast required."
+   },
+   {
+    "id": "fd-A-219",
+    "used": 0,
+    "text": "Choux pastry puffs because egg moisture turns to steam inside set custard walls."
+   },
+   {
+    "id": "fd-A-220",
+    "used": 0,
+    "text": "Popover and Yorkshire pudding rise on pure steam trapped in setting batter."
+   },
+   {
+    "id": "fd-A-221",
+    "used": 0,
+    "text": "Angel food cake uses only whites — foam structure without fat or yolks."
+   },
+   {
+    "id": "fd-A-222",
+    "used": 0,
+    "text": "Cheesecake cracks from overbaking or sudden cooling — gentle heat prevents it."
+   },
+   {
+    "id": "fd-A-223",
+    "used": 0,
+    "text": "Pie dough stays flaky when fat remains in distinct cold pieces until the oven."
+   },
+   {
+    "id": "fd-A-224",
+    "used": 0,
+    "text": "Blind baking fills pie shells before wet fillings so bottoms stay crisp."
+   },
+   {
+    "id": "fd-A-225",
+    "used": 0,
+    "text": "Fruit pie fillings thicken with baked starch — underbaking leaves them runny."
+   },
+   {
+    "id": "fd-A-226",
+    "used": 0,
+    "text": "Jam sets when pectin, sugar and acid hit the right balance together."
+   },
+   {
+    "id": "fd-A-227",
+    "used": 0,
+    "text": "Low-sugar jams set poorly because pectin needs sugar to form its gel network."
+   },
+   {
+    "id": "fd-A-228",
+    "used": 0,
+    "text": "High-acid fruits like citrus set jam more easily than low-acid bananas."
+   },
+   {
+    "id": "fd-A-229",
+    "used": 0,
+    "text": "Fruit butters are slow-cooked purees — concentration without commercial pectin."
+   },
+   {
+    "id": "fd-A-230",
+    "used": 0,
+    "text": "Compote is gently poached fruit — sugar syrup infuses as textures soften."
+   },
+   {
+    "id": "fd-A-231",
+    "used": 0,
+    "text": "Caramel sauce breaks when water content or temperature shifts wrong — reheating can rescue."
+   },
+   {
+    "id": "fd-A-232",
+    "used": 0,
+    "text": "Ganache is an emulsion of chocolate and cream — ratios control firmness."
+   },
+   {
+    "id": "fd-A-233",
+    "used": 0,
+    "text": "Whipped ganache traps air for lighter fillings than plain set ganache."
+   },
+   {
+    "id": "fd-A-234",
+    "used": 0,
+    "text": "Praline is caramelized sugar bound with nuts, cooled brittle, then crushed."
+   },
+   {
+    "id": "fd-A-235",
+    "used": 0,
+    "text": "Tuile batter spreads paper-thin — the cookie's delicate snap depends on it."
+   },
+   {
+    "id": "fd-A-236",
+    "used": 0,
+    "text": "Macaron shells need rested tops before baking so feet rise properly."
+   },
+   {
+    "id": "fd-A-237",
+    "used": 0,
+    "text": "Overfolding macaron batter deflates it — smooth lava-like flow signals readiness."
+   },
+   {
+    "id": "fd-A-238",
+    "used": 0,
+    "text": "Meringue weeps in humidity — dry oven and long low drying prevent weeping."
+   },
+   {
+    "id": "fd-A-239",
+    "used": 0,
+    "text": "Italian meringue cooks sugar syrup into whites for stable, safe foam."
+   },
+   {
+    "id": "fd-A-240",
+    "used": 0,
+    "text": "Swiss meringue warms eggs and sugar together over water before whipping."
+   },
+   {
+    "id": "fd-A-241",
+    "used": 0,
+    "text": "French meringue is simplest but least stable — used for same-day desserts."
+   },
+   {
+    "id": "fd-A-242",
+    "used": 0,
+    "text": "Crème brûlée's sugar crust forms under a torch, not in the oven."
+   },
+   {
+    "id": "fd-A-243",
+    "used": 0,
+    "text": "Pastry cream is custard thickened with starch — it survives boiling without curdling."
+   },
+   {
+    "id": "fd-A-244",
+    "used": 0,
+    "text": "Anglaise is a thin stirred custard — pull it off heat before it scrambles."
+   },
+   {
+    "id": "fd-A-245",
+    "used": 0,
+    "text": "Tempering eggs with hot liquid prevents shocking them into scrambled curds."
+   },
+   {
+    "id": "fd-A-246",
+    "used": 0,
+    "text": "Buttercream variations differ by how sugar and eggs are handled, not by butter."
+   },
+   {
+    "id": "fd-A-247",
+    "used": 0,
+    "text": "Italian buttercream uses cooked syrup for silky stability in warm rooms."
+   },
+   {
+    "id": "fd-A-248",
+    "used": 0,
+    "text": "American buttercream is quick — powdered sugar and butter whipped with milk."
+   },
+   {
+    "id": "fd-A-249",
+    "used": 0,
+    "text": "Frosting adheres better to crumbs with a thin seal coat first."
+   },
+   {
+    "id": "fd-A-250",
+    "used": 0,
+    "text": "Cake layers level better chilled — firm crumb cuts cleanly without tearing."
+   }
+  ],
+  "B": [
+   {
+    "id": "fd-B-001",
+    "used": 0,
+    "text": "Street chaat balances sweet, sour, salty and spicy in every single bite."
+   },
+   {
+    "id": "fd-B-002",
+    "used": 0,
+    "text": "Pani puri's crisp semolina shells are filled and eaten in one motion."
+   },
+   {
+    "id": "fd-B-003",
+    "used": 0,
+    "text": "Bhel puri mixes puffed rice last minute so sogginess never wins."
+   },
+   {
+    "id": "fd-B-004",
+    "used": 0,
+    "text": "Dahi puri softens the puri with yogurt — spoon required immediately."
+   },
+   {
+    "id": "fd-B-005",
+    "used": 0,
+    "text": "Sev puri layers chutneys on flat puri — no flooding required."
+   },
+   {
+    "id": "fd-B-006",
+    "used": 0,
+    "text": "Aloo tikki patties crisp on the griddle — potato street classic."
+   },
+   {
+    "id": "fd-B-007",
+    "used": 0,
+    "text": "Ragda pattice dries white pea curry over potato cakes — Mumbai monsoon favorite."
+   },
+   {
+    "id": "fd-B-008",
+    "used": 0,
+    "text": "Misal pav sprouts curry with fathan mix — spicy Maharashtrian breakfast."
+   },
+   {
+    "id": "fd-B-009",
+    "used": 0,
+    "text": "Sabudana khichdi tapioca pearls peanut — fasting-day Mumbai staple."
+   },
+   {
+    "id": "fd-B-010",
+    "used": 0,
+    "text": "Thalipeeth multigrain flatbread — Maharashtrian rustic bread craft."
+   },
+   {
+    "id": "fd-B-011",
+    "used": 0,
+    "text": "Zunka bhakri gram flour stir — rural Maharashtra everyday plate."
+   },
+   {
+    "id": "fd-B-012",
+    "used": 0,
+    "text": "Kanda poha flattened rice onion — Mumbai's default breakfast street plate."
+   },
+   {
+    "id": "fd-B-013",
+    "used": 0,
+    "text": "Chana dal sundal boiled chickpea stir — Chennai beach evening snack."
+   },
+   {
+    "id": "fd-B-014",
+    "used": 0,
+    "text": "Masala dosa street cart griddle — giant crispy crepe economics."
+   },
+   {
+    "id": "fd-B-015",
+    "used": 0,
+    "text": "Filter coffee's froth comes from pulling between tumblers — technique not machine."
+   },
+   {
+    "id": "fd-B-016",
+    "used": 0,
+    "text": "Bonda batter-dipped vegetable fry — Andhra tea-time snack."
+   },
+   {
+    "id": "fd-B-017",
+    "used": 0,
+    "text": "Goli bajé Mangalorean fried dough — coastal rainy-day fritter."
+   },
+   {
+    "id": "fd-B-018",
+    "used": 0,
+    "text": "Banana baji ripe banana fritter — Kerala evening tea companion."
+   },
+   {
+    "id": "fd-B-019",
+    "used": 0,
+    "text": "Parippu vada lentil fritter flat — Kerala's crunchy staple snack."
+   },
+   {
+    "id": "fd-B-020",
+    "used": 0,
+    "text": "Kozhukattai steamed rice flour dumpling — Ganesh festival offering."
+   },
+   {
+    "id": "fd-B-021",
+    "used": 0,
+    "text": "Murukku spiraled rice flour fry — South Indian crunch classic."
+   },
+   {
+    "id": "fd-B-022",
+    "used": 0,
+    "text": "Thenkuzhal tube-shaped savory — temple town snack favorite."
+   },
+   {
+    "id": "fd-B-023",
+    "used": 0,
+    "text": "Seedai tiny ball fry — Krishna Jayanti special careful recipe."
+   },
+   {
+    "id": "fd-B-024",
+    "used": 0,
+    "text": "Rava ladoo seminoa ghee sugar — quick festive option."
+   },
+   {
+    "id": "fd-B-025",
+    "used": 0,
+    "text": "Jalebi fermented batter sour-sweet spiral — overnight patience."
+   },
+   {
+    "id": "fd-B-026",
+    "used": 0,
+    "text": "Kachori aloo sabzi spiced curry — morning street meal."
+   },
+   {
+    "id": "fd-B-027",
+    "used": 0,
+    "text": "Aloo paratha butter curd — North Indian winter morning."
+   },
+   {
+    "id": "fd-B-028",
+    "used": 0,
+    "text": "Litti chokha roasted wheat ball brinjal mash — Bihar's rustic meal."
+   },
+   {
+    "id": "fd-B-029",
+    "used": 0,
+    "text": "Dal baati churma Rajasthan's trio — baked wheat balls drowned ghee."
+   },
+   {
+    "id": "fd-B-030",
+    "used": 0,
+    "text": "Gatte ki sabzi gram flour dumpling curry — Marwari kitchen craft."
+   },
+   {
+    "id": "fd-B-031",
+    "used": 0,
+    "text": "Dal khichdi comfort food — rice lentil one-pot simplicity."
+   },
+   {
+    "id": "fd-B-032",
+    "used": 0,
+    "text": "Kadhi pakora yogurt gram flour curry — North Indian rainy day."
+   },
+   {
+    "id": "fd-B-033",
+    "used": 0,
+    "text": "Makki ki roti sarson saag winter pairing — Punjab's seasonal icon."
+   },
+   {
+    "id": "fd-B-034",
+    "used": 0,
+    "text": "Amritsari kulcha stuffed tandoor bread — street breakfast legend."
+   },
+   {
+    "id": "fd-B-035",
+    "used": 0,
+    "text": "Tandoori roti clay oven flatbread — blistered char signature."
+   },
+   {
+    "id": "fd-B-036",
+    "used": 0,
+    "text": "Amritsari fish batter fry — street fish crispness."
+   },
+   {
+    "id": "fd-B-037",
+    "used": 0,
+    "text": "Kulcha chole combo — Old Delhi morning institution."
+   },
+   {
+    "id": "fd-B-038",
+    "used": 0,
+    "text": "Golgappa vendor's flavored water recipe — trade secret always."
+   },
+   {
+    "id": "fd-B-039",
+    "used": 0,
+    "text": "Dahi bhalla lentil dumpling yogurt — cool chaat classic."
+   },
+   {
+    "id": "fd-B-040",
+    "used": 0,
+    "text": "Aloo chaat boiled potato spices — winter Delhi street staple."
+   },
+   {
+    "id": "fd-B-041",
+    "used": 0,
+    "text": "Gajar halwa winter carrot milk ghee — Delhi seasonal sweet."
+   },
+   {
+    "id": "fd-B-042",
+    "used": 0,
+    "text": "Moong dal halwa grinds soaked lentil fine — rich celebration sweet."
+   },
+   {
+    "id": "fd-B-043",
+    "used": 0,
+    "text": "Churma ladoo crushed wheat ghee jaggery — Rajasthani festive crumble."
+   },
+   {
+    "id": "fd-B-044",
+    "used": 0,
+    "text": "Balushahi flaky yogurt dough sweet soaked syrup — North Indian classic."
+   },
+   {
+    "id": "fd-B-045",
+    "used": 0,
+    "text": "Soan papis flaky thread sweet — ghee sugar spun fine."
+   },
+   {
+    "id": "fd-B-046",
+    "used": 0,
+    "text": "Poha jalebi Indori breakfast combo — sweet-spicy morning pairing."
+   },
+   {
+    "id": "fd-B-047",
+    "used": 0,
+    "text": "Shikanji lemon spice drink — North Indian summer street cooler."
+   },
+   {
+    "id": "fd-B-048",
+    "used": 0,
+    "text": "Nimbu pani balances lemon sugar salt water — summer basic."
+   },
+   {
+    "id": "fd-B-049",
+    "used": 0,
+    "text": "Jaljeera cumin spiced water — digestive street drink of North India."
+   },
+   {
+    "id": "fd-B-050",
+    "used": 0,
+    "text": "Coconut water served chilled — nature's isotonic tropical drink."
+   },
+   {
+    "id": "fd-B-051",
+    "used": 0,
+    "text": "Sugarcane juice pressed fresh — iron-rich roadside sweetness."
+   },
+   {
+    "id": "fd-B-052",
+    "used": 0,
+    "text": "Sol kadhi coconut-kokum pink drink — coastal meal closer."
+   },
+   {
+    "id": "fd-B-053",
+    "used": 0,
+    "text": "Thandai milk almond spice drink — Holi festival cooler."
+   },
+   {
+    "id": "fd-B-054",
+    "used": 0,
+    "text": "Kesar milk saffron warm glass — winter night indulgence."
+   },
+   {
+    "id": "fd-B-055",
+    "used": 0,
+    "text": "Chaas thin buttermilk cumin — lighter than lassi always."
+   },
+   {
+    "id": "fd-B-056",
+    "used": 0,
+    "text": "Mango lassi blends yogurt mango pulp — Punjab's thick drink."
+   },
+   {
+    "id": "fd-B-057",
+    "used": 0,
+    "text": "Kadak chai ginger masala — monsoon street corner institution."
+   },
+   {
+    "id": "fd-B-058",
+    "used": 0,
+    "text": "chai stall economics — one kettle powers a whole neighborhood."
+   },
+   {
+    "id": "fd-B-059",
+    "used": 0,
+    "text": "chai cutting glass — half-glass serving culture of Mumbai."
+   },
+   {
+    "id": "fd-B-060",
+    "used": 0,
+    "text": "Irani cafe bun maska — Mumbai's colonial-era bakery culture."
+   },
+   {
+    "id": "fd-B-061",
+    "used": 0,
+    "text": "Akuri eggs Parsi style — Mumbai Irani breakfast plate."
+   },
+   {
+    "id": "fd-B-062",
+    "used": 0,
+    "text": "Berry pulao Parsi rice — Mumbai's signature restaurant dish."
+   },
+   {
+    "id": "fd-B-063",
+    "used": 0,
+    "text": "Dhansak lentil meat Parsi Sunday — community dish identity."
+   },
+   {
+    "id": "fd-B-064",
+    "used": 0,
+    "text": "Patra elephant ear leaf gram paste rolls — Gujarati steamed snack."
+   },
+   {
+    "id": "fd-B-065",
+    "used": 0,
+    "text": "Khandvi rolled gram flour — Gujarati mithai-shape savory."
+   },
+   {
+    "id": "fd-B-066",
+    "used": 0,
+    "text": "Dhokla fermented gram flour cake — Gujarat's spongy snack."
+   },
+   {
+    "id": "fd-B-067",
+    "used": 0,
+    "text": "Fafda papaya breakfast pair — Mumbai Gujarati morning ritual."
+   },
+   {
+    "id": "fd-B-068",
+    "used": 0,
+    "text": "Thepla methi flatbread travel food — Gujarati kitchen staple."
+   },
+   {
+    "id": "fd-B-069",
+    "used": 0,
+    "text": "Undhiyu mixed vegetable winter casserole — Gujarati harvest dish."
+   },
+   {
+    "id": "fd-B-070",
+    "used": 0,
+    "text": "Muthiya steamed gram flour rolls — Kathiawadi snack craft."
+   },
+   {
+    "id": "fd-B-071",
+    "used": 0,
+    "text": "Sev tameta tomato sev curry — Kathiawadi sweet-tangy plate."
+   },
+   {
+    "id": "fd-B-072",
+    "used": 0,
+    "text": "Khaman dhokla yellow version — gram flour cousin of white."
+   },
+   {
+    "id": "fd-B-073",
+    "used": 0,
+    "text": "Handvo rice lentil savory cake — baked Gujarati tea cake."
+   },
+   {
+    "id": "fd-B-074",
+    "used": 0,
+    "text": "Rotlo millet roti — rural Gujarat's coarse grain bread."
+   },
+   {
+    "id": "fd-B-075",
+    "used": 0,
+    "text": "Bajra roti ghee jaggery winter — Rajasthan Gujarat winter staple."
+   },
+   {
+    "id": "fd-B-076",
+    "used": 0,
+    "text": "Makki missi multi flour flatbread — northwestern fusion."
+   },
+   {
+    "id": "fd-B-077",
+    "used": 0,
+    "text": "Sarson ka saag mustard greens slow — winter Punjab labor love."
+   },
+   {
+    "id": "fd-B-078",
+    "used": 0,
+    "text": "Amritsari kulcha stuffed potato — tandoor street breakfast."
+   },
+   {
+    "id": "fd-B-079",
+    "used": 0,
+    "text": "Kulcha chole combo morning plate — Delhi old city institution."
+   },
+   {
+    "id": "fd-B-080",
+    "used": 0,
+    "text": "Lassi tall glass Amritsari — sweet thick counterpoint."
+   },
+   {
+    "id": "fd-B-081",
+    "used": 0,
+    "text": "Fish Amritsari batter fried — street crispness legend."
+   },
+   {
+    "id": "fd-B-082",
+    "used": 0,
+    "text": "Tandoori chicken marinade yogurt spice — clay oven signature."
+   },
+   {
+    "id": "fd-B-083",
+    "used": 0,
+    "text": "Seekh kebab minced lamb skewer — kebab house classic."
+   },
+   {
+    "id": "fd-B-084",
+    "used": 0,
+    "text": "Shami kebab lentil meat patty — Lucknowi refined street food."
+   },
+   {
+    "id": "fd-B-085",
+    "used": 0,
+    "text": "Galouti kebab melt texture — Awadhi court cuisine legend."
+   },
+   {
+    "id": "fd-B-086",
+    "used": 0,
+    "text": "Kakori kebab silk fine mince — Lucknow craft kebab."
+   },
+   {
+    "id": "fd-B-087",
+    "used": 0,
+    "text": "Boti kebab marinated organ meat — old Delhi lane specialty."
+   },
+   {
+    "id": "fd-B-088",
+    "used": 0,
+    "text": "Nihari slow overnight stew — Old Delhi morning institution."
+   },
+   {
+    "id": "fd-B-089",
+    "used": 0,
+    "text": "Haleem pounded wheat meat paste — Hyderabad Ramadan staple."
+   },
+   {
+    "id": "fd-B-090",
+    "used": 0,
+    "text": "Kacchi biryani raw meat rice dum — Awadhi technique."
+   },
+   {
+    "id": "fd-B-091",
+    "used": 0,
+    "text": "Pakki biryani cooked meat layered — Hyderabad method variant."
+   },
+   {
+    "id": "fd-B-092",
+    "used": 0,
+    "text": "Lucknowi biryani lighter spice subtle — Awadhi style."
+   },
+   {
+    "id": "fd-B-093",
+    "used": 0,
+    "text": "Hyderabadi biryani spicy kacchi style — Telangana icon."
+   },
+   {
+    "id": "fd-B-094",
+    "used": 0,
+    "text": "Kolkata biryani potato addition — colonial adaptation beloved."
+   },
+   {
+    "id": "fd-B-095",
+    "used": 0,
+    "text": "Donne biryani leaf cup serving — Bengaluru street style."
+   },
+   {
+    "id": "fd-B-096",
+    "used": 0,
+    "text": "Thalassery biryani kaima rice — Kerala coastal special."
+   },
+   {
+    "id": "fd-B-097",
+    "used": 0,
+    "text": "Ambur biryani mutton curd marinade — Tamil Nadu famous."
+   },
+   {
+    "id": "fd-B-098",
+    "used": 0,
+    "text": "Dindigul biryani seeraga samba — Tamil Nadu variant."
+   },
+   {
+    "id": "fd-B-099",
+    "used": 0,
+    "text": "Mughlai paratha stuffed fried — Kolkata street breakfast."
+   },
+   {
+    "id": "fd-B-100",
+    "used": 0,
+    "text": "Kathi roll Kolkata egg wrap — portable street invention."
+   },
+   {
+    "id": "fd-B-101",
+    "used": 0,
+    "text": "Roll stall wrap economics — foil and flame speed craft."
+   },
+   {
+    "id": "fd-B-102",
+    "used": 0,
+    "text": "Puchka Kolkata's pani puri name — local identity pride."
+   },
+   {
+    "id": "fd-B-103",
+    "used": 0,
+    "text": "Jhal muri mustard oil puffed rice — Kolkata evening snack."
+   },
+   {
+    "id": "fd-B-104",
+    "used": 0,
+    "text": "Ghugni dried pea curry — Bengal's street bowl."
+   },
+   {
+    "id": "fd-B-105",
+    "used": 0,
+    "text": "Aloo dum Bengal potato curry — winter street pairing."
+   },
+   {
+    "id": "fd-B-106",
+    "used": 0,
+    "text": "Luchi fried puffy bread — Bengali festive breakfast."
+   },
+   {
+    "id": "fd-B-107",
+    "used": 0,
+    "text": "Shukto mixed vegetable bitter first course — Bengali meal opener."
+   },
+   {
+    "id": "fd-B-108",
+    "used": 0,
+    "text": "Beguni eggplant batter fry — Bengali evening fritter."
+   },
+   {
+    "id": "fd-B-109",
+    "used": 0,
+    "text": "Posto poppy seed paste — Bengal's quiet signature."
+   },
+   {
+    "id": "fd-B-110",
+    "used": 0,
+    "text": "Chingri malai prawn coconut milk — Bengali celebration curry."
+   },
+   {
+    "id": "fd-B-111",
+    "used": 0,
+    "text": "Macher jhol light fish curry — daily Bengali lunch soul."
+   },
+   {
+    "id": "fd-B-112",
+    "used": 0,
+    "text": "Ilish hilsa steamed mustard — Bengal's festival fish."
+   },
+   {
+    "id": "fd-B-113",
+    "used": 0,
+    "text": "Pantua deep-fried milk solid balls — Bengali gulab cousin."
+   },
+   {
+    "id": "fd-B-114",
+    "used": 0,
+    "text": "Sandesh fresh chhena molded — milk sweet pure simplicity."
+   },
+   {
+    "id": "fd-B-115",
+    "used": 0,
+    "text": "Rosogolla spongy chhena in light syrup — Kolkata icon."
+   },
+   {
+    "id": "fd-B-116",
+    "used": 0,
+    "text": "Ledikeni renamed lady Canning cake — Bengali colonial sweet."
+   },
+   {
+    "id": "fd-B-117",
+    "used": 0,
+    "text": "Sitabhog sweet fine rice vermicelli — Burdwan specialty."
+   },
+   {
+    "id": "fd-B-118",
+    "used": 0,
+    "text": "Mihidana saffron fine grain sweet — Burdwan's golden sibling."
+   },
+   {
+    "id": "fd-B-119",
+    "used": 0,
+    "text": "Vark — silver leaf — sweet finishing — Rajasthani Bengali both."
+   },
+   {
+    "id": "fd-B-120",
+    "used": 0,
+    "text": "Mysore pak originated in Wodeyar palace kitchen — royal sweet."
+   },
+   {
+    "id": "fd-B-121",
+    "used": 0,
+    "text": "Dharwad peda slow milk caramelization — Karnataka's slow sweet."
+   },
+   {
+    "id": "fd-B-122",
+    "used": 0,
+    "text": "Belagavi kunda milk solid sweet — north Karnataka identity."
+   },
+   {
+    "id": "fd-B-123",
+    "used": 0,
+    "text": "Chiroti thin layered sweet powder sugar — Karnataka wedding sweet."
+   },
+   {
+    "id": "fd-B-124",
+    "used": 0,
+    "text": "Mysore masala dosa red chutney spread — Karnataka's spicy crepe."
+   },
+   {
+    "id": "fd-B-125",
+    "used": 0,
+    "text": "Bisi bele bath rice lentil spice — Karnataka's one-pot comfort."
+   },
+   {
+    "id": "fd-B-126",
+    "used": 0,
+    "text": "Ragi mudde millet ball — rural Karnataka's protein staple."
+   },
+   {
+    "id": "fd-B-127",
+    "used": 0,
+    "text": "Neer dosa watery rice crepe — coastal Karnataka delicate breakfast."
+   },
+   {
+    "id": "fd-B-128",
+    "used": 0,
+    "text": "Mangalore buns sweet banana poori — coastal Karnataka tea snack."
+   },
+   {
+    "id": "fd-B-129",
+    "used": 0,
+    "text": "Goli baje Mangalorean dough fritter — rainy day coastal favorite."
+   },
+   {
+    "id": "fd-B-130",
+    "used": 0,
+    "text": "Kori roti crisp rice roti chicken curry — coastal Karnataka pairing."
+   },
+   {
+    "id": "fd-B-131",
+    "used": 0,
+    "text": "Kundapura koli saaru chicken curry — coastal spicy standard."
+   },
+   {
+    "id": "fd-B-132",
+    "used": 0,
+    "text": "Goat brain fry Kerala street — bold Malabar plate."
+   },
+   {
+    "id": "fd-B-133",
+    "used": 0,
+    "text": "Beef ularthiyathu dry roast Kerala — pepper spice slow roast."
+   },
+   {
+    "id": "fd-B-134",
+    "used": 0,
+    "text": "Kerala parotta flaky layered bread — maida lamination street craft."
+   },
+   {
+    "id": "fd-B-135",
+    "used": 0,
+    "text": "Malabar biryani short grain spice — Kerala Muslim rice tradition."
+   },
+   {
+    "id": "fd-B-136",
+    "used": 0,
+    "text": "Chatti pathiri layered egg meat — Malabar festive dish."
+   },
+   {
+    "id": "fd-B-137",
+    "used": 0,
+    "text": "Erachi undu meat ball curry — Malabar spice craft."
+   },
+   {
+    "id": "fd-B-138",
+    "used": 0,
+    "text": "Pothichor banana leaf meal pack — Kerala lunch parcel culture."
+   },
+   {
+    "id": "fd-B-139",
+    "used": 0,
+    "text": "Meals on banana leaf served right to left — festival seating rule."
+   },
+   {
+    "id": "fd-B-140",
+    "used": 0,
+    "text": "Puttu steamed rice cylinder — Kerala breakfast steam craft."
+   },
+   {
+    "id": "fd-B-141",
+    "used": 0,
+    "text": "Appam stew pairing — coconut milk gentle morning plate."
+   },
+   {
+    "id": "fd-B-142",
+    "used": 0,
+    "text": "Kallappam bowl hopped appam — coastal fermented variant."
+   },
+   {
+    "id": "fd-B-143",
+    "used": 0,
+    "text": "Kerala parotta maida layered — street griddle flaky craft."
+   },
+   {
+    "id": "fd-B-144",
+    "used": 0,
+    "text": "Beef ularthiyathu dry roast — pepper spice Kerala standard."
+   },
+   {
+    "id": "fd-B-145",
+    "used": 0,
+    "text": "Goat brain fry street bold plate — Malabar market lunch."
+   },
+   {
+    "id": "fd-B-146",
+    "used": 0,
+    "text": "Pothichor banana leaf parcel — Kerala lunch wrap culture."
+   },
+   {
+    "id": "fd-B-147",
+    "used": 0,
+    "text": "Banana leaf meal served right to left — festival seating order."
+   },
+   {
+    "id": "fd-B-148",
+    "used": 0,
+    "text": "Goan fish curry coconut vinegar — Portuguese coastal influence."
+   },
+   {
+    "id": "fd-B-149",
+    "used": 0,
+    "text": "Vindaloo pork vinegar garlic — Goan Portuguese descendant curry."
+   },
+   {
+    "id": "fd-B-150",
+    "used": 0,
+    "text": "Xacuti complex spice roast — Goa's layered celebration curry."
+   },
+   {
+    "id": "fd-B-151",
+    "used": 0,
+    "text": "Bebinca layered egg dessert — Goan convent-born sweet."
+   },
+   {
+    "id": "fd-B-152",
+    "used": 0,
+    "text": "Feni cashew spirit Goa — distilled local pride drink."
+   },
+   {
+    "id": "fd-B-153",
+    "used": 0,
+    "text": "Pork sorpotel minced offal — Goan Christmas table essential."
+   },
+   {
+    "id": "fd-B-154",
+    "used": 0,
+    "text": "Ros omelette curry dipped — Goa's street comfort plate."
+   },
+   {
+    "id": "fd-B-155",
+    "used": 0,
+    "text": "Choris pao spicy sausage bread — Goa bakery breakfast."
+   },
+   {
+    "id": "fd-B-156",
+    "used": 0,
+    "text": "Cortado espresso milk balanced — Spanish counter standard."
+   },
+   {
+    "id": "fd-B-157",
+    "used": 0,
+    "text": "Ristretto short sweet espresso — concentrated small shot."
+   },
+   {
+    "id": "fd-B-158",
+    "used": 0,
+    "text": "Lungo long extraction — diluted espresso glass."
+   },
+   {
+    "id": "fd-B-159",
+    "used": 0,
+    "text": "Mocha chocolate espresso dessert coffee hybrid."
+   },
+   {
+    "id": "fd-B-160",
+    "used": 0,
+    "text": "Frappe blended iced coffee — Greek summer shaker classic."
+   },
+   {
+    "id": "fd-B-161",
+    "used": 0,
+    "text": "Nitro cold brew nitrogen pour — stout-like coffee texture."
+   },
+   {
+    "id": "fd-B-162",
+    "used": 0,
+    "text": "Pour over cone brewing ritual — variable control hands-on."
+   },
+   {
+    "id": "fd-B-163",
+    "used": 0,
+    "text": "French press immersion brew — robust sediment-rich cup."
+   },
+   {
+    "id": "fd-B-164",
+    "used": 0,
+    "text": "AeroPress plunge pressure — portable concentrate method."
+   },
+   {
+    "id": "fd-B-165",
+    "used": 0,
+    "text": "Siphon vacuum brewing — theatrical tabletop extraction."
+   },
+   {
+    "id": "fd-B-166",
+    "used": 0,
+    "text": "Turkish coffee fine grind unfiltered — sand brewed ceremonial."
+   },
+   {
+    "id": "fd-B-167",
+    "used": 0,
+    "text": "Greek coffee briki pot small strong — unfiltered morning."
+   },
+   {
+    "id": "fd-B-168",
+    "used": 0,
+    "text": "Cuban colada whipped demerara — shared shot culture."
+   },
+   {
+    "id": "fd-B-169",
+    "used": 0,
+    "text": "Vietnamese phin drip filter — slow single cup brew."
+   },
+   {
+    "id": "fd-B-170",
+    "used": 0,
+    "text": "Kopi tubruk Indonesian steep — simple strong morning."
+   },
+   {
+    "id": "fd-B-171",
+    "used": 0,
+    "text": "Espresso tonic bitter over ice — modern cafe glass."
+   },
+   {
+    "id": "fd-B-172",
+    "used": 0,
+    "text": "Affogato espresso gelato — dessert drink hybrid."
+   },
+   {
+    "id": "fd-B-173",
+    "used": 0,
+    "text": "Café con leche Spanish morning — strong coffee milk."
+   },
+   {
+    "id": "fd-B-174",
+    "used": 0,
+    "text": "Flat white microfoam New Zealand — velvety milk craft."
+   },
+   {
+    "id": "fd-B-175",
+    "used": 0,
+    "text": "Cappuccino thirds balance — foam milk espresso equal."
+   },
+   {
+    "id": "fd-B-176",
+    "used": 0,
+    "text": "Latte mostly milk canvas — art pouring practice surface."
+   },
+   {
+    "id": "fd-B-177",
+    "used": 0,
+    "text": "Americano espresso hot water — diluted character kept."
+   },
+   {
+    "id": "fd-B-178",
+    "used": 0,
+    "text": "Macchiato marked espresso dollop — foam stain foam."
+   },
+   {
+    "id": "fd-B-179",
+    "used": 0,
+    "text": "Instant coffee spray dried granules — convenience flavor trade."
+   },
+   {
+    "id": "fd-B-180",
+    "used": 0,
+    "text": "Decaf solvent or water process — caffeine removed mostly."
+   },
+   {
+    "id": "fd-B-181",
+    "used": 0,
+    "text": "Coffee bloom pour over first wet — fresh beans gas release."
+   },
+   {
+    "id": "fd-B-182",
+    "used": 0,
+    "text": "Grind size controls extraction rate — finer means faster."
+   },
+   {
+    "id": "fd-B-183",
+    "used": 0,
+    "text": "Over-extracted coffee turns bitter — under-extracted tastes sour."
+   },
+   {
+    "id": "fd-B-184",
+    "used": 0,
+    "text": "Water temperature brewing sweet spot — off boil slightly cooled."
+   },
+   {
+    "id": "fd-B-185",
+    "used": 0,
+    "text": "Hard water mutes coffee — filtered water improves every cup."
+   },
+   {
+    "id": "fd-B-186",
+    "used": 0,
+    "text": "Tea steep temperature matters — boiling scorches green leaves."
+   },
+   {
+    "id": "fd-B-187",
+    "used": 0,
+    "text": "Green tea cooler water seventy — black tea full boil."
+   },
+   {
+    "id": "fd-B-188",
+    "used": 0,
+    "text": "Caffeine extracts fast first minute — later steep bitter tannins."
+   },
+   {
+    "id": "fd-B-189",
+    "used": 0,
+    "text": "Milk binds tea tannins — softens astringency noticeably."
+   },
+   {
+    "id": "fd-B-190",
+    "used": 0,
+    "text": "Chai boils milk tea together — strength builds simmering."
+   },
+   {
+    "id": "fd-B-191",
+    "used": 0,
+    "text": "Assam strong malty base — chai's robust backbone leaf."
+   },
+   {
+    "id": "fd-B-192",
+    "used": 0,
+    "text": "Cardamom pods crushed chai spice — eucalyptus cool warmth."
+   },
+   {
+    "id": "fd-B-193",
+    "used": 0,
+    "text": "Ginger chai grated fresh — monsoon street corner heat."
+   },
+   {
+    "id": "fd-B-194",
+    "used": 0,
+    "text": "Tulsi holy basil tea — Indian daily herbal brew."
+   },
+   {
+    "id": "fd-B-195",
+    "used": 0,
+    "text": "Lassi sweet or salted — both classic neither wrong."
+   },
+   {
+    "id": "fd-B-196",
+    "used": 0,
+    "text": "Chaas cumin thin buttermilk — lighter daily cooler always."
+   },
+   {
+    "id": "fd-B-197",
+    "used": 0,
+    "text": "Rogan josh Kashmir slow lamb — Kashmiri mild chili deep red signature."
+   },
+   {
+    "id": "fd-B-198",
+    "used": 0,
+    "text": "Gushtaba Kashmiri mutton balls yogurt — wedding feast finale dish."
+   },
+   {
+    "id": "fd-B-199",
+    "used": 0,
+    "text": "Dum aloo Kashmiri potato simmer — fennel dry ginger signature."
+   },
+   {
+    "id": "fd-B-200",
+    "used": 0,
+    "text": "Sheermal saffron bread Lucknow — tandoor baked royal flatbread."
+   },
+   {
+    "id": "fd-B-201",
+    "used": 0,
+    "text": "Kahwa Kashmiri green tea — saffron almond cardamom brewed brass."
+   },
+   {
+    "id": "fd-B-202",
+    "used": 0,
+    "text": "Pulao Lucknow fragrant rice — whole spices gentle separate grains."
+   },
+   {
+    "id": "fd-B-203",
+    "used": 0,
+    "text": "Chaat varanasi kachori samosa — old city breakfast plate."
+   },
+   {
+    "id": "fd-B-204",
+    "used": 0,
+    "text": "Ram laddo moong dal fritter — Delhi winter green chutney stack."
+   },
+   {
+    "id": "fd-B-205",
+    "used": 0,
+    "text": "Daulat ki chaat Delhi foam — morning-only sweet rabri chaat."
+   },
+   {
+    "id": "fd-B-206",
+    "used": 0,
+    "text": "Kuremal falooda Delhi — layered summer institution of Old Delhi."
+   },
+   {
+    "id": "fd-B-207",
+    "used": 0,
+    "text": "Dabeli Gujarat kutch spice — potato filling within pav bun."
+   },
+   {
+    "id": "fd-B-208",
+    "used": 0,
+    "text": "Sev usal sprouts curry Mumbai — farsan topping generous."
+   },
+   {
+    "id": "fd-B-209",
+    "used": 0,
+    "text": "Tawa pulao Mumbai street rice — masala cooked on griddle."
+   },
+   {
+    "id": "fd-B-210",
+    "used": 0,
+    "text": "Bombay sandwich triple layer — mint butter vegetable stack."
+   },
+   {
+    "id": "fd-B-211",
+    "used": 0,
+    "text": "Mastani Pune thick milkshake — ice cream crown dessert drink."
+   },
+   {
+    "id": "fd-B-212",
+    "used": 0,
+    "text": "Bhel Mumbai beach cart — chutney trio tossed puffed rice."
+   },
+   {
+    "id": "fd-B-213",
+    "used": 0,
+    "text": "Gathiya Gujarat soft sev — jaggery chili tea time farsan."
+   },
+   {
+    "id": "fd-B-214",
+    "used": 0,
+    "text": "Chikki peanut brittle winter — Maharashtra railway station classic."
+   },
+   {
+    "id": "fd-B-215",
+    "used": 0,
+    "text": "Goda masala Maharashtrian blend — coconut sesame goda spice."
+   },
+   {
+    "id": "fd-B-216",
+    "used": 0,
+    "text": "Kanda lasoon masala paste — Maharashtrian onion garlic base."
+   },
+   {
+    "id": "fd-B-217",
+    "used": 0,
+    "text": "Amboli soft dosa Malvani — fermented rice batter coastal."
+   },
+   {
+    "id": "fd-B-218",
+    "used": 0,
+    "text": "Malvani fish curry coconut — Konkan coastal spice standard."
+   },
+   {
+    "id": "fd-B-219",
+    "used": 0,
+    "text": "Solkadhi kokum coconut — Malvani meal ending drink."
+   },
+   {
+    "id": "fd-B-220",
+    "used": 0,
+    "text": "Kombdi vade Malvani chicken — fried bread curry festive plate."
+   },
+   {
+    "id": "fd-B-221",
+    "used": 0,
+    "text": "Gavran chicken rustic village — Malvani spice rustic curry."
+   },
+   {
+    "id": "fd-B-222",
+    "used": 0,
+    "text": "Bharli vangi stuffed eggplant — Maharashtrian stuffed vegetable."
+   },
+   {
+    "id": "fd-B-223",
+    "used": 0,
+    "text": "Zunka bhakri rural plate — jowar roti gram flour stir."
+   },
+   {
+    "id": "fd-B-224",
+    "used": 0,
+    "text": "Pithla gram flour curry — zunka's saucy sibling Bhakri pairing."
+   },
+   {
+    "id": "fd-B-225",
+    "used": 0,
+    "text": "Thalipeeth multi grain — Maharashtrian griddle harvest bread."
+   },
+   {
+    "id": "fd-B-226",
+    "used": 0,
+    "text": "Kolhapuri mutton rassa — fiery coastal Karnataka Maharashtra curry."
+   },
+   {
+    "id": "fd-B-227",
+    "used": 0,
+    "text": "Tambda pandra rassa red white — Kolhapuri mutton duo gravies."
+   },
+   {
+    "id": "fd-B-228",
+    "used": 0,
+    "text": "Sabudana vada fasting fritter — Mumbai monsoon tea time snack."
+   },
+   {
+    "id": "fd-B-229",
+    "used": 0,
+    "text": "Kanji vada moong dal — Rajasthani digestive festive dish."
+   },
+   {
+    "id": "fd-B-230",
+    "used": 0,
+    "text": "Dal baati churma trio — Rajasthan baked wheat drowned ghee."
+   },
+   {
+    "id": "fd-B-231",
+    "used": 0,
+    "text": "Gatte ki sabzi gram flour — Marwari yogurt curry craft."
+   },
+   {
+    "id": "fd-B-232",
+    "used": 0,
+    "text": "Ker sangri desert beans — Rajasthani arid region vegetable."
+   },
+   {
+    "id": "fd-B-233",
+    "used": 0,
+    "text": "Bajre ki roti ghee jaggery — Rajasthan winter millet staple."
+   },
+   {
+    "id": "fd-B-234",
+    "used": 0,
+    "text": "Dal moth dry snack mix — Jodhpur savory travel mix."
+   },
+   {
+    "id": "fd-B-235",
+    "used": 0,
+    "text": "Pyaz ki kachori onion stuffed — Jodhpur breakfast legend."
+   },
+   {
+    "id": "fd-B-236",
+    "used": 0,
+    "text": "Mawa kachori sweet thickened milk — Jodhpur festive kachori."
+   },
+   {
+    "id": "fd-B-237",
+    "used": 0,
+    "text": "Mirchi bada chili fritter — Jodhpur spicy stuffed chili."
+   },
+   {
+    "id": "fd-B-238",
+    "used": 0,
+    "text": "Balangar ghevar sweet disc — Jaipur monsoon sweet lattice."
+   },
+   {
+    "id": "fd-B-239",
+    "used": 0,
+    "text": "Imarti spiral urad sweet — Jaipur festive fried spiral."
+   },
+   {
+    "id": "fd-B-240",
+    "used": 0,
+    "text": "Kaju katli silver leaf — wedding sweet thin cashew diamond."
+   },
+   {
+    "id": "fd-B-241",
+    "used": 0,
+    "text": "Bikaneri bhujia fine sev — Bikaner snack export identity."
+   },
+   {
+    "id": "fd-B-242",
+    "used": 0,
+    "text": "Haldirashi snacks story — Bikaner namkeen industry legend."
+   },
+   {
+    "id": "fd-B-243",
+    "used": 0,
+    "text": "Basundi thickened milk Gujarat — saffron reduced sweet bowl."
+   },
+   {
+    "id": "fd-B-244",
+    "used": 0,
+    "text": "Shrikhand strained yogurt sweet — Gujarati mango saffron dessert."
+   },
+   {
+    "id": "fd-B-245",
+    "used": 0,
+    "text": "Locho steamed gram flour — Surat's lazy spoon street dish."
+   },
+   {
+    "id": "fd-B-246",
+    "used": 0,
+    "text": "Surti undhiyu mixed vegetable — Surat winter vegetable casserole."
+   },
+   {
+    "id": "fd-B-247",
+    "used": 0,
+    "text": "Rabdi malpua Bihar Holi — thickened milk fried pancake sweet."
+   },
+   {
+    "id": "fd-B-248",
+    "used": 0,
+    "text": "Thekua jaggery wheat fried — Chhath prasad Bihar sweet."
+   },
+   {
+    "id": "fd-B-249",
+    "used": 0,
+    "text": "Litti chokha brinjal mash — Bihar's rustic fire roasted meal."
+   },
+   {
+    "id": "fd-B-250",
+    "used": 0,
+    "text": "Chana ghugni dried pea — Bihar Bengal evening street bowl."
+   }
+  ],
+  "C": [
+   {
+    "id": "fd-C-001",
+    "used": 0,
+    "text": "Cumin toasts in seconds — its aroma escapes fast, watch it closely."
+   },
+   {
+    "id": "fd-C-002",
+    "used": 0,
+    "text": "Coriander seeds taste citrusy when crushed — entirely different from fresh cilantro leaves."
+   },
+   {
+    "id": "fd-C-003",
+    "used": 0,
+    "text": "Fennel and anise taste related but come from different plants."
+   },
+   {
+    "id": "fd-C-004",
+    "used": 0,
+    "text": "ajwain carom seeds thicken breads — strong thyme-like punch, use sparingly."
+   },
+   {
+    "id": "fd-C-005",
+    "used": 0,
+    "text": "Kalonji nigella seeds — onion-adjacent flavor for breads and pickles."
+   },
+   {
+    "id": "fd-C-006",
+    "used": 0,
+    "text": "Methi fenugreek leaves bitter — kasuri methi dried leaves finish butter chicken."
+   },
+   {
+    "id": "fd-C-007",
+    "used": 0,
+    "text": "Pandan leaf vanilla of the East — grassy sweet fragrance for rice and cakes."
+   },
+   {
+    "id": "fd-C-008",
+    "used": 0,
+    "text": "Lemongrass stalks bruise before simmering — releases citral oils."
+   },
+   {
+    "id": "fd-C-009",
+    "used": 0,
+    "text": "Galangal harder sharper than ginger — Thai curries need the difference."
+   },
+   {
+    "id": "fd-C-010",
+    "used": 0,
+    "text": "Kaffir lime leaves tear not chop — bright floral citrus perfume."
+   },
+   {
+    "id": "fd-C-011",
+    "used": 0,
+    "text": "Tamarind pulp soak strain — sour backbone of Thai and Indian curries."
+   },
+   {
+    "id": "fd-C-012",
+    "used": 0,
+    "text": "Amchur dried mango powder — sourness without any liquid."
+   },
+   {
+    "id": "fd-C-013",
+    "used": 0,
+    "text": "Anardana dried pomegranate seeds — tangy spice for chaat and chutneys."
+   },
+   {
+    "id": "fd-C-014",
+    "used": 0,
+    "text": "Katha catechu — dark bitter extract — enhances mithai color."
+   },
+   {
+    "id": "fd-C-015",
+    "used": 0,
+    "text": "Palm jaggery iron-rich alternative — caramel mineral sweetness."
+   },
+   {
+    "id": "fd-C-016",
+    "used": 0,
+    "text": "Kokum sour dried rind — cooling tangy curries of coastal India."
+   },
+   {
+    "id": "fd-C-017",
+    "used": 0,
+    "text": "Ambul dried mango — Konkan souring agent."
+   },
+   {
+    "id": "fd-C-018",
+    "used": 0,
+    "text": "Rice vinegar mild Japanese — sushi rice seasoning base."
+   },
+   {
+    "id": "fd-C-019",
+    "used": 0,
+    "text": "Black vinegar Chinese aged — smoky depth for dumpling dips."
+   },
+   {
+    "id": "fd-C-020",
+    "used": 0,
+    "text": "Apple cider vinegar fruity sharp — dressings and marinades."
+   },
+   {
+    "id": "fd-C-021",
+    "used": 0,
+    "text": "Red wine vinegar bold — salad and braise brightness."
+   },
+   {
+    "id": "fd-C-022",
+    "used": 0,
+    "text": "Sherry vinegar Spanish nutty — finishing touch for soups."
+   },
+   {
+    "id": "fd-C-023",
+    "used": 0,
+    "text": "White distilled vinegar harsh cleaner strength — pickling workhorse."
+   },
+   {
+    "id": "fd-C-024",
+    "used": 0,
+    "text": "Balsamic vinegar thick sweet — drizzle over strawberries and cheese."
+   },
+   {
+    "id": "fd-C-025",
+    "used": 0,
+    "text": "Fish sauce Southeast Asian — salted fermented anchovy liquid gold."
+   },
+   {
+    "id": "fd-C-026",
+    "used": 0,
+    "text": "Shrimp paste pungent block — Southeast Asian base note."
+   },
+   {
+    "id": "fd-C-027",
+    "used": 0,
+    "text": "XO sauce dried seafood chili — Hong Kong luxury condiment."
+   },
+   {
+    "id": "fd-C-028",
+    "used": 0,
+    "text": "Oyster sauce thick sweet salty — stir-fry glaze."
+   },
+   {
+    "id": "fd-C-029",
+    "used": 0,
+    "text": "Hoisin sauce spiced soybean — Peking duck wrap sauce."
+   },
+   {
+    "id": "fd-C-030",
+    "used": 0,
+    "text": "Sweet chili sauce Thai bottled — mild dipping standard."
+   },
+   {
+    "id": "fd-C-031",
+    "used": 0,
+    "text": "Ssamjang thick Korean paste — lettuce wrap dipping."
+   },
+   {
+    "id": "fd-C-032",
+    "used": 0,
+    "text": "Gochujang fermented chili paste — Korean sauces sweet depth."
+   },
+   {
+    "id": "fd-C-033",
+    "used": 0,
+    "text": "Doenjang soybean paste — Korean miso deeper funk."
+   },
+   {
+    "id": "fd-C-034",
+    "used": 0,
+    "text": "Soy sauce brewed months — koji mold and brine do the work."
+   },
+   {
+    "id": "fd-C-035",
+    "used": 0,
+    "text": "Tamari wheat-free soy cousin — richer often less salty."
+   },
+   {
+    "id": "fd-C-036",
+    "used": 0,
+    "text": "Liquid aminos gluten-free soy alternative — pantry seasoning."
+   },
+   {
+    "id": "fd-C-037",
+    "used": 0,
+    "text": "Worcestershire sauce fermented anchovy tamarind — umami bomb."
+   },
+   {
+    "id": "fd-C-038",
+    "used": 0,
+    "text": "Maggi seasoning Swiss-born — Southeast Asian kitchen staple."
+   },
+   {
+    "id": "fd-C-039",
+    "used": 0,
+    "text": "HP sauce British brown sauce — breakfast condiment identity."
+   },
+   {
+    "id": "fd-C-040",
+    "used": 0,
+    "text": "Tartare sauce caper mayonnaise — fish and chips pairing."
+   },
+   {
+    "id": "fd-C-041",
+    "used": 0,
+    "text": "Cocktail sauce horseradish ketchup — shrimp dip classic."
+   },
+   {
+    "id": "fd-C-042",
+    "used": 0,
+    "text": "Marinara simple tomato garlic — Italian-American red sauce base."
+   },
+   {
+    "id": "fd-C-043",
+    "used": 0,
+    "text": "Arrabbiata spicy tomato — chili-infused pasta sauce."
+   },
+   {
+    "id": "fd-C-044",
+    "used": 0,
+    "text": "Puttanesca olive caper anchovy — bold pantry pasta sauce."
+   },
+   {
+    "id": "fd-C-045",
+    "used": 0,
+    "text": "Bolognese meat slow ragu — authentic version never has garlic."
+   },
+   {
+    "id": "fd-C-046",
+    "used": 0,
+    "text": "Carbonara egg pecorino pepper — no cream in authentic Roman recipe."
+   },
+   {
+    "id": "fd-C-047",
+    "used": 0,
+    "text": "Cacio e pepe cheese pepper emulsion — three ingredient discipline."
+   },
+   {
+    "id": "fd-C-048",
+    "used": 0,
+    "text": "Aglio e olio garlic oil chili — pantry pasta emergency dish."
+   },
+   {
+    "id": "fd-C-049",
+    "used": 0,
+    "text": "Pesto basil pine nut garlic — Ligurian green sauce identity."
+   },
+   {
+    "id": "fd-C-050",
+    "used": 0,
+    "text": "Pesto trapanese almond tomato basil — Sicilian summer variant."
+   },
+   {
+    "id": "fd-C-051",
+    "used": 0,
+    "text": "Salsa verde herb caper sauce — Italian bright green finish."
+   },
+   {
+    "id": "fd-C-052",
+    "used": 0,
+    "text": "Chimichurri raw herbs vinegar — Argentinian grilled meat companion."
+   },
+   {
+    "id": "fd-C-053",
+    "used": 0,
+    "text": "Mojo rojo canary island red sauce — paprika garlic emulsion."
+   },
+   {
+    "id": "fd-C-054",
+    "used": 0,
+    "text": "Romesco roasted pepper almond — Catalan sauce for vegetables."
+   },
+   {
+    "id": "fd-C-055",
+    "used": 0,
+    "text": "Muhammara walnut red pepper — Levantine mezze spread."
+   },
+   {
+    "id": "fd-C-056",
+    "used": 0,
+    "text": "Baba ganoush charred eggplant — smoky mezze classic."
+   },
+   {
+    "id": "fd-C-057",
+    "used": 0,
+    "text": "Hummus chickpea tahini lemon — Middle Eastern everyday dip."
+   },
+   {
+    "id": "fd-C-058",
+    "used": 0,
+    "text": "Toum Lebanese garlic emulsion — shawarma's white cloak."
+   },
+   {
+    "id": "fd-C-059",
+    "used": 0,
+    "text": "Tzatziki yogurt cucumber garlic — Greek cooling sauce."
+   },
+   {
+    "id": "fd-C-060",
+    "used": 0,
+    "text": "Taramasalata fish roe dip — Greek meze pink classic."
+   },
+   {
+    "id": "fd-C-061",
+    "used": 0,
+    "text": "Skordalia garlic potato dip — Greek pungent spread."
+   },
+   {
+    "id": "fd-C-062",
+    "used": 0,
+    "text": "Fava santorini yellow split pea puree — Greek island meze."
+   },
+   {
+    "id": "fd-C-063",
+    "used": 0,
+    "text": "Baba ghanoush vs mutabal naming — regional naming variation."
+   },
+   {
+    "id": "fd-C-064",
+    "used": 0,
+    "text": "Harissa roasted chili paste — North African pantry staple."
+   },
+   {
+    "id": "fd-C-065",
+    "used": 0,
+    "text": "Ras el hanout spice blend — North African merchant's best mix."
+   },
+   {
+    "id": "fd-C-066",
+    "used": 0,
+    "text": "Dukkah nut seed spice blend — Egyptian dipping crunch."
+   },
+   {
+    "id": "fd-C-067",
+    "used": 0,
+    "text": "Baharat mixed spice — Middle Eastern all-purpose warmth."
+   },
+   {
+    "id": "fd-C-068",
+    "used": 0,
+    "text": "Za'atar thyme sesame sumac — everyday bread dipping mix."
+   },
+   {
+    "id": "fd-C-069",
+    "used": 0,
+    "text": "Sumac lemony acid dust — no liquid needed seasoning."
+   },
+   {
+    "id": "fd-C-070",
+    "used": 0,
+    "text": "Advieh Persian spice blend — rice and stew perfume."
+   },
+   {
+    "id": "fd-C-071",
+    "used": 0,
+    "text": "Ghormeh sabzi herb stew — Iran's national dish identity."
+   },
+   {
+    "id": "fd-C-072",
+    "used": 0,
+    "text": "Tahdig crispy rice bottom — Persian pride point."
+   },
+   {
+    "id": "fd-C-073",
+    "used": 0,
+    "text": "Mast-o-khiar yogurt cucumber — Persian cooling side."
+   },
+   {
+    "id": "fd-C-074",
+    "used": 0,
+    "text": "Fesenjan pomegranate walnut stew — Persian celebration dish."
+   },
+   {
+    "id": "fd-C-075",
+    "used": 0,
+    "text": "Khoresh Persian stew family — slow sour-sweet braises."
+   },
+   {
+    "id": "fd-C-076",
+    "used": 0,
+    "text": "Mansaf lamb yogurt rice — Jordan's ceremonial national dish."
+   },
+   {
+    "id": "fd-C-077",
+    "used": 0,
+    "text": "Kabsa Saudi spiced rice — Arab world's beloved mixed rice."
+   },
+   {
+    "id": "fd-C-078",
+    "used": 0,
+    "text": "Mandi Yemeni tandoor rice — smoky pit cooking tradition."
+   },
+   {
+    "id": "fd-C-079",
+    "used": 0,
+    "text": "Saleeg white creamy rice Saudi — Hejazi comfort bowl."
+   },
+   {
+    "id": "fd-C-080",
+    "used": 0,
+    "text": "Ful medames fava beans breakfast — Egypt's morning staple."
+   },
+   {
+    "id": "fd-C-081",
+    "used": 0,
+    "text": "Shakshuka eggs tomato skillet — North African Israeli shared dish."
+   },
+   {
+    "id": "fd-C-082",
+    "used": 0,
+    "text": "Labneh strained yogurt — mezze spread thicker than Greek."
+   },
+   {
+    "id": "fd-C-083",
+    "used": 0,
+    "text": "Halloumi high melting point — grills without losing shape."
+   },
+   {
+    "id": "fd-C-084",
+    "used": 0,
+    "text": "Feta brined blocks — crumble fresh over warm dishes."
+   },
+   {
+    "id": "fd-C-085",
+    "used": 0,
+    "text": "Manchego sheep milk Spanish — nutty aged tapas cheese."
+   },
+   {
+    "id": "fd-C-086",
+    "used": 0,
+    "text": "Gruyere Alpine melting — French Swiss fondue base."
+   },
+   {
+    "id": "fd-C-087",
+    "used": 0,
+    "text": "Emmental holes eyes — bacterial gas during aging."
+   },
+   {
+    "id": "fd-C-088",
+    "used": 0,
+    "text": "Camembert soft rind edible — ripens from outside in."
+   },
+   {
+    "id": "fd-C-089",
+    "used": 0,
+    "text": "Roquefort blue veins — Penicillium injection craft."
+   },
+   {
+    "id": "fd-C-090",
+    "used": 0,
+    "text": "Parmesan crystals tyrosine — long aging signature."
+   },
+   {
+    "id": "fd-C-091",
+    "used": 0,
+    "text": "Mozzarella pasta filata — kneaded curd pulled hot water."
+   },
+   {
+    "id": "fd-C-092",
+    "used": 0,
+    "text": "Burrata mozzarella shell cream center — luxury fresh cheese."
+   },
+   {
+    "id": "fd-C-093",
+    "used": 0,
+    "text": "Mascarpone triple cream — tiramisu's rich stabilizer."
+   },
+   {
+    "id": "fd-C-094",
+    "used": 0,
+    "text": "Cream cheese fresh spread — cheesecake's smooth base."
+   },
+   {
+    "id": "fd-C-095",
+    "used": 0,
+    "text": "Ghee butter cooked clear — milk solids removed smoke point rises."
+   },
+   {
+    "id": "fd-C-096",
+    "used": 0,
+    "text": "Clarified butter solids removed — searing without burning."
+   },
+   {
+    "id": "fd-C-097",
+    "used": 0,
+    "text": "Compound butter herbs zest — slice coins onto hot proteins."
+   },
+   {
+    "id": "fd-C-098",
+    "used": 0,
+    "text": "Whipped butter aerated — spreads cold without tearing bread."
+   },
+   {
+    "id": "fd-C-099",
+    "used": 0,
+    "text": "Crème fraîche cultured cream — tangy stable cooking cream."
+   },
+   {
+    "id": "fd-C-100",
+    "used": 0,
+    "text": "Sour cream tangy — baked potato topping classic."
+   },
+   {
+    "id": "fd-C-101",
+    "used": 0,
+    "text": "Yogurt Greek strained — thicker protein-rich cousin."
+   },
+   {
+    "id": "fd-C-102",
+    "used": 0,
+    "text": "Kefir fermented milk drink — probiotic tangy daily glass."
+   },
+   {
+    "id": "fd-C-103",
+    "used": 0,
+    "text": "Buttermilk cultured tang — biscuit tenderizer secret."
+   },
+   {
+    "id": "fd-C-104",
+    "used": 0,
+    "text": "Quark fresh curd cheese — German cheesecake base."
+   },
+   {
+    "id": "fd-C-105",
+    "used": 0,
+    "text": "Fromage blanc fresh French — light spreadable breakfast cheese."
+   },
+   {
+    "id": "fd-C-106",
+    "used": 0,
+    "text": "Ricotta salata pressed salted — grating cheese summer version."
+   },
+   {
+    "id": "fd-C-107",
+    "used": 0,
+    "text": "Pecorino sheep Italian — sharper grating alternative to parmesan."
+   },
+   {
+    "id": "fd-C-108",
+    "used": 0,
+    "text": "Halloumi paneer grilling cousins — high heat stable proteins."
+   },
+   {
+    "id": "fd-C-109",
+    "used": 0,
+    "text": "Cheddar aging sharpness — mild young vs sharp aged difference."
+   },
+   {
+    "id": "fd-C-110",
+    "used": 0,
+    "text": "Gouda wax coating — red wax seals moisture in."
+   },
+   {
+    "id": "fd-C-111",
+    "used": 0,
+    "text": "Brie bloomy rind — penicillium candidum surface mold."
+   },
+   {
+    "id": "fd-C-112",
+    "used": 0,
+    "text": "Stilton blue English — crumbly vein blue heritage."
+   },
+   {
+    "id": "fd-C-113",
+    "used": 0,
+    "text": "Chèvre goat tangy — fresh log or aged crumble."
+   },
+   {
+    "id": "fd-C-114",
+    "used": 0,
+    "text": "Raclette meltable wheel — scrapes over potatoes Swiss ritual."
+   },
+   {
+    "id": "fd-C-115",
+    "used": 0,
+    "text": "Fondue cheese wine garlic — communal Alpine pot."
+   },
+   {
+    "id": "fd-C-116",
+    "used": 0,
+    "text": "Käsespätzle noodles cheese — German mac and cheese ancestor."
+   },
+   {
+    "id": "fd-C-117",
+    "used": 0,
+    "text": "Spaetzle hand-scraped noodles — German egg noodle craft."
+   },
+   {
+    "id": "fd-C-118",
+    "used": 0,
+    "text": "Sauerkraut fermented cabbage — German side preserving tradition."
+   },
+   {
+    "id": "fd-C-119",
+    "used": 0,
+    "text": "Bratwurst pork sausage — grilling griddle German standard."
+   },
+   {
+    "id": "fd-C-120",
+    "used": 0,
+    "text": "Schnitzel pounded thin fry — Austrian veal or pork cutlet."
+   },
+   {
+    "id": "fd-C-121",
+    "used": 0,
+    "text": "Wiener schnitzel veal original — breadcrumb thin coat."
+   },
+   {
+    "id": "fd-C-122",
+    "used": 0,
+    "text": "Goulash paprika stew — Hungarian national pot."
+   },
+   {
+    "id": "fd-C-123",
+    "used": 0,
+    "text": "Chicken paprikash creamy paprika — Hungarian comfort plate."
+   },
+   {
+    "id": "fd-C-124",
+    "used": 0,
+    "text": "Lángos fried dough garlic — Hungarian street fair classic."
+   },
+   {
+    "id": "fd-C-125",
+    "used": 0,
+    "text": "Pierogi filled dumplings Polish — boiled or fried options."
+   },
+   {
+    "id": "fd-C-126",
+    "used": 0,
+    "text": "Bigos hunter's stew — Polish sauerkraut meat pot."
+   },
+   {
+    "id": "fd-C-127",
+    "used": 0,
+    "text": "Borscht beet soup — Eastern European pink winter bowl."
+   },
+   {
+    "id": "fd-C-128",
+    "used": 0,
+    "text": "Blini small buckwheat pancakes — Russian caviar base."
+   },
+   {
+    "id": "fd-C-129",
+    "used": 0,
+    "text": "Pelmeni Siberian dumplings — frozen dumpling craft."
+   },
+   {
+    "id": "fd-C-130",
+    "used": 0,
+    "text": "Beef stroganoff sour cream sauce — Russian skillet classic."
+   },
+   {
+    "id": "fd-C-131",
+    "used": 0,
+    "text": "Paella socarrat toasted bottom — Spanish pan crust pride."
+   },
+   {
+    "id": "fd-C-132",
+    "used": 0,
+    "text": "Tortilla espanola potato egg omelette — Spanish bar staple."
+   },
+   {
+    "id": "fd-C-133",
+    "used": 0,
+    "text": "Gazpacho cold tomato soup — Andalusian summer soup."
+   },
+   {
+    "id": "fd-C-134",
+    "used": 0,
+    "text": "Salmorejo thicker cold soup — Cordoba's creamy cousin."
+   },
+   {
+    "id": "fd-C-135",
+    "used": 0,
+    "text": "Patatas bravas fried potato spicy sauce — tapas bar essential."
+   },
+   {
+    "id": "fd-C-136",
+    "used": 0,
+    "text": "Jamon iberico acorn fed — Spanish cured ham legend."
+   },
+   {
+    "id": "fd-C-137",
+    "used": 0,
+    "text": "Chorizo paprika sausage — Spanish pantry heat source."
+   },
+   {
+    "id": "fd-C-138",
+    "used": 0,
+    "text": "Bacalao salt cod Spain — preserved fish cuisine identity."
+   },
+   {
+    "id": "fd-C-139",
+    "used": 0,
+    "text": "Feijoada black bean stew Brazil — national Monday dish."
+   },
+   {
+    "id": "fd-C-140",
+    "used": 0,
+    "text": "Churrasco Brazilian grilled meat — sword service rodizio."
+   },
+   {
+    "id": "fd-C-141",
+    "used": 0,
+    "text": "Pão de queijo cheese bread — Brazilian tapioca snack."
+   },
+   {
+    "id": "fd-C-142",
+    "used": 0,
+    "text": "Coxinha shredded chicken croquette — Brazilian teardrop snack."
+   },
+   {
+    "id": "fd-C-143",
+    "used": 0,
+    "text": "Acaraje black eyed fritter — Brazilian West African heritage."
+   },
+   {
+    "id": "fd-C-144",
+    "used": 0,
+    "text": "Ceviche citrus cured fish — Peru's coastal national dish."
+   },
+   {
+    "id": "fd-C-145",
+    "used": 0,
+    "text": "Tiradito sliced fish sauce — Peruvian sashimi cousin."
+   },
+   {
+    "id": "fd-C-146",
+    "used": 0,
+    "text": "Lomo saltado stir fry beef — Peruvian Chinese fusion chifa."
+   },
+   {
+    "id": "fd-C-147",
+    "used": 0,
+    "text": "Aji amarillo yellow chili — Peruvian cuisine's signature pepper."
+   },
+   {
+    "id": "fd-C-148",
+    "used": 0,
+    "text": "causa layered potato salad — Peruvian cold appetizer."
+   },
+   {
+    "id": "fd-C-149",
+    "used": 0,
+    "text": "Anticuchos grilled heart skewers — Peruvian street protein."
+   },
+   {
+    "id": "fd-C-150",
+    "used": 0,
+    "text": "Tamales corn dough steamed — Mesoamerican ancient wrap."
+   },
+   {
+    "id": "fd-C-151",
+    "used": 0,
+    "text": "Mole complex sauce Mexico — dozens of ingredients patient labor."
+   },
+   {
+    "id": "fd-C-152",
+    "used": 0,
+    "text": "Mole poblano celebration sauce — Puebla's layered dark classic."
+   },
+   {
+    "id": "fd-C-153",
+    "used": 0,
+    "text": "Chiles en nogada walnut cream — Mexican tricolor plate."
+   },
+   {
+    "id": "fd-C-154",
+    "used": 0,
+    "text": "Pozole hominy soup — Mexican celebration soup."
+   },
+   {
+    "id": "fd-C-155",
+    "used": 0,
+    "text": "Carnitas slow fried pork — Michoacan confit style."
+   },
+   {
+    "id": "fd-C-156",
+    "used": 0,
+    "text": "Al pastor spit grilled pineapple — Lebanese Mexican fusion born."
+   },
+   {
+    "id": "fd-C-157",
+    "used": 0,
+    "text": "tacos al pastor trompo — vertical spit carving craft."
+   },
+   {
+    "id": "fd-C-158",
+    "used": 0,
+    "text": "Tacos de canasta steamed basket — Mexico City snack."
+   },
+   {
+    "id": "fd-C-159",
+    "used": 0,
+    "text": "Quesadilla melted cheese tortilla — griddle quick classic."
+   },
+   {
+    "id": "fd-C-160",
+    "used": 0,
+    "text": "Elote grilled corn mayo chili — Mexican street corn."
+   },
+   {
+    "id": "fd-C-161",
+    "used": 0,
+    "text": "Esquites cup corn salad — off-the-cob street version."
+   },
+   {
+    "id": "fd-C-162",
+    "used": 0,
+    "text": "Horchata rice cinnamon drink — Mexican creamy cooler."
+   },
+   {
+    "id": "fd-C-163",
+    "used": 0,
+    "text": "Agua fresca fruit water — Mexican daily hydration flavor."
+   },
+   {
+    "id": "fd-C-164",
+    "used": 0,
+    "text": "Tamarind candy ball — Mexican sour sweet street treat."
+   },
+   {
+    "id": "fd-C-165",
+    "used": 0,
+    "text": "Churros con chocolate Spanish breakfast — thick chocolate dipping."
+   },
+   {
+    "id": "fd-C-166",
+    "used": 0,
+    "text": "Buñuelos fried dough dust — holiday sweet crisp."
+   },
+   {
+    "id": "fd-C-167",
+    "used": 0,
+    "text": "Dulce de leche caramel milk — Latin American spread legend."
+   },
+   {
+    "id": "fd-C-168",
+    "used": 0,
+    "text": "Alfajores caramel sandwich cookies — South American tea time."
+   },
+   {
+    "id": "fd-C-169",
+    "used": 0,
+    "text": "Brigadeiro Brazilian chocolate truffle — birthday party staple."
+   },
+   {
+    "id": "fd-C-170",
+    "used": 0,
+    "text": "Pastel de nata Portuguese custard tart — Macau famous version."
+   },
+   {
+    "id": "fd-C-171",
+    "used": 0,
+    "text": "Pastéis de nata flaky crust — laminated pastry custard."
+   },
+   {
+    "id": "fd-C-172",
+    "used": 0,
+    "text": "Feijoa guava-like fruit — subtropical orchard oddity."
+   },
+   {
+    "id": "fd-C-173",
+    "used": 0,
+    "text": "Pão de queijo gluten-free starch — chewy cheese bread science."
+   },
+   {
+    "id": "fd-C-174",
+    "used": 0,
+    "text": "Bobo de camarao shrimp puree — Bahian coconut shrimp stew."
+   },
+   {
+    "id": "fd-C-175",
+    "used": 0,
+    "text": "Tacaca tucupi soup — Amazonian jungle broth craft."
+   },
+   {
+    "id": "fd-C-176",
+    "used": 0,
+    "text": "Tucupi wild cassava broth — Amazonian cooking essential."
+   },
+   {
+    "id": "fd-C-177",
+    "used": 0,
+    "text": "Farofa toasted manioc flour — Brazilian table sprinkle."
+   },
+   {
+    "id": "fd-C-178",
+    "used": 0,
+    "text": "Pirao fish puree cassava — Amazonian thick fish sauce."
+   },
+   {
+    "id": "fd-C-179",
+    "used": 0,
+    "text": "Acai purple berry Amazon — frozen bowl global superfood trend."
+   },
+   {
+    "id": "fd-C-180",
+    "used": 0,
+    "text": "Guarana caffeine berry — Brazilian energy drink origin."
+   },
+   {
+    "id": "fd-C-181",
+    "used": 0,
+    "text": "Mate yerba tea South America — shared gourd social ritual."
+   },
+   {
+    "id": "fd-C-182",
+    "used": 0,
+    "text": "Tereré cold mate Paraguay — iced herbal social drink."
+   },
+   {
+    "id": "fd-C-183",
+    "used": 0,
+    "text": "Chicha fermented corn drink — Andean ancient beverage."
+   },
+   {
+    "id": "fd-C-184",
+    "used": 0,
+    "text": "Pisco grape brandy Peru Chile — national spirit dispute."
+   },
+   {
+    "id": "fd-C-185",
+    "used": 0,
+    "text": "Caipirinha lime cachaca Brazil — muddled national cocktail."
+   },
+   {
+    "id": "fd-C-186",
+    "used": 0,
+    "text": "Mojito mint lime — Cuban highball built in glass."
+   },
+   {
+    "id": "fd-C-187",
+    "used": 0,
+    "text": "Daiquiri rum lime — Cuban simplicity done right."
+   },
+   {
+    "id": "fd-C-188",
+    "used": 0,
+    "text": "Cuba libre rum cola — simple mixed drink history."
+   },
+   {
+    "id": "fd-C-189",
+    "used": 0,
+    "text": "Mojito muddle gentle — bruise mint without bitterness."
+   },
+   {
+    "id": "fd-C-190",
+    "used": 0,
+    "text": "Sangria wine fruit pitcher — Spanish shared pitcher culture."
+   },
+   {
+    "id": "fd-C-191",
+    "used": 0,
+    "text": "Glühwein spiced hot wine — German Christmas market cup."
+   },
+   {
+    "id": "fd-C-192",
+    "used": 0,
+    "text": "Eggnog rich spiced dairy — winter holiday cream drink."
+   },
+   {
+    "id": "fd-C-193",
+    "used": 0,
+    "text": "Hot chocolate thick Mexican — cinnamon vanilla whipped."
+   },
+   {
+    "id": "fd-C-194",
+    "used": 0,
+    "text": "Chai masala spice tea — Indian street corner institution."
+   },
+   {
+    "id": "fd-C-195",
+    "used": 0,
+    "text": "Teh tarik pulled tea Malaysia — froth performance craft."
+   },
+   {
+    "id": "fd-C-196",
+    "used": 0,
+    "text": "Hong Kong milk tea silk stocking — evaporated richness."
+   },
+   {
+    "id": "fd-C-197",
+    "used": 0,
+    "text": "Vietnamese egg coffee Hanoi — cream on strong coffee."
+   },
+   {
+    "id": "fd-C-198",
+    "used": 0,
+    "text": "Bubble tea chewy pearls Taiwan — global phenomenon."
+   },
+   {
+    "id": "fd-C-199",
+    "used": 0,
+    "text": "Taro milk tea purple — creamy earthy variant."
+   },
+   {
+    "id": "fd-C-200",
+    "used": 0,
+    "text": "Matcha whisked green tea — umami grassy ceremony."
+   },
+   {
+    "id": "fd-C-201",
+    "used": 0,
+    "text": "Nuoc cham Vietnamese dipping sauce — fish sauce lime sugar water balance."
+   },
+   {
+    "id": "fd-C-202",
+    "used": 0,
+    "text": "Sriracha garlic chili sauce — Thai-American rooster bottle heat."
+   },
+   {
+    "id": "fd-C-203",
+    "used": 0,
+    "text": "Sambal oelek raw chili paste — Indonesian simple crushed chili base."
+   },
+   {
+    "id": "fd-C-204",
+    "used": 0,
+    "text": "Sambal belacan shrimp paste chili — Southeast Asian table condiment."
+   },
+   {
+    "id": "fd-C-205",
+    "used": 0,
+    "text": "Chili crisp oil crunchy flakes — modern pantry spoon-on-everything topping."
+   },
+   {
+    "id": "fd-C-206",
+    "used": 0,
+    "text": "Chili oil red sediment — Chinese noodle dumpling drizzle."
+   },
+   {
+    "id": "fd-C-207",
+    "used": 0,
+    "text": "Fermented black bean sauce — Chinese savory depth stir-fry base."
+   },
+   {
+    "id": "fd-C-208",
+    "used": 0,
+    "text": "Doubanjiang fermented chili bean — Sichuan mapo tofu soul paste."
+   },
+   {
+    "id": "fd-C-209",
+    "used": 0,
+    "text": "Doubanjiang ages years — time deepens its fermented complexity."
+   },
+   {
+    "id": "fd-C-210",
+    "used": 0,
+    "text": "Shacha sauce BBQ seafood paste — Chinese barbecue satay flavor."
+   },
+   {
+    "id": "fd-C-211",
+    "used": 0,
+    "text": "Fermented tofu red white — Chinese cheese equivalent pungent condiment."
+   },
+   {
+    "id": "fd-C-212",
+    "used": 0,
+    "text": "Black bean garlic sauce bottled — Chinese-American stir-fry standard."
+   },
+   {
+    "id": "fd-C-213",
+    "used": 0,
+    "text": "Chinese five spice powder — star anise cinnamon clove Sichuan pepper fennel."
+   },
+   {
+    "id": "fd-C-214",
+    "used": 0,
+    "text": "Sichuan pepper numbing tingle — unique buzzing sensation not heat."
+   },
+   {
+    "id": "fd-C-215",
+    "used": 0,
+    "text": "Thirteen spice Chinese blend — northern Chinese complex warm mix."
+   },
+   {
+    "id": "fd-C-216",
+    "used": 0,
+    "text": "Curry powder British invention — colonial blend not from one recipe."
+   },
+   {
+    "id": "fd-C-217",
+    "used": 0,
+    "text": "Vadouvan French Indian curry — southern French creole spice ferment."
+   },
+   {
+    "id": "fd-C-218",
+    "used": 0,
+    "text": "Berbere Ethiopian spice blend — chili garlic warm complex base."
+   },
+   {
+    "id": "fd-C-219",
+    "used": 0,
+    "text": "Ethiopian mitmita chili blend — cardamom bird eye heat mix."
+   },
+   {
+    "id": "fd-C-220",
+    "used": 0,
+    "text": "Shurit berbere yogurt sauce — Ethiopian spice yogurt accompaniment."
+   },
+   {
+    "id": "fd-C-221",
+    "used": 0,
+    "text": "Panch phoron Bengali five seed — fenugreek nigella cumin mustard radish."
+   },
+   {
+    "id": "fd-C-222",
+    "used": 0,
+    "text": "Kashmiri chili powder mild color — vibrant red without extreme heat."
+   },
+   {
+    "id": "fd-C-223",
+    "used": 0,
+    "text": "Paprika sweet smoked hot — three types define regional palettes."
+   },
+   {
+    "id": "fd-C-224",
+    "used": 0,
+    "text": "Hungarian paprika critical goulash — quality paprika decides the stew."
+   },
+   {
+    "id": "fd-C-225",
+    "used": 0,
+    "text": "Spanish pimenton smoked — oak smoked paprika depth difference."
+   },
+   {
+    "id": "fd-C-226",
+    "used": 0,
+    "text": "Cayenne pure heat — capsaicin punch without much flavor."
+   },
+   {
+    "id": "fd-C-227",
+    "used": 0,
+    "text": "Crushed red pepper flakes — pizza table sprinkle standard."
+   },
+   {
+    "id": "fd-C-228",
+    "used": 0,
+    "text": "Chipotle smoked jalapeno — adobo sauce smoky canned heat."
+   },
+   {
+    "id": "fd-C-229",
+    "used": 0,
+    "text": "Ancho dried poblado mild sweet — Mexican dried chili fruit notes."
+   },
+   {
+    "id": "fd-C-230",
+    "used": 0,
+    "text": "Guajillo dried chili leathery — Mexican sauce chili base."
+   },
+   {
+    "id": "fd-C-231",
+    "used": 0,
+    "text": "Habanero fruity superhot — Caribbean citrus heat careful use."
+   },
+   {
+    "id": "fd-C-232",
+    "used": 0,
+    "text": "Scotch bonnet fruity heat — Caribbean jerk signature chili."
+   },
+   {
+    "id": "fd-C-233",
+    "used": 0,
+    "text": "Ghost pepper extreme — used trace amounts only sensible."
+   },
+   {
+    "id": "fd-C-234",
+    "used": 0,
+    "text": "Tabasco aged vinegar mash — Louisiana pepper sauce fermentation."
+   },
+   {
+    "id": "fd-C-235",
+    "used": 0,
+    "text": "Cajun holy trinity onion celery bell — Louisiana flavor base."
+   },
+   {
+    "id": "fd-C-236",
+    "used": 0,
+    "text": "Cajun blackening spice — butter paprika crust high heat."
+   },
+   {
+    "id": "fd-C-237",
+    "used": 0,
+    "text": "Creole seasoning blend — Louisiana table all purpose mix."
+   },
+   {
+    "id": "fd-C-238",
+    "used": 0,
+    "text": "Old Bay seafood seasoning — Chesapeake crab boil classic."
+   },
+   {
+    "id": "fd-C-239",
+    "used": 0,
+    "text": "Lemon pepper dry rub — bright zesty all purpose seasoning."
+   },
+   {
+    "id": "fd-C-240",
+    "used": 0,
+    "text": "Ranch dressing herb buttermilk — American dip ubiquitous standard."
+   },
+   {
+    "id": "fd-C-241",
+    "used": 0,
+    "text": "Blue cheese dressing pungent — buffalo wing pairing classic."
+   },
+   {
+    "id": "fd-C-242",
+    "used": 0,
+    "text": "Caesar dressing anchovy garlic — romaine's signature coat."
+   },
+   {
+    "id": "fd-C-243",
+    "used": 0,
+    "text": "Thousand island sweet pickle — burger dressing pink standard."
+   },
+   {
+    "id": "fd-C-244",
+    "used": 0,
+    "text": "Honey mustard sweet tangy — pretzel dip pairing favorite."
+   },
+   {
+    "id": "fd-C-245",
+    "used": 0,
+    "text": "BBQ sauce regions differ — vinegar Carolina ketchup Texas styles."
+   },
+   {
+    "id": "fd-C-246",
+    "used": 0,
+    "text": "Kansas City BBQ thick sweet — tomato molasses heavy sauce."
+   },
+   {
+    "id": "fd-C-247",
+    "used": 0,
+    "text": "Memphis BBQ dry rub — spice crust before sauce optional."
+   },
+   {
+    "id": "fd-C-248",
+    "used": 0,
+    "text": "Carolina gold mustard BBQ — yellow mustard vinegar base sauce."
+   },
+   {
+    "id": "fd-C-249",
+    "used": 0,
+    "text": "Bechamel French mother sauce — milk roux white base."
+   },
+   {
+    "id": "fd-C-250",
+    "used": 0,
+    "text": "Hollandaise butter emulsion — French mother sauce egg yolk."
+   }
+  ],
+  "D": [
+   {
+    "id": "fd-D-001",
+    "used": 0,
+    "text": "Choose mangoes by scent at the stem — aroma means ready to eat."
+   },
+   {
+    "id": "fd-D-002",
+    "used": 0,
+    "text": "Pick pineapples by pulling a center leaf — easy release means ripe."
+   },
+   {
+    "id": "fd-D-003",
+    "used": 0,
+    "text": "Select avocados with slight give near the stem — rock hard means wait."
+   },
+   {
+    "id": "fd-D-004",
+    "used": 0,
+    "text": "Buy bananas green-yellow with no bruises — ripen at home under control."
+   },
+   {
+    "id": "fd-D-005",
+    "used": 0,
+    "text": "Choose melons heavy for size — weight means full juice."
+   },
+   {
+    "id": "fd-D-006",
+    "used": 0,
+    "text": "Smell cantaloupe at the blossom end — sweet fragrance signals ripeness."
+   },
+   {
+    "id": "fd-D-007",
+    "used": 0,
+    "text": "Pick berries dry and plump with no juice stains in the container."
+   },
+   {
+    "id": "fd-D-008",
+    "used": 0,
+    "text": "Select grapes on green flexible stems — brown dried stems mean old."
+   },
+   {
+    "id": "fd-D-009",
+    "used": 0,
+    "text": "Choose citrus heavy for size — thin skin means more juice inside."
+   },
+   {
+    "id": "fd-D-010",
+    "used": 0,
+    "text": "Pick apples firm without soft bruises — bruises spread rot quickly."
+   },
+   {
+    "id": "fd-D-011",
+    "used": 0,
+    "text": "Select tomatoes fragrant at the stem — cold storage loses aroma forever."
+   },
+   {
+    "id": "fd-D-012",
+    "used": 0,
+    "text": "Choose potatoes firm smooth eyes — green patches mean solanine present."
+   },
+   {
+    "id": "fd-D-013",
+    "used": 0,
+    "text": "Choose onions heavy with dry tight skins — sprouting means aging."
+   },
+   {
+    "id": "fd-D-014",
+    "used": 0,
+    "text": "Pick garlic heavy firm cloves — soft spots mean mold inside."
+   },
+   {
+    "id": "fd-D-015",
+    "used": 0,
+    "text": "Select carrots bright with fresh tops — wilted tops mean dried roots."
+   },
+   {
+    "id": "fd-D-016",
+    "used": 0,
+    "text": "Choose beets with fresh perky greens — limp greens mean old roots."
+   },
+   {
+    "id": "fd-D-017",
+    "used": 0,
+    "text": "Pick cucumbers firm and bright — yellowing means overripe seedy centers."
+   },
+   {
+    "id": "fd-D-018",
+    "used": 0,
+    "text": "Select bell peppers glossy heavy — wrinkled skin means moisture loss."
+   },
+   {
+    "id": "fd-D-019",
+    "used": 0,
+    "text": "Choose eggplants heavy glossy — dull spongy means bitter old flesh."
+   },
+   {
+    "id": "fd-D-020",
+    "used": 0,
+    "text": "Pick chilies firm taut skin — soft shriveled means drying out already."
+   },
+   {
+    "id": "fd-D-021",
+    "used": 0,
+    "text": "Select mushrooms dry closed caps — slimy surface means spoilage start."
+   },
+   {
+    "id": "fd-D-022",
+    "used": 0,
+    "text": "Choose broccoli tight closed buds — yellowing means past prime flowering."
+   },
+   {
+    "id": "fd-D-023",
+    "used": 0,
+    "text": "Select cauliflower pure white firm — brown spots mean age."
+   },
+   {
+    "id": "fd-D-024",
+    "used": 0,
+    "text": "Choose cabbage heavy dense — loose outer leaves mean drying."
+   },
+   {
+    "id": "fd-D-025",
+    "used": 0,
+    "text": "Pick greens crisp vibrant — limp rubbery leaves mean old stock."
+   },
+   {
+    "id": "fd-D-026",
+    "used": 0,
+    "text": "Select herbs bright perky — black slimy leaves mean decay already."
+   },
+   {
+    "id": "fd-D-027",
+    "used": 0,
+    "text": "Choose fresh ginger firm smooth — wrinkled dry means old stock."
+   },
+   {
+    "id": "fd-D-028",
+    "used": 0,
+    "text": "Select turmeric fingers hard bright — soft spots mean rot starting."
+   },
+   {
+    "id": "fd-D-029",
+    "used": 0,
+    "text": "Buy fish bright clear eyes — cloudy sunken eyes mean old catch."
+   },
+   {
+    "id": "fd-D-030",
+    "used": 0,
+    "text": "Select fish firm flesh that springs back — slow indentation means old."
+   },
+   {
+    "id": "fd-D-031",
+    "used": 0,
+    "text": "Fish should smell like the ocean — strong ammonia means discard."
+   },
+   {
+    "id": "fd-D-032",
+    "used": 0,
+    "text": "Choose shrimp firm translucent — black spots mean oxidation already."
+   },
+   {
+    "id": "fd-D-033",
+    "used": 0,
+    "text": "Select shellfish closed tight — open shells that don't close mean dead."
+   },
+   {
+    "id": "fd-D-034",
+    "used": 0,
+    "text": "Pick crabs heavy for size — light shells mean less meat inside."
+   },
+   {
+    "id": "fd-D-035",
+    "used": 0,
+    "text": "Choose chicken pink firm — grey slimy surface means spoilage."
+   },
+   {
+    "id": "fd-D-036",
+    "used": 0,
+    "text": "Select meat bright red moist — brown dry surface means oxidized."
+   },
+   {
+    "id": "fd-D-037",
+    "used": 0,
+    "text": "Marbling streaks indicate juiciness — lean cuts dry out faster."
+   },
+   {
+    "id": "fd-D-038",
+    "used": 0,
+    "text": "Select eggs clean uncracked — wash only right before using them."
+   },
+   {
+    "id": "fd-D-039",
+    "used": 0,
+    "text": "Egg freshness test in water — sinks fresh, floating means old."
+   },
+   {
+    "id": "fd-D-040",
+    "used": 0,
+    "text": "Choose cheese firm without dry cracks — mold spots mean contamination."
+   },
+   {
+    "id": "fd-D-041",
+    "used": 0,
+    "text": "Pick bread with springy crust — hard dry means stale already."
+   },
+   {
+    "id": "fd-D-042",
+    "used": 0,
+    "text": "Select honey thick slow pouring — thin runny may mean adulteration."
+   },
+   {
+    "id": "fd-D-043",
+    "used": 0,
+    "text": "Buy oil in dark glass bottles — clear glass lets light degrade oil."
+   },
+   {
+    "id": "fd-D-044",
+    "used": 0,
+    "text": "Buy spices fragrant when rubbed — dull dusty means old ground spice."
+   },
+   {
+    "id": "fd-D-045",
+    "used": 0,
+    "text": "Store onions dry ventilated dark — sprouting means warm humid storage."
+   },
+   {
+    "id": "fd-D-046",
+    "used": 0,
+    "text": "Keep potatoes cool dark never fridge — cold sweetens them undesirably."
+   },
+   {
+    "id": "fd-D-047",
+    "used": 0,
+    "text": "Store garlic at room temperature airflow — fridge sprouts it faster."
+   },
+   {
+    "id": "fd-D-048",
+    "used": 0,
+    "text": "Refrigerate berries unwashed — moisture invites mold growth early."
+   },
+   {
+    "id": "fd-D-049",
+    "used": 0,
+    "text": "Wash berries only before eating — washing early starts decay."
+   },
+   {
+    "id": "fd-D-050",
+    "used": 0,
+    "text": "Store mushrooms in paper bags — plastic traps moisture and slime."
+   },
+   {
+    "id": "fd-D-051",
+    "used": 0,
+    "text": "Keep celery carrots in water-filled containers — weeks of crispness."
+   },
+   {
+    "id": "fd-D-052",
+    "used": 0,
+    "text": "Refresh herb stems like flowers — stand in water on the fridge door."
+   },
+   {
+    "id": "fd-D-053",
+    "used": 0,
+    "text": "Keep bananas separate from other produce — ethylene accelerates neighbors."
+   },
+   {
+    "id": "fd-D-054",
+    "used": 0,
+    "text": "Store apples cold for weeks — low temperature holds them long."
+   },
+   {
+    "id": "fd-D-055",
+    "used": 0,
+    "text": "Refrigerate cut apples in acidulated water — browning slows dramatically."
+   },
+   {
+    "id": "fd-D-056",
+    "used": 0,
+    "text": "Keep tomatoes on the counter never fridge — cold kills aroma permanently."
+   },
+   {
+    "id": "fd-D-057",
+    "used": 0,
+    "text": "Store basil at room temperature in water — cold blackens the leaves."
+   },
+   {
+    "id": "fd-D-058",
+    "used": 0,
+    "text": "Refrigerate cut chili garlic ginger — molds love warm humid drawers."
+   },
+   {
+    "id": "fd-D-059",
+    "used": 0,
+    "text": "Store nuts sealed cold — oils go rancid quickly at room temperature."
+   },
+   {
+    "id": "fd-D-060",
+    "used": 0,
+    "text": "Keep flour sealed cool dry — weevils and moisture both excluded."
+   },
+   {
+    "id": "fd-D-061",
+    "used": 0,
+    "text": "Store sugar airtight — hardened bricks soften briefly in the oven."
+   },
+   {
+    "id": "fd-D-062",
+    "used": 0,
+    "text": "Honey never spoils — crystallization reverses with gentle warming."
+   },
+   {
+    "id": "fd-D-063",
+    "used": 0,
+    "text": "Keep coffee beans airtight dark — grind fresh for aroma retention."
+   },
+   {
+    "id": "fd-D-064",
+    "used": 0,
+    "text": "Store chocolate cool stable temperature — heat bloom appears white."
+   },
+   {
+    "id": "fd-D-065",
+    "used": 0,
+    "text": "Butter absorbs fridge odors greedily — always keep it sealed."
+   },
+   {
+    "id": "fd-D-066",
+    "used": 0,
+    "text": "Store oils dark cool away from stove — heat degrades every bottle."
+   },
+   {
+    "id": "fd-D-067",
+    "used": 0,
+    "text": "Refrigerate opened nut butters — oil separation slows when cold."
+   },
+   {
+    "id": "fd-D-068",
+    "used": 0,
+    "text": "Store cheese wrapped breathable — plastic traps moisture and off flavors."
+   },
+   {
+    "id": "fd-D-069",
+    "used": 0,
+    "text": "Freeze bread sliced — pull single slices as needed anytime."
+   },
+   {
+    "id": "fd-D-070",
+    "used": 0,
+    "text": "Revive frozen bread in the oven — steam restores crust and crumb."
+   },
+   {
+    "id": "fd-D-071",
+    "used": 0,
+    "text": "Thaw meat in the fridge never counter — surface stays safer longer."
+   },
+   {
+    "id": "fd-D-072",
+    "used": 0,
+    "text": "Cold water thaw in sealed bags — faster than fridge still safe."
+   },
+   {
+    "id": "fd-D-073",
+    "used": 0,
+    "text": "Never refreeze fully thawed meat — texture and safety both suffer."
+   },
+   {
+    "id": "fd-D-074",
+    "used": 0,
+    "text": "Freeze leftovers flat in bags — stacks space-efficient thaws fast."
+   },
+   {
+    "id": "fd-D-075",
+    "used": 0,
+    "text": "Label and date every freezer bag — forgotten food wastes for years."
+   },
+   {
+    "id": "fd-D-076",
+    "used": 0,
+    "text": "Keep the fridge below four degrees — thermometer beats dial guesses."
+   },
+   {
+    "id": "fd-D-077",
+    "used": 0,
+    "text": "Freezer at minus eighteen — quality holds indefinitely safe."
+   },
+   {
+    "id": "fd-D-078",
+    "used": 0,
+    "text": "Cool hot food before the fridge — but within two hours maximum."
+   },
+   {
+    "id": "fd-D-079",
+    "used": 0,
+    "text": "Spread hot leftovers thin — deep pots stay warm too long inside."
+   },
+   {
+    "id": "fd-D-080",
+    "used": 0,
+    "text": "Reheat leftovers once only — repeated cycles multiply bacterial risk."
+   },
+   {
+    "id": "fd-D-081",
+    "used": 0,
+    "text": "Reheat to piping hot with steam — visual steam means safe temperature."
+   },
+   {
+    "id": "fd-D-082",
+    "used": 0,
+    "text": "Keep hot takeout above sixty — the danger zone starts below it."
+   },
+   {
+    "id": "fd-D-083",
+    "used": 0,
+    "text": "Discard food left out over two hours — one hour in hot climate."
+   },
+   {
+    "id": "fd-D-084",
+    "used": 0,
+    "text": "When in doubt throw it out — no meal is worth food poisoning."
+   },
+   {
+    "id": "fd-D-085",
+    "used": 0,
+    "text": "Wash hands twenty seconds before prep — soap not water alone."
+   },
+   {
+    "id": "fd-D-086",
+    "used": 0,
+    "text": "Scrub firm produce under running water — rubbing removes stuck microbes."
+   },
+   {
+    "id": "fd-D-087",
+    "used": 0,
+    "text": "Rinse melons before cutting — rind carries field bacteria inside."
+   },
+   {
+    "id": "fd-D-088",
+    "used": 0,
+    "text": "Dry hands with paper towels — cloth towels harbor bacteria silently."
+   },
+   {
+    "id": "fd-D-089",
+    "used": 0,
+    "text": "Use separate boards raw meat and produce — cross contamination prevention."
+   },
+   {
+    "id": "fd-D-090",
+    "used": 0,
+    "text": "Replace worn cutting boards with deep grooves — grooves hide bacteria."
+   },
+   {
+    "id": "fd-D-091",
+    "used": 0,
+    "text": "Keep nails short and clean — dirt hides under nails during prep."
+   },
+   {
+    "id": "fd-D-092",
+    "used": 0,
+    "text": "Tie hair back in the kitchen — contamination falls into open food."
+   },
+   {
+    "id": "fd-D-093",
+    "used": 0,
+    "text": "Keep pets off kitchen counters — paws carry outdoor microbes."
+   },
+   {
+    "id": "fd-D-094",
+    "used": 0,
+    "text": "Refrigerate homemade garlic infused oil — botulism risk is real."
+   },
+   {
+    "id": "fd-D-095",
+    "used": 0,
+    "text": "Home canning low acid needs pressure — botulism prevention is non-negotiable."
+   },
+   {
+    "id": "fd-D-096",
+    "used": 0,
+    "text": "Acidify tomatoes before water bath canning — the safety line is pH."
+   },
+   {
+    "id": "fd-D-097",
+    "used": 0,
+    "text": "Discard bulging leaking swollen cans — never taste to check."
+   },
+   {
+    "id": "fd-D-098",
+    "used": 0,
+    "text": "Boil home canned low acid foods before serving — extra safety step."
+   },
+   {
+    "id": "fd-D-099",
+    "used": 0,
+    "text": "Discard moldy soft foods entirely — roots penetrate deep invisible."
+   },
+   {
+    "id": "fd-D-100",
+    "used": 0,
+    "text": "Hard cheeses can have mold scraped — dense matrix blocks root travel."
+   },
+   {
+    "id": "fd-D-101",
+    "used": 0,
+    "text": "Salami surface mold expected — trim outside keep the rest confidently."
+   },
+   {
+    "id": "fd-D-102",
+    "used": 0,
+    "text": "Refrigerate opened deli meats — listeria grows even when cold slowly."
+   },
+   {
+    "id": "fd-D-103",
+    "used": 0,
+    "text": "Pregnant people avoid raw sprouts and deli meats — risk groups exist."
+   },
+   {
+    "id": "fd-D-104",
+    "used": 0,
+    "text": "Store raw meat on the bottom shelf — drips cannot contaminate below."
+   },
+   {
+    "id": "fd-D-105",
+    "used": 0,
+    "text": "Keep ready-to-eat foods above raw — fridge shelf order matters."
+   },
+   {
+    "id": "fd-D-106",
+    "used": 0,
+    "text": "Use separate tongs raw and cooked — utensils cross contaminate too."
+   },
+   {
+    "id": "fd-D-107",
+    "used": 0,
+    "text": "Marinate in the fridge not counter — acid does not sterilize surfaces."
+   },
+   {
+    "id": "fd-D-108",
+    "used": 0,
+    "text": "Boil marinade used on raw meat — before using it as sauce always."
+   },
+   {
+    "id": "fd-D-109",
+    "used": 0,
+    "text": "Wash knives after raw meat — rind contact transfers bacteria."
+   },
+   {
+    "id": "fd-D-110",
+    "used": 0,
+    "text": "Keep oven thermometer accurate — dial settings drift over years."
+   },
+   {
+    "id": "fd-D-111",
+    "used": 0,
+    "text": "Check fridge door seals — warm air leaks raise whole fridge temperature."
+   },
+   {
+    "id": "fd-D-112",
+    "used": 0,
+    "text": "Do not overload the fridge — air needs space to circulate cooling."
+   },
+   {
+    "id": "fd-D-113",
+    "used": 0,
+    "text": "Clean the fridge monthly — spills feed bacteria colonies silently."
+   },
+   {
+    "id": "fd-D-114",
+    "used": 0,
+    "text": "Empty old leftovers weekly — forgotten containers spoil and spread odors."
+   },
+   {
+    "id": "fd-D-115",
+    "used": 0,
+    "text": "Compost spoiled produce — nutrients return instead of landfill methane."
+   },
+   {
+    "id": "fd-D-116",
+    "used": 0,
+    "text": "Keep emergency staples rice beans lentils — long shelf life stores."
+   },
+   {
+    "id": "fd-D-117",
+    "used": 0,
+    "text": "Dried beans keep years when sealed — soak and cook when needed."
+   },
+   {
+    "id": "fd-D-118",
+    "used": 0,
+    "text": "Canned goods keep far past printed dates — dates mark quality not safety."
+   },
+   {
+    "id": "fd-D-119",
+    "used": 0,
+    "text": "Printed dates are quality markers — safety depends on storage conditions."
+   },
+   {
+    "id": "fd-D-120",
+    "used": 0,
+    "text": "Freshness window shrinks after opening — reseal and refrigerate promptly."
+   },
+   {
+    "id": "fd-D-121",
+    "used": 0,
+    "text": "Vacuum sealing extends pantry life — removes oxygen pests and mold need."
+   },
+   {
+    "id": "fd-D-122",
+    "used": 0,
+    "text": "Oxygen absorbers protect dried goods — silica controls moisture instead."
+   },
+   {
+    "id": "fd-D-123",
+    "used": 0,
+    "text": "Mylar bags shield light and pests — long term storage standard."
+   },
+   {
+    "id": "fd-D-124",
+    "used": 0,
+    "text": "Sun drying preserves with heat and air — traditional dehydration craft."
+   },
+   {
+    "id": "fd-D-125",
+    "used": 0,
+    "text": "Dehydrator gives controlled drying — fruit leather and jerky consistent."
+   },
+   {
+    "id": "fd-D-126",
+    "used": 0,
+    "text": "Freeze drying preserves nearly forever — texture and nutrition retained."
+   },
+   {
+    "id": "fd-D-127",
+    "used": 0,
+    "text": "Smoking adds flavor and keeps — salt smoke combination classic craft."
+   },
+   {
+    "id": "fd-D-128",
+    "used": 0,
+    "text": "Curing salt prevents botulism — pink salt is sometimes not optional."
+   },
+   {
+    "id": "fd-D-129",
+    "used": 0,
+    "text": "Fermentation builds acid naturally — safe only with correct salt ratios."
+   },
+   {
+    "id": "fd-D-130",
+    "used": 0,
+    "text": "Pickling recipes are acidity tested — never guess brine strength."
+   },
+   {
+    "id": "fd-D-131",
+    "used": 0,
+    "text": "Ketchup lasts months opened in fridge — vinegar and sugar preserve it."
+   },
+   {
+    "id": "fd-D-132",
+    "used": 0,
+    "text": "Mustard stays stable for years — vinegar and spice inhibit growth."
+   },
+   {
+    "id": "fd-D-133",
+    "used": 0,
+    "text": "Smell before tasting anything — noses catch spoilage first."
+   },
+   {
+    "id": "fd-D-134",
+    "used": 0,
+    "text": "Sour smell means discard dairy — cultured tangy differs from putrid."
+   },
+   {
+    "id": "fd-D-135",
+    "used": 0,
+    "text": "Bitter metallic smell means discard oils — oxidation already happened."
+   },
+   {
+    "id": "fd-D-136",
+    "used": 0,
+    "text": "Slime on meat means bacterial colonies — texture and smell both matter."
+   },
+   {
+    "id": "fd-D-137",
+    "used": 0,
+    "text": "Cloudy cooking oil means degraded — filter and stop endless reuse."
+   },
+   {
+    "id": "fd-D-138",
+    "used": 0,
+    "text": "Smoke point drops with used oil — never reuse deep fry oil forever."
+   },
+   {
+    "id": "fd-D-139",
+    "used": 0,
+    "text": "Frying oil filtering extends life — store dark cool between uses."
+   },
+   {
+    "id": "fd-D-140",
+    "used": 0,
+    "text": "Keep a first aid kit in the kitchen — burns and cuts happen suddenly."
+   },
+   {
+    "id": "fd-D-141",
+    "used": 0,
+    "text": "Cool burns under running water twenty minutes — ice worsens damage."
+   },
+   {
+    "id": "fd-D-142",
+    "used": 0,
+    "text": "Knife cuts need pressure elevation — firm pressure stops bleeding fast."
+   },
+   {
+    "id": "fd-D-143",
+    "used": 0,
+    "text": "Label allergens in a shared household — nut allergies can kill."
+   },
+   {
+    "id": "fd-D-144",
+    "used": 0,
+    "text": "Read labels at every purchase — formulations change without notice."
+   },
+   {
+    "id": "fd-D-145",
+    "used": 0,
+    "text": "Gluten hides in sauces and stocks — soy sauce contains barley often."
+   },
+   {
+    "id": "fd-D-146",
+    "used": 0,
+    "text": "Dairy hides in breads and sauces — read beyond obvious pastries."
+   },
+   {
+    "id": "fd-D-147",
+    "used": 0,
+    "text": "Severe nut allergies need certified products — shared lines cross contact."
+   },
+   {
+    "id": "fd-D-148",
+    "used": 0,
+    "text": "Cross contact kills allergen families — separate utensils and surfaces."
+   },
+   {
+    "id": "fd-D-149",
+    "used": 0,
+    "text": "Epinephrine auto injectors save severe allergy lives — carry them always."
+   },
+   {
+    "id": "fd-D-150",
+    "used": 0,
+    "text": "Seasonal buying saves money — peak harvest means lowest price best flavor."
+   },
+   {
+    "id": "fd-D-151",
+    "used": 0,
+    "text": "Farmers market evening deals — vendors discount rather than carry back."
+   },
+   {
+    "id": "fd-D-152",
+    "used": 0,
+    "text": "Ugly produce tastes identical — cosmetic defects hide perfect flesh."
+   },
+   {
+    "id": "fd-D-153",
+    "used": 0,
+    "text": "Store brand often equals name brand — same factories package both."
+   },
+   {
+    "id": "fd-D-154",
+    "used": 0,
+    "text": "Compare unit prices on shelves — larger is not always cheaper."
+   },
+   {
+    "id": "fd-D-155",
+    "used": 0,
+    "text": "Buy whole vegetables and cut at home — pre-cut costs more dries faster."
+   },
+   {
+    "id": "fd-D-156",
+    "used": 0,
+    "text": "Batch prep wash cut store ready — prepared vegetables actually get used."
+   },
+   {
+    "id": "fd-D-157",
+    "used": 0,
+    "text": "Plan meals before shopping — impulse buys spoil unused in drawers."
+   },
+   {
+    "id": "fd-D-158",
+    "used": 0,
+    "text": "First in first out rotation — old stock goes to front new behind."
+   },
+   {
+    "id": "fd-D-159",
+    "used": 0,
+    "text": "Smell milk before pouring — sour means discard no tasting needed."
+   },
+   {
+    "id": "fd-D-160",
+    "used": 0,
+    "text": "Yogurt tastes tangy not rotten — cultured sourness differs from spoilage."
+   },
+   {
+    "id": "fd-D-161",
+    "used": 0,
+    "text": "Cottage cheese liquid is normal — smell and texture decide freshness."
+   },
+   {
+    "id": "fd-D-162",
+    "used": 0,
+    "text": "Rancid butter tastes metallic and flat — light flavors mean oxidized."
+   },
+   {
+    "id": "fd-D-163",
+    "used": 0,
+    "text": "Bread mold — cut an inch around soft breads only."
+   },
+   {
+    "id": "fd-D-164",
+    "used": 0,
+    "text": "Firm cheese surface mold — trim with wide margin keep the rest."
+   },
+   {
+    "id": "fd-D-165",
+    "used": 0,
+    "text": "Soft cheese mold — discard entirely roots penetrate deep."
+   },
+   {
+    "id": "fd-D-166",
+    "used": 0,
+    "text": "Fruit and vegetable mold spots — one bad area spreads spores fast."
+   },
+   {
+    "id": "fd-D-167",
+    "used": 0,
+    "text": "Jam surface mold — discard entirely moisture contamination throughout."
+   },
+   {
+    "id": "fd-D-168",
+    "used": 0,
+    "text": "Nut container mold — discard all spores travel through air."
+   },
+   {
+    "id": "fd-D-169",
+    "used": 0,
+    "text": "Rice stores dry and sealed — pantry months freezer even longer."
+   },
+   {
+    "id": "fd-D-170",
+    "used": 0,
+    "text": "Cooked rice refrigerates quickly — spores survive poor reheating."
+   },
+   {
+    "id": "fd-D-171",
+    "used": 0,
+    "text": "Bean blanch before eating — sensitive groups reduce risk first."
+   },
+   {
+    "id": "fd-D-172",
+    "used": 0,
+    "text": "Raw egg dishes need care — homemade mayo risky for sensitive groups."
+   },
+   {
+    "id": "fd-D-173",
+    "used": 0,
+    "text": "Oysters demand perfect cold chain — raw shellfish risk is real."
+   },
+   {
+    "id": "fd-D-174",
+    "used": 0,
+    "text": "Raw milk carries pathogens — unpasteurized risk outweighs benefits."
+   },
+   {
+    "id": "fd-D-175",
+    "used": 0,
+    "text": "Pet food hygiene matters — raw diets transfer bacteria to homes."
+   },
+   {
+    "id": "fd-D-176",
+    "used": 0,
+    "text": "Supervise children with knives — guided cutting builds safe confidence."
+   },
+   {
+    "id": "fd-D-177",
+    "used": 0,
+    "text": "Handle wet floors immediately — kitchen slips cause serious injuries."
+   },
+   {
+    "id": "fd-D-178",
+    "used": 0,
+    "text": "Turn pot handles inward on the stove — knocks cannot tip contents."
+   },
+   {
+    "id": "fd-D-179",
+    "used": 0,
+    "text": "Stabilize cutting boards with damp towels — boards must never slide."
+   },
+   {
+    "id": "fd-D-180",
+    "used": 0,
+    "text": "Unplug appliances before cleaning — water and electricity are deadly."
+   },
+   {
+    "id": "fd-D-181",
+    "used": 0,
+    "text": "Dry hands before touching plugs — electrocution risk is real."
+   },
+   {
+    "id": "fd-D-182",
+    "used": 0,
+    "text": "Keep a kitchen-rated fire extinguisher — grease needs the correct class."
+   },
+   {
+    "id": "fd-D-183",
+    "used": 0,
+    "text": "Dry oven mitts only — water conducts heat straight through fabric."
+   },
+   {
+    "id": "fd-D-184",
+    "used": 0,
+    "text": "Lid smothers pan fires — baking soda works for small grease fires."
+   },
+   {
+    "id": "fd-D-185",
+    "used": 0,
+    "text": "Never carry flaming pans — walk-away burns destroy kitchens."
+   },
+   {
+    "id": "fd-D-186",
+    "used": 0,
+    "text": "Test smoke alarms monthly — early warning saves entire buildings."
+   },
+   {
+    "id": "fd-D-187",
+    "used": 0,
+    "text": "Carbon monoxide detector near the stove — gas appliances need monitoring."
+   },
+   {
+    "id": "fd-D-188",
+    "used": 0,
+    "text": "Vent the hood while frying — grease vapor settles as film everywhere."
+   },
+   {
+    "id": "fd-D-189",
+    "used": 0,
+    "text": "Store heavy pots on low shelves — overhead disasters waiting to happen."
+   },
+   {
+    "id": "fd-D-190",
+    "used": 0,
+    "text": "Use stable step stools not chairs — unstable climbing causes falls."
+   },
+   {
+    "id": "fd-D-191",
+    "used": 0,
+    "text": "Sharpen knives regularly — dull blades slip and cause more cuts."
+   },
+   {
+    "id": "fd-D-192",
+    "used": 0,
+    "text": "Honning steel before every session — aligned edges cut safer."
+   },
+   {
+    "id": "fd-D-193",
+    "used": 0,
+    "text": "Cut away from the body always — slips then travel to safety."
+   },
+   {
+    "id": "fd-D-194",
+    "used": 0,
+    "text": "Stabilize round vegetables with a flat cut — rolling food cuts fingers."
+   },
+   {
+    "id": "fd-D-195",
+    "used": 0,
+    "text": "Curl guiding fingers under the knuckle — knuckles guard fingertips."
+   },
+   {
+    "id": "fd-D-196",
+    "used": 0,
+    "text": "Dry handles before cutting — wet grips slip under pressure."
+   },
+   {
+    "id": "fd-D-197",
+    "used": 0,
+    "text": "Never catch a falling knife — step back let it fall."
+   },
+   {
+    "id": "fd-D-198",
+    "used": 0,
+    "text": "Store knives on magnetic strips — drawer loose blades dull fast."
+   },
+   {
+    "id": "fd-D-199",
+    "used": 0,
+    "text": "Children use nylon knives first — serrated safety without real risk."
+   },
+   {
+    "id": "fd-D-200",
+    "used": 0,
+    "text": "Hot oil splash distance doubles in water — never add water to oil."
+   },
+   {
+    "id": "fd-D-201",
+    "used": 0,
+    "text": "Baking soda smothers grease fires — flour is not a fire extinguisher."
+   },
+   {
+    "id": "fd-D-202",
+    "used": 0,
+    "text": "Keep lids sized to pans — fire response needs to be instant."
+   },
+   {
+    "id": "fd-D-203",
+    "used": 0,
+    "text": "Ventilate while deep frying — oil mist settles and attracts dust."
+   },
+   {
+    "id": "fd-D-204",
+    "used": 0,
+    "text": "Cool oil before disposing — hot oil melts plastic bins and pipes."
+   },
+   {
+    "id": "fd-D-205",
+    "used": 0,
+    "text": "Never pour grease down drains — congealed fat blocks entire sewage lines."
+   },
+   {
+    "id": "fd-D-206",
+    "used": 0,
+    "text": "Grease goes in sealed jars for trash — municipal systems thank you."
+   },
+   {
+    "id": "fd-D-207",
+    "used": 0,
+    "text": "Check gas hoses for cracks yearly — gas leaks ignite catastrophically."
+   },
+   {
+    "id": "fd-D-208",
+    "used": 0,
+    "text": "Install gas detectors near appliances — silent leaks are deadly."
+   },
+   {
+    "id": "fd-D-209",
+    "used": 0,
+    "text": "Propane tanks stored upright outside — never indoors ever."
+   },
+   {
+    "id": "fd-D-210",
+    "used": 0,
+    "text": "Extension cords away from water — kitchen outlets overload easily."
+   },
+   {
+    "id": "fd-D-211",
+    "used": 0,
+    "text": "Avoid loose sleeves near flame — fabric ignites in an instant."
+   },
+   {
+    "id": "fd-D-212",
+    "used": 0,
+    "text": "Tie back long hair and apron strings — nothing dangles near burners."
+   },
+   {
+    "id": "fd-D-213",
+    "used": 0,
+    "text": "Keep flammable towels away from stovetops — cloth ignites in seconds."
+   },
+   {
+    "id": "fd-D-214",
+    "used": 0,
+    "text": "Unplug toasters before cleaning crumbs — metal tools and live current clash."
+   },
+   {
+    "id": "fd-D-215",
+    "used": 0,
+    "text": "Water and electricity never mix — dry-floor kitchen rule always."
+   },
+   {
+    "id": "fd-D-216",
+    "used": 0,
+    "text": "Store cleaning products separately from food — poisonings happen by mistake."
+   },
+   {
+    "id": "fd-D-217",
+    "used": 0,
+    "text": "Never store chemicals under the sink near food — confusion risks ingestion."
+   },
+   {
+    "id": "fd-D-218",
+    "used": 0,
+    "text": "Label spray bottles clearly — looks-alike bottles cause chemical accidents."
+   },
+   {
+    "id": "fd-D-219",
+    "used": 0,
+    "text": "Keep dish soap away from food shelves — accidental swaps happen."
+   },
+   {
+    "id": "fd-D-220",
+    "used": 0,
+    "text": "Check fridge coils yearly — dust makes compressors work overtime."
+   },
+   {
+    "id": "fd-D-221",
+    "used": 0,
+    "text": "Clean drip pans regularly — standing water breeds kitchen pests."
+   },
+   {
+    "id": "fd-D-222",
+    "used": 0,
+    "text": "Seal pantry against pests — weevils travel in flour and grain."
+   },
+   {
+    "id": "fd-D-223",
+    "used": 0,
+    "text": "Freeze new flour a week — kills any hitchhiker eggs before storage."
+   },
+   {
+    "id": "fd-D-224",
+    "used": 0,
+    "text": "Bay leaves in grain jars — traditional pantry pest deterrent."
+   },
+   {
+    "id": "fd-D-225",
+    "used": 0,
+    "text": "Inspect produce before it touches the counter — one bad item spreads."
+   },
+   {
+    "id": "fd-D-226",
+    "used": 0,
+    "text": "Isolate overripe fruit — ethylene speeds neighbors into spoilage."
+   },
+   {
+    "id": "fd-D-227",
+    "used": 0,
+    "text": "Wipe fridge spills immediately — residues harden and breed bacteria."
+   },
+   {
+    "id": "fd-D-228",
+    "used": 0,
+    "text": "Run dishwasher hot cycles — heat sanitizes better than warm settings."
+   },
+   {
+    "id": "fd-D-229",
+    "used": 0,
+    "text": "Wash dishcloths daily — damp cloth is bacterial hotel."
+   },
+   {
+    "id": "fd-D-230",
+    "used": 0,
+    "text": "Replace sponges weekly or microwave damp — sponge holds millions of bacteria."
+   },
+   {
+    "id": "fd-D-231",
+    "used": 0,
+    "text": "Dish brushes air dry upright — trapped moisture grows mold."
+   },
+   {
+    "id": "fd-D-232",
+    "used": 0,
+    "text": "Use separate towels for hands and dishes — cross contamination matters."
+   },
+   {
+    "id": "fd-D-233",
+    "used": 0,
+    "text": "Clean can opener gears — hidden residue touches every opened can."
+   },
+   {
+    "id": "fd-D-234",
+    "used": 0,
+    "text": "Wash blender blades carefully — sealed base traps spoiled residue."
+   },
+   {
+    "id": "fd-D-235",
+    "used": 0,
+    "text": "Descale kettles regularly — mineral film harbors unwanted deposits."
+   },
+   {
+    "id": "fd-D-236",
+    "used": 0,
+    "text": "Change fridge water filters on schedule — old filters breed slime."
+   },
+   {
+    "id": "fd-D-237",
+    "used": 0,
+    "text": "Empty and dry water dispensers — standing water grows biofilm."
+   },
+   {
+    "id": "fd-D-238",
+    "used": 0,
+    "text": "Keep trash cans with lids — open bins attract fruit flies."
+   },
+   {
+    "id": "fd-D-239",
+    "used": 0,
+    "text": "Take kitchen trash out daily in warm months — odors mean bacterial bloom."
+   },
+   {
+    "id": "fd-D-240",
+    "used": 0,
+    "text": "Compost bin sealed against pests — outdoor composting done right."
+   },
+   {
+    "id": "fd-D-241",
+    "used": 0,
+    "text": "Wash reusable bags regularly — raw meat juices linger in fabric."
+   },
+   {
+    "id": "fd-D-242",
+    "used": 0,
+    "text": "Store produce ethylene sensitive away — apples bananas separate always."
+   },
+   {
+    "id": "fd-D-243",
+    "used": 0,
+    "text": "Ripen avocados in paper bags — trapped ethylene speeds days."
+   },
+   {
+    "id": "fd-D-244",
+    "used": 0,
+    "text": "Speed tomato ripening with banana — shared ethylene works overnight."
+   },
+   {
+    "id": "fd-D-245",
+    "used": 0,
+    "text": "Dehydrate overripe fruit instead of tossing — snacks from near waste."
+   },
+   {
+    "id": "fd-D-246",
+    "used": 0,
+    "text": "Blend bruised fruit into smoothies — flavor hides texture flaws."
+   },
+   {
+    "id": "fd-D-247",
+    "used": 0,
+    "text": "Stale bread becomes breadcrumbs croutons — never waste the loaf."
+   },
+   {
+    "id": "fd-D-248",
+    "used": 0,
+    "text": "Vegetable scraps become stock — peels and ends hold flavor."
+   },
+   {
+    "id": "fd-D-249",
+    "used": 0,
+    "text": "Wilting greens revive in ice water — turgor returns in minutes."
+   },
+   {
+    "id": "fd-D-250",
+    "used": 0,
+    "text": "Soft carrots re-crisp in cold water — cell pressure restored overnight."
+   }
+  ]
+ }
+}

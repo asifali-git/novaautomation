@@ -1,0 +1,5019 @@
+{
+ "subject": "animals",
+ "angle_names": {
+  "A": "Biology & Anatomy",
+  "B": "Behavior & Survival",
+  "C": "Animals in Human Culture",
+  "D": "Conservation & Care"
+ },
+ "angles": {
+  "A": [
+   {
+    "id": "an-A-001",
+    "used": 0,
+    "text": "An elephant trunk holds about forty thousand muscles - more than an entire human body."
+   },
+   {
+    "id": "an-A-002",
+    "used": 0,
+    "text": "Octopuses have three hearts and blue blood - copper carries their oxygen."
+   },
+   {
+    "id": "an-A-003",
+    "used": 0,
+    "text": "Sharks carry skeletons of cartilage - lighter than bone throughout their bodies."
+   },
+   {
+    "id": "an-A-004",
+    "used": 0,
+    "text": "Bird bones are hollow and strutted - strength without weight for flight."
+   },
+   {
+    "id": "an-A-005",
+    "used": 0,
+    "text": "Owls rotate their necks about two hundred and seventy degrees - vessel webs shield the turn."
+   },
+   {
+    "id": "an-A-006",
+    "used": 0,
+    "text": "A giraffe's tongue stretches half a metre and turns dark - melanin blocks sunburn."
+   },
+   {
+    "id": "an-A-007",
+    "used": 0,
+    "text": "Camel humps store fat, not water - metabolism releases both when food runs out."
+   },
+   {
+    "id": "an-A-008",
+    "used": 0,
+    "text": "Polar bear skin is black beneath white fur - melanin hides under hollow hairs."
+   },
+   {
+    "id": "an-A-009",
+    "used": 0,
+    "text": "Reindeer eyes shift gold to arctic blue in winter - deeper light for polar night."
+   },
+   {
+    "id": "an-A-010",
+    "used": 0,
+    "text": "Dogs pack roughly three hundred million scent receptors - humans manage six million."
+   },
+   {
+    "id": "an-A-011",
+    "used": 0,
+    "text": "A cat's pupil slits into a narrow curve - vertical cuts meter the light."
+   },
+   {
+    "id": "an-A-012",
+    "used": 0,
+    "text": "Cat claws rest retracted - springs keep the edges sharp for the next pounce."
+   },
+   {
+    "id": "an-A-013",
+    "used": 0,
+    "text": "Horses doze standing - a stay lock in the leg holds them upright."
+   },
+   {
+    "id": "an-A-014",
+    "used": 0,
+    "text": "The platypus reads electric fields with its bill - electroreceptors map hidden prey."
+   },
+   {
+    "id": "an-A-015",
+    "used": 0,
+    "text": "Monotremes nurse without nipples - skin patches secrete the milk."
+   },
+   {
+    "id": "an-A-016",
+    "used": 0,
+    "text": "Tardigrades dry into glass - cryptobiosis pauses life for decades."
+   },
+   {
+    "id": "an-A-017",
+    "used": 0,
+    "text": "An axolotl regrows limbs and even heart tissue - repair without scars."
+   },
+   {
+    "id": "an-A-018",
+    "used": 0,
+    "text": "Starfish push their stomachs outside the body - digestion starts on the rock face."
+   },
+   {
+    "id": "an-A-019",
+    "used": 0,
+    "text": "Cuttlefish pupils cut into W shapes - tinted lenses sharpen contrast underwater."
+   },
+   {
+    "id": "an-A-020",
+    "used": 0,
+    "text": "Mantis shrimp strike with spring-loaded clubs - acceleration rivals a bullet."
+   },
+   {
+    "id": "an-A-021",
+    "used": 0,
+    "text": "Mantis shrimps see sixteen cone types - humans manage three."
+   },
+   {
+    "id": "an-A-022",
+    "used": 0,
+    "text": "An eagle's eye holds two foveae - one telescopes detail, one scans wide."
+   },
+   {
+    "id": "an-A-023",
+    "used": 0,
+    "text": "Owl ears sit asymmetrically - sound reaches each ear milliseconds apart."
+   },
+   {
+    "id": "an-A-024",
+    "used": 0,
+    "text": "Cats see far better than humans in dim light - a tapetum throws light back."
+   },
+   {
+    "id": "an-A-025",
+    "used": 0,
+    "text": "Hatchetfish carry photophores underneath - counter-light erases their silhouette."
+   },
+   {
+    "id": "an-A-026",
+    "used": 0,
+    "text": "Electric eels fire near nine hundred volts - modified muscles double as batteries."
+   },
+   {
+    "id": "an-A-027",
+    "used": 0,
+    "text": "Snails carry thousands of teeth on one tongue - a rasp called a radula."
+   },
+   {
+    "id": "an-A-028",
+    "used": 0,
+    "text": "Spider silk outpulls steel by weight - dragline threads rival Kevlar."
+   },
+   {
+    "id": "an-A-029",
+    "used": 0,
+    "text": "Woodpecker skulls spring like helmets - wrapped bone and tissue cushion each blow."
+   },
+   {
+    "id": "an-A-030",
+    "used": 0,
+    "text": "Hummingbird wings trace figure-eights - lift comes on both strokes."
+   },
+   {
+    "id": "an-A-031",
+    "used": 0,
+    "text": "Albatross shoulders lock mid-glide - tendon notches let them soar half asleep."
+   },
+   {
+    "id": "an-A-032",
+    "used": 0,
+    "text": "Ironclad beetles suture their shells - jigsaw seams spread any crushing force."
+   },
+   {
+    "id": "an-A-033",
+    "used": 0,
+    "text": "Bombardier beetles boil their spray - bursts leave the chamber near boiling."
+   },
+   {
+    "id": "an-A-034",
+    "used": 0,
+    "text": "Pufferfish inflate by gulping water - spines stand out from stretched skin."
+   },
+   {
+    "id": "an-A-035",
+    "used": 0,
+    "text": "An octopus beak is its only hard part - the rest squeezes through any gap."
+   },
+   {
+    "id": "an-A-036",
+    "used": 0,
+    "text": "Giant squid axons fire fast - the widest nerve cells ever dissected."
+   },
+   {
+    "id": "an-A-037",
+    "used": 0,
+    "text": "Tortoise shells grow from the ribcage - armour fused to backbone and sternum."
+   },
+   {
+    "id": "an-A-038",
+    "used": 0,
+    "text": "Sea turtle sex depends on nest heat - warmer sand skews female."
+   },
+   {
+    "id": "an-A-039",
+    "used": 0,
+    "text": "Crocodiles swallow stones as ballast - gastroliths aid digestion and diving."
+   },
+   {
+    "id": "an-A-040",
+    "used": 0,
+    "text": "Feathers start as simple filaments - insulation came long before flight."
+   },
+   {
+    "id": "an-A-041",
+    "used": 0,
+    "text": "A feather's barbs zip with micro-hooks - a comb re-seals the vane."
+   },
+   {
+    "id": "an-A-042",
+    "used": 0,
+    "text": "Whale blowholes are noses migrated on top - lips seal them watertight."
+   },
+   {
+    "id": "an-A-043",
+    "used": 0,
+    "text": "Dolphins sleep one brain hemisphere at a time - the other keeps swimming."
+   },
+   {
+    "id": "an-A-044",
+    "used": 0,
+    "text": "Lateral lines run along fishes' sides - they feel ripples no eye could see."
+   },
+   {
+    "id": "an-A-045",
+    "used": 0,
+    "text": "Ray electroreceptor pores hide buried hearts - ampullae read the sand."
+   },
+   {
+    "id": "an-A-046",
+    "used": 0,
+    "text": "Clownfish mucus blocks anemone stingers - the net never fires on them."
+   },
+   {
+    "id": "an-A-047",
+    "used": 0,
+    "text": "Parrotfish sleep inside mucus cocoons - scent-masking beds beat night hunters."
+   },
+   {
+    "id": "an-A-048",
+    "used": 0,
+    "text": "Naked mole-rats skip acid pain - their skin chemistry ignores the burn."
+   },
+   {
+    "id": "an-A-049",
+    "used": 0,
+    "text": "Naked mole-rats resist cancer almost entirely - tumours rarely get started."
+   },
+   {
+    "id": "an-A-050",
+    "used": 0,
+    "text": "Mouse hearts race six hundred beats a minute - blue whales manage two."
+   },
+   {
+    "id": "an-A-051",
+    "used": 0,
+    "text": "Blue whale hearts weigh around two hundred kilograms - a small car's engine."
+   },
+   {
+    "id": "an-A-052",
+    "used": 0,
+    "text": "Tunas keep muscle warm - heat exchangers hold power in cold water."
+   },
+   {
+    "id": "an-A-053",
+    "used": 0,
+    "text": "Fish swim bladders trim buoyancy - fins only adjust the attitude."
+   },
+   {
+    "id": "an-A-054",
+    "used": 0,
+    "text": "Lampreys circle jawless onto hosts - vertebrate prototypes still feed today."
+   },
+   {
+    "id": "an-A-055",
+    "used": 0,
+    "text": "Hagfish knot themselves to pull free - slime clogs every predator's mouth."
+   },
+   {
+    "id": "an-A-056",
+    "used": 0,
+    "text": "Lungfish breathe air when ponds dry - dormant until the rains return."
+   },
+   {
+    "id": "an-A-057",
+    "used": 0,
+    "text": "Sea cucumbers eject organs as decoys - the guts grow back within weeks."
+   },
+   {
+    "id": "an-A-058",
+    "used": 0,
+    "text": "Earthworms pulse blood through throat arches - simple hearts instead of one."
+   },
+   {
+    "id": "an-A-059",
+    "used": 0,
+    "text": "Houseflies taste with their feet - landing starts the meal."
+   },
+   {
+    "id": "an-A-060",
+    "used": 0,
+    "text": "Compound eyes pack thousands of lenses - motion shows long before shape."
+   },
+   {
+    "id": "an-A-061",
+    "used": 0,
+    "text": "Mosquitoes probe with six needle parts - one numbs, another drinks."
+   },
+   {
+    "id": "an-A-062",
+    "used": 0,
+    "text": "Honeybee stings barb inward - workers die releasing them."
+   },
+   {
+    "id": "an-A-063",
+    "used": 0,
+    "text": "Moth antennae catch single pheromone molecules - a mate across kilometres."
+   },
+   {
+    "id": "an-A-064",
+    "used": 0,
+    "text": "Dragonflies steer four wings independently - each pair beats out of step."
+   },
+   {
+    "id": "an-A-065",
+    "used": 0,
+    "text": "Cockroaches live weeks without a head - they die only at the next moult."
+   },
+   {
+    "id": "an-A-066",
+    "used": 0,
+    "text": "Rhinoceros beetles lift a thousand times their weight - horn leverage wins."
+   },
+   {
+    "id": "an-A-067",
+    "used": 0,
+    "text": "Fireflies glow with luciferin - enzyme light runs almost heat free."
+   },
+   {
+    "id": "an-A-068",
+    "used": 0,
+    "text": "Gecko toes zip with millions of setae - molecular forces grip smooth glass."
+   },
+   {
+    "id": "an-A-069",
+    "used": 0,
+    "text": "Chameleon tongues fire in milliseconds - accelerator muscles do the launching."
+   },
+   {
+    "id": "an-A-070",
+    "used": 0,
+    "text": "Chameleon colour tunes through nanocrystals - spacing sets the rainbow."
+   },
+   {
+    "id": "an-A-071",
+    "used": 0,
+    "text": "A chameleon's eyes swivel separately - one watches prey, one the sky."
+   },
+   {
+    "id": "an-A-072",
+    "used": 0,
+    "text": "Pit vipers sense infrared - heat pits read warm bodies in darkness."
+   },
+   {
+    "id": "an-A-073",
+    "used": 0,
+    "text": "Spitting cobras aim for the eyes - venom sprays with startling accuracy."
+   },
+   {
+    "id": "an-A-074",
+    "used": 0,
+    "text": "Pythons constrict blood flow - prey faints fast, not from suffocation."
+   },
+   {
+    "id": "an-A-075",
+    "used": 0,
+    "text": "A frog's tongue flips faster than we can blink - sticky launch, tiny target."
+   },
+   {
+    "id": "an-A-076",
+    "used": 0,
+    "text": "Human ear muscles still twitch - vestigial tugs from ear-wigging ancestors."
+   },
+   {
+    "id": "an-A-077",
+    "used": 0,
+    "text": "A sneeze blasts near a hundred miles an hour - eyelids close by reflex."
+   },
+   {
+    "id": "an-A-078",
+    "used": 0,
+    "text": "You grow a fresh skeleton roughly every decade - old bone dissolves as new sets."
+   },
+   {
+    "id": "an-A-079",
+    "used": 0,
+    "text": "Stomachs rebuild their lining every few days - mucus keeps self-digestion away."
+   },
+   {
+    "id": "an-A-080",
+    "used": 0,
+    "text": "Nerve signals sprint at a hundred metres a second - touch beats pain to the brain."
+   },
+   {
+    "id": "an-A-081",
+    "used": 0,
+    "text": "Babies start with around three hundred bones - adults fuse down to two hundred six."
+   },
+   {
+    "id": "an-A-082",
+    "used": 0,
+    "text": "Fingernails grow about twice as fast as toenails - tips heal before soles."
+   },
+   {
+    "id": "an-A-083",
+    "used": 0,
+    "text": "Ostrich eyes are bigger than their brains - vision outranks thinking."
+   },
+   {
+    "id": "an-A-084",
+    "used": 0,
+    "text": "Ostriches run on two toes - one massive nail works like a hoof."
+   },
+   {
+    "id": "an-A-085",
+    "used": 0,
+    "text": "Kiwi nostrils sit at the bill's tip - smell finds worms underground."
+   },
+   {
+    "id": "an-A-086",
+    "used": 0,
+    "text": "Bats fly on true wings - finger membranes stretch the flight skin."
+   },
+   {
+    "id": "an-A-087",
+    "used": 0,
+    "text": "Sugar gliders glide on wrist membranes - furred tails steer the drop."
+   },
+   {
+    "id": "an-A-088",
+    "used": 0,
+    "text": "Koala fingerprints loop like ours - magnification often fools crime labs."
+   },
+   {
+    "id": "an-A-089",
+    "used": 0,
+    "text": "Wombats make cube-shaped droppings - uneven wall thickness sets the corners."
+   },
+   {
+    "id": "an-A-090",
+    "used": 0,
+    "text": "Rabbit whiskers match their width - they verify a burrow before entering."
+   },
+   {
+    "id": "an-A-091",
+    "used": 0,
+    "text": "A pig's snout disc carries thousands of receptors - rooting feels as much as it smells."
+   },
+   {
+    "id": "an-A-092",
+    "used": 0,
+    "text": "Raccoon front paws never stop exploring - touch builds a picture in the dark."
+   },
+   {
+    "id": "an-A-093",
+    "used": 0,
+    "text": "Beaver teeth run iron-orange - enamel laced with metal self-sharpening."
+   },
+   {
+    "id": "an-A-094",
+    "used": 0,
+    "text": "Moles dig with palms turned outward - swimming strokes through the soil."
+   },
+   {
+    "id": "an-A-095",
+    "used": 0,
+    "text": "Hedgehog quills are hollow keratin - light armour under watchful muscles."
+   },
+   {
+    "id": "an-A-096",
+    "used": 0,
+    "text": "Porcupine barbs ease in and resist out - retreats drive the spikes deeper."
+   },
+   {
+    "id": "an-A-097",
+    "used": 0,
+    "text": "Hippos secrete red sweat - the film works as sunscreen and antiseptic."
+   },
+   {
+    "id": "an-A-098",
+    "used": 0,
+    "text": "Rhino horns are pure keratin - crushed hair, the same as fingernails."
+   },
+   {
+    "id": "an-A-099",
+    "used": 0,
+    "text": "Deer antlers are the fastest growing tissue - bone outraces any grass."
+   },
+   {
+    "id": "an-A-100",
+    "used": 0,
+    "text": "Horse hooves are a single toe - five became one over deep time."
+   },
+   {
+    "id": "an-A-101",
+    "used": 0,
+    "text": "A kangaroo's tail carries fifth of its strength - muscle thick as a leg."
+   },
+   {
+    "id": "an-A-102",
+    "used": 0,
+    "text": "Kangaroo hops store energy in tendons - each bound costs less than the last."
+   },
+   {
+    "id": "an-A-103",
+    "used": 0,
+    "text": "A joey crawls to the pouch at jellybean size - milk valves do the rest."
+   },
+   {
+    "id": "an-A-104",
+    "used": 0,
+    "text": "Okapi wear zebra stripes on the rump - the giraffe family's forest cousin."
+   },
+   {
+    "id": "an-A-105",
+    "used": 0,
+    "text": "Giraffe spots work as radiators - vessels under each patch vent heat."
+   },
+   {
+    "id": "an-A-106",
+    "used": 0,
+    "text": "Zebra stripes baffle biting flies - horseflies struggle to land on stripes."
+   },
+   {
+    "id": "an-A-107",
+    "used": 0,
+    "text": "A lion's roar carries for kilometres - built like a natural foghorn."
+   },
+   {
+    "id": "an-A-108",
+    "used": 0,
+    "text": "Cheetah claws grip like cleats - semi-retractable traction for the sprint."
+   },
+   {
+    "id": "an-A-109",
+    "used": 0,
+    "text": "Cheetahs overheat quickly - the engine limits how long the chase runs."
+   },
+   {
+    "id": "an-A-110",
+    "used": 0,
+    "text": "Tunas ram ventilate - swimming forces water over the gills."
+   },
+   {
+    "id": "an-A-111",
+    "used": 0,
+    "text": "Side-neck turtles fold the head sideways - shoulders ride inside the shell armour."
+   },
+   {
+    "id": "an-A-112",
+    "used": 0,
+    "text": "Butterfly proboscises coil like watch springs - nectar releases the straw."
+   },
+   {
+    "id": "an-A-113",
+    "used": 0,
+    "text": "Scorpions glow under ultraviolet - armour shines blue-green in the dark."
+   },
+   {
+    "id": "an-A-114",
+    "used": 0,
+    "text": "Horseshoe crab blood is copper-blue - the lysate detects bacterial contamination."
+   },
+   {
+    "id": "an-A-115",
+    "used": 0,
+    "text": "Coral polyps are animals - thousands of mouths build the reef."
+   },
+   {
+    "id": "an-A-116",
+    "used": 0,
+    "text": "Sponges hold no organs or nerves - pores filter the sea for food."
+   },
+   {
+    "id": "an-A-117",
+    "used": 0,
+    "text": "Jellyfish manage without brain, blood or heart - a loose net still hunts."
+   },
+   {
+    "id": "an-A-118",
+    "used": 0,
+    "text": "Anemone stinging cells fire like harpoons - touch sets the coil off."
+   },
+   {
+    "id": "an-A-119",
+    "used": 0,
+    "text": "Clams print growth rings like trees - seasons write into the shell."
+   },
+   {
+    "id": "an-A-120",
+    "used": 0,
+    "text": "Sea stars have no blood - water powers their whole system."
+   },
+   {
+    "id": "an-A-121",
+    "used": 0,
+    "text": "Sea urchins grind with Aristotle's lantern - five teeth shear the algae."
+   },
+   {
+    "id": "an-A-122",
+    "used": 0,
+    "text": "Nautilus chambers flood and dry - gas control spirals the shell up."
+   },
+   {
+    "id": "an-A-123",
+    "used": 0,
+    "text": "Squids jet through siphons - water in, water out, arrow away."
+   },
+   {
+    "id": "an-A-124",
+    "used": 0,
+    "text": "Cuttlebone is an inner shell - gas and liquid trim the float."
+   },
+   {
+    "id": "an-A-125",
+    "used": 0,
+    "text": "Penguin bones run dense as weights - little air lightens the plunge."
+   },
+   {
+    "id": "an-A-126",
+    "used": 0,
+    "text": "Penguin feathers pack hundreds per square inch - oil seals out the cold."
+   },
+   {
+    "id": "an-A-127",
+    "used": 0,
+    "text": "Arctic fox fur changes twice a year - camouflage set by the calendar."
+   },
+   {
+    "id": "an-A-128",
+    "used": 0,
+    "text": "Wood frogs freeze solid each winter - hearts stop, spring thaws them back."
+   },
+   {
+    "id": "an-A-129",
+    "used": 0,
+    "text": "Arctic ground squirrels chill below zero - blood cools without ice forming."
+   },
+   {
+    "id": "an-A-130",
+    "used": 0,
+    "text": "Sharks keep swimming to breathe - some rest only in motion."
+   },
+   {
+    "id": "an-A-131",
+    "used": 0,
+    "text": "Baleen combs krill from seawater - fringed plates strain the meal."
+   },
+   {
+    "id": "an-A-132",
+    "used": 0,
+    "text": "Toothed whales picture with sound - clicks render images where eyes fail."
+   },
+   {
+    "id": "an-A-133",
+    "used": 0,
+    "text": "Seahorse males brood in a pouch - pouch tissue feeds the young."
+   },
+   {
+    "id": "an-A-134",
+    "used": 0,
+    "text": "Elephants carry pregnancies twenty-two months - the longest term on land."
+   },
+   {
+    "id": "an-A-135",
+    "used": 0,
+    "text": "Blue whale calves gain around ninety kilograms a day - milk so rich it slides."
+   },
+   {
+    "id": "an-A-136",
+    "used": 0,
+    "text": "Snakes smell direction with forked tongues - each tip reports a side."
+   },
+   {
+    "id": "an-A-137",
+    "used": 0,
+    "text": "A snake's jaw bones split wide - ligaments let heads swallow huge meals."
+   },
+   {
+    "id": "an-A-138",
+    "used": 0,
+    "text": "Crocodilian hearts add a shunt - diving bypasses the lungs."
+   },
+   {
+    "id": "an-A-139",
+    "used": 0,
+    "text": "Dinosaurs survive as birds - theropod lineage stands in every yard."
+   },
+   {
+    "id": "an-A-140",
+    "used": 0,
+    "text": "Octopuses rewrite their RNA instead of DNA - brains adapt without touching genes."
+   },
+   {
+    "id": "an-A-141",
+    "used": 0,
+    "text": "Bees read electric flowers - charged blooms signal the freshest nectar."
+   },
+   {
+    "id": "an-A-142",
+    "used": 0,
+    "text": "Hummingbird tongues fork and zip - capillary trap, not suction pump."
+   },
+   {
+    "id": "an-A-143",
+    "used": 0,
+    "text": "Pigeons see ultraviolet - iridescent feathers write messages we miss."
+   },
+   {
+    "id": "an-A-144",
+    "used": 0,
+    "text": "Star-nosed moles judge touch with twenty-two tentacles - the fastest touch on earth."
+   },
+   {
+    "id": "an-A-145",
+    "used": 0,
+    "text": "A platypus shuts its eyes underwater - the bill senses everything instead."
+   },
+   {
+    "id": "an-A-146",
+    "used": 0,
+    "text": "Echidna spines are modified hairs - keratin quills on a digging frame."
+   },
+   {
+    "id": "an-A-147",
+    "used": 0,
+    "text": "Pandas grip with a false thumb - a wrist bone acting as a sixth finger."
+   },
+   {
+    "id": "an-A-148",
+    "used": 0,
+    "text": "Flamingo tongues piston like pumps - lamellae strain shrimp from brine."
+   },
+   {
+    "id": "an-A-149",
+    "used": 0,
+    "text": "Pelican throat pouches stretch for the scoop - fish drain before swallowing."
+   },
+   {
+    "id": "an-A-150",
+    "used": 0,
+    "text": "Vultures run battery-acid stomachs - botulism never survives the pass."
+   },
+   {
+    "id": "an-A-151",
+    "used": 0,
+    "text": "Honey buzzards wear scale armour on the face - bee stings slide off."
+   },
+   {
+    "id": "an-A-152",
+    "used": 0,
+    "text": "Elephant ears radiate heat - a metre of vascular fan cools the blood."
+   },
+   {
+    "id": "an-A-153",
+    "used": 0,
+    "text": "Barnacles cement the strongest underwater glue - repairs hold in surf."
+   },
+   {
+    "id": "an-A-154",
+    "used": 0,
+    "text": "Mussel threads flex with the waves - holdfasts ride the surge instead of snapping."
+   },
+   {
+    "id": "an-A-155",
+    "used": 0,
+    "text": "Tube worms farm bacteria - vent chimneys feed without sunlight."
+   },
+   {
+    "id": "an-A-156",
+    "used": 0,
+    "text": "Sea squirts pump and filter - chordate cousins that dumped the brain."
+   },
+   {
+    "id": "an-A-157",
+    "used": 0,
+    "text": "Planarian worms regrow from slivers - one fragment rebuilds the animal."
+   },
+   {
+    "id": "an-A-158",
+    "used": 0,
+    "text": "Hydras bud forever - young cells keep the body from ageing."
+   },
+   {
+    "id": "an-A-159",
+    "used": 0,
+    "text": "Pangolins armour in keratin - the only mammal wearing scales."
+   },
+   {
+    "id": "an-A-160",
+    "used": 0,
+    "text": "Three-toed sloths grow nine neck bones - two more than any mammal needs."
+   },
+   {
+    "id": "an-A-161",
+    "used": 0,
+    "text": "Sloth fur farms algae - green camouflage cultivated in the coat."
+   },
+   {
+    "id": "an-A-162",
+    "used": 0,
+    "text": "Komodo dragons carry venom - anticoagulant bites drain prey weak."
+   },
+   {
+    "id": "an-A-163",
+    "used": 0,
+    "text": "Tuataras keep a parietal eye - a light sensor under skull scales."
+   },
+   {
+    "id": "an-A-164",
+    "used": 0,
+    "text": "Zebrafish regrow fins and heart muscle - lab fish rebuild in weeks."
+   },
+   {
+    "id": "an-A-165",
+    "used": 0,
+    "text": "The brain burns a fifth of resting energy - two percent of weight, twenty percent of fuel."
+   },
+   {
+    "id": "an-A-166",
+    "used": 0,
+    "text": "Muscles only pull - bones lever, tendons rope the effort."
+   },
+   {
+    "id": "an-A-167",
+    "used": 0,
+    "text": "The heart paces itself - its own pacemaker fires before nerves do."
+   },
+   {
+    "id": "an-A-168",
+    "used": 0,
+    "text": "Enamel never regrows - the hardest tissue the body builds is final."
+   },
+   {
+    "id": "an-A-169",
+    "used": 0,
+    "text": "The liver regrows from a sixth - surgeons trim, nature rebuilds."
+   },
+   {
+    "id": "an-A-170",
+    "used": 0,
+    "text": "Kidneys hold a million filters each - nephrons sieve the blood clean."
+   },
+   {
+    "id": "an-A-171",
+    "used": 0,
+    "text": "Lungs unfold to a tennis court - alveoli trade air across thin film."
+   },
+   {
+    "id": "an-A-172",
+    "used": 0,
+    "text": "Red cells drop their nucleus - packed with haemoglobin, disposable for months."
+   },
+   {
+    "id": "an-A-173",
+    "used": 0,
+    "text": "Platelets clot without orders - first responders already in the plasma."
+   },
+   {
+    "id": "an-A-174",
+    "used": 0,
+    "text": "Hiccups spasm the diaphragm - an ancient reflex mammals never outgrew."
+   },
+   {
+    "id": "an-A-175",
+    "used": 0,
+    "text": "Yawning may cool the brain - deep breaths pull heat upward."
+   },
+   {
+    "id": "an-A-176",
+    "used": 0,
+    "text": "Goosebumps tug at empty follicles - muscles raise phantom fur."
+   },
+   {
+    "id": "an-A-177",
+    "used": 0,
+    "text": "Egg shell colour paints late in the line - blue runs through, brown only coats."
+   },
+   {
+    "id": "an-A-178",
+    "used": 0,
+    "text": "Dabbling ducks carry lamellae - serrated bills strain water from food."
+   },
+   {
+    "id": "an-A-179",
+    "used": 0,
+    "text": "Toucan beaks are honeycomb light - giant bills built on foam bone."
+   },
+   {
+    "id": "an-A-180",
+    "used": 0,
+    "text": "Peacock eyespots shimmer with photonic crystals - structure, not just pigment."
+   },
+   {
+    "id": "an-A-181",
+    "used": 0,
+    "text": "Finch beaks match the menu - deep for seeds, long for cactus."
+   },
+   {
+    "id": "an-A-182",
+    "used": 0,
+    "text": "Bats chirp and read echoes - sound pictures resolve in full dark."
+   },
+   {
+    "id": "an-A-183",
+    "used": 0,
+    "text": "Seal whiskers read wakes - they trace fish left behind in the water."
+   },
+   {
+    "id": "an-A-184",
+    "used": 0,
+    "text": "Walrus tusks are elongated canines - ice grips and hauling hooks."
+   },
+   {
+    "id": "an-A-185",
+    "used": 0,
+    "text": "Squirrels' incisors never stop - gnawing keeps the length in check."
+   },
+   {
+    "id": "an-A-186",
+    "used": 0,
+    "text": "Nine-banded armadillos almost always twin - one embryo splits every time."
+   },
+   {
+    "id": "an-A-187",
+    "used": 0,
+    "text": "Anteater tongues reach half a metre - sticky saliva lifts whole insect colonies."
+   },
+   {
+    "id": "an-A-188",
+    "used": 0,
+    "text": "Spotted hyenas digest bone - their dung dries white with calcium."
+   },
+   {
+    "id": "an-A-189",
+    "used": 0,
+    "text": "Bears out-smell hounds in trials - scent receptors built for kilometres."
+   },
+   {
+    "id": "an-A-190",
+    "used": 0,
+    "text": "Donkey pupils run horizontal - wide horizons while heads graze."
+   },
+   {
+    "id": "an-A-191",
+    "used": 0,
+    "text": "Hamster cheek pouches reach the shoulders - seed vaults built in."
+   },
+   {
+    "id": "an-A-192",
+    "used": 0,
+    "text": "Tarsier eyes outweigh their brains - the largest eye-to-body ratio among mammals."
+   },
+   {
+    "id": "an-A-193",
+    "used": 0,
+    "text": "Slow lorises deliver venom - elbow glands licked before the bite."
+   },
+   {
+    "id": "an-A-194",
+    "used": 0,
+    "text": "Human and chimpanzee DNA differs about one percent - two species, one blueprint."
+   },
+   {
+    "id": "an-A-195",
+    "used": 0,
+    "text": "Gibbon arms swing past their feet - brachiation geared for speed."
+   },
+   {
+    "id": "an-A-196",
+    "used": 0,
+    "text": "Manatee bones grow dense - no marrow, no buoyancy trouble."
+   },
+   {
+    "id": "an-A-197",
+    "used": 0,
+    "text": "Lobster blood runs blue - copper doing oxygen's job, like the octopus."
+   },
+   {
+    "id": "an-A-198",
+    "used": 0,
+    "text": "Snapping shrimp claws boil cavitation bubbles - the pop can outgun a rifle."
+   },
+   {
+    "id": "an-A-199",
+    "used": 0,
+    "text": "Krill form city-sized swarms - whales, penguins and seals queue behind them."
+   },
+   {
+    "id": "an-A-200",
+    "used": 0,
+    "text": "Centipede fangs are modified legs - venom walks from the head."
+   },
+   {
+    "id": "an-A-201",
+    "used": 0,
+    "text": "Millipedes carry two leg pairs per segment - armour coils with chemical defence."
+   },
+   {
+    "id": "an-A-202",
+    "used": 0,
+    "text": "Octopus arms hold two thirds of the neurons - the brain delegates to the limbs."
+   },
+   {
+    "id": "an-A-203",
+    "used": 0,
+    "text": "Cuttlefish skin carries muscles, not just colour - texture changes with the pattern."
+   },
+   {
+    "id": "an-A-204",
+    "used": 0,
+    "text": "Frog skin breathes - some species pull oxygen straight through damp skin."
+   },
+   {
+    "id": "an-A-205",
+    "used": 0,
+    "text": "Newts regenerate limbs, jaws and even eye lenses - rebuild lists mammals envy."
+   },
+   {
+    "id": "an-A-206",
+    "used": 0,
+    "text": "Human embryos grow fine lanugo hair - it sheds before birth."
+   },
+   {
+    "id": "an-A-207",
+    "used": 0,
+    "text": "The body's smallest bones sit in the ear - stirrup, anvil and hammer, grain-sized."
+   },
+   {
+    "id": "an-A-208",
+    "used": 0,
+    "text": "Taste buds turn over every week or so - bruises heal, senses reset."
+   },
+   {
+    "id": "an-A-209",
+    "used": 0,
+    "text": "Smell signals reach memory circuits before language does - scent hits first."
+   },
+   {
+    "id": "an-A-210",
+    "used": 0,
+    "text": "Embryos build tail genes, then switch them off - we start and reabsorb."
+   },
+   {
+    "id": "an-A-211",
+    "used": 0,
+    "text": "The appendix may bank gut bacteria - a remnant still earning rent."
+   },
+   {
+    "id": "an-A-212",
+    "used": 0,
+    "text": "Adrenal glands dump adrenaline within a second - heart, lungs and legs prepped."
+   },
+   {
+    "id": "an-A-213",
+    "used": 0,
+    "text": "Muscle memory lives in circuits - the fibre does not remember, the wiring does."
+   },
+   {
+    "id": "an-A-214",
+    "used": 0,
+    "text": "A foetus hears from mid-term - voices arrive muffled through fluid."
+   },
+   {
+    "id": "an-A-215",
+    "used": 0,
+    "text": "Fingerprints set in the womb - friction and timing make every loop unique."
+   },
+   {
+    "id": "an-A-216",
+    "used": 0,
+    "text": "Hairs grow in cycles - each strand quits, rests, then restarts."
+   },
+   {
+    "id": "an-A-217",
+    "used": 0,
+    "text": "Blond hair bleaches in the sun - decades of light keep lightening it."
+   },
+   {
+    "id": "an-A-218",
+    "used": 0,
+    "text": "Grey hair marks pigment cells running dry - follicles stop refilling colour."
+   },
+   {
+    "id": "an-A-219",
+    "used": 0,
+    "text": "Tooth nerves read fluid motion - cold drinks alarm the tubes inside enamel."
+   },
+   {
+    "id": "an-A-220",
+    "used": 0,
+    "text": "Bones knit with cartilage first - a hard callus finishes the repair."
+   },
+   {
+    "id": "an-A-221",
+    "used": 0,
+    "text": "Haemoglobin's iron atom holds oxygen - one mineral runs the whole blood line."
+   },
+   {
+    "id": "an-A-222",
+    "used": 0,
+    "text": "White cells hunt by scent - infection chemicals draw the swarm."
+   },
+   {
+    "id": "an-A-223",
+    "used": 0,
+    "text": "Lymph nodes filter the crew - immune cells meet at the gates."
+   },
+   {
+    "id": "an-A-224",
+    "used": 0,
+    "text": "Skin spans roughly two square metres - the body's largest organ by area."
+   },
+   {
+    "id": "an-A-225",
+    "used": 0,
+    "text": "Fingertips carry unique ridges - grip improves and identity prints."
+   },
+   {
+    "id": "an-A-226",
+    "used": 0,
+    "text": "The cornea has no blood - oxygen dissolves straight from the air."
+   },
+   {
+    "id": "an-A-227",
+    "used": 0,
+    "text": "Vertebrate retinas wire backwards - light crosses nerve layers before reporting."
+   },
+   {
+    "id": "an-A-228",
+    "used": 0,
+    "text": "Pupils close with a sphincter muscle - a biological aperture in the eye."
+   },
+   {
+    "id": "an-A-229",
+    "used": 0,
+    "text": "Muscles attach through tendons - the rope carries load to the bone."
+   },
+   {
+    "id": "an-A-230",
+    "used": 0,
+    "text": "Joint cartilage works like bearings - synovial oil keeps the glide quiet."
+   },
+   {
+    "id": "an-A-231",
+    "used": 0,
+    "text": "Human spines curve in four bends - upright load shares across the stack."
+   },
+   {
+    "id": "an-A-232",
+    "used": 0,
+    "text": "Twelve rib pairs flex with every breath - the cage swings open and shut."
+   },
+   {
+    "id": "an-A-233",
+    "used": 0,
+    "text": "The diaphragm domes down on inhale - a vacuum pulls air without effort."
+   },
+   {
+    "id": "an-A-234",
+    "used": 0,
+    "text": "Newborns hold a swimming reflex - water trips automatic strokes."
+   },
+   {
+    "id": "an-A-235",
+    "used": 0,
+    "text": "Reflexes skip the brain - spinal signals answer before thought finishes."
+   },
+   {
+    "id": "an-A-236",
+    "used": 0,
+    "text": "A knee tap tests the whole arc - tap, nerve, muscle, no thinking."
+   },
+   {
+    "id": "an-A-237",
+    "used": 0,
+    "text": "Cat purrs run twenty-five to a hundred and fifty hertz - the band researchers keep studying."
+   },
+   {
+    "id": "an-A-238",
+    "used": 0,
+    "text": "Dogs curl to protect the organs - the pose is ancestral."
+   },
+   {
+    "id": "an-A-239",
+    "used": 0,
+    "text": "Dogs see a blue-yellow world - red-green stays out of their view."
+   },
+   {
+    "id": "an-A-240",
+    "used": 0,
+    "text": "Rats dream in replay - mazes rerun during sleep."
+   },
+   {
+    "id": "an-A-241",
+    "used": 0,
+    "text": "Goldfish track days by feeding time - clocks, not seconds, guide them."
+   },
+   {
+    "id": "an-A-242",
+    "used": 0,
+    "text": "Bees count to four - laboratory hives learned sets of landmarks."
+   },
+   {
+    "id": "an-A-243",
+    "used": 0,
+    "text": "Ants haul many times their own weight - leverage scales with size."
+   },
+   {
+    "id": "an-A-244",
+    "used": 0,
+    "text": "Praying mantises hear with their thorax - ultrasound ears on the middle legs."
+   },
+   {
+    "id": "an-A-245",
+    "used": 0,
+    "text": "Tiger moths jam bat sonar - clicks deafen the hunting chirp."
+   },
+   {
+    "id": "an-A-246",
+    "used": 0,
+    "text": "Katydid ears sit on the front legs - knees that literally hear."
+   },
+   {
+    "id": "an-A-247",
+    "used": 0,
+    "text": "Cricket chirps track temperature - one extra pulse per degree."
+   },
+   {
+    "id": "an-A-248",
+    "used": 0,
+    "text": "Mayflies live a single day as adults - the years pass underwater."
+   },
+   {
+    "id": "an-A-249",
+    "used": 0,
+    "text": "Periodical cicadas wait thirteen or seventeen years - prime numbers beat predators."
+   },
+   {
+    "id": "an-A-250",
+    "used": 0,
+    "text": "Damselflies fold their wings at rest - dragonflies cannot."
+   }
+  ],
+  "B": [
+   {
+    "id": "an-B-001",
+    "used": 0,
+    "text": "Cleaner wrasse run reef stations - clients queue for parasite dips."
+   },
+   {
+    "id": "an-B-002",
+    "used": 0,
+    "text": "Oxpeckers ride rhinos and cattle - ticks eaten, danger spotted."
+   },
+   {
+    "id": "an-B-003",
+    "used": 0,
+    "text": "Clownfish trade food for shelter - anemone stings never touch their hosts."
+   },
+   {
+    "id": "an-B-004",
+    "used": 0,
+    "text": "Remoras hitch sharks on suction discs - rides with scraps included."
+   },
+   {
+    "id": "an-B-005",
+    "used": 0,
+    "text": "Plovers pick crocodile teeth - birds welcome in open jaws."
+   },
+   {
+    "id": "an-B-006",
+    "used": 0,
+    "text": "Honeyguides call people to beehives - birds lead, humans crack the nest."
+   },
+   {
+    "id": "an-B-007",
+    "used": 0,
+    "text": "Ants herd aphids like cattle - honeydew tapped, herds guarded."
+   },
+   {
+    "id": "an-B-008",
+    "used": 0,
+    "text": "Leafcutter ants farm fungus - leaves feed the crop, not the ants."
+   },
+   {
+    "id": "an-B-009",
+    "used": 0,
+    "text": "Bobtail squid farm glowing bacteria - microbes write the nightly disguise."
+   },
+   {
+    "id": "an-B-010",
+    "used": 0,
+    "text": "Snapping shrimp keep goby lookouts - blind shrimp dig, alert fish warn."
+   },
+   {
+    "id": "an-B-011",
+    "used": 0,
+    "text": "Arctic terns fly pole to pole - the longest migration on the planet."
+   },
+   {
+    "id": "an-B-012",
+    "used": 0,
+    "text": "Monarchs return in generations - no single butterfly completes the round trip."
+   },
+   {
+    "id": "an-B-013",
+    "used": 0,
+    "text": "Salmon smell their birth stream - chemistry written in the nose."
+   },
+   {
+    "id": "an-B-014",
+    "used": 0,
+    "text": "Sea turtles navigate to natal beaches - magnetic maps guide the return."
+   },
+   {
+    "id": "an-B-015",
+    "used": 0,
+    "text": "Wildebeest follow the rains - herds trace the greening savanna."
+   },
+   {
+    "id": "an-B-016",
+    "used": 0,
+    "text": "Caribou cross thousands of kilometres - the longest land migration among deer."
+   },
+   {
+    "id": "an-B-017",
+    "used": 0,
+    "text": "Humpbacks fast through migration - weeks of travel without feeding."
+   },
+   {
+    "id": "an-B-018",
+    "used": 0,
+    "text": "European eels vanish to spawn - the Sargasso nursery still puzzles science."
+   },
+   {
+    "id": "an-B-019",
+    "used": 0,
+    "text": "Humpbacks blow bubble nets - spiral curtains trap schooling fish."
+   },
+   {
+    "id": "an-B-020",
+    "used": 0,
+    "text": "Orcas wave-wash seals off ice - coordinated hits from below."
+   },
+   {
+    "id": "an-B-021",
+    "used": 0,
+    "text": "African wild dogs vote by sneezing - the pack decides on the move."
+   },
+   {
+    "id": "an-B-022",
+    "used": 0,
+    "text": "Cheetah cubs practice chase lines - play builds the sprint."
+   },
+   {
+    "id": "an-B-023",
+    "used": 0,
+    "text": "Lions hunt cooperative in darkness - night closes the distance to prey."
+   },
+   {
+    "id": "an-B-024",
+    "used": 0,
+    "text": "Leopards haul kills into trees - a larder out of hyena reach."
+   },
+   {
+    "id": "an-B-025",
+    "used": 0,
+    "text": "Foxes snow-dive on hearing alone - ears locate mice under the crust."
+   },
+   {
+    "id": "an-B-026",
+    "used": 0,
+    "text": "Bears snatch salmon mid-leap - timing beats the river."
+   },
+   {
+    "id": "an-B-027",
+    "used": 0,
+    "text": "Dolphins drive fish into bait balls - rings tighten, mouths wait."
+   },
+   {
+    "id": "an-B-028",
+    "used": 0,
+    "text": "Mantises sway with the wind - rocking hides the hunter in plain motion."
+   },
+   {
+    "id": "an-B-029",
+    "used": 0,
+    "text": "Trapdoor spiders wait under hinged lids - silk doors hide the ambush."
+   },
+   {
+    "id": "an-B-030",
+    "used": 0,
+    "text": "Bolas spiders swing chemical lassoes - glue balls mimic moth pheromones."
+   },
+   {
+    "id": "an-B-031",
+    "used": 0,
+    "text": "Anglerfish dangle glowing lures - light draws dinner through the black."
+   },
+   {
+    "id": "an-B-032",
+    "used": 0,
+    "text": "Dragonfly nymphs snatch underwater - hinged jaws grab tadpoles."
+   },
+   {
+    "id": "an-B-033",
+    "used": 0,
+    "text": "Vultures ride thermals in spirals - height buys the search area."
+   },
+   {
+    "id": "an-B-034",
+    "used": 0,
+    "text": "New Caledonian crows bend wire hooks - tools made, not found."
+   },
+   {
+    "id": "an-B-035",
+    "used": 0,
+    "text": "Chimpanzees fish termites with sticks - craft taught across generations."
+   },
+   {
+    "id": "an-B-036",
+    "used": 0,
+    "text": "Sea otters crack shells on chest rocks - personal anvils, carried for life."
+   },
+   {
+    "id": "an-B-037",
+    "used": 0,
+    "text": "Octopuses carry coconut shells as armour - portable hideouts on the sand."
+   },
+   {
+    "id": "an-B-038",
+    "used": 0,
+    "text": "Crows drop nuts at crosswalks - traffic cracks them for free."
+   },
+   {
+    "id": "an-B-039",
+    "used": 0,
+    "text": "Dolphins wear sponge shields - beaks protected while they forage."
+   },
+   {
+    "id": "an-B-040",
+    "used": 0,
+    "text": "Elephants swat flies with branches - tools chosen, used and dropped."
+   },
+   {
+    "id": "an-B-041",
+    "used": 0,
+    "text": "Aye-ayes tap wood and listen - long fingers extract grubs by echo."
+   },
+   {
+    "id": "an-B-042",
+    "used": 0,
+    "text": "Gulls drop mussels on chosen rocks - anvil sites remembered by the flock."
+   },
+   {
+    "id": "an-B-043",
+    "used": 0,
+    "text": "Ravens sled on snow discs - play logged by researchers."
+   },
+   {
+    "id": "an-B-044",
+    "used": 0,
+    "text": "Magpies mark themselves in mirrors - one of few species passing the test."
+   },
+   {
+    "id": "an-B-045",
+    "used": 0,
+    "text": "Rats laugh when tickled - ultrasonic chirps only meters can hear."
+   },
+   {
+    "id": "an-B-046",
+    "used": 0,
+    "text": "Octopus juveniles blow and chase balls - play seen even in invertebrates."
+   },
+   {
+    "id": "an-B-047",
+    "used": 0,
+    "text": "Elephant families mourn - they revisit the bones of the dead."
+   },
+   {
+    "id": "an-B-048",
+    "used": 0,
+    "text": "Elephants talk in rumbles below hearing - infrasound carries for kilometres."
+   },
+   {
+    "id": "an-B-049",
+    "used": 0,
+    "text": "Matriarchs remember drought routes - herds survive on elder maps."
+   },
+   {
+    "id": "an-B-050",
+    "used": 0,
+    "text": "Whale songs drift and evolve - cultures cross whole ocean basins."
+   },
+   {
+    "id": "an-B-051",
+    "used": 0,
+    "text": "Dolphins name themselves - signature whistles answer a call."
+   },
+   {
+    "id": "an-B-052",
+    "used": 0,
+    "text": "Parrots learn flock names - labels for mates, taught young."
+   },
+   {
+    "id": "an-B-053",
+    "used": 0,
+    "text": "Bees dance distance and direction - the hive reads the angle."
+   },
+   {
+    "id": "an-B-054",
+    "used": 0,
+    "text": "Scout bees argue by dancing - enthusiasm recruits the swarm's vote."
+   },
+   {
+    "id": "an-B-055",
+    "used": 0,
+    "text": "Prairie dogs name predators - specific barks for hawk, coyote and human."
+   },
+   {
+    "id": "an-B-056",
+    "used": 0,
+    "text": "Meerkats post sentries - the mob works while one watches."
+   },
+   {
+    "id": "an-B-057",
+    "used": 0,
+    "text": "Vervet monkeys scream per predator - eagle cries send the troop diving."
+   },
+   {
+    "id": "an-B-058",
+    "used": 0,
+    "text": "Howls reunite wolf packs - long calls carry ownership and location."
+   },
+   {
+    "id": "an-B-059",
+    "used": 0,
+    "text": "Lemurs sunbathe facing the cold - ritual postures to warm up."
+   },
+   {
+    "id": "an-B-060",
+    "used": 0,
+    "text": "Bonobos settle tension with grooming - touch is their diplomacy."
+   },
+   {
+    "id": "an-B-061",
+    "used": 0,
+    "text": "Gorilla chest-beats carry far - size and rhythm warn rivals."
+   },
+   {
+    "id": "an-B-062",
+    "used": 0,
+    "text": "Howler monkeys roar for kilometres - throat sacs work as loudspeakers."
+   },
+   {
+    "id": "an-B-063",
+    "used": 0,
+    "text": "Dawn chorus peaks when rivals are near - first song stakes the day."
+   },
+   {
+    "id": "an-B-064",
+    "used": 0,
+    "text": "Firefly females fake rival flashes - luring other males to their end."
+   },
+   {
+    "id": "an-B-065",
+    "used": 0,
+    "text": "Sea otters hold paws while sleeping - the raft keeps pairs from drifting."
+   },
+   {
+    "id": "an-B-066",
+    "used": 0,
+    "text": "Flamingos stand on one leg - half the brain stays alert."
+   },
+   {
+    "id": "an-B-067",
+    "used": 0,
+    "text": "Koalas sleep twenty hours - eucalyptus is slow-burning fuel."
+   },
+   {
+    "id": "an-B-068",
+    "used": 0,
+    "text": "Bats lock onto branches upside down - tendons hold without effort."
+   },
+   {
+    "id": "an-B-069",
+    "used": 0,
+    "text": "Geckos lick their eyes clean - no eyelids to shut."
+   },
+   {
+    "id": "an-B-070",
+    "used": 0,
+    "text": "Common swifts stay airborne for months - eating, mating and sleeping aloft."
+   },
+   {
+    "id": "an-B-071",
+    "used": 0,
+    "text": "Clownfish turn female when the leader dies - the largest takes her place."
+   },
+   {
+    "id": "an-B-072",
+    "used": 0,
+    "text": "Anglerfish males fuse into females - permanent parasitic attachment."
+   },
+   {
+    "id": "an-B-073",
+    "used": 0,
+    "text": "Aphids are born pregnant through summer - no mating needed for clones."
+   },
+   {
+    "id": "an-B-074",
+    "used": 0,
+    "text": "Cuckoos lay in others' nests - chicks evict the rightful brood."
+   },
+   {
+    "id": "an-B-075",
+    "used": 0,
+    "text": "Bowerbirds decorate courts with blue finds - taste wins the female."
+   },
+   {
+    "id": "an-B-076",
+    "used": 0,
+    "text": "Pufferfish sculpt sand circles - males draw patterned beds for egg visits."
+   },
+   {
+    "id": "an-B-077",
+    "used": 0,
+    "text": "Strawberry poison frogs taxi tadpoles - droplets delivered up bromeliads."
+   },
+   {
+    "id": "an-B-078",
+    "used": 0,
+    "text": "Mouthbrooding cichlids hold eggs for weeks - fathers mouth the nursery."
+   },
+   {
+    "id": "an-B-079",
+    "used": 0,
+    "text": "Gentoo penguins offer pebbles - nest gifts seal the pair bond."
+   },
+   {
+    "id": "an-B-080",
+    "used": 0,
+    "text": "Wandering albatrosses return to the same ground - sky partners, steady mates."
+   },
+   {
+    "id": "an-B-081",
+    "used": 0,
+    "text": "Swan pairs rebuild the same bank yearly - the same mate, the nest anew."
+   },
+   {
+    "id": "an-B-082",
+    "used": 0,
+    "text": "Crocodile fathers carry hatchlings - gentle jaws ferry them to water."
+   },
+   {
+    "id": "an-B-083",
+    "used": 0,
+    "text": "Pythons shiver to brood eggs - muscle heat incubates the clutch."
+   },
+   {
+    "id": "an-B-084",
+    "used": 0,
+    "text": "Hippo calves nurse underwater - milk seals over the snout."
+   },
+   {
+    "id": "an-B-085",
+    "used": 0,
+    "text": "Wild dog packs feed pups first - regurgitation runs the nursery."
+   },
+   {
+    "id": "an-B-086",
+    "used": 0,
+    "text": "Meerkat adults teach dead scorpions first - lessons sized to the pups."
+   },
+   {
+    "id": "an-B-087",
+    "used": 0,
+    "text": "Cotton-top tamarin fathers haul the twins - infant carrying shared."
+   },
+   {
+    "id": "an-B-088",
+    "used": 0,
+    "text": "Emperor penguin fathers balance eggs through winter - fasting on the ice."
+   },
+   {
+    "id": "an-B-089",
+    "used": 0,
+    "text": "Octopus ink buys seconds - a smokescreen shaped like the escapee."
+   },
+   {
+    "id": "an-B-090",
+    "used": 0,
+    "text": "Skunks raise the tail first - the dance says stop or spray."
+   },
+   {
+    "id": "an-B-091",
+    "used": 0,
+    "text": "Horned lizards jet blood from eyes - predators get a chemical shock."
+   },
+   {
+    "id": "an-B-092",
+    "used": 0,
+    "text": "Stick insects sway like twigs - motion sells the disguise."
+   },
+   {
+    "id": "an-B-093",
+    "used": 0,
+    "text": "Leaf-tailed geckos press flat - tails finish the dead-leaf outline."
+   },
+   {
+    "id": "an-B-094",
+    "used": 0,
+    "text": "Peppered moths matched the soot - industrial bark flipped the colour balance."
+   },
+   {
+    "id": "an-B-095",
+    "used": 0,
+    "text": "Viceroy and monarchs share warning colours - predators learn once, both profit."
+   },
+   {
+    "id": "an-B-096",
+    "used": 0,
+    "text": "King snakes band coral red - harmless copies the dangerous pattern."
+   },
+   {
+    "id": "an-B-097",
+    "used": 0,
+    "text": "Hoverflies wear wasp stripes - stings faked by colour alone."
+   },
+   {
+    "id": "an-B-098",
+    "used": 0,
+    "text": "Peacock butterfly wings flash eyespots - startle buys the escape."
+   },
+   {
+    "id": "an-B-099",
+    "used": 0,
+    "text": "Opossums play dead convincingly - even the smell of rot sells it."
+   },
+   {
+    "id": "an-B-100",
+    "used": 0,
+    "text": "Death-feigning beetles drop and freeze - predators lose interest in stillness."
+   },
+   {
+    "id": "an-B-101",
+    "used": 0,
+    "text": "Sharks flip into tonic immobility - paralysis on their backs."
+   },
+   {
+    "id": "an-B-102",
+    "used": 0,
+    "text": "Frilled lizards flare their fans - apparent size doubles for a bluff."
+   },
+   {
+    "id": "an-B-103",
+    "used": 0,
+    "text": "Cobras hood up to stand taller - ribs spread the warning sail."
+   },
+   {
+    "id": "an-B-104",
+    "used": 0,
+    "text": "Rattlesnake rattles buzz warning - keratin rings announce the threat."
+   },
+   {
+    "id": "an-B-105",
+    "used": 0,
+    "text": "Geckos shed tails that keep wriggling - the decoy runs while they hide."
+   },
+   {
+    "id": "an-B-106",
+    "used": 0,
+    "text": "Dolphins invent bubble rings to play - toys for their own amusement."
+   },
+   {
+    "id": "an-B-107",
+    "used": 0,
+    "text": "Bears sled down snow slopes - play caught on camera."
+   },
+   {
+    "id": "an-B-108",
+    "used": 0,
+    "text": "Puppies play with bite inhibition - mouth manners taught by littermates."
+   },
+   {
+    "id": "an-B-109",
+    "used": 0,
+    "text": "Kittens wrestle to learn limits - play teaches bite strength."
+   },
+   {
+    "id": "an-B-110",
+    "used": 0,
+    "text": "Scrub-jays hide thousands of seeds - and recall which caches already failed."
+   },
+   {
+    "id": "an-B-111",
+    "used": 0,
+    "text": "Grey squirrels fake-bury when watched - thieves are shadowed by deception."
+   },
+   {
+    "id": "an-B-112",
+    "used": 0,
+    "text": "Clark's nutcrackers cache tens of thousands of pine seeds - and remember thousands of sites."
+   },
+   {
+    "id": "an-B-113",
+    "used": 0,
+    "text": "Starling murmurations flicker without collision - each bird matches about seven neighbours."
+   },
+   {
+    "id": "an-B-114",
+    "used": 0,
+    "text": "Fish schools flash silver walls - predators face a maze of mirrors."
+   },
+   {
+    "id": "an-B-115",
+    "used": 0,
+    "text": "Emperor penguins huddle and rotate - warmth shared through the crowd."
+   },
+   {
+    "id": "an-B-116",
+    "used": 0,
+    "text": "Small birds mob hawks - danger shouted down by numbers."
+   },
+   {
+    "id": "an-B-117",
+    "used": 0,
+    "text": "Orca pods teach hunting culture - sons inherit their mother's technique."
+   },
+   {
+    "id": "an-B-118",
+    "used": 0,
+    "text": "Bumblebees shiver to warm flight muscles - takeoff needs engine heat."
+   },
+   {
+    "id": "an-B-119",
+    "used": 0,
+    "text": "Moth fur deadens bat sonar - fuzzy wings absorb the clicks."
+   },
+   {
+    "id": "an-B-120",
+    "used": 0,
+    "text": "Desert beetles harvest fog - bumpy backs channel water toward the mouth."
+   },
+   {
+    "id": "an-B-121",
+    "used": 0,
+    "text": "Weaver birds sew living leaves - bills thread the nest shut."
+   },
+   {
+    "id": "an-B-122",
+    "used": 0,
+    "text": "Ovenbirds build clay domes - mud ovens with a side door."
+   },
+   {
+    "id": "an-B-123",
+    "used": 0,
+    "text": "Tailorbirds stitch leaf seams - plant fibre and spider silk thread."
+   },
+   {
+    "id": "an-B-124",
+    "used": 0,
+    "text": "Sunbirds hang woven pouches - nests dangling from branch tips."
+   },
+   {
+    "id": "an-B-125",
+    "used": 0,
+    "text": "Hermit crabs trade shells in chains - one vacancy sweeps the line."
+   },
+   {
+    "id": "an-B-126",
+    "used": 0,
+    "text": "Coral spawning turns water to snow - eggs rise on the moon's cue."
+   },
+   {
+    "id": "an-B-127",
+    "used": 0,
+    "text": "Vampire bats share meals - blood regurgitated for roostmates who failed."
+   },
+   {
+    "id": "an-B-128",
+    "used": 0,
+    "text": "Beavers slap tails on the water - the lodge alarm."
+   },
+   {
+    "id": "an-B-129",
+    "used": 0,
+    "text": "Mudskippers climb mangrove roots - fish that walk and breathe air."
+   },
+   {
+    "id": "an-B-130",
+    "used": 0,
+    "text": "Archerfish spit water at prey - the jet knocks insects off branches."
+   },
+   {
+    "id": "an-B-131",
+    "used": 0,
+    "text": "Bluehead wrasses change sex with rank - females turn male when the chief dies."
+   },
+   {
+    "id": "an-B-132",
+    "used": 0,
+    "text": "Parrotfish grind coral into sand - trails build beaches grain by grain."
+   },
+   {
+    "id": "an-B-133",
+    "used": 0,
+    "text": "Sea cucumbers sift the sediment - castings clean the seabed."
+   },
+   {
+    "id": "an-B-134",
+    "used": 0,
+    "text": "Ants link bodies into bridges - columns cross their own gaps."
+   },
+   {
+    "id": "an-B-135",
+    "used": 0,
+    "text": "Fire ants form living rafts - floods float the colony dry."
+   },
+   {
+    "id": "an-B-136",
+    "used": 0,
+    "text": "Termite mounds breathe through chimneys - internal climate held steady."
+   },
+   {
+    "id": "an-B-137",
+    "used": 0,
+    "text": "Naked mole-rat colonies run like hives - a queen, workers and soldiers."
+   },
+   {
+    "id": "an-B-138",
+    "used": 0,
+    "text": "Keas solve multi-step puzzles - New Zealand's alpine troublemakers."
+   },
+   {
+    "id": "an-B-139",
+    "used": 0,
+    "text": "Homing pigeons use Earth's magnetic field - sensors in the beak help map."
+   },
+   {
+    "id": "an-B-140",
+    "used": 0,
+    "text": "Many songbirds migrate by night - stars and streetlights steer the flock."
+   },
+   {
+    "id": "an-B-141",
+    "used": 0,
+    "text": "Geese fly in V - each bird rides the upwash from the one ahead."
+   },
+   {
+    "id": "an-B-142",
+    "used": 0,
+    "text": "Ducklings imprint on first motion - the moving object becomes mother."
+   },
+   {
+    "id": "an-B-143",
+    "used": 0,
+    "text": "Chicks recognise clucks before hatching - class starts inside the shell."
+   },
+   {
+    "id": "an-B-144",
+    "used": 0,
+    "text": "Locusts shift phase with crowds - alone grazers, together marching bands."
+   },
+   {
+    "id": "an-B-145",
+    "used": 0,
+    "text": "Anemones clone by splitting - colonies cover whole shores."
+   },
+   {
+    "id": "an-B-146",
+    "used": 0,
+    "text": "Turritopsis jellies revert to youth - the species that can restart life."
+   },
+   {
+    "id": "an-B-147",
+    "used": 0,
+    "text": "Bats drop body temperature in roosts - torpor saves the day's fuel."
+   },
+   {
+    "id": "an-B-148",
+    "used": 0,
+    "text": "Hedgehogs curl into winter balls - heartbeats fall to a crawl."
+   },
+   {
+    "id": "an-B-149",
+    "used": 0,
+    "text": "Bears sleep through winter without food - metabolism drops, muscle holds."
+   },
+   {
+    "id": "an-B-150",
+    "used": 0,
+    "text": "Snails seal the door for drought - mucus plugs survive years."
+   },
+   {
+    "id": "an-B-151",
+    "used": 0,
+    "text": "Fiddler crabs wave a giant claw - tool and banner in one."
+   },
+   {
+    "id": "an-B-152",
+    "used": 0,
+    "text": "Spotted hyena daughters inherit their mother's rank - hierarchy runs in families."
+   },
+   {
+    "id": "an-B-153",
+    "used": 0,
+    "text": "Baboons trade grooming for alliances - hours bought with protection."
+   },
+   {
+    "id": "an-B-154",
+    "used": 0,
+    "text": "Orangutans hold leaves overhead in rain - umbrellas made from branches."
+   },
+   {
+    "id": "an-B-155",
+    "used": 0,
+    "text": "Snow monkeys bathe in hot springs - troop behaviour copied from a pioneer."
+   },
+   {
+    "id": "an-B-156",
+    "used": 0,
+    "text": "Capuchins crack nuts with stones - hammers sharpened by practice."
+   },
+   {
+    "id": "an-B-157",
+    "used": 0,
+    "text": "Pangolins roll into scaled spheres - a knot predators cannot swallow."
+   },
+   {
+    "id": "an-B-158",
+    "used": 0,
+    "text": "Wolverines cache food under snow - pantries locked with ice."
+   },
+   {
+    "id": "an-B-159",
+    "used": 0,
+    "text": "Honey badgers shrug off stings and quills - thick, loose skin fears little."
+   },
+   {
+    "id": "an-B-160",
+    "used": 0,
+    "text": "Urban coyotes shift to quiet hours - traffic sets their clocks."
+   },
+   {
+    "id": "an-B-161",
+    "used": 0,
+    "text": "Flying squirrels glide on furred membranes - tails rudder the drop."
+   },
+   {
+    "id": "an-B-162",
+    "used": 0,
+    "text": "Colugos sail between trunks - skin wings over Borneo's canopy."
+   },
+   {
+    "id": "an-B-163",
+    "used": 0,
+    "text": "White-tailed deer flash their tails - white flags warn the woods."
+   },
+   {
+    "id": "an-B-164",
+    "used": 0,
+    "text": "Moose wade for pond weeds - aquatic plants deliver salt and protein."
+   },
+   {
+    "id": "an-B-165",
+    "used": 0,
+    "text": "Giraffes nap standing in minutes - among the briefest sleepers known."
+   },
+   {
+    "id": "an-B-166",
+    "used": 0,
+    "text": "Sheep remember fifty faces for years - better than many primates."
+   },
+   {
+    "id": "an-B-167",
+    "used": 0,
+    "text": "Ibex scale near-vertical dam walls - hooves find holds on sheer stone."
+   },
+   {
+    "id": "an-B-168",
+    "used": 0,
+    "text": "Llamas settle rank with spit - hierarchy decided in drool."
+   },
+   {
+    "id": "an-B-169",
+    "used": 0,
+    "text": "Camels seal their eyes with twin lashes - sand shut out against the wind."
+   },
+   {
+    "id": "an-B-170",
+    "used": 0,
+    "text": "Gibbon pairs sing duets at dawn - mated voices mark the territory."
+   },
+   {
+    "id": "an-B-171",
+    "used": 0,
+    "text": "Brittle stars walk on hundreds of tube feet - arms doing the legs' job."
+   },
+   {
+    "id": "an-B-172",
+    "used": 0,
+    "text": "Lobsters signal with urine - face-to-face sprays read the clan."
+   },
+   {
+    "id": "an-B-173",
+    "used": 0,
+    "text": "Barnacles fan legs when the tide runs - doors open on the current."
+   },
+   {
+    "id": "an-B-174",
+    "used": 0,
+    "text": "Oysters switch sex with age and season - some start male, then turn."
+   },
+   {
+    "id": "an-B-175",
+    "used": 0,
+    "text": "Cuttlefish flash hypnotic passing bands - prey zoned out before the strike."
+   },
+   {
+    "id": "an-B-176",
+    "used": 0,
+    "text": "Spiders balloon on silk - hatchlings ride the wind to new ground."
+   },
+   {
+    "id": "an-B-177",
+    "used": 0,
+    "text": "Tarantulas flick urticating hairs - defence launched from the abdomen."
+   },
+   {
+    "id": "an-B-178",
+    "used": 0,
+    "text": "Sea lions bark individually - voices identify members of the raft."
+   },
+   {
+    "id": "an-B-179",
+    "used": 0,
+    "text": "Kingfishers plunge feet-first - they aim through the water's bend."
+   },
+   {
+    "id": "an-B-180",
+    "used": 0,
+    "text": "Hornbills cement the nest door - females sealed inside while raising young."
+   },
+   {
+    "id": "an-B-181",
+    "used": 0,
+    "text": "Nuthatches creep head-first down trunks - unique among tree climbers."
+   },
+   {
+    "id": "an-B-182",
+    "used": 0,
+    "text": "Mockingbirds replay stolen songs at dawn - a repertoire built by theft."
+   },
+   {
+    "id": "an-B-183",
+    "used": 0,
+    "text": "Puffins stack fish crosswise - beaks designed to carry many at once."
+   },
+   {
+    "id": "an-B-184",
+    "used": 0,
+    "text": "Gannets fold back before impact - solid skulls survive the dive."
+   },
+   {
+    "id": "an-B-185",
+    "used": 0,
+    "text": "Roosters crow by light clocks - sunrise just confirms the schedule."
+   },
+   {
+    "id": "an-B-186",
+    "used": 0,
+    "text": "Flamingos start grey - shrimp pigment repaints every feather."
+   },
+   {
+    "id": "an-B-187",
+    "used": 0,
+    "text": "Sperm whales sleep vertically - drifting like logs in the deep."
+   },
+   {
+    "id": "an-B-188",
+    "used": 0,
+    "text": "Weddell seals keep breathing holes open - teeth grind the ice."
+   },
+   {
+    "id": "an-B-189",
+    "used": 0,
+    "text": "Scallops watch from hundreds of blue eyes - shell rims lined with them."
+   },
+   {
+    "id": "an-B-190",
+    "used": 0,
+    "text": "Scorpion mothers carry young on their backs - first climb lasts weeks."
+   },
+   {
+    "id": "an-B-191",
+    "used": 0,
+    "text": "Shrews must eat almost constantly - tiny furnaces with venomous bites."
+   },
+   {
+    "id": "an-B-192",
+    "used": 0,
+    "text": "Warthogs kneel to graze - calloused knees survive the thornveld."
+   },
+   {
+    "id": "an-B-193",
+    "used": 0,
+    "text": "Springbok pronk in bouncing leaps - jumps that brag their health."
+   },
+   {
+    "id": "an-B-194",
+    "used": 0,
+    "text": "Donkeys bond hard - losing a companion brings visible grief."
+   },
+   {
+    "id": "an-B-195",
+    "used": 0,
+    "text": "Cows keep best friends - separation raises the pulse."
+   },
+   {
+    "id": "an-B-196",
+    "used": 0,
+    "text": "Pigs navigate mazes and learn joystick games - lab work shows sharp memory."
+   },
+   {
+    "id": "an-B-197",
+    "used": 0,
+    "text": "Rabbits thump hind feet as alarms - the drum carries underground."
+   },
+   {
+    "id": "an-B-198",
+    "used": 0,
+    "text": "Horses read human faces - anger changes their response."
+   },
+   {
+    "id": "an-B-199",
+    "used": 0,
+    "text": "Pandas graze up to sixteen hours - bamboo pays so slowly, time is everything."
+   },
+   {
+    "id": "an-B-200",
+    "used": 0,
+    "text": "Cats slow-blink at people - the feline kiss owners return."
+   },
+   {
+    "id": "an-B-201",
+    "used": 0,
+    "text": "Cats knead blankets all life - nursing comfort carried into adulthood."
+   },
+   {
+    "id": "an-B-202",
+    "used": 0,
+    "text": "Dogs follow human pointing - gestures understood before words arrive."
+   },
+   {
+    "id": "an-B-203",
+    "used": 0,
+    "text": "Dog tail sweeps bias with mood - researchers read feelings in the wag."
+   },
+   {
+    "id": "an-B-204",
+    "used": 0,
+    "text": "Elephant seals plunge past a thousand metres - lungs collapse to beat the squeeze."
+   },
+   {
+    "id": "an-B-205",
+    "used": 0,
+    "text": "Crows gather at corpse sightings - danger learned from the dead."
+   },
+   {
+    "id": "an-B-206",
+    "used": 0,
+    "text": "Orangutans build leaf mattresses - bedding arranged before sleep."
+   },
+   {
+    "id": "an-B-207",
+    "used": 0,
+    "text": "Japanese macaques wash sweet potatoes - one inventor, a whole culture."
+   },
+   {
+    "id": "an-B-208",
+    "used": 0,
+    "text": "Chimps embrace after fights - reconciliation is deliberate."
+   },
+   {
+    "id": "an-B-209",
+    "used": 0,
+    "text": "Owl feathers comb the air - fringed edges silence the wingbeat."
+   },
+   {
+    "id": "an-B-210",
+    "used": 0,
+    "text": "Peregrines stoop past three hundred kilometres an hour - the fastest move is a dive."
+   },
+   {
+    "id": "an-B-211",
+    "used": 0,
+    "text": "Megapodes bury eggs in compost - birds that let the earth incubate."
+   },
+   {
+    "id": "an-B-212",
+    "used": 0,
+    "text": "Alligator bellows make water dance - infrasound ripples along the back."
+   },
+   {
+    "id": "an-B-213",
+    "used": 0,
+    "text": "King cobras weave leaf nests - the only snake that builds a bed."
+   },
+   {
+    "id": "an-B-214",
+    "used": 0,
+    "text": "Mimic octopuses impersonate lionfish and flatfish - costumes worn on demand."
+   },
+   {
+    "id": "an-B-215",
+    "used": 0,
+    "text": "Blue-ringed octopuses flash warning rings - colour first, deadly bite after."
+   },
+   {
+    "id": "an-B-216",
+    "used": 0,
+    "text": "Emu fathers sit the clutch alone - males raise the chicks too."
+   },
+   {
+    "id": "an-B-217",
+    "used": 0,
+    "text": "Kiwi eggs weigh about a fifth of the mother - outsized for any bird."
+   },
+   {
+    "id": "an-B-218",
+    "used": 0,
+    "text": "Prairie dog towns run for hectares - one alarm system for a thousand bodies."
+   },
+   {
+    "id": "an-B-219",
+    "used": 0,
+    "text": "Meerkats plug the burrow at dawn - doors reopened each evening."
+   },
+   {
+    "id": "an-B-220",
+    "used": 0,
+    "text": "Spider monkeys use tails as fifth hands - branches grabbed without looking."
+   },
+   {
+    "id": "an-B-221",
+    "used": 0,
+    "text": "Howler monkeys rest through the heat - energy saved for the evening roar."
+   },
+   {
+    "id": "an-B-222",
+    "used": 0,
+    "text": "Baboon infants ride their mothers' backs - early tours of the troop's routes."
+   },
+   {
+    "id": "an-B-223",
+    "used": 0,
+    "text": "Chimpanzee mothers carry infants for years - school rides on the back."
+   },
+   {
+    "id": "an-B-224",
+    "used": 0,
+    "text": "Gorillas weave fresh night nests - a new bed every evening."
+   },
+   {
+    "id": "an-B-225",
+    "used": 0,
+    "text": "Orangutans pull leaf covers overhead - rain roofs made before sleep."
+   },
+   {
+    "id": "an-B-226",
+    "used": 0,
+    "text": "Lemur troops scent-mark trails - tails brushed past every leaf."
+   },
+   {
+    "id": "an-B-227",
+    "used": 0,
+    "text": "Tarsiers cling upright all night - motionless until dusk sparks the hunt."
+   },
+   {
+    "id": "an-B-228",
+    "used": 0,
+    "text": "Hummingbirds chase rivals past feeders - territories the size of a hand."
+   },
+   {
+    "id": "an-B-229",
+    "used": 0,
+    "text": "Peahens reject dull trains - choice writes the peacock's next generation."
+   },
+   {
+    "id": "an-B-230",
+    "used": 0,
+    "text": "Dung beetles steer by the Milky Way - starlight keeps their rolling line."
+   },
+   {
+    "id": "an-B-231",
+    "used": 0,
+    "text": "Queen termites can live decades - rulers bred only to lay eggs."
+   },
+   {
+    "id": "an-B-232",
+    "used": 0,
+    "text": "Queen bee pheromone holds the hive in line - chemistry keeps a single mother."
+   },
+   {
+    "id": "an-B-233",
+    "used": 0,
+    "text": "Ant trails smell of order - pheromone paths redrawn by every walker."
+   },
+   {
+    "id": "an-B-234",
+    "used": 0,
+    "text": "Honeybee workers cool the hive by fanning - water carriers assist the wings."
+   },
+   {
+    "id": "an-B-235",
+    "used": 0,
+    "text": "Paper wasp adults and larvae trade food - the nursery pays the hunters back."
+   },
+   {
+    "id": "an-B-236",
+    "used": 0,
+    "text": "Moths taste with their feet - contact chemistry starts the egg decision."
+   },
+   {
+    "id": "an-B-237",
+    "used": 0,
+    "text": "Monarchs fold wings in to sleep - camouflage hiding the bright orange."
+   },
+   {
+    "id": "an-B-238",
+    "used": 0,
+    "text": "Dragonfly nymphs spend years underwater - the aerial hunter starts below."
+   },
+   {
+    "id": "an-B-239",
+    "used": 0,
+    "text": "Damselfly nymphs breathe through tail gills - fins for a pond life."
+   },
+   {
+    "id": "an-B-240",
+    "used": 0,
+    "text": "Coconut crabs climb trees to harvest palms - giant land crabs, crushing claws."
+   },
+   {
+    "id": "an-B-241",
+    "used": 0,
+    "text": "Owls cough up pellets - fur and bone the kitchen could not digest."
+   },
+   {
+    "id": "an-B-242",
+    "used": 0,
+    "text": "Bald eagles often steal fish from osprey - thieves working the waterways."
+   },
+   {
+    "id": "an-B-243",
+    "used": 0,
+    "text": "Cockatoos learn to open city bins - neighbourhoods teach each other."
+   },
+   {
+    "id": "an-B-244",
+    "used": 0,
+    "text": "Cassowaries spread rainforest seeds - fruit carried whole across the forest."
+   },
+   {
+    "id": "an-B-245",
+    "used": 0,
+    "text": "Wild turkeys roost in trees - ground birds refuse ground beds."
+   },
+   {
+    "id": "an-B-246",
+    "used": 0,
+    "text": "Cormorants dry their wings after dives - waterlogged feathers need the sun."
+   },
+   {
+    "id": "an-B-247",
+    "used": 0,
+    "text": "Secretary birds stomp snakes to death - kicks on feathered legs."
+   },
+   {
+    "id": "an-B-248",
+    "used": 0,
+    "text": "Chickadees code danger in their song - more dees mean a bigger threat."
+   },
+   {
+    "id": "an-B-249",
+    "used": 0,
+    "text": "Bats drink mid-flight - skims that hardly dimple the water."
+   },
+   {
+    "id": "an-B-250",
+    "used": 0,
+    "text": "Stoats dance to distract rabbits - hops that mesmerise before the strike."
+   }
+  ],
+  "C": [
+   {
+    "id": "an-C-001",
+    "used": 0,
+    "text": "Lions dominate coats of arms - the most carved beast in heraldry."
+   },
+   {
+    "id": "an-C-002",
+    "used": 0,
+    "text": "Scotland rides a unicorn - chained on the royal arms for centuries."
+   },
+   {
+    "id": "an-C-003",
+    "used": 0,
+    "text": "England's royal arms wear three golden lions - three cats on one shield."
+   },
+   {
+    "id": "an-C-004",
+    "used": 0,
+    "text": "The Gallic rooster speaks for France - coq Gaulois on jerseys and seals."
+   },
+   {
+    "id": "an-C-005",
+    "used": 0,
+    "text": "The bald eagle flags America - chosen for the seal in 1782."
+   },
+   {
+    "id": "an-C-006",
+    "used": 0,
+    "text": "Australia's arms pair kangaroo and emu - two forward-striding emblems."
+   },
+   {
+    "id": "an-C-007",
+    "used": 0,
+    "text": "The Chinese dragon rides water and weather - unlike Western fire lizards."
+   },
+   {
+    "id": "an-C-008",
+    "used": 0,
+    "text": "India's tiger speaks for the wilderness - national animal since 1973."
+   },
+   {
+    "id": "an-C-009",
+    "used": 0,
+    "text": "Nekhbet the vulture crowns pharaohs - mother bird over the white crown."
+   },
+   {
+    "id": "an-C-010",
+    "used": 0,
+    "text": "The falcon soars with Horus - sky and kingship in one bird."
+   },
+   {
+    "id": "an-C-011",
+    "used": 0,
+    "text": "Anubis judges with a jackal's head - embalmer of the dead."
+   },
+   {
+    "id": "an-C-012",
+    "used": 0,
+    "text": "Bastet rules as the cat goddess - feline grace worshipped at Bubastis."
+   },
+   {
+    "id": "an-C-013",
+    "used": 0,
+    "text": "The cobra rears on the crown - Uraeus spits fire over the brow."
+   },
+   {
+    "id": "an-C-014",
+    "used": 0,
+    "text": "Scarabs roll the sun - dung beetles copied as resurrection icons."
+   },
+   {
+    "id": "an-C-015",
+    "used": 0,
+    "text": "Thoth's ibis writes the tally - wisdom billed as a wading bird."
+   },
+   {
+    "id": "an-C-016",
+    "used": 0,
+    "text": "Ganesha rides a mouse - the mighty tamed by the smallest mount."
+   },
+   {
+    "id": "an-C-017",
+    "used": 0,
+    "text": "Nandi waits at Shiva's gate - the white bull keeps the temple."
+   },
+   {
+    "id": "an-C-018",
+    "used": 0,
+    "text": "Garuda carries Vishnu - part eagle, part wind, wholly devoted."
+   },
+   {
+    "id": "an-C-019",
+    "used": 0,
+    "text": "The phoenix burns and returns - reborn from its own ashes."
+   },
+   {
+    "id": "an-C-020",
+    "used": 0,
+    "text": "Griffins guard gold - lion body, eagle wings, watchdog of the East."
+   },
+   {
+    "id": "an-C-021",
+    "used": 0,
+    "text": "The sphinx asks one riddle - lion body with a human wit."
+   },
+   {
+    "id": "an-C-022",
+    "used": 0,
+    "text": "Owls stood for Athena - the owl of wisdom minted on Greek coins."
+   },
+   {
+    "id": "an-C-023",
+    "used": 0,
+    "text": "Wolves raised Rome - Romulus and Remus under the she-wolf."
+   },
+   {
+    "id": "an-C-024",
+    "used": 0,
+    "text": "Capitoline geese once saved Rome - honks that beat a night raid."
+   },
+   {
+    "id": "an-C-025",
+    "used": 0,
+    "text": "Eagles led Roman legions - the aquila was the army's soul."
+   },
+   {
+    "id": "an-C-026",
+    "used": 0,
+    "text": "Crane and turtle pair for long life - Japanese wedding emblems."
+   },
+   {
+    "id": "an-C-027",
+    "used": 0,
+    "text": "Koi climb the waterfall - perseverance painted on gates and scrolls."
+   },
+   {
+    "id": "an-C-028",
+    "used": 0,
+    "text": "Bats carry luck's homograph - China hangs fu for fortune with bats."
+   },
+   {
+    "id": "an-C-029",
+    "used": 0,
+    "text": "Owls hoot at witchcraft in Europe - the same bird Athena loved."
+   },
+   {
+    "id": "an-C-030",
+    "used": 0,
+    "text": "Odin keeps two ravens - thought and memory fly from his shoulders."
+   },
+   {
+    "id": "an-C-031",
+    "used": 0,
+    "text": "Butterflies carry souls in Greek thought - psyche means both."
+   },
+   {
+    "id": "an-C-032",
+    "used": 0,
+    "text": "The serpent on the staff heals - medicine still borrows the snake."
+   },
+   {
+    "id": "an-C-033",
+    "used": 0,
+    "text": "The dove returns with an olive branch - peace flown from Genesis."
+   },
+   {
+    "id": "an-C-034",
+    "used": 0,
+    "text": "Medieval pelicans bleed for young - the wound became sacred art."
+   },
+   {
+    "id": "an-C-035",
+    "used": 0,
+    "text": "The dog came first - wolf packs began raiding human camps millennia ago."
+   },
+   {
+    "id": "an-C-036",
+    "used": 0,
+    "text": "The oldest cat claim sits in Cyprus - a burial with a cat 9,500 years ago."
+   },
+   {
+    "id": "an-C-037",
+    "used": 0,
+    "text": "Cats entered Egypt as rat catchers - granaries turned them into gods."
+   },
+   {
+    "id": "an-C-038",
+    "used": 0,
+    "text": "Horses were tamed on the steppe - wheel and rider changed war."
+   },
+   {
+    "id": "an-C-039",
+    "used": 0,
+    "text": "Cattle grew from aurochs - wild stock that vanished in 1627."
+   },
+   {
+    "id": "an-C-040",
+    "used": 0,
+    "text": "Chickens descend from red junglefowl - jungle birds oddly hooked."
+   },
+   {
+    "id": "an-C-041",
+    "used": 0,
+    "text": "Camels took deserts to people - Bactrian north, dromedary south."
+   },
+   {
+    "id": "an-C-042",
+    "used": 0,
+    "text": "Goldfish were bred in Song ponds - colour selected over centuries."
+   },
+   {
+    "id": "an-C-043",
+    "used": 0,
+    "text": "Pigeons carried messages for empires - Roman post and world wars relied on them."
+   },
+   {
+    "id": "an-C-044",
+    "used": 0,
+    "text": "War elephants broke armies - Hannibal's crossing made them legend."
+   },
+   {
+    "id": "an-C-045",
+    "used": 0,
+    "text": "Sled dogs built the north - mail, meat and medicine by team."
+   },
+   {
+    "id": "an-C-046",
+    "used": 0,
+    "text": "Asses and mules haul where engines fail - the pack animals of mountains."
+   },
+   {
+    "id": "an-C-047",
+    "used": 0,
+    "text": "Water buffalo plough Asia's paddies - engines of the rice belt."
+   },
+   {
+    "id": "an-C-048",
+    "used": 0,
+    "text": "Llamas pack the Andes - no other beast at altitude."
+   },
+   {
+    "id": "an-C-049",
+    "used": 0,
+    "text": "Yaks thrive where oxygen thins - Tibet's walking wool."
+   },
+   {
+    "id": "an-C-050",
+    "used": 0,
+    "text": "Reindeer pull Sami sleds - the herd moves with the seasons."
+   },
+   {
+    "id": "an-C-051",
+    "used": 0,
+    "text": "Egyptians kept hives along the Nile - tomb paintings show the harvest."
+   },
+   {
+    "id": "an-C-052",
+    "used": 0,
+    "text": "Silk worms started a road - the Silk Road carried the cocoon's thread."
+   },
+   {
+    "id": "an-C-053",
+    "used": 0,
+    "text": "Falconry won heritage status - a trained hunt listed across cultures."
+   },
+   {
+    "id": "an-C-054",
+    "used": 0,
+    "text": "Minoans painted bull-leapers - sport or ritual, still argued."
+   },
+   {
+    "id": "an-C-055",
+    "used": 0,
+    "text": "Vienna's Schonbrunn Zoo opened in 1752 - the oldest zoo still receiving guests."
+   },
+   {
+    "id": "an-C-056",
+    "used": 0,
+    "text": "London Zoo opened in 1828 - the first kept as much for science as spectacle."
+   },
+   {
+    "id": "an-C-057",
+    "used": 0,
+    "text": "London's Fish House opened in 1853 - the first public aquarium."
+   },
+   {
+    "id": "an-C-058",
+    "used": 0,
+    "text": "Chauvet's beasts were drawn 36,000 years ago - horses and lions underground."
+   },
+   {
+    "id": "an-C-059",
+    "used": 0,
+    "text": "Lascaux's galleries run 17,000 years - painted in French stone."
+   },
+   {
+    "id": "an-C-060",
+    "used": 0,
+    "text": "Egyptians mummified cats by the thousand - kitten offerings to Bastet."
+   },
+   {
+    "id": "an-C-061",
+    "used": 0,
+    "text": "Navies sailed with ship cats - rat duty before radios."
+   },
+   {
+    "id": "an-C-062",
+    "used": 0,
+    "text": "Messenger dogs carried trench notes - silent runners of world war one."
+   },
+   {
+    "id": "an-C-063",
+    "used": 0,
+    "text": "Laika became the first animal in orbit - Sputnik 2 in 1957."
+   },
+   {
+    "id": "an-C-064",
+    "used": 0,
+    "text": "Ham the chimpanzee survived spaceflight - first primate on a ballistic arc."
+   },
+   {
+    "id": "an-C-065",
+    "used": 0,
+    "text": "Koko the gorilla signed over a thousand words - and raised kittens gently."
+   },
+   {
+    "id": "an-C-066",
+    "used": 0,
+    "text": "Hachiko waited nine years at Shibuya - long past his owner's death."
+   },
+   {
+    "id": "an-C-067",
+    "used": 0,
+    "text": "Balto led the final serum run into Nome - 1925 diphtheria freight."
+   },
+   {
+    "id": "an-C-068",
+    "used": 0,
+    "text": "Seaman the Newfoundland circled with Lewis and Clark."
+   },
+   {
+    "id": "an-C-069",
+    "used": 0,
+    "text": "Rin Tin Tin, a war-dog rescue, became cinema's biggest canine star."
+   },
+   {
+    "id": "an-C-070",
+    "used": 0,
+    "text": "Lassie defined the collie - a fiction that shaped real breeds."
+   },
+   {
+    "id": "an-C-071",
+    "used": 0,
+    "text": "Nipper listened to the gramophone - the dog over the phonograph."
+   },
+   {
+    "id": "an-C-072",
+    "used": 0,
+    "text": "Greyfriars Bobby guarded his master's grave - Edinburgh's loyal statue."
+   },
+   {
+    "id": "an-C-073",
+    "used": 0,
+    "text": "Joy Adamson's lioness Elsa returned to the wild - the story that became Born Free."
+   },
+   {
+    "id": "an-C-074",
+    "used": 0,
+    "text": "Jane Goodall's chimps used tools - science had to redefine man."
+   },
+   {
+    "id": "an-C-075",
+    "used": 0,
+    "text": "Dian Fossey lived among mountain gorillas - counted from her camp."
+   },
+   {
+    "id": "an-C-076",
+    "used": 0,
+    "text": "Pavlov's dogs learned the bell - conditioned reflex written into textbooks."
+   },
+   {
+    "id": "an-C-077",
+    "used": 0,
+    "text": "Crows drop stones to drink - Aesop's fable turned testable."
+   },
+   {
+    "id": "an-C-078",
+    "used": 0,
+    "text": "Thailand's monkey buffet piles fruit for Lopburi's macaques."
+   },
+   {
+    "id": "an-C-079",
+    "used": 0,
+    "text": "Swan upping counts the Thames - royal birds tallied each summer."
+   },
+   {
+    "id": "an-C-080",
+    "used": 0,
+    "text": "Pushkar's camel fair trades thousands - Rajasthan's desert market week."
+   },
+   {
+    "id": "an-C-081",
+    "used": 0,
+    "text": "Churches bless animals each October - Saint Francis' feast day custom."
+   },
+   {
+    "id": "an-C-082",
+    "used": 0,
+    "text": "The Chinese zodiac runs twelve animals - years assigned to beasts in order."
+   },
+   {
+    "id": "an-C-083",
+    "used": 0,
+    "text": "Nepal garlands street dogs at Tihar - tikka and treats for every stray."
+   },
+   {
+    "id": "an-C-084",
+    "used": 0,
+    "text": "Jaipur paints its elephants for Holi - the elephant festival's colour day."
+   },
+   {
+    "id": "an-C-085",
+    "used": 0,
+    "text": "Wales flies a red dragon - thunder beast on the flag since 1591."
+   },
+   {
+    "id": "an-C-086",
+    "used": 0,
+    "text": "Bhutan paints the thunder dragon - the Druk rides every official banner."
+   },
+   {
+    "id": "an-C-087",
+    "used": 0,
+    "text": "Mexico's arms show eagle and serpent - the founding sign of Tenochtitlan."
+   },
+   {
+    "id": "an-C-088",
+    "used": 0,
+    "text": "Audubon painted birds plate by plate - four hundred studies, one obsession."
+   },
+   {
+    "id": "an-C-089",
+    "used": 0,
+    "text": "Stubbs flayed horses for truth - anatomy under every painted coat."
+   },
+   {
+    "id": "an-C-090",
+    "used": 0,
+    "text": "Durer's Hare studied fur by fur - a rabbit drawn like a portrait."
+   },
+   {
+    "id": "an-C-091",
+    "used": 0,
+    "text": "Maneki-neko cats wave fortune in - the beckoning paw of shopfronts."
+   },
+   {
+    "id": "an-C-092",
+    "used": 0,
+    "text": "Piggy banks grew from pygg - a coin jar that lost a letter."
+   },
+   {
+    "id": "an-C-093",
+    "used": 0,
+    "text": "The teddy bear began with a refused hunt - a president's mercy in 1902."
+   },
+   {
+    "id": "an-C-094",
+    "used": 0,
+    "text": "A bear named Winnipeg lived at London Zoo - Milne's son met Winnie there."
+   },
+   {
+    "id": "an-C-095",
+    "used": 0,
+    "text": "Most dog breeds froze in Victorian times - dog shows wrote the standards."
+   },
+   {
+    "id": "an-C-096",
+    "used": 0,
+    "text": "The first big cat show filled Crystal Palace in 1871 - breeds got their paperwork."
+   },
+   {
+    "id": "an-C-097",
+    "used": 0,
+    "text": "Crufts has run since 1891 - the world's most crowded dog show."
+   },
+   {
+    "id": "an-C-098",
+    "used": 0,
+    "text": "Guide dogs began with blinded veterans - Germany trained the first pairs."
+   },
+   {
+    "id": "an-C-099",
+    "used": 0,
+    "text": "Customs beagles sniff luggage - the friendly face of biosecurity."
+   },
+   {
+    "id": "an-C-100",
+    "used": 0,
+    "text": "St Bernards crossed alpine snow - the hospice dogs of the pass."
+   },
+   {
+    "id": "an-C-101",
+    "used": 0,
+    "text": "Police dogs work scent at crime scenes - K9 units now standard worldwide."
+   },
+   {
+    "id": "an-C-102",
+    "used": 0,
+    "text": "Herding breeds stalk sheep with a crouch - instinct nobody taught."
+   },
+   {
+    "id": "an-C-103",
+    "used": 0,
+    "text": "Chinese fishers dive with cormorants - birds fishing on a leash."
+   },
+   {
+    "id": "an-C-104",
+    "used": 0,
+    "text": "Lab rats built modern medicine - species bred to be predictable."
+   },
+   {
+    "id": "an-C-105",
+    "used": 0,
+    "text": "Fruit flies built genetics - Morgan's flies and their chromosomes."
+   },
+   {
+    "id": "an-C-106",
+    "used": 0,
+    "text": "Clever Hans hoofed his answers - the horse that fooled psychology."
+   },
+   {
+    "id": "an-C-107",
+    "used": 0,
+    "text": "Jumbo became the first celebrity elephant - Barnum's star, a species' name."
+   },
+   {
+    "id": "an-C-108",
+    "used": 0,
+    "text": "Roman households kept songbirds - cages clipped, voices ordered at dinner."
+   },
+   {
+    "id": "an-C-109",
+    "used": 0,
+    "text": "A Pompeii collar warns beware of the dog - the phrase is ancient."
+   },
+   {
+    "id": "an-C-110",
+    "used": 0,
+    "text": "Pigeon racing releases flocks from afar - the birds clock their own return."
+   },
+   {
+    "id": "an-C-111",
+    "used": 0,
+    "text": "Gulf camel races run robot jockeys - whips replaced by remote hands."
+   },
+   {
+    "id": "an-C-112",
+    "used": 0,
+    "text": "Vienna's Lipizzaners dance the school - white stallions trained to steps."
+   },
+   {
+    "id": "an-C-113",
+    "used": 0,
+    "text": "The Iditarod races a thousand miles - the serum trail turned sport."
+   },
+   {
+    "id": "an-C-114",
+    "used": 0,
+    "text": "Dolly the sheep was cloned from an adult cell - first mammal from a frozen page."
+   },
+   {
+    "id": "an-C-115",
+    "used": 0,
+    "text": "Cerberus guards the underworld gate - three heads for Hades' halls."
+   },
+   {
+    "id": "an-C-116",
+    "used": 0,
+    "text": "The Minotaur kept the labyrinth - man, bull and myth at Crete."
+   },
+   {
+    "id": "an-C-117",
+    "used": 0,
+    "text": "Bellerophon rode Pegasus - the winged horse of Greek sky."
+   },
+   {
+    "id": "an-C-118",
+    "used": 0,
+    "text": "The Chimera breathed fire - lion, goat and serpent in one beast."
+   },
+   {
+    "id": "an-C-119",
+    "used": 0,
+    "text": "Heracles fought a regrowing hydra - cut one head, two more answered."
+   },
+   {
+    "id": "an-C-120",
+    "used": 0,
+    "text": "Baba Yaga's hut stands on chicken legs - Slavic witch of the deep forest."
+   },
+   {
+    "id": "an-C-121",
+    "used": 0,
+    "text": "Russia's firebird glows in fairy tales - tsars send princes for one feather."
+   },
+   {
+    "id": "an-C-122",
+    "used": 0,
+    "text": "Sun Wukong the Monkey King - a stone ape who defied heaven."
+   },
+   {
+    "id": "an-C-123",
+    "used": 0,
+    "text": "Bavaria's wolpertinger haunts beer halls - antlered, winged tavern rabbit."
+   },
+   {
+    "id": "an-C-124",
+    "used": 0,
+    "text": "Pan's pipes startled travellers - goat-legged music of the wild."
+   },
+   {
+    "id": "an-C-125",
+    "used": 0,
+    "text": "Callisto became the great bear - a huntress placed among the stars."
+   },
+   {
+    "id": "an-C-126",
+    "used": 0,
+    "text": "Io wandered as a heifer - a gadfly-stung wanderer of Greek myth."
+   },
+   {
+    "id": "an-C-127",
+    "used": 0,
+    "text": "Lycaon fed a god human flesh - cursed to run as Arcadia's wolf."
+   },
+   {
+    "id": "an-C-128",
+    "used": 0,
+    "text": "Fafnir turned dragon on gold - a dwarf cursed by greed and treasure."
+   },
+   {
+    "id": "an-C-129",
+    "used": 0,
+    "text": "The Wild Hunt sweeps the winter sky - phantom hounds of northern story."
+   },
+   {
+    "id": "an-C-130",
+    "used": 0,
+    "text": "The harpies stole the feast - bird-women of storm and hunger."
+   },
+   {
+    "id": "an-C-131",
+    "used": 0,
+    "text": "Cadmus sowed dragon teeth - warriors sprang up from the furrow."
+   },
+   {
+    "id": "an-C-132",
+    "used": 0,
+    "text": "Hindus honour the cow - milk, dung and ghee all sacred gifts."
+   },
+   {
+    "id": "an-C-133",
+    "used": 0,
+    "text": "Monkeys feed at Hanuman temples - the god's living kin on the steps."
+   },
+   {
+    "id": "an-C-134",
+    "used": 0,
+    "text": "Cats rest easy in Islamic tradition - the Prophet's sleeve was their bed."
+   },
+   {
+    "id": "an-C-135",
+    "used": 0,
+    "text": "The donkey carried Palm Sunday - the meek beast of Jerusalem's gate."
+   },
+   {
+    "id": "an-C-136",
+    "used": 0,
+    "text": "Aaron's golden calf angered Moses - an idol carved in the desert."
+   },
+   {
+    "id": "an-C-137",
+    "used": 0,
+    "text": "Balaam's ass spoke to its rider - the beast that saw the angel first."
+   },
+   {
+    "id": "an-C-138",
+    "used": 0,
+    "text": "Inari's shrines line with fox statues - kitsune as the rice god's messengers."
+   },
+   {
+    "id": "an-C-139",
+    "used": 0,
+    "text": "The Salmon of Knowledge swam in Irish pools - wisdom caught and eaten."
+   },
+   {
+    "id": "an-C-140",
+    "used": 0,
+    "text": "The two lives of a cat - nine lives outlived the saying, folklore kept."
+   },
+   {
+    "id": "an-C-141",
+    "used": 0,
+    "text": "Bullfighting divides Spain - tradition on one side, welfare on the other."
+   },
+   {
+    "id": "an-C-142",
+    "used": 0,
+    "text": "The Kentucky Derby ran since 1875 - roses, mint juleps and fast horses."
+   },
+   {
+    "id": "an-C-143",
+    "used": 0,
+    "text": "The Easter bunny arrived with German immigrants - hares and eggs together."
+   },
+   {
+    "id": "an-C-144",
+    "used": 0,
+    "text": "Groundhog Day rides one marmot - Punxsutawney Phil's shadow verdict."
+   },
+   {
+    "id": "an-C-145",
+    "used": 0,
+    "text": "The Melbourne Cup stops a nation - three minutes of spring racing."
+   },
+   {
+    "id": "an-C-146",
+    "used": 0,
+    "text": "Aintree's Grand National jumps history - the steeplechase everyone knows."
+   },
+   {
+    "id": "an-C-147",
+    "used": 0,
+    "text": "Tamil Pongal thanks the cattle - cooked milk and garlanded horns."
+   },
+   {
+    "id": "an-C-148",
+    "used": 0,
+    "text": "Thanksgiving put the turkey on the table - a bird Benjamin Franklin admired."
+   },
+   {
+    "id": "an-C-149",
+    "used": 0,
+    "text": "Westminster's kennel show ran since 1877 - benched rivals and best in show."
+   },
+   {
+    "id": "an-C-150",
+    "used": 0,
+    "text": "Snail racing crowns a champion - the world title run at walking pace."
+   },
+   {
+    "id": "an-C-151",
+    "used": 0,
+    "text": "The padded horse collar let Europe pull - heavier loads without choking."
+   },
+   {
+    "id": "an-C-152",
+    "used": 0,
+    "text": "Clydesdales haul brewery wagons - draft teams keeping old trades visible."
+   },
+   {
+    "id": "an-C-153",
+    "used": 0,
+    "text": "Bloodhounds trail scents for kilometres - the hound built for pursuit."
+   },
+   {
+    "id": "an-C-154",
+    "used": 0,
+    "text": "Circus Maximus packed Rome - chariot teams racing before emperors."
+   },
+   {
+    "id": "an-C-155",
+    "used": 0,
+    "text": "Guano islands built fertilizer empires - birds whose droppings fed fields."
+   },
+   {
+    "id": "an-C-156",
+    "used": 0,
+    "text": "Pekingese guarded Chinese palaces - the lion dog behind palace doors."
+   },
+   {
+    "id": "an-C-157",
+    "used": 0,
+    "text": "Basenjis don't bark - the African barkless dog hums instead."
+   },
+   {
+    "id": "an-C-158",
+    "used": 0,
+    "text": "The Chihuahua descends from Techichi dogs - Toltec lap warmers."
+   },
+   {
+    "id": "an-C-159",
+    "used": 0,
+    "text": "Salukis hunted with pharaohs - the royal hound of the desert courts."
+   },
+   {
+    "id": "an-C-160",
+    "used": 0,
+    "text": "Trafalgar Square's four lions lie in bronze - Landseer's stone guard."
+   },
+   {
+    "id": "an-C-161",
+    "used": 0,
+    "text": "Battersea's doors opened in 1860 - London's home for stray dogs."
+   },
+   {
+    "id": "an-C-162",
+    "used": 0,
+    "text": "The Bone Wars dug up America - Cope and Marsh crews racing fossils."
+   },
+   {
+    "id": "an-C-163",
+    "used": 0,
+    "text": "Hitchcock's The Birds turned gulls to dread - a coast under wings."
+   },
+   {
+    "id": "an-C-164",
+    "used": 0,
+    "text": "Jaws made beaches fear great whites - a summer's villain in fin form."
+   },
+   {
+    "id": "an-C-165",
+    "used": 0,
+    "text": "The MGM lion roars on every reel - Hollywood's feline signature."
+   },
+   {
+    "id": "an-C-166",
+    "used": 0,
+    "text": "Puss in Boots turned a cat into a marquis - Perrault's swindler in footwear."
+   },
+   {
+    "id": "an-C-167",
+    "used": 0,
+    "text": "Lofting's Doctor Dolittle talked to animals - letters that became books."
+   },
+   {
+    "id": "an-C-168",
+    "used": 0,
+    "text": "Andersen's Ugly Duckling grows into grace - swanhood as patience."
+   },
+   {
+    "id": "an-C-169",
+    "used": 0,
+    "text": "Edward Lear's owl and pussycat sailed to sea - nonsense verse's odd couple."
+   },
+   {
+    "id": "an-C-170",
+    "used": 0,
+    "text": "Secretariat won the Belmont by thirty-one lengths - a racer gone legend."
+   },
+   {
+    "id": "an-C-171",
+    "used": 0,
+    "text": "Red Rum won Aintree three times - the Grand National's immortal horse."
+   },
+   {
+    "id": "an-C-172",
+    "used": 0,
+    "text": "Phar Lap ran into legend - Australia's giant-hearted racehorse."
+   },
+   {
+    "id": "an-C-173",
+    "used": 0,
+    "text": "Seabiscuit raced as the underdog - America's small horse against giants."
+   },
+   {
+    "id": "an-C-174",
+    "used": 0,
+    "text": "Twitter's bird was named Larry - Larry Bird of the Boston Celtics."
+   },
+   {
+    "id": "an-C-175",
+    "used": 0,
+    "text": "Puma took its name from the big cat - a Dassler brother's speed brand."
+   },
+   {
+    "id": "an-C-176",
+    "used": 0,
+    "text": "Saint-Saens' Swan glides on cello - the Carnival's calmest movement."
+   },
+   {
+    "id": "an-C-177",
+    "used": 0,
+    "text": "Saint-Saens' Elephant lifts the double bass - Carnival's lumbering waltz."
+   },
+   {
+    "id": "an-C-178",
+    "used": 0,
+    "text": "Giraffe descends from Arabic zarafa - a word that travelled north."
+   },
+   {
+    "id": "an-C-179",
+    "used": 0,
+    "text": "Guinea pigs come neither from Guinea nor pigs - rodents of the Andes."
+   },
+   {
+    "id": "an-C-180",
+    "used": 0,
+    "text": "Octopus means eight-foot - Greek counts its arms in the name."
+   },
+   {
+    "id": "an-C-181",
+    "used": 0,
+    "text": "Centipede promises a hundred feet - the count is always a lie."
+   },
+   {
+    "id": "an-C-182",
+    "used": 0,
+    "text": "Woodchucks chuck no wood - the name comes from Algonquian wuchak."
+   },
+   {
+    "id": "an-C-183",
+    "used": 0,
+    "text": "The Burgess Shale freezes a burst of evolution - soft bodies in Canadian stone."
+   },
+   {
+    "id": "an-C-184",
+    "used": 0,
+    "text": "Congress bred hoofbeats for battle - the horse that made steppe empires."
+   },
+   {
+    "id": "an-C-185",
+    "used": 0,
+    "text": "Wojtek the Syrian bear enlisted with Polish troops - an ammunition-carrying corporal bear."
+   },
+   {
+    "id": "an-C-186",
+    "used": 0,
+    "text": "Togo ran the serum run's longest leg - the sled star history overshadowed."
+   },
+   {
+    "id": "an-C-187",
+    "used": 0,
+    "text": "Sergeant Stubby marched the trenches - a stray pit bull with battle medals."
+   },
+   {
+    "id": "an-C-188",
+    "used": 0,
+    "text": "Frankel retired unbeaten - fourteen starts, one perfect racehorse record."
+   },
+   {
+    "id": "an-C-189",
+    "used": 0,
+    "text": "Winx stacked thirty-three straight wins - Australia's modern wonder mare."
+   },
+   {
+    "id": "an-C-190",
+    "used": 0,
+    "text": "Man o' War lost once in twenty starts - the standard champions still measure."
+   },
+   {
+    "id": "an-C-191",
+    "used": 0,
+    "text": "Merino sheep carried their fleece south - Spanish stock that built southern wool."
+   },
+   {
+    "id": "an-C-192",
+    "used": 0,
+    "text": "Medieval English wool paid for cathedrals - the fleece behind the estates."
+   },
+   {
+    "id": "an-C-193",
+    "used": 0,
+    "text": "Salt cod built Atlantic empires - dried fish that fed fleets and colonies."
+   },
+   {
+    "id": "an-C-194",
+    "used": 0,
+    "text": "Eiderdown comes from nesting ducks - farms harvest the shed breast feather."
+   },
+   {
+    "id": "an-C-195",
+    "used": 0,
+    "text": "Raccoon descends from a Powhatan word - aroughcun, the one that scratches."
+   },
+   {
+    "id": "an-C-196",
+    "used": 0,
+    "text": "Moose comes from an Algonquian word - moosu, the bark stripper."
+   },
+   {
+    "id": "an-C-197",
+    "used": 0,
+    "text": "Opossum carries a Powhatan name - apassum, the white-faced one."
+   },
+   {
+    "id": "an-C-198",
+    "used": 0,
+    "text": "Coyote the trickster shapes Plains stories - the small dog that outsmarts giants."
+   },
+   {
+    "id": "an-C-199",
+    "used": 0,
+    "text": "Anansi the spider wins with wit - West African tales where brains beat strength."
+   },
+   {
+    "id": "an-C-200",
+    "used": 0,
+    "text": "The Rainbow Serpent dreams Australian deserts - creator under the red earth."
+   },
+   {
+    "id": "an-C-201",
+    "used": 0,
+    "text": "Selkies shed sealskins at the shore - Celtic myth's amphibious brides."
+   },
+   {
+    "id": "an-C-202",
+    "used": 0,
+    "text": "The kelpie lures riders to lochs - Scottish water horse of drowning stories."
+   },
+   {
+    "id": "an-C-203",
+    "used": 0,
+    "text": "Sinbad's roc carried elephants - the giant bird of Arabian nights."
+   },
+   {
+    "id": "an-C-204",
+    "used": 0,
+    "text": "Quetzalcoatl wore feathers as a serpent - Mesoamerica's plumed snake god."
+   },
+   {
+    "id": "an-C-205",
+    "used": 0,
+    "text": "Thunderbirds stitch storms in North America - wings that make the thunder."
+   },
+   {
+    "id": "an-C-206",
+    "used": 0,
+    "text": "Black cats read lucky or cursed - Britain and America split on the omen."
+   },
+   {
+    "id": "an-C-207",
+    "used": 0,
+    "text": "The Tower of London keeps ravens - legend says the kingdom falls if they leave."
+   },
+   {
+    "id": "an-C-208",
+    "used": 0,
+    "text": "Horseshoes hang as iron luck - the lucky nail tradition across Europe."
+   },
+   {
+    "id": "an-C-209",
+    "used": 0,
+    "text": "Pamplona runs the bulls each July - a contested tradition of crowded streets."
+   },
+   {
+    "id": "an-C-210",
+    "used": 0,
+    "text": "Chonburi races water buffalo through rice - Thailand's annual splash sprint."
+   },
+   {
+    "id": "an-C-211",
+    "used": 0,
+    "text": "The RSPCA formed in 1824 - the world's first animal welfare society."
+   },
+   {
+    "id": "an-C-212",
+    "used": 0,
+    "text": "The ASPCA began in 1866 - American cruelty laws followed Bergh's push."
+   },
+   {
+    "id": "an-C-213",
+    "used": 0,
+    "text": "The WWF launched with a panda in 1961 - six letters and one bamboo icon."
+   },
+   {
+    "id": "an-C-214",
+    "used": 0,
+    "text": "Orion hunts with two dogs - Canis Major and Minor at his belt."
+   },
+   {
+    "id": "an-C-215",
+    "used": 0,
+    "text": "Sirius barks in Canis Major - the dog star leads the night sky."
+   },
+   {
+    "id": "an-C-216",
+    "used": 0,
+    "text": "Muybridge proved all four hooves leave the ground - photography dissected the gallop."
+   },
+   {
+    "id": "an-C-217",
+    "used": 0,
+    "text": "The Bayeux tapestry stitches a conquest - 202 metres of cavalry and horses."
+   },
+   {
+    "id": "an-C-218",
+    "used": 0,
+    "text": "Bosch filled paradise with beasts - a garden of hybrid nightmares."
+   },
+   {
+    "id": "an-C-219",
+    "used": 0,
+    "text": "London's hall swapped Dippy for a blue whale - museum mascots get replaced."
+   },
+   {
+    "id": "an-C-220",
+    "used": 0,
+    "text": "Churchill's Jock kept the armchair warm - the Chartwell marmalade cat."
+   },
+   {
+    "id": "an-C-221",
+    "used": 0,
+    "text": "Lincoln's sons hitched goats to a chair - White House lawns under siege."
+   },
+   {
+    "id": "an-C-222",
+    "used": 0,
+    "text": "Coolidge's raccoon Rebecca was meant for dinner - the pet that escaped the pot."
+   },
+   {
+    "id": "an-C-223",
+    "used": 0,
+    "text": "John Quincy Adams kept an alligator - a gift loose in the East Room."
+   },
+   {
+    "id": "an-C-224",
+    "used": 0,
+    "text": "Attenborough's Life on Earth reset wildlife TV - 1979's appointment viewing."
+   },
+   {
+    "id": "an-C-225",
+    "used": 0,
+    "text": "Cousteau's Calypso opened the sea - undersea film from the water up."
+   },
+   {
+    "id": "an-C-226",
+    "used": 0,
+    "text": "Steve Irwin turned wrangling into TV - enthusiasm that funded his zoo."
+   },
+   {
+    "id": "an-C-227",
+    "used": 0,
+    "text": "BBC's Animal Magic made the zoo a living room - feeding time as national radio."
+   },
+   {
+    "id": "an-C-228",
+    "used": 0,
+    "text": "The Lion King carried Hamlet to the savannah - Broadway's biggest cat."
+   },
+   {
+    "id": "an-C-229",
+    "used": 0,
+    "text": "101 Dalmatians spiked the breed - films can breed fads and their rescues."
+   },
+   {
+    "id": "an-C-230",
+    "used": 0,
+    "text": "Finding Nemo flooded pet tanks - the clownfish the film forgot to warn about."
+   },
+   {
+    "id": "an-C-231",
+    "used": 0,
+    "text": "Ratatouille made a rat a chef - Paris's kitchen won over the pest."
+   },
+   {
+    "id": "an-C-232",
+    "used": 0,
+    "text": "Bambi made a forest feel - a generation grew gentler with it."
+   },
+   {
+    "id": "an-C-233",
+    "used": 0,
+    "text": "San Diego's safari park runs herds on ranch lines - zoos borrowing ranching."
+   },
+   {
+    "id": "an-C-234",
+    "used": 0,
+    "text": "Hera's peacock rolls her chariot - the hundred-eyed tail of the queen of gods."
+   },
+   {
+    "id": "an-C-235",
+    "used": 0,
+    "text": "Argus Panoptes had a hundred eyes - the giant whose watch became feathers."
+   },
+   {
+    "id": "an-C-236",
+    "used": 0,
+    "text": "Aristotle sorted animals before Linnaeus - the first great cataloguing."
+   },
+   {
+    "id": "an-C-237",
+    "used": 0,
+    "text": "Linnaeus named the living world - binomials that stuck like tags."
+   },
+   {
+    "id": "an-C-238",
+    "used": 0,
+    "text": "Grumpy Cat turned a scowl into a meme - the internet's grudgiest celebrity."
+   },
+   {
+    "id": "an-C-239",
+    "used": 0,
+    "text": "APOPO's hero rats sniff out landmines - giant pouched rats clearing old wars."
+   },
+   {
+    "id": "an-C-240",
+    "used": 0,
+    "text": "The Pony Express ran horses hard - a mail dream that lasted eighteen months."
+   },
+   {
+    "id": "an-C-241",
+    "used": 0,
+    "text": "The basilisk wears a rooster crown - serpent king of medieval bestiaries."
+   },
+   {
+    "id": "an-C-242",
+    "used": 0,
+    "text": "Wyverns stand on two legs - heraldry's dragon with one limb too few."
+   },
+   {
+    "id": "an-C-243",
+    "used": 0,
+    "text": "The bestiary taught virtue from beasts - medieval books where animals preach."
+   },
+   {
+    "id": "an-C-244",
+    "used": 0,
+    "text": "The Oseberg ship took horses and dogs to the grave - Viking farewells with a leash."
+   },
+   {
+    "id": "an-C-245",
+    "used": 0,
+    "text": "Okunoshima's rabbits overrun the island - a poison factory turned petting site."
+   },
+   {
+    "id": "an-C-246",
+    "used": 0,
+    "text": "Nara's deer bow for crackers - temple pets that wait in line for snacks."
+   },
+   {
+    "id": "an-C-247",
+    "used": 0,
+    "text": "Tokyo's cat cafes pour tea with paws - purring therapy by the cup."
+   },
+   {
+    "id": "an-C-248",
+    "used": 0,
+    "text": "Tamagotchi fed a generation - a 1996 egg that demanded breakfast."
+   },
+   {
+    "id": "an-C-249",
+    "used": 0,
+    "text": "Nearly all pet Syrian hamsters descend from one 1930s litter - a single golden stock."
+   },
+   {
+    "id": "an-C-250",
+    "used": 0,
+    "text": "Avalanche dogs sweep slopes - rescue noses ahead of every probe."
+   }
+  ],
+  "D": [
+   {
+    "id": "an-D-001",
+    "used": 0,
+    "text": "The dodo vanished by 1681 - hunted and habitat-hungry on Mauritius."
+   },
+   {
+    "id": "an-D-002",
+    "used": 0,
+    "text": "Steller's sea cow was gone by 1768 - a gentle giant eaten out of the Bering Sea."
+   },
+   {
+    "id": "an-D-003",
+    "used": 0,
+    "text": "The great auk's last pair died in 1844 - feathers and fat sealed its fate."
+   },
+   {
+    "id": "an-D-004",
+    "used": 0,
+    "text": "Martha the passenger pigeon died in 1914 - flocks that darkened the sky ended in one cage."
+   },
+   {
+    "id": "an-D-005",
+    "used": 0,
+    "text": "The Tasmanian tiger's last died in 1936 - Hobart's lone thylacine."
+   },
+   {
+    "id": "an-D-006",
+    "used": 0,
+    "text": "The quagga's stripes ended in 1883 - a half-zebra of the open veld."
+   },
+   {
+    "id": "an-D-007",
+    "used": 0,
+    "text": "The Falklands wolf was gone by 1876 - the archipelago's little fox."
+   },
+   {
+    "id": "an-D-008",
+    "used": 0,
+    "text": "Barbary lions roared last in the 1920s - the North African king hunted out."
+   },
+   {
+    "id": "an-D-009",
+    "used": 0,
+    "text": "The eastern cougar was declared extinct in 2018 - the ghost cat of Appalachia."
+   },
+   {
+    "id": "an-D-010",
+    "used": 0,
+    "text": "The western black rhino vanished in 2011 - poaching closed a subspecies."
+   },
+   {
+    "id": "an-D-011",
+    "used": 0,
+    "text": "The baiji was functionally extinct by 2006 - the Yangtze's white dolphin."
+   },
+   {
+    "id": "an-D-012",
+    "used": 0,
+    "text": "The golden toad's last shone in 1989 - Costa Rica's vanished amber."
+   },
+   {
+    "id": "an-D-013",
+    "used": 0,
+    "text": "The Yangtze giant softshell lost its last female in 2019 - a species down to males."
+   },
+   {
+    "id": "an-D-014",
+    "used": 0,
+    "text": "Christmas Island's rat was gone by 1908 - an island extinction barely noticed."
+   },
+   {
+    "id": "an-D-015",
+    "used": 0,
+    "text": "The Alaotra grebe was gone by 2010 - Madagascar's grebe of one lake."
+   },
+   {
+    "id": "an-D-016",
+    "used": 0,
+    "text": "The Labrador duck's last fell in 1878 - a sea duck nobody saved."
+   },
+   {
+    "id": "an-D-017",
+    "used": 0,
+    "text": "The Xerces blue butterfly died in 1941 - San Francisco's lost blue."
+   },
+   {
+    "id": "an-D-018",
+    "used": 0,
+    "text": "The Carolina parakeet's last died in 1918 - America's only parakeet."
+   },
+   {
+    "id": "an-D-019",
+    "used": 0,
+    "text": "The ivory-billed woodpecker was declared extinct in 2021 - the Lord God bird of old growth."
+   },
+   {
+    "id": "an-D-020",
+    "used": 0,
+    "text": "Lonesome George, the last Pinta tortoise, died in 2012."
+   },
+   {
+    "id": "an-D-021",
+    "used": 0,
+    "text": "The Pyrenean ibex was cloned once - the kid died breathing in 2003."
+   },
+   {
+    "id": "an-D-022",
+    "used": 0,
+    "text": "The Chinese paddlefish was declared extinct in 2020 - a Yangtze giant past saving."
+   },
+   {
+    "id": "an-D-023",
+    "used": 0,
+    "text": "The Bramble cay melomys was declared extinct in 2019 - first mammal lost to climate change."
+   },
+   {
+    "id": "an-D-024",
+    "used": 0,
+    "text": "Heath hens ended on Martha's Vineyard in 1932 - a mainland bird gone island-final."
+   },
+   {
+    "id": "an-D-025",
+    "used": 0,
+    "text": "Whooping cranes fell to about twenty birds - now numbering in the hundreds again."
+   },
+   {
+    "id": "an-D-026",
+    "used": 0,
+    "text": "California condors fell to twenty-two - every wild bird captured in 1987."
+   },
+   {
+    "id": "an-D-027",
+    "used": 0,
+    "text": "Banning DDT let peregrine falcons return - thin shells, then thick again."
+   },
+   {
+    "id": "an-D-028",
+    "used": 0,
+    "text": "Bald eagles climbed off the endangered list in 2007 - bans and protection worked."
+   },
+   {
+    "id": "an-D-029",
+    "used": 0,
+    "text": "Humpbacks rebounded from whaling - the ocean's singers back in the tens of thousands."
+   },
+   {
+    "id": "an-D-030",
+    "used": 0,
+    "text": "Eastern Pacific gray whales recovered - from hunting grounds to whale-watch tours."
+   },
+   {
+    "id": "an-D-031",
+    "used": 0,
+    "text": "Wolves returned to Yellowstone in 1995 - streams and willows followed the pack."
+   },
+   {
+    "id": "an-D-032",
+    "used": 0,
+    "text": "Przewalski's horse was pulled from the brink - zoo stock back on the steppe."
+   },
+   {
+    "id": "an-D-033",
+    "used": 0,
+    "text": "The Arabian oryx came back from the desert - extinct in the wild in 1972, released later."
+   },
+   {
+    "id": "an-D-034",
+    "used": 0,
+    "text": "Iberian lynx rose from around ninety cats to over a thousand - Europe's rarest cat saved."
+   },
+   {
+    "id": "an-D-035",
+    "used": 0,
+    "text": "Nene, Hawaii's goose, dropped to thirty - now thousands on lava fields."
+   },
+   {
+    "id": "an-D-036",
+    "used": 0,
+    "text": "Kakapo numbers climbed past 250 - every bird named, numbered and guarded."
+   },
+   {
+    "id": "an-D-037",
+    "used": 0,
+    "text": "Southern right whales recovered from hunting - calving bays busy again."
+   },
+   {
+    "id": "an-D-038",
+    "used": 0,
+    "text": "Raine Island rebuilds beaches - the world's biggest green turtle rookery keeps growing."
+   },
+   {
+    "id": "an-D-039",
+    "used": 0,
+    "text": "Every black-footed ferret descends from about seven founders - a species rebuilt twice."
+   },
+   {
+    "id": "an-D-040",
+    "used": 0,
+    "text": "Elizabeth Ann, a cloned ferret, was born in 2020 - frozen genes joined the bloodline."
+   },
+   {
+    "id": "an-D-041",
+    "used": 0,
+    "text": "Amur leopards doubled to about a hundred - cameras count the rarest big cat."
+   },
+   {
+    "id": "an-D-042",
+    "used": 0,
+    "text": "Sumatran rhinos number only a few dozen - the last small-horned survivors."
+   },
+   {
+    "id": "an-D-043",
+    "used": 0,
+    "text": "Javan rhinos survive in one park - Ujung Kulon holds the entire subspecies."
+   },
+   {
+    "id": "an-D-044",
+    "used": 0,
+    "text": "Vaquitas number around ten - gillnets keep ending the little porpoise."
+   },
+   {
+    "id": "an-D-045",
+    "used": 0,
+    "text": "Fewer than four hundred North Atlantic right whales remain - the slowest breeder in the sea."
+   },
+   {
+    "id": "an-D-046",
+    "used": 0,
+    "text": "Snow leopards hold the high mountains - an uncertain few thousand at most."
+   },
+   {
+    "id": "an-D-047",
+    "used": 0,
+    "text": "Ethiopian wolves cling to the highlands - fewer than five hundred remain."
+   },
+   {
+    "id": "an-D-048",
+    "used": 0,
+    "text": "Cross River gorillas count under three hundred - a forest pocket of great apes."
+   },
+   {
+    "id": "an-D-049",
+    "used": 0,
+    "text": "Hawaiian monk seals number around a thousand - every pup matters on the beach."
+   },
+   {
+    "id": "an-D-050",
+    "used": 0,
+    "text": "Giant pandas left the endangered list in 2016 - bamboo country under recovery."
+   },
+   {
+    "id": "an-D-051",
+    "used": 0,
+    "text": "India's tiger count rose past three thousand - stripes counted by pugmark and camera."
+   },
+   {
+    "id": "an-D-052",
+    "used": 0,
+    "text": "Black rhinos have climbed back past five thousand - slow work after the poaching years."
+   },
+   {
+    "id": "an-D-053",
+    "used": 0,
+    "text": "Mountain gorillas now count over a thousand - the great ape that bounced back."
+   },
+   {
+    "id": "an-D-054",
+    "used": 0,
+    "text": "European bison came back from about a hundred animals - forests restocked by zoos."
+   },
+   {
+    "id": "an-D-055",
+    "used": 0,
+    "text": "Red kites re-filled British skies - from a few pairs to thousands overhead."
+   },
+   {
+    "id": "an-D-056",
+    "used": 0,
+    "text": "Sea otters recovered from the fur trade along California - kelp forests regained their grazer."
+   },
+   {
+    "id": "an-D-057",
+    "used": 0,
+    "text": "Beavers returned to Britain's rivers - dams hired by flood managers."
+   },
+   {
+    "id": "an-D-058",
+    "used": 0,
+    "text": "Addax antelopes survive in the low hundreds in the wild - Saharan ghost herd."
+   },
+   {
+    "id": "an-D-059",
+    "used": 0,
+    "text": "Philippine eagles number only a few hundred - the monkey-eating eagle of Mindanao."
+   },
+   {
+    "id": "an-D-060",
+    "used": 0,
+    "text": "Maui's dolphin counts under a hundred - the world's smallest dolphin at risk."
+   },
+   {
+    "id": "an-D-061",
+    "used": 0,
+    "text": "Blue whales still number a fraction of pre-whaling herds - recovery runs slow."
+   },
+   {
+    "id": "an-D-062",
+    "used": 0,
+    "text": "Axolotls survive only in Xochimilco - the smiling salamander of Mexico City's canals."
+   },
+   {
+    "id": "an-D-063",
+    "used": 0,
+    "text": "Lord Howe's stick insect came back from presumed extinction - eggs found on Ball's Pyramid."
+   },
+   {
+    "id": "an-D-064",
+    "used": 0,
+    "text": "Red wolves count in the teens in the wild - the world's most endangered canid."
+   },
+   {
+    "id": "an-D-065",
+    "used": 0,
+    "text": "Mexican wolves hold a few hundred in the Southwest - the comeback of the lobo."
+   },
+   {
+    "id": "an-D-066",
+    "used": 0,
+    "text": "African wild dogs number only several thousand - packs shrinking with range."
+   },
+   {
+    "id": "an-D-067",
+    "used": 0,
+    "text": "Cheetahs lost most of their old range - under seven thousand cats remain."
+   },
+   {
+    "id": "an-D-068",
+    "used": 0,
+    "text": "Lions fell from hundreds of thousands to around twenty thousand - the long decline."
+   },
+   {
+    "id": "an-D-069",
+    "used": 0,
+    "text": "Giraffes suffered a silent decline - some subspecies cut to the hundreds."
+   },
+   {
+    "id": "an-D-070",
+    "used": 0,
+    "text": "Saiga antelopes crashed by die-offs, then rebounded past a million - grassland's odd noses."
+   },
+   {
+    "id": "an-D-071",
+    "used": 0,
+    "text": "Yellowstone became the first national park in 1872 - a template for wild land."
+   },
+   {
+    "id": "an-D-072",
+    "used": 0,
+    "text": "Ecuador fenced the Galapagos as a reserve in 1959 - Darwin's lab under law."
+   },
+   {
+    "id": "an-D-073",
+    "used": 0,
+    "text": "Australia zoned the Great Barrier Reef Marine Park in 1975 - a sea mapped for protection."
+   },
+   {
+    "id": "an-D-074",
+    "used": 0,
+    "text": "The world pledged 30 percent protection by 2030 - Kunming-Montreal's headline target."
+   },
+   {
+    "id": "an-D-075",
+    "used": 0,
+    "text": "Natura 2000 knits Europe's wild patches - a continent-spanning reserve network."
+   },
+   {
+    "id": "an-D-076",
+    "used": 0,
+    "text": "Bhutan's constitution keeps most of the country forested - green cover written into law."
+   },
+   {
+    "id": "an-D-077",
+    "used": 0,
+    "text": "Costa Rica doubled its forest cover - poor farmland grew back into jungle."
+   },
+   {
+    "id": "an-D-078",
+    "used": 0,
+    "text": "The Serengeti hosts the great migration - two million hooves on an annual loop."
+   },
+   {
+    "id": "an-D-079",
+    "used": 0,
+    "text": "Pangolins are the world's most trafficked mammal - scales pulled at millions per year."
+   },
+   {
+    "id": "an-D-080",
+    "used": 0,
+    "text": "Rhino horn weighs more than gold by gram on the black market - one horn doomed the poached."
+   },
+   {
+    "id": "an-D-081",
+    "used": 0,
+    "text": "Ivory bans since 1989 slowed the elephant kill - CITES closed most legal markets."
+   },
+   {
+    "id": "an-D-082",
+    "used": 0,
+    "text": "Tigers are killed for bones and skins - a wild population poached for tonics."
+   },
+   {
+    "id": "an-D-083",
+    "used": 0,
+    "text": "The totoaba's swim bladder drives a cartel fishery - vaquitas die in its nets."
+   },
+   {
+    "id": "an-D-084",
+    "used": 0,
+    "text": "Cecil the lion's 2015 death made global headlines - trophy hunting under new scrutiny."
+   },
+   {
+    "id": "an-D-085",
+    "used": 0,
+    "text": "Songbird traps clear forests for cages - millions caught alive across the trade."
+   },
+   {
+    "id": "an-D-086",
+    "used": 0,
+    "text": "Bile farming keeps bears in crush cages - decades of extraction, little relief."
+   },
+   {
+    "id": "an-D-087",
+    "used": 0,
+    "text": "Slow lorises are gummed for pets - their venomous bite is ignored for cuteness."
+   },
+   {
+    "id": "an-D-088",
+    "used": 0,
+    "text": "Cheetah cubs leave the Horn as pets - half never reach the buyer."
+   },
+   {
+    "id": "an-D-089",
+    "used": 0,
+    "text": "Ghost nets drift for decades - whales, turtles and seals drown in discarded gear."
+   },
+   {
+    "id": "an-D-090",
+    "used": 0,
+    "text": "Plastic gyres swirl in five oceans - seabirds mistake fragments for food."
+   },
+   {
+    "id": "an-D-091",
+    "used": 0,
+    "text": "Sea turtles choke on straws and bags - a nibble mistaken for jellyfish."
+   },
+   {
+    "id": "an-D-092",
+    "used": 0,
+    "text": "Albatross chicks die on bottle caps - parents fly plastic home to the nest."
+   },
+   {
+    "id": "an-D-093",
+    "used": 0,
+    "text": "Microplastics now sit in deep sediments - the ocean's new sediment layer."
+   },
+   {
+    "id": "an-D-094",
+    "used": 0,
+    "text": "Bottom trawling drags the seafloor - carbon-stirring nets flatten habitats."
+   },
+   {
+    "id": "an-D-095",
+    "used": 0,
+    "text": "Ship strikes kill whales - fast container lanes cross the old migration roads."
+   },
+   {
+    "id": "an-D-096",
+    "used": 0,
+    "text": "Ocean noise drowns whale songs - sonar and engines overwrite the distance calls."
+   },
+   {
+    "id": "an-D-097",
+    "used": 0,
+    "text": "Ocean acidification has cut carbonate saturation - shells and reefs build slower."
+   },
+   {
+    "id": "an-D-098",
+    "used": 0,
+    "text": "Coral bleaching events keep stacking - 1998, 2014-17 and later hot years stripped colour."
+   },
+   {
+    "id": "an-D-099",
+    "used": 0,
+    "text": "Warming seas push fish poleward - tropical species turn up in new coastlines."
+   },
+   {
+    "id": "an-D-100",
+    "used": 0,
+    "text": "Deforestation cleared hundreds of millions of hectares this century - habitat gone to cattle and palm."
+   },
+   {
+    "id": "an-D-101",
+    "used": 0,
+    "text": "Amazon fires follow the axe - fire spread into forests that never burned before."
+   },
+   {
+    "id": "an-D-102",
+    "used": 0,
+    "text": "Palm oil expansion eats Borneo's rainforest - orangutans lose canopy corridors."
+   },
+   {
+    "id": "an-D-103",
+    "used": 0,
+    "text": "Peatlands drained for farms - carbon-rich soils oxidise into the air."
+   },
+   {
+    "id": "an-D-104",
+    "used": 0,
+    "text": "Habitat fragmentation fences migration - herds meet roads, wires and farms."
+   },
+   {
+    "id": "an-D-105",
+    "used": 0,
+    "text": "Roadkill takes millions of animals a year - crossings cut old migration routes."
+   },
+   {
+    "id": "an-D-106",
+    "used": 0,
+    "text": "Bird collisions with glass kill up to a billion a year in the US - towers on flyways."
+   },
+   {
+    "id": "an-D-107",
+    "used": 0,
+    "text": "Wind turbines occasionally take birds and bats - siting maps try to steer clear."
+   },
+   {
+    "id": "an-D-108",
+    "used": 0,
+    "text": "Neonicotinoid insecticides weakened bee foragers - the EU restricted outdoor use in 2018."
+   },
+   {
+    "id": "an-D-109",
+    "used": 0,
+    "text": "Insect numbers fell over decades of monitoring - the flying biomass of gardens is thinning."
+   },
+   {
+    "id": "an-D-110",
+    "used": 0,
+    "text": "Varroa mites parasitise honey bees - viruses ride the hitchhiker."
+   },
+   {
+    "id": "an-D-111",
+    "used": 0,
+    "text": "American foulbrood burns through hives - beekeepers burn boxes to stop it."
+   },
+   {
+    "id": "an-D-112",
+    "used": 0,
+    "text": "Chytrid fungus has pushed amphibians to extinction worldwide - a skin disease spread by trade."
+   },
+   {
+    "id": "an-D-113",
+    "used": 0,
+    "text": "White-nose syndrome killed millions of North American bats - a fungus from Europe."
+   },
+   {
+    "id": "an-D-114",
+    "used": 0,
+    "text": "Devil facial tumour disease nearly emptied Tasmanian devils - contagious cancer in a marsupial."
+   },
+   {
+    "id": "an-D-115",
+    "used": 0,
+    "text": "Avian influenza H5N1 swept colonies and farms - seabird seasons closed by outbreak."
+   },
+   {
+    "id": "an-D-116",
+    "used": 0,
+    "text": "Myxomatosis cut rabbit populations - Australia imported a virus, then a myxoma lesson."
+   },
+   {
+    "id": "an-D-117",
+    "used": 0,
+    "text": "Sea star wasting disease dissolved arms along the Pacific - kelp forests lost their graziers."
+   },
+   {
+    "id": "an-D-118",
+    "used": 0,
+    "text": "Invasive cats and rats eat island nests - seabird colonies vanish within seasons."
+   },
+   {
+    "id": "an-D-119",
+    "used": 0,
+    "text": "Cane toads poisoned Australian predators - a biocontrol blunder still spreading."
+   },
+   {
+    "id": "an-D-120",
+    "used": 0,
+    "text": "Zebra mussels clog North American pipes - ballast water shipped a plague inland."
+   },
+   {
+    "id": "an-D-121",
+    "used": 0,
+    "text": "Lionfish infest Caribbean reefs - predators with no local enemies and endless appetites."
+   },
+   {
+    "id": "an-D-122",
+    "used": 0,
+    "text": "Grey squirrels carry squirrelpox - reds retreat ahead of the spread."
+   },
+   {
+    "id": "an-D-123",
+    "used": 0,
+    "text": "Burmese pythons emptied Everglades mammals - park surveys watch empty roads."
+   },
+   {
+    "id": "an-D-124",
+    "used": 0,
+    "text": "Climate change dries nests before eggs hatch - heat skews reptile sex ratios."
+   },
+   {
+    "id": "an-D-125",
+    "used": 0,
+    "text": "Warming shrinks Arctic sea ice - polar bears hunt on thinner, shorter ice."
+   },
+   {
+    "id": "an-D-126",
+    "used": 0,
+    "text": "Bees and butterflies shift seasons out of step - flowers open before pollinators wake."
+   },
+   {
+    "id": "an-D-127",
+    "used": 0,
+    "text": "Wildfire seasons lengthen with heat - koala habitat burns faster than it can regrow."
+   },
+   {
+    "id": "an-D-128",
+    "used": 0,
+    "text": "Ranger forces guard parks against armed poachers - conservation's front line."
+   },
+   {
+    "id": "an-D-129",
+    "used": 0,
+    "text": "CITES has regulated wildlife trade since 1973 - permits now gate thousands of species."
+   },
+   {
+    "id": "an-D-130",
+    "used": 0,
+    "text": "The US Endangered Species Act became law in 1973 - the modern template for species defense."
+   },
+   {
+    "id": "an-D-131",
+    "used": 0,
+    "text": "The Marine Mammal Protection Act of 1972 set a US take limit - whales and seals under law."
+   },
+   {
+    "id": "an-D-132",
+    "used": 0,
+    "text": "The Migratory Bird Treaty Act of 1918 made bird hunting a regulated compact."
+   },
+   {
+    "id": "an-D-133",
+    "used": 0,
+    "text": "Banff's wildlife crossings span the Trans-Canada - overpasses that cut animal road deaths."
+   },
+   {
+    "id": "an-D-134",
+    "used": 0,
+    "text": "Wildlife corridors link reserves - design that lets ranges breathe again."
+   },
+   {
+    "id": "an-D-135",
+    "used": 0,
+    "text": "Elephant corridors stitch broken forests - herds routed between farms and parks."
+   },
+   {
+    "id": "an-D-136",
+    "used": 0,
+    "text": "Hedgehog highways drill fence holes - British gardens open for night walkers."
+   },
+   {
+    "id": "an-D-137",
+    "used": 0,
+    "text": "Bee hotels and native hedges feed urban pollinators - garden plans with stings included."
+   },
+   {
+    "id": "an-D-138",
+    "used": 0,
+    "text": "Camera traps catch every passer - a million-trigger watch on the trail."
+   },
+   {
+    "id": "an-D-139",
+    "used": 0,
+    "text": "GPS collars map migrations in real time - herds drawn as moving lines on dashboards."
+   },
+   {
+    "id": "an-D-140",
+    "used": 0,
+    "text": "Satellite tags follow sharks across basins - the blue highways finally traced."
+   },
+   {
+    "id": "an-D-141",
+    "used": 0,
+    "text": "Environmental DNA in water samples finds rare species - a pond's whole list from one bucket."
+   },
+   {
+    "id": "an-D-142",
+    "used": 0,
+    "text": "AI camera traps flag snares and poachers - rangers pinged before the shot."
+   },
+   {
+    "id": "an-D-143",
+    "used": 0,
+    "text": "Bird ringing has run for over a century - tiny aluminium rings hold long careers."
+   },
+   {
+    "id": "an-D-144",
+    "used": 0,
+    "text": "eBird turns phone lists into science - hundreds of millions of sightings pooled."
+   },
+   {
+    "id": "an-D-145",
+    "used": 0,
+    "text": "iNaturalist maps urban wildlife - a photo becomes a data point with a name."
+   },
+   {
+    "id": "an-D-146",
+    "used": 0,
+    "text": "The Christmas Bird Count has run since 1900 - citizen censuses before binoculars were cheap."
+   },
+   {
+    "id": "an-D-147",
+    "used": 0,
+    "text": "Big Garden Birdwatch asks a garden an hour - Britain's winter flock survey."
+   },
+   {
+    "id": "an-D-148",
+    "used": 0,
+    "text": "BioBlitz events race a park for species - a day of discovery logged in an app."
+   },
+   {
+    "id": "an-D-149",
+    "used": 0,
+    "text": "No-kill shelters rewire intake - foster networks hold the space crisis."
+   },
+   {
+    "id": "an-D-150",
+    "used": 0,
+    "text": "Trap-neuter-return stabilises feral cat colonies - feeding stations and ear tips."
+   },
+   {
+    "id": "an-D-151",
+    "used": 0,
+    "text": "Low-cost spay clinics cut shelter overflow - one surgery spares a litter."
+   },
+   {
+    "id": "an-D-152",
+    "used": 0,
+    "text": "Microchipping rehomes lost pets - a scan turns a stray into an address."
+   },
+   {
+    "id": "an-D-153",
+    "used": 0,
+    "text": "Rabies still kills tens of thousands of people a year - dog vaccination breaks the chain."
+   },
+   {
+    "id": "an-D-154",
+    "used": 0,
+    "text": "Vaccination schedules shield puppies and kittens - parvo and distemper lose their edge."
+   },
+   {
+    "id": "an-D-155",
+    "used": 0,
+    "text": "Positive-replacement training replaced punishment - markers and rewards, no choke."
+   },
+   {
+    "id": "an-D-156",
+    "used": 0,
+    "text": "Bite prevention starts in childhood - reading a dog's warning before it bites."
+   },
+   {
+    "id": "an-D-157",
+    "used": 0,
+    "text": "Senior pets get their own wards - pain, dental and mobility care for old companions."
+   },
+   {
+    "id": "an-D-158",
+    "used": 0,
+    "text": "Animal hospice cares when cure fails - comfort, pain relief and quiet rooms."
+   },
+   {
+    "id": "an-D-159",
+    "used": 0,
+    "text": "Wildlife rehabilitators heal and release - injured foxes, oiled birds, orphaned hawks."
+   },
+   {
+    "id": "an-D-160",
+    "used": 0,
+    "text": "Sea turtle patrols guard nests at night - poachers and foxes lose to flashlights."
+   },
+   {
+    "id": "an-D-161",
+    "used": 0,
+    "text": "Whale disentanglement teams cut ropes at sea - trained crews and sharp blades."
+   },
+   {
+    "id": "an-D-162",
+    "used": 0,
+    "text": "Working animal clinics treat donkeys and mules - the Brooke's vets on dusty roads."
+   },
+   {
+    "id": "an-D-163",
+    "used": 0,
+    "text": "Farm animal welfare moved cages out - the EU banned battery cages for laying hens in 2012."
+   },
+   {
+    "id": "an-D-164",
+    "used": 0,
+    "text": "Cage-free pledges reshaped supply chains - supermarket eggs under new promises."
+   },
+   {
+    "id": "an-D-165",
+    "used": 0,
+    "text": "The three Rs guide lab animal science - replacement, reduction, refinement."
+   },
+   {
+    "id": "an-D-166",
+    "used": 0,
+    "text": "Sanctuaries retire animals for life - no breeding, no performing, no sale."
+   },
+   {
+    "id": "an-D-167",
+    "used": 0,
+    "text": "Circus elephants drew protest for decades - traveling shows lost cities and hearts."
+   },
+   {
+    "id": "an-D-168",
+    "used": 0,
+    "text": "Whale watching replaced harpoons for some fleets - tourism income for living tails."
+   },
+   {
+    "id": "an-D-169",
+    "used": 0,
+    "text": "San Diego's Frozen Zoo stores cell lines and semen - backup genes for vanished species."
+   },
+   {
+    "id": "an-D-170",
+    "used": 0,
+    "text": "Coral gardeners plant nursery fragments onto damaged reefs - heat-tolerant strains tested first."
+   },
+   {
+    "id": "an-D-171",
+    "used": 0,
+    "text": "Mangrove replanting holds coastlines - roots double as breakwater and fish nursery."
+   },
+   {
+    "id": "an-D-172",
+    "used": 0,
+    "text": "Oyster reefs are being rebuilt by the shell - filter feeders hired to clear bays."
+   },
+   {
+    "id": "an-D-173",
+    "used": 0,
+    "text": "Assisted migration moves species ahead of climate - relocations debated by ecologists."
+   },
+   {
+    "id": "an-D-174",
+    "used": 0,
+    "text": "Grey wolves were edited toward dire wolves - de-extinction's first pups, hotly debated."
+   },
+   {
+    "id": "an-D-175",
+    "used": 0,
+    "text": "Scientists made northern white rhino embryos in the lab - the subspecies' last hope on ice."
+   },
+   {
+    "id": "an-D-176",
+    "used": 0,
+    "text": "Texas pumas revived Florida panthers - a 1995 genetic rescue that doubled the herd."
+   },
+   {
+    "id": "an-D-177",
+    "used": 0,
+    "text": "Island rat removals free seabird colonies - nests safe again after the eradication."
+   },
+   {
+    "id": "an-D-178",
+    "used": 0,
+    "text": "New Zealand fences and traps around kiwi - a predator-free push parish by parish."
+   },
+   {
+    "id": "an-D-179",
+    "used": 0,
+    "text": "Takahē were written off, then found alive in 1948 - the rediscovery of the century."
+   },
+   {
+    "id": "an-D-180",
+    "used": 0,
+    "text": "Foster homes bottle-feed neonatal litters - shelters skip the parvo ward."
+   },
+   {
+    "id": "an-D-181",
+    "used": 0,
+    "text": "Puppy mills stack cages for profit - the supply side of shelter intake."
+   },
+   {
+    "id": "an-D-182",
+    "used": 0,
+    "text": "Declawing is amputation, and more vets refuse it - the knife leaving the table."
+   },
+   {
+    "id": "an-D-183",
+    "used": 0,
+    "text": "Cosmetic ear crops and tail docks draw restrictions - trimming for looks under scrutiny."
+   },
+   {
+    "id": "an-D-184",
+    "used": 0,
+    "text": "Milkweed vanished under herbicides - monarch caterpillars ran out of canteens."
+   },
+   {
+    "id": "an-D-185",
+    "used": 0,
+    "text": "Diclofenac wiped out India's vultures - a cattle painkiller lethal to carrion birds."
+   },
+   {
+    "id": "an-D-186",
+    "used": 0,
+    "text": "Lead ammunition leaves fragments - condors and eagles poison themselves scavenging."
+   },
+   {
+    "id": "an-D-187",
+    "used": 0,
+    "text": "Rodenticides poison hawks and owls - a mouse meal that ends a raptor."
+   },
+   {
+    "id": "an-D-188",
+    "used": 0,
+    "text": "Fur farming lost licences across Europe - the coat trade retreating by law."
+   },
+   {
+    "id": "an-D-189",
+    "used": 0,
+    "text": "The IWC whaling moratorium took effect in 1986 - most commercial hunting stopped."
+   },
+   {
+    "id": "an-D-190",
+    "used": 0,
+    "text": "Illegal fishing steals millions of tonnes a year - the fleet without papers."
+   },
+   {
+    "id": "an-D-191",
+    "used": 0,
+    "text": "Turtle excluder devices let turtles walk out of shrimp trawls."
+   },
+   {
+    "id": "an-D-192",
+    "used": 0,
+    "text": "Shark finning keeps the fins and drops the body - fin trade bans keep spreading."
+   },
+   {
+    "id": "an-D-193",
+    "used": 0,
+    "text": "The Montreal Protocol showed bans work - the ozone hole is slowly closing."
+   },
+   {
+    "id": "an-D-194",
+    "used": 0,
+    "text": "The Ramsar Convention has protected wetlands since 1971 - swamp by swamp."
+   },
+   {
+    "id": "an-D-195",
+    "used": 0,
+    "text": "Outdoor cats kill over a billion birds a year in the US - bells, curfews and catio debates."
+   },
+   {
+    "id": "an-D-196",
+    "used": 0,
+    "text": "Bird-safe glass film cuts strikes - fritted patterns birds can actually see."
+   },
+   {
+    "id": "an-D-197",
+    "used": 0,
+    "text": "Cities dim their towers for migration - Lights Out while flocks pass through."
+   },
+   {
+    "id": "an-D-198",
+    "used": 0,
+    "text": "Beachfront lights run low for hatchlings - baby turtles crawl to the dark sea."
+   },
+   {
+    "id": "an-D-199",
+    "used": 0,
+    "text": "Acoustic monitors count birds and frogs by ear - the forest logs itself."
+   },
+   {
+    "id": "an-D-200",
+    "used": 0,
+    "text": "Zooniverse volunteers classify the wild - whale tails and seahorses sorted by the public."
+   },
+   {
+    "id": "an-D-201",
+    "used": 0,
+    "text": "Whale tail flukes work as fingerprints - every notch read by the catalogue."
+   },
+   {
+    "id": "an-D-202",
+    "used": 0,
+    "text": "Seagrass meadows bury carbon fast - dugongs graze and garden the lawn."
+   },
+   {
+    "id": "an-D-203",
+    "used": 0,
+    "text": "The UK recognised animal sentience in law in 2022 - sentience with a statutory name."
+   },
+   {
+    "id": "an-D-204",
+    "used": 0,
+    "text": "Knepp's Sussex farm rewilds at scale - longhorns and pigs as living disturbers."
+   },
+   {
+    "id": "an-D-205",
+    "used": 0,
+    "text": "Ospreys recolonised British rivers - fish eagles back on platforms and pylons."
+   },
+   {
+    "id": "an-D-206",
+    "used": 0,
+    "text": "The large blue butterfly returned to Swedish stock - extinct in Britain, reintroduced."
+   },
+   {
+    "id": "an-D-207",
+    "used": 0,
+    "text": "White-tailed eagles were refloated on Scottish isles - sea eagles overhead again."
+   },
+   {
+    "id": "an-D-208",
+    "used": 0,
+    "text": "SMART patrols score ranger routes - data where guesswork used to walk."
+   },
+   {
+    "id": "an-D-209",
+    "used": 0,
+    "text": "Drones sweep parks for snares and carcasses - the eye that never blinks."
+   },
+   {
+    "id": "an-D-210",
+    "used": 0,
+    "text": "Circle hooks cut bycatch on longlines - straighter steel, fewer turtles hooked."
+   },
+   {
+    "id": "an-D-211",
+    "used": 0,
+    "text": "Ship speed limits protect right whales - seasonal slowdowns along busy coasts."
+   },
+   {
+    "id": "an-D-212",
+    "used": 0,
+    "text": "Amphibian ark tanks hold frogs through chytrid - assurance colonies against a fungus."
+   },
+   {
+    "id": "an-D-213",
+    "used": 0,
+    "text": "Insurance herds in zoos backstop wild crashes - breeding as a lifeboat."
+   },
+   {
+    "id": "an-D-214",
+    "used": 0,
+    "text": "Species survival plans pair animals by pedigree - love matched by studbook."
+   },
+   {
+    "id": "an-D-215",
+    "used": 0,
+    "text": "Routine farm antibiotics bred resistant bugs - growth-bans eased the pressure."
+   },
+   {
+    "id": "an-D-216",
+    "used": 0,
+    "text": "Gestation crates for sows face bans - the farrowing crate out of fashion."
+   },
+   {
+    "id": "an-D-217",
+    "used": 0,
+    "text": "Predator-proof bomas keep lions out of cattle pens - fewer spears at dawn."
+   },
+   {
+    "id": "an-D-218",
+    "used": 0,
+    "text": "Livestock guardian dogs live with the flock - dogs as the fence's immune system."
+   },
+   {
+    "id": "an-D-219",
+    "used": 0,
+    "text": "Vulture restaurants serve clean carcasses - safe plates instead of poisoned ones."
+   },
+   {
+    "id": "an-D-220",
+    "used": 0,
+    "text": "India's Project Tiger began in 1973 - reserves, patrols and a counting habit."
+   },
+   {
+    "id": "an-D-221",
+    "used": 0,
+    "text": "No-take marine reserves let fish grow old - big spawners seed the edges."
+   },
+   {
+    "id": "an-D-222",
+    "used": 0,
+    "text": "The 2023 High Seas Treaty opened ocean protection beyond borders."
+   },
+   {
+    "id": "an-D-223",
+    "used": 0,
+    "text": "Debt-for-nature swaps cancel loans for protection - Belize rewrote its paper."
+   },
+   {
+    "id": "an-D-224",
+    "used": 0,
+    "text": "Indigenous ranger programs steward country - burning, counting and caring."
+   },
+   {
+    "id": "an-D-225",
+    "used": 0,
+    "text": "Park fees and village guides fund communities - habitat income tied to intact forest."
+   },
+   {
+    "id": "an-D-226",
+    "used": 0,
+    "text": "Natural history cabinets store time capsules - specimens that measure what changed."
+   },
+   {
+    "id": "an-D-227",
+    "used": 0,
+    "text": "Dam removals reopen salmon rivers - concrete out, gravel back."
+   },
+   {
+    "id": "an-D-228",
+    "used": 0,
+    "text": "Fish ladders help salmon climb dams - stepped water for leaping fish."
+   },
+   {
+    "id": "an-D-229",
+    "used": 0,
+    "text": "Golden lion tamarins came back from the brink - marmosets replanted into Atlantic forest."
+   },
+   {
+    "id": "an-D-230",
+    "used": 0,
+    "text": "Kakapo-style headstarts raise rare chicks - keepers raise the litter, then return it."
+   },
+   {
+    "id": "an-D-231",
+    "used": 0,
+    "text": "Sea otters and urchins and kelp - one grazer can hold a whole forest."
+   },
+   {
+    "id": "an-D-232",
+    "used": 0,
+    "text": "Rewilding beavers engineers wetlands - dams hired for drought and flood."
+   },
+   {
+    "id": "an-D-233",
+    "used": 0,
+    "text": "Translocation moves animals back to old ranges - crates, maps and soft release."
+   },
+   {
+    "id": "an-D-234",
+    "used": 0,
+    "text": "Poison-bait bans protect scavengers - strychnine off the shelf at last."
+   },
+   {
+    "id": "an-D-235",
+    "used": 0,
+    "text": "Predator-exclusion pens save ground-nesting birds - a fence around the eggs."
+   },
+   {
+    "id": "an-D-236",
+    "used": 0,
+    "text": "Assisted reproduction crossed subspecies lines - the last northern white rhino's kin."
+   },
+   {
+    "id": "an-D-237",
+    "used": 0,
+    "text": "Genetic banks freeze diversity - a backup for populations that crash overnight."
+   },
+   {
+    "id": "an-D-238",
+    "used": 0,
+    "text": "Ranger colleges train for the front line - fieldcraft, law and first aid."
+   },
+   {
+    "id": "an-D-239",
+    "used": 0,
+    "text": "Reintroduction protocols quarantine first - no pathogen rides the release crate."
+   },
+   {
+    "id": "an-D-240",
+    "used": 0,
+    "text": "Marginal habitat gets restoration too - hedgerows, ponds and scrub corridors."
+   },
+   {
+    "id": "an-D-241",
+    "used": 0,
+    "text": "Wildlife crossings pay back in roadkill data - counts drop where bridges stand."
+   },
+   {
+    "id": "an-D-242",
+    "used": 0,
+    "text": "Urban bat boxes replace lost roosts - brick chimneys traded for plywood flats."
+   },
+   {
+    "id": "an-D-243",
+    "used": 0,
+    "text": "Citizen science flags spawning salmon - river watchers beat spawning surveys."
+   },
+   {
+    "id": "an-D-244",
+    "used": 0,
+    "text": "Conservation breeding keeps founder bloodlines wide - avoid the pedigree squeeze."
+   },
+   {
+    "id": "an-D-245",
+    "used": 0,
+    "text": "Population counts run on drones - seals and flamingos tallied from the air."
+   },
+   {
+    "id": "an-D-246",
+    "used": 0,
+    "text": "Mitigation banking trades habitat credit - damage here, wetland there."
+   },
+   {
+    "id": "an-D-247",
+    "used": 0,
+    "text": "Fish passage opens thousands of kilometres - culverts swapped for streams."
+   },
+   {
+    "id": "an-D-248",
+    "used": 0,
+    "text": "Fire-smart management burns planned - cool mosaic burns instead of mega-fire."
+   },
+   {
+    "id": "an-D-249",
+    "used": 0,
+    "text": "Assisted gene flow boosts heat tolerance - corals bred for warmer summers."
+   },
+   {
+    "id": "an-D-250",
+    "used": 0,
+    "text": "Community conservancies hold wildlife across Kenya - land shared with herders."
+   }
+  ]
+ }
+}
