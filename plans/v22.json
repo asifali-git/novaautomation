@@ -1,0 +1,479 @@
+{
+ "audio_type": "asmr",
+ "audio_mode": "lower",
+ "audio_volume": 0.4,
+ "has_speech": false,
+ "video_summary": "A fresh green coconut is skillfully peeled on a wooden stump outdoors, with rhythmic cutting sounds and minimal narration.",
+ "style": "raw",
+ "title": "Why Street Vendors Tap Before Slicing",
+ "description": "A coconut is expertly peeled with a large knife on a wooden stump, showcasing the technique and texture. The process reveals the smooth interior and prepares the fruit for consumption.",
+ "hashtags": [
+  "#coconutpeeling",
+  "#kitchentechniques",
+  "#freshproduce"
+ ],
+ "tags": [
+  "coconut",
+  "peeling",
+  "knife",
+  "outdoor",
+  "foodprep",
+  "tropical",
+  "culinary",
+  "howto",
+  "green",
+  "natural",
+  "handtools",
+  "wooden",
+  "fresh",
+  "technique"
+ ],
+ "segments": [
+  {
+   "index": 0,
+   "start": 0.0,
+   "end": 3.0,
+   "action": "keep",
+   "speed": 1.12,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.07,
+    "saturation": 1.15
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Tapping First",
+    "position": "bottom",
+    "style": "box"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "A spoonful of thick cream instantly rounds sharp spices, a bold claim for freshness.",
+   "notes": "Hook with verified fact 1 as a surprising claim."
+  },
+  {
+   "index": 1,
+   "start": 3.0,
+   "end": 7.0,
+   "action": "keep",
+   "speed": 1.09,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.07,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "box"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Mid-video fact 2 plainly stated; audio remains dominant ASMR."
+  },
+  {
+   "index": 2,
+   "start": 7.0,
+   "end": 10.0,
+   "action": "keep",
+   "speed": 1.06,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.05,
+    "saturation": 1.1
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "box"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Fact 3 woven into a comment-inviting question."
+  },
+  {
+   "index": 3,
+   "start": 10.0,
+   "end": 14.0,
+   "action": "keep",
+   "speed": 1.08,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.07,
+    "saturation": 1.13
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "box"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Expert insight on technique; audio continues."
+  },
+  {
+   "index": 4,
+   "start": 14.0,
+   "end": 18.0,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.07,
+   "color": {
+    "preset": "cool",
+    "brightness": 0.0,
+    "contrast": 1.04,
+    "saturation": 1.08
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "box"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Nutrition/chemistry fact; maintains ASMR pacing."
+  },
+  {
+   "index": 5,
+   "start": 18.0,
+   "end": 22.0,
+   "action": "keep",
+   "speed": 1.05,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.06,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.03,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Smooth Cut",
+    "position": "bottom",
+    "style": "box"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Many think the top must be removed first — actually, the stem guides the cut.",
+   "notes": "Myth-busting insight; audio remains key."
+  },
+  {
+   "index": 6,
+   "start": 22.0,
+   "end": 26.0,
+   "action": "keep",
+   "speed": 1.07,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.14
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "box"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Consumer utility tip; maintains engagement."
+  },
+  {
+   "index": 7,
+   "start": 26.0,
+   "end": 30.0,
+   "action": "keep",
+   "speed": 1.09,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "cool",
+    "brightness": 0.0,
+    "contrast": 1.05,
+    "saturation": 1.11
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "box"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Technique insight; audio stays prominent."
+  },
+  {
+   "index": 8,
+   "start": 30.0,
+   "end": 34.0,
+   "action": "keep",
+   "speed": 1.06,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.07,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.04,
+    "saturation": 1.09
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "box"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Observation of flow; avoids visual description."
+  },
+  {
+   "index": 9,
+   "start": 34.0,
+   "end": 38.0,
+   "action": "keep",
+   "speed": 1.08,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "cool",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "box"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Consumer utility tip; audio continues."
+  },
+  {
+   "index": 10,
+   "start": 38.0,
+   "end": 42.0,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.07,
+    "saturation": 1.13
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Ready to Drink",
+    "position": "bottom",
+    "style": "box"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Would you drink it straight from the shell? Let us know in the comments.",
+   "notes": "Final question; invites engagement per ASMR rules."
+  }
+ ],
+ "global": {
+  "intro_effect": "fade",
+  "ending_effect": "fade",
+  "voice_gain": 1.0
+ },
+ "caption_regions": [
+  {
+   "band": "top",
+   "top_frac": 0.0203,
+   "bottom_frac": 0.0688,
+   "action": "crop",
+   "confidence": 0.95
+  },
+  {
+   "band": "top",
+   "top_frac": 0.1688,
+   "bottom_frac": 0.1953,
+   "action": "crop",
+   "confidence": 0.95
+  },
+  {
+   "band": "bottom",
+   "top_frac": 0.85,
+   "bottom_frac": 0.89,
+   "action": "crop",
+   "confidence": 0.95
+  }
+ ]
+}
