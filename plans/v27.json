@@ -1,0 +1,440 @@
+{
+ "audio_type": "vocal",
+ "audio_mode": "lower",
+ "audio_volume": 0.55,
+ "has_speech": true,
+ "video_summary": "A person skillfully peels a fresh yellow coconut outdoors using a large knife on a wooden board, with palm trees in the background.",
+ "style": "educational",
+ "title": "Why Street Vendors Tap Before Slicing",
+ "description": "A vendor expertly peels a fresh coconut, revealing its tender pulp and water. The technique preserves flavor and texture while showcasing traditional preparation.",
+ "hashtags": [
+  "#coconut",
+  "#peeling",
+  "#streetfood",
+  "#tropical",
+  "#foodprep"
+ ],
+ "tags": [
+  "coconut",
+  "peeling",
+  "knife technique",
+  "tropical fruit",
+  "street food",
+  "food science",
+  "how to cut",
+  "fresh produce",
+  "kitchen skills",
+  "natural ingredients",
+  "culinary tradition"
+ ],
+ "segments": [
+  {
+   "index": 0,
+   "start": 0.0,
+   "end": 5.46,
+   "action": "keep",
+   "speed": 1.12,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Tap to release",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Fresh coconuts hold sweet water — tap once to unlock it!",
+   "notes": "Hook with bold claim about water release"
+  },
+  {
+   "index": 1,
+   "start": 5.46,
+   "end": 10.93,
+   "action": "keep",
+   "speed": 1.08,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.07,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Fact on technique precision"
+  },
+  {
+   "index": 2,
+   "start": 10.93,
+   "end": 16.39,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "cool",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Proper ripeness",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Yellow flesh means it's ripe and its fiber content supports digestion.",
+   "notes": "Nutrition fact on ripeness"
+  },
+  {
+   "index": 3,
+   "start": 16.39,
+   "end": 21.86,
+   "action": "keep",
+   "speed": 1.09,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Fiber for health",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Tender pulp carries dietary fiber, making it a nutritious snack.",
+   "notes": "Health benefit emphasis"
+  },
+  {
+   "index": 4,
+   "start": 21.86,
+   "end": 27.32,
+   "action": "keep",
+   "speed": 1.11,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.07,
+   "color": {
+    "preset": "cool",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Flavor characteristic"
+  },
+  {
+   "index": 5,
+   "start": 27.32,
+   "end": 32.78,
+   "action": "keep",
+   "speed": 1.07,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "vintage",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Traditional method",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Street vendors use this method for centuries — it's time-tested.",
+   "notes": "Cultural context"
+  },
+  {
+   "index": 6,
+   "start": 32.78,
+   "end": 38.25,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "moody",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Humor in action",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Even a dull knife would crush this, not slice it cleanly.",
+   "notes": "Opinion on knife quality"
+  },
+  {
+   "index": 7,
+   "start": 38.25,
+   "end": 43.71,
+   "action": "keep",
+   "speed": 1.08,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Visual payoff"
+  },
+  {
+   "index": 8,
+   "start": 43.71,
+   "end": 49.17,
+   "action": "keep",
+   "speed": 1.12,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.07,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Engagement question"
+  },
+  {
+   "index": 9,
+   "start": 49.17,
+   "end": 54.638,
+   "action": "keep",
+   "speed": 1.05,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.06,
+   "color": {
+    "preset": "cool",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Drink now?",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Would you drink it straight from the shell?",
+   "notes": "Silent tail for retention"
+  }
+ ],
+ "global": {
+  "intro_effect": "fade",
+  "ending_effect": "fade",
+  "voice_gain": 1.8
+ },
+ "caption_regions": [
+  {
+   "band": "top",
+   "top_frac": 0.0,
+   "bottom_frac": 0.0906,
+   "action": "crop",
+   "confidence": 0.95
+  },
+  {
+   "band": "top",
+   "top_frac": 0.1125,
+   "bottom_frac": 0.1266,
+   "action": "crop",
+   "confidence": 0.95
+  },
+  {
+   "band": "bottom",
+   "top_frac": 0.85,
+   "bottom_frac": 0.89,
+   "action": "crop",
+   "confidence": 0.95
+  }
+ ]
+}
