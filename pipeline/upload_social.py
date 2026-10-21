@@ -2071,17 +2071,29 @@ def upload_all(video_path, title, description):
         return results
 
     caption = f"{title}\n\n{description}".strip()[:2200]
+    fb_creds = ((os.getenv("FB_PAGE_TOKEN") or "").strip()
+                and (os.getenv("FB_PAGE_ID") or "").strip())
+    ig_selected = False
+    fb_selected = any(p == "facebook" for p, _ in enabled)
 
     for plat, acct_id in enabled:
         if plat == "tiktok":
             print(f"[social] uploading to TikTok{f' (account {acct_id})' if acct_id else ''}...")
             results["tiktok"] = upload_tiktok(video_path, caption, account_id=acct_id)
         elif plat == "instagram":
-            print(f"[social] uploading to Instagram{f' (account {acct_id})' if acct_id else ''}...")
-            results["instagram"] = upload_instagram(video_path, caption, account_id=acct_id)
+            # Graph API path — no cookies/browser (needs IG linked to Page).
+            ig_selected = True
+            print("[social] uploading to Instagram via Graph API...")
+            try:
+                import upload_instagram_api
+                results["instagram"] = upload_instagram_api.upload(
+                    video_path, caption=caption)
+            except Exception as e:
+                print(f"[social] instagram graph upload failed: {e}",
+                      file=sys.stderr)
+                results["instagram"] = {"success": False, "error": str(e)}
         elif plat == "facebook":
-            if ((os.getenv("FB_PAGE_TOKEN") or "").strip()
-                    and (os.getenv("FB_PAGE_ID") or "").strip()):
+            if fb_creds:
                 # Graph API path — no browser, works from any runner IP.
                 print("[social] uploading to Facebook via Graph API...")
                 try:
@@ -2097,6 +2109,19 @@ def upload_all(video_path, title, description):
                       f"{f' (account {acct_id})' if acct_id else ''}...")
                 results["facebook"] = upload_facebook(video_path, caption,
                                                       account_id=acct_id)
+
+    # Flow: IG selected -> ALSO mirror to the Facebook Page (Graph API),
+    # unless facebook was already an explicit destination above.
+    if ig_selected and not fb_selected and fb_creds:
+        print("[social] instagram selected -> also uploading to "
+              "Facebook Page (Graph API)...")
+        try:
+            import upload_fb
+            results["facebook"] = upload_fb.upload(video_path,
+                                                   description=caption)
+        except Exception as e:
+            print(f"[social] facebook mirror failed: {e}", file=sys.stderr)
+            results["facebook"] = {"success": False, "error": str(e)}
 
     return results
 
