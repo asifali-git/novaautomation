@@ -1,0 +1,23 @@
+name: check
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/5 * * * *'
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install deps
+        run: pip install -r requirements.txt
+      - name: Check all platforms/tasks (first add = newest only, then only NEW; one batch dispatch)
+        env:
+          WORKER_URL: ${{ secrets.WORKER_URL }}
+          INTERNAL_TOKEN: ${{ secrets.INTERNAL_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: python fastpoll.py --check

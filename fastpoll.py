@@ -76,15 +76,21 @@ def patch_task(task_id, **fields):
         pass
 
 
-def flat_latest(url, cookiefile=None, proxy=None):
-    """Lightweight yt-dlp check — flat extract, no download."""
+def flat_recent(url, cookiefile=None, proxy=None, n=5):
+    """Up to n newest entries of a channel/playlist — flat, no download.
+
+    entries[0] is USUALLY newest, but a pinned/featured video can sit on
+    top on some platforms. When every id is numeric (Facebook/TikTok/
+    Instagram) the largest id is the newest — sort by that. YouTube ids
+    are non-numeric strings; the /videos tab is already chronological.
+    """
     import yt_dlp
 
     opts = {
         "quiet": True,
         "no_warnings": True,
         "extract_flat": "in_playlist",
-        "playlistend": 5,
+        "playlistend": n,
         "skip_download": True,
         "socket_timeout": 10,
     }
@@ -98,19 +104,28 @@ def flat_latest(url, cookiefile=None, proxy=None):
     entries = info.get("entries") or []
     if not entries:
         if info.get("id"):
-            return {
+            return [{
                 "id": info.get("id"),
                 "title": info.get("title"),
                 "url": info.get("webpage_url") or url,
-            }
-        return None
+            }]
+        return []
 
-    e = entries[0]
-    return {
+    items = [{
         "id": e.get("id"),
         "title": e.get("title"),
         "url": e.get("url") or e.get("webpage_url") or url,
-    }
+    } for e in entries[:n]]
+    ids = [x.get("id") for x in items if x.get("id") is not None]
+    if ids and all(str(i).isdigit() for i in ids):
+        items.sort(key=lambda x: int(x.get("id") or 0), reverse=True)
+    return items
+
+
+def flat_latest(url, cookiefile=None, proxy=None):
+    """Newest single entry (flat_latest = first of flat_recent)."""
+    items = flat_recent(url, cookiefile=cookiefile, proxy=proxy, n=5)
+    return items[0] if items else None
 
 
 # --- Platform-aware detection --------------------------------------------------
@@ -245,6 +260,47 @@ def _fb_parse_feed(h):
         if len(vids) == 1:
             nodes.append((t, vids[0]))
     return nodes
+
+
+def _split_seen(seen):
+    """Task last_seen_key -> (video_key, created_ts).
+
+    New format: "<video_key>:<created_ts>" (FB creation_time). Legacy
+    format was the bare video_key — ts stays None for those.
+    """
+    if not seen:
+        return None, None
+    s = str(seen)
+    key, sep, ts = s.rpartition(":")
+    if sep and ts.isdigit():
+        return (key or None), int(ts)
+    return s, None
+
+
+def _fb_new_nodes(nodes, seen_key, seen_ts, cap=5):
+    """Feed nodes (created_ts, video_id) that are strictly NEWER than the
+    last-seen reel. Returns (new_nodes_oldest_first, newest_of_them).
+
+    Timestamp guard: a partial feed parse (login-wall flap, slow load) can
+    briefly hide the true newest card and make an older card LOOK new —
+    comparing creation_time instead of identity stops old reels from ever
+    being enqueued again. First contact = newest card only (back-catalog
+    stays untouched).
+    """
+    if not nodes:
+        return [], None
+    if seen_key is None and seen_ts is None:
+        newest = max(nodes, key=lambda x: x[0])
+        return [newest], newest
+    if seen_ts is not None:
+        newer = [n for n in nodes if n[0] > seen_ts]
+    else:
+        # Legacy seen (bare id, no ts): only accept a DIFFERENT newest card.
+        newest = max(nodes, key=lambda x: x[0])
+        newer = [newest] if str(newest[1]) != str(seen_key) else []
+    newer.sort(key=lambda x: x[0])
+    newer = newer[-cap:]
+    return newer, (newer[-1] if newer else None)
 
 
 def _fb_account(uid):
@@ -421,13 +477,13 @@ def trigger_process(video_ids):
         log.warning("failed to trigger process: %s", e)
 
 
-def trigger_fbcheck():
-    """Ask a GitHub runner to run fbcheck.yml (FB feed is login-walled
-    from Render's IP; the runner's IP fetches it fine)."""
+def trigger_check():
+    """Ask a GitHub runner to run check.yml (all-platform check; the FB
+    feed is login-walled from Render's IP, the runner's IP fetches it)."""
     if not GH_TOKEN or not GH_REPO:
-        log.warning("fbcheck skipped: GH_TOKEN/GH_REPO not set")
+        log.warning("check skipped: GH_TOKEN/GH_REPO not set")
         return False
-    url = f"https://api.github.com/repos/{GH_REPO}/actions/workflows/fbcheck.yml/dispatches"
+    url = f"https://api.github.com/repos/{GH_REPO}/actions/workflows/check.yml/dispatches"
     headers = {
         "Authorization": f"token {GH_TOKEN}",
         "Accept": "application/vnd.github+json",
@@ -438,8 +494,11 @@ def trigger_fbcheck():
         r.raise_for_status()
         return True
     except Exception as e:
-        log.warning("fbcheck dispatch failed: %s", e)
+        log.warning("check dispatch failed: %s", e)
         return False
+
+
+trigger_fbcheck = trigger_check  # old name, kept as alias
 
 
 def gh_save_plan(key, plan):
@@ -540,100 +599,191 @@ def check_manual_jobs():
         return False
 
 
+def _enqueue(tid, key, url, title, new_ids, undispached):
+    """add_video + tracking. Returns (status, video_id):
+    ("created", id) | ("known", None) | ("failed", None)."""
+    try:
+        res = add_video(tid, key, url, title)
+    except Exception as e:
+        log.warning("task %s add_video %s failed: %s", tid, key, e)
+        return "failed", None
+    if not res.get("created"):
+        log.info("task %s video %s already known", tid, key)
+        return "known", None
+    vid = res["video"]["id"]
+    new_ids.append(vid)
+    log.info("task %s video %s -> id %s (worker dispatched=%s)",
+             tid, key, vid, res.get("dispatched"))
+    if not res.get("dispatched"):
+        if undispached is not None:
+            undispached.append(vid)
+        elif _should_trigger(f"vids:{vid}", 1800):
+            trigger_process([vid])
+    return "created", vid
+
+
+def _check_task(t, new_ids, fetch_fb=True, undispached=None):
+    """One task's detection pass (all platforms).
+
+    fetch_fb=True fetches the FB feed here (check.yml on a GH runner).
+    False → FB tasks just dispatch check.yml (Render's IP is login-walled).
+    undispached: optional list — created-but-not-worker-dispatched video
+    ids, batch-fired as ONE process.yml run at the end of check_all_tasks.
+    Returns True if any new video was enqueued.
+    """
+    tid = t["id"]
+    url = t["source_url"]
+    platform = (t.get("platform") or "").lower()
+    uid = t.get("user_id") or 0
+    is_fb = platform == "facebook" or "facebook.com" in (url or "")
+
+    if is_fb and not fetch_fb:
+        if _should_trigger("check", 60):
+            ok = trigger_check()
+            log.info("task %s: check dispatch -> %s", tid, ok)
+        return False
+
+    seen_key, seen_ts = _split_seen(t.get("last_seen_key"))
+    baseline = t.get("baseline_key")
+    first = baseline is None and seen_key is None
+
+    nodes = None      # FB: [(created_ts, video_id), ...]
+    items = None      # others: [{id, title, url}, ...] newest-first
+    try:
+        if is_fb:
+            page, nodes = _fb_fetch_feed(url, uid)
+            if not nodes:
+                raise ValueError(f"page '{page}': no feed cards")
+        elif platform in ("tiktok", "instagram"):
+            items = flat_recent(url, cookiefile=_cookie_file(platform, uid))
+        else:
+            items = flat_recent(url)
+        if t.get("last_error"):
+            patch_task(tid, last_error="")
+    except Exception as e:
+        log.warning("task %s fetch failed: %s", tid, e)
+        _state["task_err"] = f"task {tid}: {str(e)[:180]}"
+        _state["task_err_ts"] = time.time()
+        try:
+            patch_task(tid, last_error=str(e)[:200])
+        except Exception:
+            pass
+        return False
+    _state["task_err"] = None
+
+    if is_fb:
+        picked, newest = _fb_new_nodes(nodes, seen_key, seen_ts)
+        if not picked:
+            return False
+        found = False
+        ok_advance = True  # last_seen may advance unless ALL enqueues failed
+        for cts, vid in picked:
+            st, _v = _enqueue(tid, vid, f"https://www.facebook.com/reel/{vid}",
+                              None, new_ids, undispached)
+            if st == "created":
+                found = True
+            elif st == "failed":
+                ok_advance = False
+        if newest and ok_advance:
+            packed = f"{newest[1]}:{newest[0]}"
+            if first:
+                patch_task(tid, baseline_key=newest[1], last_seen_key=packed)
+                log.info("task %s baseline set %s (ts %s)", tid, newest[1], newest[0])
+            else:
+                patch_task(tid, last_seen_key=packed)
+        return found
+
+    if not items or not items[0].get("id"):
+        return False
+
+    if first:
+        # First contact: enqueue THE newest video only (back-catalog stays).
+        # On failure leave baseline unset → retried on the next pass.
+        top = items[0]
+        st, _v = _enqueue(tid, str(top["id"]), top.get("url") or url,
+                          top.get("title"), new_ids, undispached)
+        if st != "failed":
+            patch_task(tid, baseline_key=str(top["id"]),
+                       last_seen_key=str(top["id"]))
+            log.info("task %s baseline set to %s", tid, top["id"])
+        return st == "created"
+
+    ids = [str(x.get("id") or "") for x in items]
+    if (seen_key and str(seen_key).isdigit()
+            and all(i.isdigit() for i in ids if i)):
+        # Numeric platform (TikTok/IG): enqueue EVERY id newer than seen.
+        newer = [x for x in items
+                 if str(x.get("id") or "").isdigit()
+                 and int(x["id"]) > int(seen_key)]
+        newer.sort(key=lambda x: int(x["id"]))
+        newer = newer[-5:]
+    else:
+        # Non-numeric ids (YouTube): only the top item, only if changed.
+        newer = [items[0]] if str(items[0].get("id")) != str(seen_key) else []
+    found = False
+    ok_advance = True
+    for x in newer:
+        st, _v = _enqueue(tid, str(x["id"]), x.get("url") or url,
+                          x.get("title"), new_ids, undispached)
+        if st == "created":
+            found = True
+        elif st == "failed":
+            ok_advance = False
+    if newer and ok_advance:
+        patch_task(tid, last_seen_key=str(newer[-1]["id"]))
+    return found
+
+
 def poll_once():
-    """Single poll pass across all active tasks. Returns new video IDs."""
+    """Single poll pass across all active tasks. Returns new video IDs.
+
+    Render-side: FB tasks just dispatch check.yml (login-walled IP);
+    everything else is fetched here with yt-dlp.
+    """
     if not WORKER or not TOKEN:
         log.error("WORKER_URL / INTERNAL_TOKEN not set")
         return []
-
     try:
         tasks = get_tasks()
     except Exception as e:
         log.error("failed to fetch tasks: %s", e)
         return []
-
-    if not tasks:
-        return []
-
     new_ids = []
     for t in tasks:
-        tid = t["id"]
-        url = t["source_url"]
-        platform = (t.get("platform") or "").lower()
-        uid = t.get("user_id") or 0
         try:
-            if platform == "facebook" or "facebook.com" in url:
-                # FB feed is login-walled from Render's IP. A GitHub runner
-                # (fbcheck.yml) fetches the feed, enqueues the newest reel
-                # and sets baseline/seen itself — skip local FB fetching.
-                if _should_trigger("fbcheck", 60):
-                    ok = trigger_fbcheck()
-                    log.info("task %s: fbcheck dispatch -> %s", tid, ok)
-                continue
-            elif platform in ("tiktok", "instagram"):
-                latest = flat_latest(url, cookiefile=_cookie_file(platform, uid))
-            else:
-                latest = flat_latest(url)
-            if t.get("last_error"):
-                patch_task(tid, last_error="")
+            _check_task(t, new_ids, fetch_fb=False)
         except Exception as e:
-            log.warning("task %s fetch failed: %s", tid, e)
-            _state["task_err"] = f"task {tid}: {str(e)[:180]}"
-            _state["task_err_ts"] = time.time()
-            try:
-                patch_task(tid, last_error=str(e)[:200])
-            except Exception:
-                pass
-            continue
-        _state["task_err"] = None
+            log.error("task %s check crashed: %s", t.get("id"), e)
+    return new_ids
 
-        if not latest or not latest.get("id"):
-            continue
 
-        key = latest["id"]
-        seen = t.get("last_seen_key")
-        baseline = t.get("baseline_key")
-
-        if baseline is None and seen is None:
-            # First time we see this source: enqueue THE latest video so it
-            # goes through the full pipeline (download+edit+upload), then set
-            # it as baseline so the older back-catalog is never picked up.
-            # On failure leave baseline unset → retried on the next loop.
-            try:
-                res = add_video(tid, key, latest.get("url") or url, latest.get("title"))
-                if res.get("created"):
-                    vid = res["video"]["id"]
-                    new_ids.append(vid)
-                    log.info("task %s first poll -> latest video %s id %s (dispatched=%s)",
-                             tid, key, vid, res.get("dispatched"))
-                    if not res.get("dispatched") and _should_trigger(f"vids:{vid}", 1800):
-                        trigger_process([vid])
-                else:
-                    log.info("task %s first poll: latest %s already known", tid, key)
-                patch_task(tid, baseline_key=key, last_seen_key=key)
-                log.info("task %s baseline set to %s", tid, key)
-            except Exception as e:
-                log.warning("task %s first-poll enqueue failed (will retry): %s", tid, e)
-            continue
-
-        if key == seen:
-            continue
-
+def check_all_tasks():
+    """Full multi-platform check in ONE pass — run by check.yml on a GitHub
+    runner. Covers every connected platform/account/task (new tasks are
+    picked up automatically via get_tasks). First add = newest only; after
+    that only strictly-new videos are enqueued. All worker-dispatch failures
+    are batch-fired as ONE process.yml run at the end.
+    Returns the list of new video ids.
+    """
+    if not WORKER or not TOKEN:
+        log.error("WORKER_URL / INTERNAL_TOKEN not set")
+        return []
+    try:
+        tasks = get_tasks()
+    except Exception as e:
+        log.error("failed to fetch tasks: %s", e)
+        return []
+    new_ids = []
+    undispached = []
+    for t in tasks:
         try:
-            res = add_video(tid, key, latest.get("url") or url, latest.get("title"))
-            if res.get("created"):
-                vid = res["video"]["id"]
-                new_ids.append(vid)
-                log.info("NEW task %s video %s -> id %s (worker dispatched=%s)",
-                         tid, key, vid, res.get("dispatched"))
-                # Fallback only: worker is the primary GH triggerer. If its
-                # dispatch failed, fire from here so the video isn't stranded.
-                if not res.get("dispatched") and _should_trigger(f"vids:{vid}", 1800):
-                    trigger_process([vid])
-            patch_task(tid, last_seen_key=key)
+            _check_task(t, new_ids, fetch_fb=True, undispached=undispached)
         except Exception as e:
-            log.warning("task %s add_video failed: %s", tid, e)
-
+            log.error("task %s check crashed: %s", t.get("id"), e)
+    if undispached:
+        log.info("batch-trigger process for undispached videos: %s", undispached)
+        trigger_process(undispached)
+    log.info("check done: %d task(s), %d new video(s)", len(tasks), len(new_ids))
     return new_ids
 
 
@@ -853,4 +1003,9 @@ def main():
 
 
 if __name__ == "__main__":
+    if "--check" in sys.argv:
+        # One full check pass — entrypoint of check.yml on a GH runner.
+        ids = check_all_tasks()
+        print(f"check: {len(ids)} new video(s)")
+        sys.exit(0)
     main()

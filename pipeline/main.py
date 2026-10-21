@@ -287,9 +287,14 @@ def fit_segments_to_voices(plan, voice_wavs, src_duration=None):
     print(f"[fit] total timeline: {total:.2f}s (source={src_duration:.2f}s)")
 
 
-def build_meta(plan, info):
+def build_meta(plan, info, video_key=None):
+    title = (plan.get("title") or info.get("title") or "").strip()
+    if not title or title.lower() in ("short", "shorts"):
+        # Never ship the same generic title for every video — use the
+        # per-video key so AI-plan fallbacks stay unique across a batch.
+        title = f"Clip {video_key}" if video_key else "Short"
     meta = {
-        "title": (plan.get("title") or info.get("title") or "Short")[:95],
+        "title": title[:95],
         "description": (plan.get("description") or info.get("description") or ""),
         "tags": plan.get("tags") or info.get("tags") or [],
     }
@@ -310,6 +315,10 @@ def build_meta(plan, info):
             meta.update(m)
         except Exception as e:
             print(f"[warn] metadata fallback failed: {e}", file=sys.stderr)
+    # Re-guard after fallback: OpenRouter can also return a generic title.
+    t = (meta.get("title") or "").strip()
+    if not t or t.lower() in ("short", "shorts"):
+        meta["title"] = (f"Clip {video_key}" if video_key else "Short")[:95]
     return meta
 
 
@@ -325,6 +334,7 @@ def run():
     vid = video["id"]
     url = video["url"]
     title = video.get("title") or "Short"
+    src_key = str(video.get("video_key") or vid)
     work = "work"
     os.makedirs(work, exist_ok=True)
 
@@ -349,7 +359,12 @@ def run():
     set_status(vid, status="downloading")
     src, info = dl.download(url, out_dir=work, max_secs=MAX_SECS)
     print(f"[download] {src} ({os.path.getsize(src)//1024} KB)")
-    title_hint = info.get("title") or title
+    title_hint = (info.get("title") or "").strip() or (title or "").strip()
+    if not title_hint or title_hint.lower() in ("short", "shorts"):
+        # Same-title bug fix: every FB enqueue used to arrive as "Short" →
+        # AI plan titles collapsed into near-identical names. Give each
+        # video a unique, key-based hint instead.
+        title_hint = f"Clip {src_key}"
     if is_cancelled(vid):
         print("[cancel] cancelled by user before edit — stopping")
         return 0
@@ -394,7 +409,7 @@ def run():
 
     # 4. Metadata (plan first, OpenRouter fallback).
     set_status(vid, status="metadata")
-    meta = build_meta(plan, info)
+    meta = build_meta(plan, info, video_key=src_key)
     print(f"[meta] {meta['title']}")
 
     # 5. Upload (dest may pin a channel: "youtube:<login_id>").

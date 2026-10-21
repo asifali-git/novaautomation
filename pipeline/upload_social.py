@@ -2080,8 +2080,23 @@ def upload_all(video_path, title, description):
             print(f"[social] uploading to Instagram{f' (account {acct_id})' if acct_id else ''}...")
             results["instagram"] = upload_instagram(video_path, caption, account_id=acct_id)
         elif plat == "facebook":
-            print(f"[social] uploading to Facebook{f' (account {acct_id})' if acct_id else ''}...")
-            results["facebook"] = upload_facebook(video_path, caption, account_id=acct_id)
+            if ((os.getenv("FB_PAGE_TOKEN") or "").strip()
+                    and (os.getenv("FB_PAGE_ID") or "").strip()):
+                # Graph API path — no browser, works from any runner IP.
+                print("[social] uploading to Facebook via Graph API...")
+                try:
+                    import upload_fb
+                    results["facebook"] = upload_fb.upload(
+                        video_path, description=caption)
+                except Exception as e:
+                    print(f"[social] facebook graph upload failed: {e}",
+                          file=sys.stderr)
+                    results["facebook"] = {"success": False, "error": str(e)}
+            else:
+                print(f"[social] uploading to Facebook"
+                      f"{f' (account {acct_id})' if acct_id else ''}...")
+                results["facebook"] = upload_facebook(video_path, caption,
+                                                      account_id=acct_id)
 
     return results
 

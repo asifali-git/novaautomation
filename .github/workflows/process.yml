@@ -90,6 +90,8 @@ jobs:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
           PRIVACY: ${{ vars.PRIVACY || 'public' }}
           MAX_SECS: ${{ vars.MAX_SECS || '200' }}
+          FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
         run: |
           echo "=== Processing manual job ${{ inputs.manual_job_id }} ==="
           MANUAL_JOB_ID="${{ inputs.manual_job_id }}" python pipeline/manual_upload.py
@@ -108,6 +110,8 @@ jobs:
           MAX_SECS: ${{ vars.MAX_SECS || '200' }}
           PRIVACY: ${{ vars.PRIVACY || 'public' }}
           FB_PAGE_URL: ${{ vars.FB_PAGE_URL || '' }}
+          FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
         run: |
           ids="${{ inputs.video_ids }}"
           if [ -z "$ids" ]; then
