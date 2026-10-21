@@ -14,21 +14,19 @@ def _cookies_opt():
 
 
 def _yt_attempts(url):
-    """YouTube: ordered (extra_opts_with_cookies_flag, format) attempts.
+    """YouTube: ordered (extra_opts, fmt, use_cookies) attempts.
     web+cookies is the only combo YouTube accepts from datacenter IPs
     (ytprobe: all no-cookie clients -> bot-check; non-web clients+cookies
     -> zero formats). visionos/android no-cookie kept as home-IP fallbacks."""
     u = (url or "").lower()
     if "youtube.com" in u or "youtu.be" in u:
         return [
-            ({"extractor_args": {"youtube": {"player_client": ["web"]}, "cookies": True},
-             "bv*+ba/b"),
-            ({"extractor_args": {"youtube": {"player_client": ["visionos"]}, "cookies": False},
-             "bv*[ext=mp4]+ba[ext=m4a]/b[ext=mp4]/b"),
-            ({"extractor_args": {"youtube": {"player_client": ["android"]}, "cookies": False},
-             "b[ext=mp4]/b"),
+            ({"extractor_args": {"youtube": {"player_client": ["web"]}}}, "bv*+ba/b", True),
+            ({"extractor_args": {"youtube": {"player_client": ["visionos"]}}},
+             "bv*[ext=mp4]+ba[ext=m4a]/b[ext=mp4]/b", False),
+            ({"extractor_args": {"youtube": {"player_client": ["android"]}}}, "b[ext=mp4]/b", False),
         ]
-    return [({"cookies": True}, "bv*[ext=mp4]+ba[ext=m4a]/b[ext=mp4]/b")]
+    return [({}, "bv*[ext=mp4]+ba[ext=m4a]/b[ext=mp4]/b", True)]
 
 
 def download(url, out_dir="work", max_secs=None):
@@ -48,10 +46,8 @@ def download(url, out_dir="work", max_secs=None):
     }
     last_err = None
     info = None
-    for extra, fmt in _yt_attempts(url):
+    for extra, fmt, use_cookies in _yt_attempts(url):
         opts = dict(base)
-        extra = dict(extra)
-        use_cookies = extra.pop("cookies", True)
         opts.update(extra)
         opts["format"] = fmt
         if use_cookies:
