@@ -76,28 +76,40 @@ def download_best(url, out_dir="work"):
     os.makedirs(out_dir, exist_ok=True)
     import yt_dlp
 
-    opts = {
-        "outtmpl": os.path.join(out_dir, "%(id)s.%(ext)s"),
-        "format": "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
-        "merge_output_format": "mp4",
-        "max_filesize": 500 * 1024 * 1024,
-        "socket_timeout": 30,
-        "retries": 3,
-    }
+    u = (url or "").lower()
+    is_yt = "youtube.com" in u or "youtu.be" in u
 
-    cookies_file = os.getenv("COOKIES_FILE", "")
-    if cookies_file and os.path.exists(cookies_file):
-        opts["cookiefile"] = cookies_file
+    def _attempt(player_client, use_cookies):
+        opts = {
+            "outtmpl": os.path.join(out_dir, "%(id)s.%(ext)s"),
+            "format": "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
+            "merge_output_format": "mp4",
+            "max_filesize": 500 * 1024 * 1024,
+            "socket_timeout": 30,
+            "retries": 3,
+        }
+        if use_cookies:
+            cookies_file = os.getenv("COOKIES_FILE", "")
+            if cookies_file and os.path.exists(cookies_file):
+                opts["cookiefile"] = cookies_file
+        if player_client:
+            opts["extractor_args"] = {"youtube": {"player_client": [player_client]}}
+        with yt_dlp.YoutubeDL(opts) as ydl:
+            info = ydl.extract_info(url, download=True)
+            filepath = ydl.prepare_filename(info)
+            if not filepath.endswith(".mp4"):
+                base = os.path.splitext(filepath)[0]
+                if os.path.exists(base + ".mp4"):
+                    filepath = base + ".mp4"
+        return filepath, info
 
-    with yt_dlp.YoutubeDL(opts) as ydl:
-        info = ydl.extract_info(url, download=True)
-        filepath = ydl.prepare_filename(info)
-        if not filepath.endswith(".mp4"):
-            base = os.path.splitext(filepath)[0]
-            if os.path.exists(base + ".mp4"):
-                filepath = base + ".mp4"
-
-    return filepath, info
+    if is_yt:
+        try:
+            return _attempt("visionos", False)
+        except Exception as e:
+            print(f"[download] yt visionos failed ({e}); trying android", file=sys.stderr)
+            return _attempt("android", False)
+    return _attempt(None, True)
 
 
 # ── AI pipeline (YouTube) ──────────────────────────────────────────────────

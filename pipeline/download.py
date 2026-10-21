@@ -1,6 +1,7 @@
 """Download a video with yt-dlp. Supports FB, Instagram, TikTok, YouTube, Twitter."""
 import os
 import glob
+import sys
 import yt_dlp
 
 
@@ -12,10 +13,24 @@ def _cookies_opt():
     return {}
 
 
+def _yt_attempts(url):
+    """YouTube: ordered extra_opts attempts. Both skip cookies — the browser
+    cookie export is partial (missing session cookies) and actively breaks
+    web/visionos clients with 'page needs to be reloaded'. visionos gives
+    full DASH formats; android falls back to progressive 360p."""
+    u = (url or "").lower()
+    if "youtube.com" in u or "youtu.be" in u:
+        return [
+            {"extractor_args": {"youtube": {"player_client": ["visionos"]}}},
+            {"extractor_args": {"youtube": {"player_client": ["android"]}}},
+        ]
+    return [{}]
+
+
 def download(url, out_dir="work", max_secs=None):
     """Download `url` into out_dir. Returns (file_path, info_dict)."""
     os.makedirs(out_dir, exist_ok=True)
-    opts = {
+    base = {
         "outtmpl": os.path.join(out_dir, "src.%(ext)s"),
         "merge_output_format": "mp4",
         "format": "bv*[ext=mp4]+ba[ext=m4a]/b[ext=mp4]/b",
@@ -28,12 +43,25 @@ def download(url, out_dir="work", max_secs=None):
         # Prefer a single progressive file when possible (lower peak RAM).
         "prefer_free_formats": False,
     }
-    opts.update(_cookies_opt())
-    if max_secs:
-        opts["download_ranges"] = yt_dlp.utils.download_range_func(None, [(0, max_secs)])
-
-    with yt_dlp.YoutubeDL(opts) as ydl:
-        info = ydl.extract_info(url, download=True)
+    last_err = None
+    info = None
+    for extra in _yt_attempts(url):
+        opts = dict(base)
+        opts.update(extra)
+        if not extra:
+            opts.update(_cookies_opt())
+        if max_secs:
+            opts["download_ranges"] = yt_dlp.utils.download_range_func(None, [(0, max_secs)])
+        try:
+            with yt_dlp.YoutubeDL(opts) as ydl:
+                info = ydl.extract_info(url, download=True)
+            last_err = None
+            break
+        except Exception as e:
+            last_err = e
+            print(f"[download] yt attempt failed ({extra}): {e}", file=sys.stderr)
+    if last_err is not None:
+        raise last_err
 
     # Find the produced file.
     candidates = glob.glob(os.path.join(out_dir, "src.*"))
