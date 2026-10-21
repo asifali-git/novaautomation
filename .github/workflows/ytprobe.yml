@@ -32,26 +32,30 @@ jobs:
           URL: ${{ inputs.url }}
         run: |
           python - <<'PY'
-          import os, subprocess, sys, itertools
+          import os, subprocess, sys, tempfile
           url = os.environ.get("URL") or "https://www.youtube.com/watch?v=GHspQ1PCWNw"
           ck = os.environ.get("COOKIES_FILE") or ""
-          clients = ["visionos", "android", "web", "ios", "tv"]
+          outd = tempfile.mkdtemp(prefix="ytp_")
+          fmts = [("dash", "bv*[ext=mp4]+ba[ext=m4a]/b[ext=mp4]/b"),
+                  ("prog", "b[ext=mp4]/b"),
+                  ("any", "bv*+ba/b")]
           combos = []
-          for c in clients:
-              combos.append((f"{c}_nock", ["--extractor-args", f"youtube:player_client={c}"]))
-              if ck and os.path.exists(ck):
-                  combos.append((f"{c}_ck", ["--cookies", ck, "--extractor-args", f"youtube:player_client={c}"]))
-          def probe(label, args):
+          for c in ["web", "visionos", "android", "tv", "ios"]:
+              for fk, fv in fmts:
+                  if ck and os.path.exists(ck):
+                      combos.append((f"{c}_ck_{fk}", ["--cookies", ck, "--extractor-args", f"youtube:player_client={c}"], fv))
+              combos.append((f"{c}_nock_dash", ["--extractor-args", f"youtube:player_client={c}"], fmts[0][1]))
+          def probe(label, args, fmt):
+              out = os.path.join(outd, "src.mp4")
               try:
-                  p = subprocess.run([sys.executable, "-m", "yt_dlp", "-F", "--no-warnings", *args, url],
-                                     capture_output=True, text=True, timeout=90)
+                  p = subprocess.run([sys.executable, "-m", "yt_dlp", "-f", fmt, "--no-warnings",
+                                      *args, "-o", out, "--max-filesize", "50M", url],
+                                     capture_output=True, text=True, timeout=150)
               except Exception as e:
                   print(f"{label}: EXC {e}"); return
-              real = [l for l in (p.stdout or "").splitlines()
-                      if ("https" in l or "m3u8" in l) and any(ch.isdigit() for ch in l)]
-              err = (p.stderr or "").strip().splitlines()
-              tail = err[-1][:110] if err and p.returncode else ""
-              print(f"{label}: rc={p.returncode} real_formats={len(real)}  {tail}")
-          for label, args in combos:
-              probe(label, args)
+              sz = os.path.getsize(out) if os.path.exists(out) else 0
+              err = [l for l in (p.stderr or "").splitlines() if l.startswith("ERROR")]
+              print(f"{label}: rc={p.returncode} file={sz}B  {err[-1][:100] if err else ''}")
+          for label, args, fmt in combos:
+              probe(label, args, fmt)
           PY
