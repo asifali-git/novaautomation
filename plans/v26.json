@@ -1,0 +1,353 @@
+{
+ "audio_type": "asmr",
+ "audio_mode": "lower",
+ "audio_volume": 0.4,
+ "has_speech": false,
+ "video_summary": "A person expertly peels a fresh coconut with a large knife, revealing the white meat and liquid.",
+ "style": "educational",
+ "title": "Why Street Vendors Tap Before Slicing",
+ "description": "Discover why chilled coconut water tastes best, how fresh milk is made with warm water and three presses, and why maltodextrin keeps spray-dried water flowing. Experience the satisfying peel in this outdoor setting.",
+ "hashtags": [
+  "#coconut",
+  "#freshproduce",
+  "#kitchentechniques",
+  "#foodscience",
+  "#coconutharvest"
+ ],
+ "tags": [
+  "coconut",
+  "fresh coconut",
+  "peeling",
+  "coconut water",
+  "tropical fruit",
+  "knife skills",
+  "outdoor cooking",
+  "food preparation",
+  "coconut milk",
+  "coconut harvesting",
+  "tropical fruit",
+  "knife technique",
+  "coconut trick",
+  "coconut fresh"
+ ],
+ "segments": [
+  {
+   "index": 0,
+   "start": 0.0,
+   "end": 3.0,
+   "action": "keep",
+   "speed": 1.08,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Tap for Water",
+    "position": "top",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Fresh coconut water tastes best when chilled, never ice-cold.",
+   "notes": "Hook segment with first fact as bold claim"
+  },
+  {
+   "index": 1,
+   "start": 3.0,
+   "end": 5.0,
+   "action": "keep",
+   "speed": 1.12,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.04,
+    "saturation": 1.08
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "center",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Middle segment delivering second fact with ASMR audio prominence"
+  },
+  {
+   "index": 2,
+   "start": 5.0,
+   "end": 7.5,
+   "action": "keep",
+   "speed": 1.09,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.11,
+   "color": {
+    "preset": "cool",
+    "brightness": 0.0,
+    "contrast": 1.07,
+    "saturation": 1.1
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Fact about carriers, continues ASMR budget"
+  },
+  {
+   "index": 3,
+   "start": 7.5,
+   "end": 9.5,
+   "action": "keep",
+   "speed": 1.13,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.05,
+    "saturation": 1.09
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "top",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Expert technique insight during peel removal"
+  },
+  {
+   "index": 4,
+   "start": 9.5,
+   "end": 12.5,
+   "action": "keep",
+   "speed": 1.07,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "cool",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.11
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "White Flesh",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "The white coconut meat is soft and edible when properly prepared.",
+   "notes": "Continuation of educational facts during cutting"
+  },
+  {
+   "index": 5,
+   "start": 12.5,
+   "end": 15.0,
+   "action": "keep",
+   "speed": 1.14,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.08,
+    "saturation": 1.13
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "center",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Reiteration of first fact as key ASMR point"
+  },
+  {
+   "index": 6,
+   "start": 15.0,
+   "end": 17.18,
+   "action": "keep",
+   "speed": 1.11,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.12,
+   "color": {
+    "preset": "moody",
+    "brightness": 0.0,
+    "contrast": 1.05,
+    "saturation": 1.07
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "top",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Third fact elaboration with subtle pacing"
+  },
+  {
+   "index": 7,
+   "start": 17.18,
+   "end": 20.18,
+   "action": "keep",
+   "speed": 1.06,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.07,
+   "color": {
+    "preset": "vintage",
+    "brightness": 0.0,
+    "contrast": 1.03,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Drink or Cut?",
+    "position": "bottom",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Would you drink it straight from the shell or slice it open?",
+   "notes": "Final question segment ending video with voice running to final seconds"
+  }
+ ],
+ "global": {
+  "intro_effect": "fade",
+  "ending_effect": "fade",
+  "voice_gain": 1.0
+ },
+ "caption_regions": [
+  {
+   "band": "bottom",
+   "top_frac": 0.9031,
+   "bottom_frac": 0.9188,
+   "action": "crop",
+   "confidence": 0.95
+  }
+ ]
+}
