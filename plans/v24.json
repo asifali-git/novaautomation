@@ -1,0 +1,437 @@
+{
+ "audio_type": "asmr",
+ "audio_mode": "lower",
+ "audio_volume": 0.4,
+ "has_speech": false,
+ "video_summary": "A person skillfully peels a yellow coconut with a large knife on a wooden stump, revealing the tender pulp.",
+ "style": "educational",
+ "title": "Why Street Vendors Tap Before Slicing: The Secret Behind Coconut Preparation",
+ "description": "Discover the traditional Rajasthani method of preparing dry coconut for Pongal offerings and gassi pastes. Watch how a sharp knife skillfully peels the husk in smooth strips.",
+ "hashtags": [
+  "#coconut",
+  "#asmr",
+  "#foodpreparation",
+  "#tradition",
+  "#peeling"
+ ],
+ "tags": [
+  "coconut peeling",
+  "street food",
+  "Rajasthani cooking",
+  "Pongal festival",
+  "Kitchen techniques",
+  "fresh coconut",
+  "knife skills",
+  "dry coconut",
+  "food science",
+  "cultural food",
+  "peeling technique",
+  "tropical fruit",
+  "handmade food",
+  "natural ingredients",
+  "culinary heritage"
+ ],
+ "segments": [
+  {
+   "index": 0,
+   "start": 0.0,
+   "end": 7.7,
+   "action": "keep",
+   "speed": 1.12,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.05,
+    "saturation": 1.1
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Rajasthani Secret",
+    "position": "top",
+    "style": "box"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Why street vendors tap coconuts before slicing — a desert survival trick.",
+   "notes": "Hook with bold regional fact"
+  },
+  {
+   "index": 1,
+   "start": 7.7,
+   "end": 15.3,
+   "action": "keep",
+   "speed": 1.08,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.07,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "top",
+    "style": "box"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Fact 2 spread evenly, matches visual of fresh coconut"
+  },
+  {
+   "index": 2,
+   "start": 15.3,
+   "end": 22.9,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.07,
+    "saturation": 1.11
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "top",
+    "style": "box"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Fact 3 continues the regional context"
+  },
+  {
+   "index": 3,
+   "start": 22.9,
+   "end": 30.7,
+   "action": "keep",
+   "speed": 1.09,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.05,
+    "saturation": 1.1
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Vietnam's Candy",
+    "position": "top",
+    "style": "box"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "In Ben Tre, Vietnam, coconut flesh becomes candy and every husk strand is used.",
+   "notes": "Fact 4 introduces cultural utility"
+  },
+  {
+   "index": 4,
+   "start": 30.7,
+   "end": 38.3,
+   "action": "keep",
+   "speed": 1.11,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.07,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "top",
+    "style": "box"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Educational fact about coconut chemistry"
+  },
+  {
+   "index": 5,
+   "start": 38.3,
+   "end": 45.9,
+   "action": "keep",
+   "speed": 1.06,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.08,
+    "saturation": 1.13
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "top",
+    "style": "box"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Technique insight with visual match"
+  },
+  {
+   "index": 6,
+   "start": 45.9,
+   "end": 53.7,
+   "action": "keep",
+   "speed": 1.07,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.05,
+    "saturation": 1.11
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Desert Adaptation",
+    "position": "top",
+    "style": "box"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Dry coconut thrives in arid regions where fresh fruit never reached the desert markets.",
+   "notes": "Fact 1 revisited for regional relevance"
+  },
+  {
+   "index": 7,
+   "start": 53.7,
+   "end": 61.4,
+   "action": "keep",
+   "speed": 1.09,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.07,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.1
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "top",
+    "style": "box"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Connects to Fact 4's utility theme"
+  },
+  {
+   "index": 8,
+   "start": 61.4,
+   "end": 69.0,
+   "action": "keep",
+   "speed": 1.05,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.07,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "top",
+    "style": "box"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Chemistry insight with visual match"
+  },
+  {
+   "index": 9,
+   "start": 69.0,
+   "end": 76.744,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.05,
+    "saturation": 1.1
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Final Question",
+    "position": "top",
+    "style": "box"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Would you drink it straight from the shell after seeing this traditional preparation?",
+   "notes": "Ends video with question as required, voice runs to final seconds"
+  }
+ ],
+ "global": {
+  "intro_effect": "fade",
+  "ending_effect": "fade",
+  "voice_gain": 1.0
+ },
+ "caption_regions": [
+  {
+   "band": "top",
+   "top_frac": 0.0,
+   "bottom_frac": 0.15,
+   "action": "crop",
+   "confidence": 0.95
+  },
+  {
+   "band": "bottom",
+   "top_frac": 0.8578,
+   "bottom_frac": 0.9031,
+   "action": "crop",
+   "confidence": 0.95
+  }
+ ]
+}
