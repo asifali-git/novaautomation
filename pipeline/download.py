@@ -14,19 +14,21 @@ def _cookies_opt():
 
 
 def _yt_attempts(url):
-    """YouTube: ordered (extra_opts, format) attempts. Both skip cookies —
-    the browser cookie export is partial (missing session cookies) and
-    yields zero formats on every client. visionos gives full DASH formats
-    (merged via ffmpeg); android falls back to a single progressive file."""
+    """YouTube: ordered (extra_opts_with_cookies_flag, format) attempts.
+    web+cookies is the only combo YouTube accepts from datacenter IPs
+    (ytprobe: all no-cookie clients -> bot-check; non-web clients+cookies
+    -> zero formats). visionos/android no-cookie kept as home-IP fallbacks."""
     u = (url or "").lower()
     if "youtube.com" in u or "youtu.be" in u:
         return [
-            ({"extractor_args": {"youtube": {"player_client": ["visionos"]}}},
+            ({"extractor_args": {"youtube": {"player_client": ["web"]}, "cookies": True},
+             "bv*+ba/b"),
+            ({"extractor_args": {"youtube": {"player_client": ["visionos"]}, "cookies": False},
              "bv*[ext=mp4]+ba[ext=m4a]/b[ext=mp4]/b"),
-            ({"extractor_args": {"youtube": {"player_client": ["android"]}}},
+            ({"extractor_args": {"youtube": {"player_client": ["android"]}, "cookies": False},
              "b[ext=mp4]/b"),
         ]
-    return [({}, "bv*[ext=mp4]+ba[ext=m4a]/b[ext=mp4]/b")]
+    return [({"cookies": True}, "bv*[ext=mp4]+ba[ext=m4a]/b[ext=mp4]/b")]
 
 
 def download(url, out_dir="work", max_secs=None):
@@ -48,9 +50,11 @@ def download(url, out_dir="work", max_secs=None):
     info = None
     for extra, fmt in _yt_attempts(url):
         opts = dict(base)
+        extra = dict(extra)
+        use_cookies = extra.pop("cookies", True)
         opts.update(extra)
         opts["format"] = fmt
-        if not extra:
+        if use_cookies:
             opts.update(_cookies_opt())
         if max_secs:
             opts["download_ranges"] = yt_dlp.utils.download_range_func(None, [(0, max_secs)])
@@ -61,7 +65,7 @@ def download(url, out_dir="work", max_secs=None):
             break
         except Exception as e:
             last_err = e
-            print(f"[download] yt attempt failed ({extra}): {e}", file=sys.stderr)
+            print(f"[download] yt attempt failed (cookies={use_cookies}, {extra}): {e}", file=sys.stderr)
     if last_err is not None:
         raise last_err
 

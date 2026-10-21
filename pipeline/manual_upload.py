@@ -105,6 +105,10 @@ def download_best(url, out_dir="work"):
 
     if is_yt:
         try:
+            return _attempt("web", True, "bv*+ba/b")
+        except Exception as e:
+            print(f"[download] yt web+cookies failed ({e}); trying visionos", file=sys.stderr)
+        try:
             return _attempt("visionos", False, "bv*[ext=mp4]+ba[ext=m4a]/best[ext=mp4]/best")
         except Exception as e:
             print(f"[download] yt visionos failed ({e}); trying android", file=sys.stderr)
