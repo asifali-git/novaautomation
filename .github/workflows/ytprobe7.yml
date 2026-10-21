@@ -1,0 +1,53 @@
+name: ytprobe7
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: "YouTube video URL"
+        required: false
+        default: "https://www.youtube.com/watch?v=GHspQ1PCWNw"
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install deps
+        run: pip install -r requirements.txt
+      - name: Decode cookies
+        env:
+          COOKIE_B64: ${{ secrets.COOKIE_B64 }}
+        run: |
+          echo "$COOKIE_B64" | base64 -d > cookies.txt
+          echo "COOKIES_FILE=cookies.txt" >> "$GITHUB_ENV"
+          echo "decoded cookies.txt ($(wc -l < cookies.txt) lines)"
+      - name: Probe actual download
+        env:
+          URL: ${{ inputs.url }}
+        run: |
+          python - <<'PY'
+          import os, subprocess, sys, tempfile
+          url = os.environ.get("URL") or "https://www.youtube.com/watch?v=GHspQ1PCWNw"
+          ck = os.environ.get("COOKIES_FILE") or ""
+          outd = tempfile.mkdtemp(prefix="ytp7_")
+          def run(label, extra):
+              out = os.path.join(outd, label + ".mp4")
+              try:
+                  p = subprocess.run([sys.executable, "-m", "yt_dlp", "-f", "b[ext=mp4]/b", "--no-warnings",
+                                      *extra, "-o", out, url],
+                                     capture_output=True, text=True, timeout=180)
+              except Exception as e:
+                  print(f"{label}: EXC {e}"); return
+              sz = os.path.getsize(out) if os.path.exists(out) else 0
+              err = [l for l in (p.stderr or "").splitlines() if l.startswith("ERROR")]
+              print(f"{label}: rc={p.returncode} file={sz}B  {err[-1][:110] if err else 'OK'}")
+              if os.path.exists(out):
+                  os.remove(out)
+          ckb = ["--cookies", ck] if ck and os.path.exists(ck) else []
+          run("visionos_ck", ckb + ["--extractor-args", "youtube:player_client=visionos"])
+          run("android_ck", ckb + ["--extractor-args", "youtube:player_client=android"])
+          run("web_ck", ckb + ["--extractor-args", "youtube:player_client=web"])
+          run("mweb_ck", ckb + ["--extractor-args", "youtube:player_client=mweb"])
+          PY
