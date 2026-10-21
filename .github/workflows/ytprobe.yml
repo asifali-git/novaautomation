@@ -1,0 +1,57 @@
+name: ytprobe
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: "YouTube video URL"
+        required: false
+        default: "https://www.youtube.com/watch?v=GHspQ1PCWNw"
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install deps
+        run: pip install -r requirements.txt
+      - name: Decode cookies
+        env:
+          COOKIE_B64: ${{ secrets.COOKIE_B64 }}
+        run: |
+          if [ -n "$COOKIE_B64" ]; then
+            echo "$COOKIE_B64" | base64 -d > cookies.txt
+            echo "COOKIES_FILE=cookies.txt" >> "$GITHUB_ENV"
+            echo "decoded cookies.txt ($(wc -l < cookies.txt) lines)"
+          else
+            echo "no COOKIE_B64 secret"
+          fi
+      - name: Probe yt clients from runner IP
+        env:
+          URL: ${{ inputs.url }}
+        run: |
+          python - <<'PY'
+          import os, subprocess, sys, itertools
+          url = os.environ.get("URL") or "https://www.youtube.com/watch?v=GHspQ1PCWNw"
+          ck = os.environ.get("COOKIES_FILE") or ""
+          clients = ["visionos", "android", "web", "ios", "tv"]
+          combos = []
+          for c in clients:
+              combos.append((f"{c}_nock", ["--extractor-args", f"youtube:player_client={c}"]))
+              if ck and os.path.exists(ck):
+                  combos.append((f"{c}_ck", ["--cookies", ck, "--extractor-args", f"youtube:player_client={c}"]))
+          def probe(label, args):
+              try:
+                  p = subprocess.run([sys.executable, "-m", "yt_dlp", "-F", "--no-warnings", *args, url],
+                                     capture_output=True, text=True, timeout=90)
+              except Exception as e:
+                  print(f"{label}: EXC {e}"); return
+              real = [l for l in (p.stdout or "").splitlines()
+                      if ("https" in l or "m3u8" in l) and any(ch.isdigit() for ch in l)]
+              err = (p.stderr or "").strip().splitlines()
+              tail = err[-1][:110] if err and p.returncode else ""
+              print(f"{label}: rc={p.returncode} real_formats={len(real)}  {tail}")
+          for label, args in combos:
+              probe(label, args)
+          PY
