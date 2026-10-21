@@ -92,6 +92,7 @@ jobs:
           MAX_SECS: ${{ vars.MAX_SECS || '200' }}
           FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
           FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_PAGES_JSON: ${{ secrets.FB_PAGES_JSON }}
         run: |
           echo "=== Processing manual job ${{ inputs.manual_job_id }} ==="
           MANUAL_JOB_ID="${{ inputs.manual_job_id }}" python pipeline/manual_upload.py
@@ -112,6 +113,7 @@ jobs:
           FB_PAGE_URL: ${{ vars.FB_PAGE_URL || '' }}
           FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
           FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_PAGES_JSON: ${{ secrets.FB_PAGES_JSON }}
         run: |
           ids="${{ inputs.video_ids }}"
           if [ -z "$ids" ]; then

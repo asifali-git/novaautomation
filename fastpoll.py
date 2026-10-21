@@ -13,6 +13,7 @@ Env vars:
   POLL_MIN, POLL_MAX           — seconds between polls (default 8 / 12)
 """
 import os
+import base64
 import sys
 import re
 import json
@@ -215,12 +216,39 @@ def _cookie_file(platform, uid):
     return path
 
 
-def _fb_session(uid):
-    """requests.Session with the owner's Facebook cookies."""
-    items = _fetch_account_cookies("facebook", uid)
-    if not items or isinstance(items, str):
+def _fb_env_cookies():
+    """Source-scrape cookies from env FB_SOURCE_COOKIES_B64 (base64 of the
+    JSON cookie list or Netscape text). Moved OUT of the worker accounts
+    store — Connected Accounts now holds only API-backed pages; this secret
+    exists only so external FB sources stay scrapeable (Graph can't read
+    foreign profiles)."""
+    b64 = (os.getenv("FB_SOURCE_COOKIES_B64") or "").strip()
+    if not b64:
         return None
-    key = int(uid or 0)
+    raw = b64
+    try:
+        raw = base64.b64decode(b64).decode("utf-8", "replace")
+    except Exception:
+        pass
+    s = raw.lstrip()
+    if s.startswith("[") or s.startswith("{"):
+        try:
+            return json.loads(s)
+        except Exception:
+            return None
+    return raw  # Netscape cookie text
+
+
+def _fb_session(uid=None):
+    """requests.Session built from the source-scrape cookies (env)."""
+    items = _fb_env_cookies()
+    if not items:
+        return None
+    if isinstance(items, str):
+        jar = _cookie_jar(items)
+        items = [{"name": k, "value": v, "domain": ".facebook.com"}
+                 for k, v in jar.items()]
+    key = "env"
     now = time.time()
     ent = _fb_sess_cache.get(key)
     if ent and ent[1] > now:
@@ -228,6 +256,8 @@ def _fb_session(uid):
     s = requests.Session()
     s.headers.update(_FB_HEADERS)
     for c in items:
+        if not isinstance(c, dict):
+            continue
         try:
             s.cookies.set(c.get("name"), c.get("value", ""),
                           domain=c.get("domain") or ".facebook.com",
@@ -303,28 +333,6 @@ def _fb_new_nodes(nodes, seen_key, seen_ts, cap=5):
     return newer, (newer[-1] if newer else None)
 
 
-def _fb_account(uid):
-    """Owner's Facebook account {cookies, proxy} from Worker (cached)."""
-    key = ("fbacc", int(uid or 0))
-    now = time.time()
-    ent = _ck_cache.get(key)
-    if ent and ent["exp"] > now:
-        return ent["items"]
-    acc = None
-    try:
-        params = f"?user_id={int(uid)}" if uid else ""
-        r = requests.get(f"{WORKER}/api/internal/accounts/env{params}",
-                         headers=_h(), timeout=30)
-        if r.status_code == 200:
-            lst = (r.json() or {}).get("facebook") or []
-            if lst:
-                acc = lst[0]
-    except Exception as e:
-        log.warning("fb account fetch failed: %s", e)
-    _ck_cache[key] = {"exp": now + _COOKIE_TTL, "items": acc}
-    return acc
-
-
 def _cookie_jar(items):
     """Name->value dict from a JSON cookie list or Netscape cookie text."""
     jar = {}
@@ -365,13 +373,13 @@ def _fb_fetch_feed(url, uid):
                 "permalink.php", "story.php", "photo.php"):
         raise ValueError("use a page url like facebook.com/<PageName> "
                          "(single-video/profile.php urls unsupported)")
-    acc = _fb_account(uid) or {}
-    jar = _cookie_jar(acc.get("cookies")) or _cookie_jar(
-        _fetch_account_cookies("facebook", uid))
+    items = _fb_env_cookies()
+    jar = _cookie_jar(items)
     if not jar:
-        raise ValueError("no facebook cookies connected — add a Facebook "
-                         "account first (Connect)")
-    proxy = acc.get("proxy") or None
+        raise ValueError(
+            "FB_SOURCE_COOKIES_B64 missing/empty — FB source-scrape cookies "
+            "live in the repo secret now (not in Connected Accounts)")
+    proxy = (os.getenv("FB_SOURCE_PROXY") or "").strip() or None
     prox = {"http": proxy, "https": proxy} if proxy else None
     variants = [f"https://{h}/{page}/reels{q}"
                 for h in ("www.facebook.com", "m.facebook.com")
@@ -412,8 +420,9 @@ def _fb_fetch_feed(url, uid):
 
     s = _fb_session(uid)
     if s is None:
-        raise ValueError("no facebook cookies connected — add a Facebook "
-                         "account first (Connect)")
+        raise ValueError(
+            "FB_SOURCE_COOKIES_B64 missing/empty — FB source-scrape cookies "
+            "live in the repo secret now (not in Connected Accounts)")
     if proxy:
         s.proxies = dict(prox)
     for full in variants:

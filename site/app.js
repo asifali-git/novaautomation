@@ -943,7 +943,7 @@ async function loadSocial() {
         <span>${esc(a.username || 'Connected')}</span>
         ${a.country ? `<span class="badge idle" title="Fingerprint country">${esc(a.country)}</span>` : ''}
         ${a.proxy ? `<span class="badge idle" title="${esc(a.proxy)}">proxy</span>` : ''}
-        <button class="btn ghost sm" style="margin-left:auto" onclick="openUpdateCookies('${a.id}')" title="Update cookies without re-adding">⟳ Cookies</button>
+        ${p === 'facebook' ? '' : `<button class="btn ghost sm" style="margin-left:auto" onclick="openUpdateCookies('${a.id}')" title="Update cookies without re-adding">⟳ Cookies</button>`}
         <button class="btn danger sm" onclick="delAccount('${a.id}')" title="Delete account">✕</button>
       </div>
     `).join('');
@@ -960,9 +960,11 @@ async function loadSocial() {
         ${connected ? accList : '<div class="muted">No accounts yet. Use the form below to connect.</div>'}
       </div>
       <div class="social-card-actions">
-        <button class="btn ghost sm" onclick="document.getElementById('af-platform').value='${p}'; document.getElementById('af-cookies').click();">
+        ${p === 'facebook'
+          ? '<div class="muted" style="font-size:12px">Facebook pages are API-connected (Graph token registry) — cookie connect removed.</div>'
+          : `<button class="btn ghost sm" onclick="document.getElementById('af-platform').value='${p}'; document.getElementById('af-cookies').click();">
           ${connected ? '+ Add another' : 'Connect'}
-        </button>
+        </button>`}
       </div>
     </div>`;
   }).join('');

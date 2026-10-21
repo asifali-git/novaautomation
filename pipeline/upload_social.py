@@ -119,6 +119,36 @@ def _get_enabled_platforms():
     return result
 
 
+def _fb_page_sel(acct_id):
+    """facebook:<acct_id> -> Graph page id for upload_fb (None = default page).
+
+    acct_id may be a registry page id, a page name, or a worker accounts
+    row id (API-backed page rows carry the page name as username)."""
+    if not acct_id:
+        return None
+    try:
+        import upload_fb
+        pages = upload_fb.fb_registry()["pages"]
+    except Exception:
+        return None
+    s = str(acct_id).strip()
+    sl = s.casefold()
+    for p in pages:
+        if p.get("id") == s or (p.get("name") or "").casefold() == sl:
+            return p.get("id")
+    try:
+        uname = (_account_meta(acct_id).get("username") or "").strip().casefold()
+    except Exception:
+        uname = ""
+    if uname:
+        for p in pages:
+            if (p.get("name") or "").strip().casefold() == uname:
+                return p.get("id")
+    print(f"[social] facebook account {s!r} matches no API page — "
+          f"using default page", file=sys.stderr)
+    return None
+
+
 def _up(success, url=None, error=None, account_id=None):
     """Uniform uploader return value: {success, url, account, error?}."""
     r = {"success": bool(success), "url": url or None, "account": account_id}
@@ -1530,531 +1560,6 @@ def upload_instagram(video_path, description, account_id=None):
         _quit(driver)
 
 
-# ─────────────────────────── FACEBOOK ───────────────────────────
-
-def _parse_cookies_any_format(cookies_file):
-    """Parse cookies from JSON (Puppeteer) or Netscape (.txt) format.
-    Returns list of dicts with name/value/domain/path."""
-    # Try JSON first
-    try:
-        with open(cookies_file, "r") as f:
-            loaded = json.load(f)
-        if isinstance(loaded, list):
-            return loaded
-        if isinstance(loaded, dict):
-            return [loaded]
-    except (json.JSONDecodeError, UnicodeDecodeError):
-        pass
-
-    # Try Netscape format
-    cookies = []
-    with open(cookies_file, "r") as f:
-        for line in f:
-            line = line.strip()
-            if not line or line.startswith("#"):
-                # Netscape header comment lines, skip
-                if line.startswith("#HttpOnly_"):
-                    line = line[len("#HttpOnly_"):]
-                else:
-                    continue
-            parts = line.split("\t")
-            if len(parts) >= 7:
-                domain, _, path, secure, expires, name, value = parts[:7]
-                cookies.append({
-                    "name": name,
-                    "value": value,
-                    "domain": domain,
-                    "path": path,
-                    "secure": secure.upper() == "TRUE",
-                    "expires": int(expires) if expires.isdigit() else -1,
-                })
-    return cookies
-
-
-def _harvest_facebook_url(driver, timeout=30):
-    """Capture the just-published reel URL.
-
-    Priority:
-      1. anchors inside the success dialog ("View reel") — page-wide scan skipped
-         because the home feed is full of OTHER people's reels (stale-link source).
-      2. notifications flow (deterministic): newest "Your reel has been published"
-         notification carries a base64 content_id "S:<page>:<story>:<story>";
-         story.php?story_fbid=<story>&id=<page> redirects to the canonical
-         /reel/<id> permalink. Recency-filtered by notif_id (epoch ms)."""
-    import base64 as _b64
-    import re
-    from urllib.parse import parse_qs, urlparse
-
-    rx = re.compile(r"/reel/\d{6,}", re.I)
-    now = time.time()
-    deadline = now + timeout
-    while time.time() < deadline:
-        # Pass 1: success-dialog links only
-        try:
-            cands = driver.execute_script(r"""
-                const out = [];
-                const dlg = document.querySelector('[role="dialog"]');
-                if (dlg) {
-                    dlg.querySelectorAll('a[href]').forEach(a => {
-                        out.push({h: a.href || '', t: (a.innerText || '').trim().slice(0, 50)});
-                    });
-                }
-                return JSON.stringify(out);
-            """)
-            for it in json.loads(cands or "[]"):
-                h = it.get("h") or ""
-                if rx.search(h) and "reels/create" not in h and "/reel/?s=" not in h:
-                    return h.split("?")[0]
-        except Exception:
-            pass
-
-        # Pass 2: notifications -> story.php redirect -> canonical permalink
-        try:
-            driver.get("https://www.facebook.com/notifications/")
-            _sleep(5, 7)
-            hrefs = json.loads(driver.execute_script(r"""
-                const s = new Set();
-                document.querySelectorAll('a[href*="content_id"]').forEach(a => s.add(a.href));
-                return JSON.stringify([...s]);
-            """) or "[]")
-            best = None  # (notif_time, story_url)
-            for href in hrefs:
-                q = parse_qs(urlparse(href).query)
-                enc = (q.get("content_id") or [""])[0]
-                nid = (q.get("notif_id") or [""])[0]
-                if not enc:
-                    continue
-                # Recency: notif_id ≈ epoch seconds (+fraction); reject stale ones
-                try:
-                    t = int(nid) / 1000.0
-                except Exception:
-                    continue
-                if not (now - 1800 <= t <= time.time() + 60):
-                    continue
-                try:
-                    parts = _b64.b64decode(enc).decode().split(":")
-                    page, story = parts[1].lstrip("_I"), parts[2]
-                except Exception:
-                    continue
-                if best is None or t > best[0]:
-                    best = (t, f"https://www.facebook.com/story.php?story_fbid={story}&id={page}")
-            if best:
-                driver.get(best[1])
-                _sleep(5, 7)
-                m = rx.search(driver.current_url.split("?")[0])
-                if m:
-                    return f"https://www.facebook.com{m.group(0)}"
-        except Exception as e:
-            print(f"[facebook] notification harvest: {e}")
-        _sleep(3, 4)
-    return None
-
-
-def upload_facebook(video_path, description, account_id=None):
-    """Upload reel to Facebook using cookies from worker."""
-    cookies = _get_cookies("facebook", account_id=account_id)
-    if not cookies:
-        print("[facebook] no cookies in worker; skipping")
-        return _up(False, error="no cookies", account_id=account_id)
-
-    abs_path = os.path.abspath(video_path)
-    print(f"[facebook] video: {abs_path} ({os.path.getsize(abs_path)//1024} KB)")
-    driver = _make_driver(headless=True)
-    try:
-        driver.get("https://www.facebook.com/")
-        _spoof(driver)
-
-        loaded = _load_cookies_for_driver(driver, cookies)
-        if loaded == 0:
-            print("[facebook] zero cookies loaded; aborting")
-            return _up(False, error="zero cookies loaded", account_id=account_id)
-
-        driver.refresh()
-        _sleep(4, 6)
-
-        # Verify login cookies
-        all_c = driver.get_cookies()
-        has_auth = any(c.get("name") in ("c_user", "xs", "fr") for c in all_c)
-        cookie_names = [c.get("name") for c in all_c]
-        print(f"[facebook] auth cookies present: {has_auth} (total: {len(all_c)}, names: {cookie_names[:15]})")
-        if not has_auth:
-            print("[facebook] WARNING: no auth cookies — may not be logged in")
-
-        from selenium.webdriver.common.by import By
-        from selenium.webdriver.support.ui import WebDriverWait
-        from selenium.webdriver.support import expected_conditions as EC
-        from selenium.webdriver.common.keys import Keys
-
-        # Dismiss cookie consent / popups
-        for sel in [
-            "//div[@role='dialog']//div[@aria-label='Close']",
-            "//div[@role='dialog']//button[@aria-label='Close']",
-            "//span[text()='Allow all cookies']/ancestor::div[@role='button']",
-            "//div[@aria-label='Allow all cookies']",
-            "//button[contains(text(),'Allow all')]",
-            "//div[@role='button' and contains(.,'Allow all')]",
-        ]:
-            try:
-                btn = driver.find_element(By.XPATH, sel)
-                if btn.is_displayed():
-                    btn.click()
-                    print(f"[facebook] dismissed popup: {sel[:50]}")
-                    _sleep(1, 2)
-            except Exception:
-                pass
-
-        # Try multiple reels create URLs
-        create_urls = [
-            "https://www.facebook.com/reels/create/",
-            "https://www.facebook.com/reels/",
-            "https://www.facebook.com/create/reel/",
-        ]
-        file_input = None
-        for url in create_urls:
-            try:
-                print(f"[facebook] trying: {url}")
-                driver.get(url)
-                _sleep(6, 8)
-
-                # Also dismiss popups on create page
-                for sel in [
-                    "//div[@role='dialog']//div[@aria-label='Close']",
-                    "//div[@role='dialog']//button[@aria-label='Close']",
-                    "//span[text()='Not now']/ancestor::div[@role='button']",
-                    "//div[@role='button' and contains(.,'Not now')]",
-                ]:
-                    try:
-                        btn = driver.find_element(By.XPATH, sel)
-                        if btn.is_displayed():
-                            btn.click()
-                            _sleep(1, 2)
-                    except Exception:
-                        pass
-
-                # Wait for page to fully load
-                _sleep(3, 5)
-
-                # Check if we're on login page
-                page_inputs = driver.execute_script("""
-                    const inputs = document.querySelectorAll('input');
-                    const result = [];
-                    inputs.forEach(i => result.push({type: i.type, name: i.name}));
-                    return result;
-                """)
-                has_login = any(i.get("name") in ("email", "pass", "password") for i in page_inputs if isinstance(i, dict))
-                if has_login:
-                    print(f"[facebook] LOGIN FORM DETECTED on {url} — cookies not accepted!")
-                    print(f"[facebook] page URL: {driver.current_url}")
-                    # Try to fill login form with cookie session - skip, just report
-                    continue
-
-                # Try multiple ways to find file input
-                try:
-                    file_input = WebDriverWait(driver, 10).until(
-                        EC.presence_of_element_located(
-                            (By.XPATH, "//input[@type='file']")
-                        )
-                    )
-                    if file_input:
-                        print(f"[facebook] found file input at {url}")
-                        break
-                except Exception:
-                    pass
-
-                # Try JS - search all inputs including hidden
-                file_input = driver.execute_script("""
-                    // Search in main document
-                    let inputs = document.querySelectorAll('input[type=file]');
-                    for (const inp of inputs) {
-                        if (inp.accept && inp.accept.includes('video')) return inp;
-                    }
-                    if (inputs.length > 0) return inputs[0];
-
-                    // Search in iframes
-                    const iframes = document.querySelectorAll('iframe');
-                    for (const iframe of iframes) {
-                        try {
-                            const doc = iframe.contentDocument || iframe.contentWindow.document;
-                            const finputs = doc.querySelectorAll('input[type=file]');
-                            for (const inp of finputs) {
-                                if (inp.accept && inp.accept.includes('video')) return inp;
-                            }
-                            if (finputs.length > 0) return finputs[0];
-                        } catch(e) {}
-                    }
-
-                    // Search in shadow DOM
-                    const allEls = document.querySelectorAll('*');
-                    for (const el of allEls) {
-                        if (el.shadowRoot) {
-                            const sinp = el.shadowRoot.querySelectorAll('input[type=file]');
-                            if (sinp.length > 0) return sinp[0];
-                        }
-                    }
-                    return null;
-                """)
-                if file_input:
-                    print(f"[facebook] found file input via JS at {url}")
-                    break
-
-                # Debug: dump what inputs exist
-                debug = driver.execute_script("""
-                    const inputs = document.querySelectorAll('input');
-                    const result = [];
-                    inputs.forEach(i => result.push({type: i.type, accept: i.accept, id: i.id, name: i.name}));
-                    return JSON.stringify(result);
-                """)
-                print(f"[facebook] page inputs: {debug}")
-
-            except Exception as e:
-                print(f"[facebook] {url} failed: {e}")
-
-        if not file_input:
-            print(f"[facebook] no file input found. URL: {driver.current_url}")
-            print(f"[facebook] page title: {driver.title}")
-            # Try alternative: click "Create" button first
-            try:
-                for sel in [
-                    "//div[@role='button' and contains(.,'Create')]",
-                    "//button[contains(.,'Create')]",
-                    "//a[contains(.,'Create')]",
-                    "//div[@role='link' and contains(.,'Create')]",
-                ]:
-                    try:
-                        create_btn = driver.find_element(By.XPATH, sel)
-                        if create_btn.is_displayed():
-                            create_btn.click()
-                            print(f"[facebook] clicked Create: {sel[:50]}")
-                            _sleep(3, 5)
-                            # Now look for file input again
-                            file_input = driver.execute_script("""
-                                const inputs = document.querySelectorAll('input[type=file]');
-                                for (const inp of inputs) {
-                                    if (inp.accept && inp.accept.includes('video')) return inp;
-                                }
-                                if (inputs.length > 0) return inputs[0];
-                                return null;
-                            """)
-                            if file_input:
-                                print("[facebook] found file input after Create click")
-                                break
-                    except Exception:
-                        pass
-            except Exception:
-                pass
-
-        if not file_input:
-            print(f"[facebook] still no file input. Final URL: {driver.current_url}")
-            return _up(False, error="no file input on create page", account_id=account_id)
-
-        # Upload video
-        file_input.send_keys(abs_path)
-        print("[facebook] uploading video file...")
-        _sleep(15, 25)
-
-        # Wait for video processing to complete (poll up to ~90s)
-        print("[facebook] waiting for video processing...")
-        processing = True
-        for i in range(18):
-            _sleep(4, 6)
-            try:
-                still_processing = driver.execute_script("""
-                    const body = document.body.innerText;
-                    return /Processing|Uploading|Preparing|Do not close/i.test(body);
-                """)
-                if not still_processing:
-                    processing = False
-                    break
-            except Exception:
-                pass
-        print(f"[facebook] processing done={not processing} after polling")
-
-        # Fill description (JS click bypasses overlay interception — native
-        # click got intercepted in job25 and the reel published with no caption)
-        def _fill_editor(text, wait_s=15):
-            try:
-                box = WebDriverWait(driver, wait_s).until(
-                    EC.element_to_be_clickable(
-                        (By.XPATH, "//div[@contenteditable='true'] | //div[@role='textbox']")
-                    )
-                )
-                driver.execute_script("arguments[0].scrollIntoView({block:'center'});", box)
-                _sleep(0.5, 1)
-                driver.execute_script("arguments[0].click();", box)
-                _sleep(0.3, 0.6)
-                box.send_keys(text[:5000])
-                _sleep(1, 1.5)
-                val = driver.execute_script("return arguments[0].innerText || ''", box) or ""
-                if len(val.strip()) < 10:
-                    # Lexical-compatible fallback: execCommand insertText
-                    driver.execute_script(
-                        """
-                        const el = arguments[0], t = arguments[1];
-                        el.focus();
-                        document.execCommand('selectAll', false, null);
-                        document.execCommand('insertText', false, t);
-                        """,
-                        box,
-                        text[:5000],
-                    )
-                    _sleep(1, 1.5)
-                    val = driver.execute_script("return arguments[0].innerText || ''", box) or ""
-                ok = len(val.strip()) >= 10
-                print(f"[facebook] description {'filled' if ok else 'FAILED'} ({len(val.strip())} chars)")
-                return ok
-            except Exception as e:
-                print(f"[facebook] description failed: {e}")
-                return False
-
-        _fill_editor(description)
-
-        _sleep(2, 4)
-
-        # Facebook Reels is a multi-step wizard: Upload → Next → Share
-        def _find_button_exact(labels):
-            """Find visible enabled button whose EXACT text/aria-label matches one of labels (priority order)."""
-            try:
-                btns = driver.find_elements(By.XPATH, "//div[@role='button'] | //button")
-            except Exception:
-                btns = []
-            for label in labels:
-                low = label.lower()
-                for b in btns:
-                    try:
-                        if not b.is_displayed():
-                            continue
-                        if b.get_attribute("aria-disabled") == "true":
-                            continue
-                        t = (b.text or "").strip().lower()
-                        a = (b.get_attribute("aria-label") or "").strip().lower()
-                        if t == low or a == low:
-                            return b
-                    except Exception:
-                        pass
-            return None
-
-        # Step: click "Next" if present (wizard step 1 → 2)
-        next_btn = _find_button_exact(["next"])
-        if next_btn:
-            driver.execute_script("arguments[0].scrollIntoView({block:'center'});", next_btn)
-            _sleep(0.5, 1)
-            driver.execute_script("arguments[0].click();", next_btn)
-            print("[facebook] clicked Next (wizard step)")
-            _sleep(3, 5)
-
-            # Fill description on step 2 if it didn't carry over / first fill failed
-            try:
-                cur = WebDriverWait(driver, 12).until(
-                    EC.presence_of_element_located(
-                        (By.XPATH, "//div[@contenteditable='true'] | //div[@role='textbox']")
-                    )
-                )
-                existing = cur.text or ""
-                if len(existing.strip()) < 10:
-                    _fill_editor(description, wait_s=12)
-                else:
-                    print(f"[facebook] description carried over ({len(existing.strip())} chars)")
-            except Exception as e:
-                print(f"[facebook] step2 description check failed: {e}")
-            _sleep(1, 2)
-
-        # Dump all button-like elements for debugging
-        try:
-            btn_dump = driver.execute_script("""
-                const els = document.querySelectorAll('div[role=button], button, input[type=submit], a[role=button]');
-                const out = [];
-                els.forEach(e => {
-                    const t = (e.innerText || e.value || e.getAttribute('aria-label') || '').trim().slice(0,60);
-                    if (t) out.push({tag: e.tagName, role: e.getAttribute('role'), text: t, disabled: e.getAttribute('aria-disabled') || e.disabled || false});
-                });
-                return JSON.stringify(out.slice(0, 40));
-            """)
-            print(f"[facebook] page buttons: {btn_dump}")
-        except Exception as e:
-            print(f"[facebook] button dump failed: {e}")
-
-        # Step: click Share / Publish / Share reel — exact matches only
-        publish_btn = _find_button_exact(["share reel", "post", "publish", "share"])
-        if publish_btn:
-            driver.execute_script("arguments[0].scrollIntoView({block:'center'});", publish_btn)
-            _sleep(0.5, 1)
-            driver.execute_script("arguments[0].click();", publish_btn)
-            print(f"[facebook] clicked publish: {(publish_btn.text or '')[:40]!r}")
-
-            # Verify with DEFINITIVE signals only — "Posting" or a bare URL change
-            # is not enough (dead session redirects to /login/, duplicate dialog,
-            # error toasts all look like "success" to the old check).
-            _VERIFY_JS = """
-                const b = document.body.innerText;
-                const url = location.href;
-                const badUrl = /\\/login|checkpoint|recover|zerooptin|\\/security\\//.test(url);
-                const err = /didn'?t work|couldn'?t share|unable to share|something went wrong|try again later|duplicate|violat|not allowed|support standards|upload failed|failed to share/i.test(b);
-                const successText = /Your reel has been shared|reel has been shared|View reel|shared to your feed|reel was published/i.test(b);
-                const leftCreate = !/reels\\/create/.test(url);
-                const ok = (successText || (leftCreate && !badUrl)) && !err;
-                return JSON.stringify({ok: ok, err: err, badUrl: badUrl, url: url.slice(0,140)});
-            """
-            verified = False
-            for j in range(15):
-                _sleep(3, 4)
-                try:
-                    state = driver.execute_script(_VERIFY_JS)
-                    print(f"[facebook] post-click check {j+1}: {state}")
-                    s = {}
-                    try:
-                        s = json.loads(state or "{}")
-                    except Exception:
-                        pass
-                    if s.get("err"):
-                        # Confirm the error dialog is really there (not transient text).
-                        _sleep(4, 5)
-                        s2 = {}
-                        try:
-                            s2 = json.loads(driver.execute_script(_VERIFY_JS) or "{}")
-                        except Exception:
-                            pass
-                        if s2.get("err"):
-                            print(f"[facebook] publish FAILED (error dialog) url={s2.get('url')}")
-                            return _up(
-                                False,
-                                error="facebook showed an error after publish",
-                                account_id=account_id,
-                            )
-                        continue
-                    if s.get("ok"):
-                        verified = True
-                        break
-                except Exception:
-                    pass
-            if not verified:
-                print("[facebook] clicked but could not verify success")
-                return _up(False, error="unverified after publish click", account_id=account_id)
-
-            _sleep(3, 5)
-            pub_url = _harvest_facebook_url(driver, timeout=50)
-            print(f"[facebook] reel published OK: {pub_url or '(url not found)'}")
-            return _up(True, url=pub_url, account_id=account_id)
-
-        # Check if already published (success message)
-        try:
-            WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located(
-                    (By.XPATH, "//*[contains(text(),'Your reel') or contains(text(),'has been shared') or contains(text(),'published')]")
-                )
-            )
-            print("[facebook] success message found")
-            pub_url = _harvest_facebook_url(driver, timeout=45)
-            return _up(True, url=pub_url, account_id=account_id)
-        except Exception:
-            pass
-
-        print("[facebook] no publish button found")
-        return _up(False, error="no publish button found", account_id=account_id)
-    except Exception as e:
-        print(f"[facebook] error: {type(e).__name__}: {e}")
-        return _up(False, error=str(e), account_id=account_id)
-    finally:
-        _quit(driver)
 
 
 # ─────────────────────────── MAIN ───────────────────────────
@@ -2071,8 +1576,11 @@ def upload_all(video_path, title, description):
         return results
 
     caption = f"{title}\n\n{description}".strip()[:2200]
-    fb_creds = ((os.getenv("FB_PAGE_TOKEN") or "").strip()
-                and (os.getenv("FB_PAGE_ID") or "").strip())
+    try:
+        import upload_fb
+        fb_creds = upload_fb.creds_available()
+    except Exception:
+        fb_creds = False
     ig_selected = False
     fb_selected = any(p == "facebook" for p, _ in enabled)
 
@@ -2094,21 +1602,23 @@ def upload_all(video_path, title, description):
                 results["instagram"] = {"success": False, "error": str(e)}
         elif plat == "facebook":
             if fb_creds:
-                # Graph API path — no browser, works from any runner IP.
-                print("[social] uploading to Facebook via Graph API...")
+                # Graph API path — no browser/cookies, works from any runner IP.
+                sel = _fb_page_sel(acct_id)
+                label = f" (page {sel})" if sel else ""
+                print(f"[social] uploading to Facebook via Graph API{label}...")
                 try:
                     import upload_fb
                     results["facebook"] = upload_fb.upload(
-                        video_path, description=caption)
+                        video_path, description=caption, page=sel)
                 except Exception as e:
                     print(f"[social] facebook graph upload failed: {e}",
                           file=sys.stderr)
                     results["facebook"] = {"success": False, "error": str(e)}
             else:
-                print(f"[social] uploading to Facebook"
-                      f"{f' (account {acct_id})' if acct_id else ''}...")
-                results["facebook"] = upload_facebook(video_path, caption,
-                                                      account_id=acct_id)
+                msg = ("no Facebook API creds — set FB_PAGES_JSON "
+                       "(or FB_PAGE_TOKEN/FB_PAGE_ID)")
+                print(f"[social] {msg}", file=sys.stderr)
+                results["facebook"] = {"success": False, "error": msg}
 
     # Flow: IG selected -> ALSO mirror to the Facebook Page (Graph API),
     # unless facebook was already an explicit destination above.

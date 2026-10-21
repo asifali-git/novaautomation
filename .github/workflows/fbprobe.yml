@@ -15,6 +15,7 @@ jobs:
         env:
           WORKER_URL: ${{ secrets.WORKER_URL }}
           INTERNAL_TOKEN: ${{ secrets.INTERNAL_TOKEN }}
+          FB_SOURCE_COOKIES_B64: ${{ secrets.FB_SOURCE_COOKIES_B64 }}
         run: |
           python - <<'PY'
           import json, os, sys, time

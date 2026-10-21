@@ -20,4 +20,5 @@ jobs:
           INTERNAL_TOKEN: ${{ secrets.INTERNAL_TOKEN }}
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           GH_REPO: ${{ github.repository }}
+          FB_SOURCE_COOKIES_B64: ${{ secrets.FB_SOURCE_COOKIES_B64 }}
         run: python fastpoll.py --check
