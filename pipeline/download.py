@@ -14,17 +14,19 @@ def _cookies_opt():
 
 
 def _yt_attempts(url):
-    """YouTube: ordered extra_opts attempts. Both skip cookies — the browser
-    cookie export is partial (missing session cookies) and actively breaks
-    web/visionos clients with 'page needs to be reloaded'. visionos gives
-    full DASH formats; android falls back to progressive 360p."""
+    """YouTube: ordered (extra_opts, format) attempts. Both skip cookies —
+    the browser cookie export is partial (missing session cookies) and
+    yields zero formats on every client. visionos gives full DASH formats
+    (merged via ffmpeg); android falls back to a single progressive file."""
     u = (url or "").lower()
     if "youtube.com" in u or "youtu.be" in u:
         return [
-            {"extractor_args": {"youtube": {"player_client": ["visionos"]}}},
-            {"extractor_args": {"youtube": {"player_client": ["android"]}}},
+            ({"extractor_args": {"youtube": {"player_client": ["visionos"]}}},
+             "bv*[ext=mp4]+ba[ext=m4a]/b[ext=mp4]/b"),
+            ({"extractor_args": {"youtube": {"player_client": ["android"]}}},
+             "b[ext=mp4]/b"),
         ]
-    return [{}]
+    return [({}, "bv*[ext=mp4]+ba[ext=m4a]/b[ext=mp4]/b")]
 
 
 def download(url, out_dir="work", max_secs=None):
@@ -33,7 +35,6 @@ def download(url, out_dir="work", max_secs=None):
     base = {
         "outtmpl": os.path.join(out_dir, "src.%(ext)s"),
         "merge_output_format": "mp4",
-        "format": "bv*[ext=mp4]+ba[ext=m4a]/b[ext=mp4]/b",
         "noplaylist": True,
         "quiet": True,
         "no_warnings": True,
@@ -45,9 +46,10 @@ def download(url, out_dir="work", max_secs=None):
     }
     last_err = None
     info = None
-    for extra in _yt_attempts(url):
+    for extra, fmt in _yt_attempts(url):
         opts = dict(base)
         opts.update(extra)
+        opts["format"] = fmt
         if not extra:
             opts.update(_cookies_opt())
         if max_secs:

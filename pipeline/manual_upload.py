@@ -79,10 +79,10 @@ def download_best(url, out_dir="work"):
     u = (url or "").lower()
     is_yt = "youtube.com" in u or "youtu.be" in u
 
-    def _attempt(player_client, use_cookies):
+    def _attempt(player_client, use_cookies, fmt):
         opts = {
             "outtmpl": os.path.join(out_dir, "%(id)s.%(ext)s"),
-            "format": "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
+            "format": fmt,
             "merge_output_format": "mp4",
             "max_filesize": 500 * 1024 * 1024,
             "socket_timeout": 30,
@@ -105,11 +105,11 @@ def download_best(url, out_dir="work"):
 
     if is_yt:
         try:
-            return _attempt("visionos", False)
+            return _attempt("visionos", False, "bv*[ext=mp4]+ba[ext=m4a]/best[ext=mp4]/best")
         except Exception as e:
             print(f"[download] yt visionos failed ({e}); trying android", file=sys.stderr)
-            return _attempt("android", False)
-    return _attempt(None, True)
+            return _attempt("android", False, "b[ext=mp4]/b")
+    return _attempt(None, True, "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best")
 
 
 # ── AI pipeline (YouTube) ──────────────────────────────────────────────────
