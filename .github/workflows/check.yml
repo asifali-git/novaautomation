@@ -2,7 +2,7 @@ name: check
 on:
   workflow_dispatch:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '* * * * *'
 jobs:
   check:
     runs-on: ubuntu-latest
