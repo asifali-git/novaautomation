@@ -1,0 +1,211 @@
+{
+ "audio_type": "asmr",
+ "audio_mode": "lower",
+ "audio_volume": 0.4,
+ "has_speech": false,
+ "video_summary": "A hand peels and slices a two-toned green and yellow coconut over a wooden stump in a lush green field.",
+ "style": "educational",
+ "title": "Why Street Vendors Tap Before Slicing Coconuts",
+ "description": "A close-up video shows the preparation of a unique green and yellow coconut, revealing its inner flesh. This clip highlights how traditional street vendors prepare this tropical fruit for consumption.",
+ "hashtags": [
+  "#coconut",
+  "#streetfood",
+  "#tropicalfruit",
+  "#foodprep",
+  "#natural",
+  "#healthy",
+  "#cooking"
+ ],
+ "tags": [
+  "coconut",
+  "street food",
+  "tropical fruit",
+  "food preparation",
+  "healthy eating",
+  "natural ingredients",
+  "cooking techniques",
+  "fresh produce",
+  "tropical cuisine",
+  "preparation",
+  "sustainable food",
+  "local cuisine",
+  "nutrient rich",
+  "traditional recipes",
+  "easy recipe"
+ ],
+ "segments": [
+  {
+   "index": 0,
+   "start": 0.0,
+   "end": 12.75,
+   "action": "keep",
+   "speed": 1.12,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Thai Dessert Roots",
+    "position": "top",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Thai street vendors tap coconuts to release sweet water before serving.",
+   "notes": "Hook with verified fact 1, warm color grade for tropical feel"
+  },
+  {
+   "index": 1,
+   "start": 12.75,
+   "end": 25.5,
+   "action": "keep",
+   "speed": 1.08,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.06,
+   "color": {
+    "preset": "warm",
+    "brightness": 0.0,
+    "contrast": 1.04,
+    "saturation": 1.08
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Coconut Fat Cooking",
+    "position": "top",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Long simmering in rendang uses coconut fat as the primary cooking medium.",
+   "notes": "Fact 2 delivered while hand manipulates coconut, subtle speed variation"
+  },
+  {
+   "index": 2,
+   "start": 25.5,
+   "end": 38.25,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.07,
+   "color": {
+    "preset": "moody",
+    "brightness": 0.0,
+    "contrast": 1.07,
+    "saturation": 1.1
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Colostrum & Fasting",
+    "position": "top",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Fasting-friendly coconut colchas use the same fruit as traditional offerings.",
+   "notes": "Fact 3 explained with natural motion, consistent color grading"
+  },
+  {
+   "index": 3,
+   "start": 38.25,
+   "end": 50.955,
+   "action": "keep",
+   "speed": 1.14,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.08,
+    "saturation": 1.14
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Eat History",
+    "position": "top",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Coconut dishes preserve local histories you can actually taste and enjoy.",
+   "notes": "Fact 4 wrapped in a question inviting comments, final seconds"
+  }
+ ],
+ "global": {
+  "intro_effect": "fade",
+  "ending_effect": "fade",
+  "voice_gain": 1.0
+ },
+ "caption_regions": [
+  {
+   "band": "top",
+   "top_frac": 0.2016,
+   "bottom_frac": 0.2344,
+   "action": "crop",
+   "confidence": 0.95
+  },
+  {
+   "band": "bottom",
+   "top_frac": 0.8719,
+   "bottom_frac": 1.0,
+   "action": "crop",
+   "confidence": 0.95
+  }
+ ]
+}
