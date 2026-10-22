@@ -357,6 +357,15 @@ def build_meta(plan, info):
             meta.update(m)
         except Exception as e:
             print(f"[warn] metadata fallback failed: {e}", file=sys.stderr)
+    # Near-duplicate guard: never ship the same/paraphrased title twice.
+    try:
+        meta["title"] = md.ensure_unique_title(
+            meta["title"],
+            description=meta.get("description", ""),
+            tags=meta.get("tags"),
+        )
+    except Exception as e:
+        print(f"[warn] title dedup failed: {e}", file=sys.stderr)
     return meta
 
 

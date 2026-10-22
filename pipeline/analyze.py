@@ -1086,6 +1086,19 @@ def analyze_video(path, title_hint="", fps=1.0, max_frames=10, allow_fallback=Tr
                                           subject=cat, context=ctx, n=n_f)
     except Exception as e:
         print(f"[facts] vault skipped ({e})", file=sys.stderr)
+    # Near-duplicate title prevention: tell every AI backend which recent
+    # titles are already used so each video gets a distinct angle/opening.
+    try:
+        import metadata as _md
+        _recent = _md.load_history(15)
+        if _recent:
+            fact_note += (
+                "\nTITLE RULE: The plan title must NOT repeat or lightly rephrase any "
+                "of these recent titles — pick a clearly different angle and different "
+                "opening words: " + " | ".join(_recent)
+            )
+    except Exception:
+        pass
     plan = None
     first_err = None
     corr = ""

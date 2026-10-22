@@ -319,6 +319,16 @@ def build_meta(plan, info, video_key=None):
     t = (meta.get("title") or "").strip()
     if not t or t.lower() in ("short", "shorts"):
         meta["title"] = (f"Clip {video_key}" if video_key else "Short")[:95]
+    # Near-duplicate guard: never ship the same/paraphrased title twice.
+    try:
+        meta["title"] = md.ensure_unique_title(
+            meta["title"],
+            description=meta.get("description", ""),
+            tags=meta.get("tags"),
+            video_key=video_key,
+        )
+    except Exception as e:
+        print(f"[warn] title dedup failed: {e}", file=sys.stderr)
     return meta
 
 

@@ -141,7 +141,7 @@ jobs:
         run: |
           git config user.name "nova-factbot"
           git config user.email "nova-factbot@users.noreply.github.com"
-          git add pipeline/facts/*.json
+          git add pipeline/facts/*.json pipeline/title_history.json
           if git diff --cached --quiet; then exit 0; fi
           git pull --rebase origin master
           git commit -m "facts: usage update"
