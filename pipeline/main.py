@@ -332,6 +332,33 @@ def build_meta(plan, info, video_key=None):
     return meta
 
 
+def build_meta_raw(info, title_hint, video_key=None):
+    """Raw (no-edit) mode: fresh title/description/tags from source text via
+    OpenRouter — no video analysis, ready for instant upload."""
+    meta = {
+        "title": (title_hint or "Short")[:95],
+        "description": (info.get("description") or ""),
+        "tags": list(info.get("tags") or []),
+    }
+    if os.getenv("OPENROUTER_API_KEY"):
+        try:
+            m = md.make_metadata(meta["title"], info.get("description") or "", meta["tags"])
+            meta.update(m)
+            print(f"[meta] raw-mode metadata via OpenRouter")
+        except Exception as e:
+            print(f"[warn] raw metadata failed ({e}); using source title", file=sys.stderr)
+    try:
+        meta["title"] = md.ensure_unique_title(
+            meta["title"],
+            description=meta.get("description", ""),
+            tags=meta.get("tags"),
+            video_key=video_key,
+        )
+    except Exception as e:
+        print(f"[warn] title dedup failed: {e}", file=sys.stderr)
+    return meta
+
+
 def run():
     if not WORKER or not TOKEN:
         raise RuntimeError("WORKER_URL and INTERNAL_TOKEN required")
@@ -351,6 +378,7 @@ def run():
     # Fetch task's dest_platforms for social upload selection.
     dest_platforms = ""
     task_uid = 0
+    skip_edit = False
     try:
         task_data = worker_get(f"/api/internal/tasks")
         tasks = task_data.get("tasks", [])
@@ -359,12 +387,16 @@ def run():
             dest_platforms = task["dest_platforms"]
         if task and task.get("user_id"):
             task_uid = int(task["user_id"])
+        # Hijack: task.dest_provider 'youtube|noedit' = raw upload (no AI edit).
+        if task and "noedit" in (task.get("dest_provider") or ""):
+            skip_edit = True
     except Exception as e:
         print(f"[warn] failed to fetch task dest_platforms: {e}", file=sys.stderr)
     if task_uid:
         os.environ["PIPELINE_USER_ID"] = str(task_uid)
     os.environ["VIDEO_DEST_PLATFORMS"] = dest_platforms
     print(f"[social] dest platforms: {dest_platforms or '(none)'}")
+    print(f"[mode] {'raw upload (no edit)' if skip_edit else 'edit pipeline'}")
 
     set_status(vid, status="downloading")
     src, info = dl.download(url, out_dir=work, max_secs=MAX_SECS)
@@ -378,49 +410,58 @@ def run():
     if is_cancelled(vid):
         print("[cancel] cancelled by user before edit — stopping")
         return 0
-    set_status(vid, status="editing", title=title_hint)
 
-    # 1. Analyze -> JSON edit plan (Nemotron -> simple visual fallback).
-    plan, used_ai = make_plan(src, title_hint, vid)
-    print(f"[plan] {len(plan['segments'])} segs, ai={used_ai}, "
-          f"audio={plan.get('audio_type')}, mode={plan.get('audio_mode')}")
+    if skip_edit:
+        # Raw mode: fresh AI title/desc/tags, upload original as-is.
+        set_status(vid, status="metadata", title=title_hint)
+        meta = build_meta_raw(info, title_hint, video_key=src_key)
+        print(f"[meta] {meta['title']}")
+        out_path = src
+        plan = None
+    else:
+        set_status(vid, status="editing", title=title_hint)
 
-    # 1b. Merge AI-observed source text with CV detection (any position),
-    #     so old captions/watermarks are cropped/delogoed wherever they sit.
-    try:
-        plan["caption_regions"] = smart.merge_caption_regions(
-            plan.get("caption_regions") or [],
-            smart.detect_caption_regions(src))
-        print(f"[captions] {len(plan['caption_regions'])} region(s): "
-              f"{[(r['band'], r['top_frac'], r['bottom_frac']) for r in plan['caption_regions']]}")
-    except Exception:
-        plan.setdefault("caption_regions", [])
-        print("[captions] detection failed; keeping plan regions", file=sys.stderr)
+        # 1. Analyze -> JSON edit plan (Nemotron -> simple visual fallback).
+        plan, used_ai = make_plan(src, title_hint, vid)
+        print(f"[plan] {len(plan['segments'])} segs, ai={used_ai}, "
+              f"audio={plan.get('audio_type')}, mode={plan.get('audio_mode')}")
 
-    # 1c. Share the plan JSON with fastpoll (dashboard download button).
-    post_plan("video", vid, plan)
-
-    # 2. Kokoro narration (AI path only; fallback = visual-only, no voice).
-    voice_wavs = make_voices(plan, work, vid, used_ai=used_ai)
-
-    # 2b. Extend segment durations so narration plays at natural speed (no crush).
-    #     Cap at source video duration so segments never go beyond available footage.
-    if voice_wavs:
+        # 1b. Merge AI-observed source text with CV detection (any position),
+        #     so old captions/watermarks are cropped/delogoed wherever they sit.
         try:
-            src_dur = an.probe_duration(src)
+            plan["caption_regions"] = smart.merge_caption_regions(
+                plan.get("caption_regions") or [],
+                smart.detect_caption_regions(src))
+            print(f"[captions] {len(plan['caption_regions'])} region(s): "
+                  f"{[(r['band'], r['top_frac'], r['bottom_frac']) for r in plan['caption_regions']]}")
         except Exception:
-            src_dur = None
-        fit_segments_to_voices(plan, voice_wavs, src_duration=src_dur)
+            plan.setdefault("caption_regions", [])
+            print("[captions] detection failed; keeping plan regions", file=sys.stderr)
 
-    # 3. ffmpeg applies the plan (segments, captions, narration, effects).
-    set_status(vid, status="editing")
-    out_path = ap.apply_plan(src, plan, workdir=work, voice_wavs=voice_wavs)
-    print(f"[apply] {out_path} ({os.path.getsize(out_path)//1024} KB)")
+        # 1c. Share the plan JSON with fastpoll (dashboard download button).
+        post_plan("video", vid, plan)
 
-    # 4. Metadata (plan first, OpenRouter fallback).
-    set_status(vid, status="metadata")
-    meta = build_meta(plan, info, video_key=src_key)
-    print(f"[meta] {meta['title']}")
+        # 2. Kokoro narration (AI path only; fallback = visual-only, no voice).
+        voice_wavs = make_voices(plan, work, vid, used_ai=used_ai)
+
+        # 2b. Extend segment durations so narration plays at natural speed (no crush).
+        #     Cap at source video duration so segments never go beyond available footage.
+        if voice_wavs:
+            try:
+                src_dur = an.probe_duration(src)
+            except Exception:
+                src_dur = None
+            fit_segments_to_voices(plan, voice_wavs, src_duration=src_dur)
+
+        # 3. ffmpeg applies the plan (segments, captions, narration, effects).
+        set_status(vid, status="editing")
+        out_path = ap.apply_plan(src, plan, workdir=work, voice_wavs=voice_wavs)
+        print(f"[apply] {out_path} ({os.path.getsize(out_path)//1024} KB)")
+
+        # 4. Metadata (plan first, OpenRouter fallback).
+        set_status(vid, status="metadata")
+        meta = build_meta(plan, info, video_key=src_key)
+        print(f"[meta] {meta['title']}")
 
     # 5. Upload (dest may pin a channel: "youtube:<login_id>").
     if is_cancelled(vid):

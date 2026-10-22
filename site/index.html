@@ -539,6 +539,16 @@
           <span class="form-hint">Select where to upload the processed videos. YouTube uses OAuth; others use cookies.</span>
         </div>
 
+        <div class="form-group full" id="edit-group" style="display:none;">
+          <span class="form-label">Processing</span>
+          <label class="dest-option" for="f-edit">
+            <input type="checkbox" id="f-edit" checked />
+            <span class="dest-icon">✂</span>
+            <span class="dest-name">Edit video before upload (AI captions, voiceover, effects)</span>
+          </label>
+          <span class="form-hint">Turn OFF to upload the original video right after download — with a fresh AI title, description &amp; hashtags, no editing.</span>
+        </div>
+
         <div class="form-actions">
           <button class="btn ghost" type="button" id="btn-cancel-add">Cancel</button>
           <button class="btn primary" type="submit">Add Source</button>

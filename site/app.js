@@ -158,6 +158,7 @@ $('f-url')?.addEventListener('input', () => {
     $('name-group').style.display = 'none';
     $('platform-display').style.display = 'none';
     $('dest-group').style.display = 'none';
+    $('edit-group').style.display = 'none';
     return;
   }
 
@@ -170,6 +171,7 @@ $('f-url')?.addEventListener('input', () => {
     $('platform-display').style.display = '';
     $('detected-platform-badge').innerHTML = `<span class="platform-dot ${meta.cls}">${meta.icon}</span> ${meta.label}`;
     $('dest-group').style.display = '';
+    $('edit-group').style.display = '';
     populateAccountDropdowns();
   } else {
     status.textContent = '?';
@@ -272,7 +274,9 @@ function openModal() {
   $('name-group').style.display = 'none';
   $('platform-display').style.display = 'none';
   $('dest-group').style.display = 'none';
+  $('edit-group').style.display = 'none';
   $('f-youtube').checked = true;
+  $('f-edit').checked = true;
   ['tiktok', 'instagram', 'facebook'].forEach(p => {
     const cb = $(`f-${p}`);
     if (cb) { cb.checked = false; cb.onchange && cb.onchange(); }
@@ -312,11 +316,15 @@ $('add-form')?.addEventListener('submit', async e => {
     }
   });
   if (dest.length === 0) return toast('Select at least one destination', 'err');
+  const editOn = $('f-edit')?.checked !== false;
 
   try {
     await api('/api/tasks', {
       method: 'POST',
-      body: JSON.stringify({ source_url: url, name, platform, dest_platforms: dest }),
+      body: JSON.stringify({
+        source_url: url, name, platform, dest_platforms: dest,
+        ...(editOn ? {} : { dest_provider: 'youtube|noedit' }),
+      }),
     });
     toast('Source added successfully');
     closeModal();
@@ -386,6 +394,10 @@ async function loadTasks() {
       const isActive = t.status === 'active';
       const active = isActive ? `<span class="badge ok"><span class="badge-dot"></span> Active</span>` : `<span class="badge idle">Paused</span>`;
       const lastSeen = t.last_poll_at ? timeAgo(new Date(t.last_poll_at * 1000).toISOString()) : (t.last_seen_key ? 'seen' : '—');
+      const noedit = (t.dest_provider || '').includes('noedit');
+      const modeBadge = noedit
+        ? `<span class="badge warn" title="Raw mode — upload original right after download (no AI edit)">⚡ Raw</span>`
+        : `<span class="badge ok" title="Edit mode — AI captions, voiceover, effects before upload">✂ Edit</span>`;
 
       return `<tr>
         <td>
@@ -395,10 +407,11 @@ async function loadTasks() {
         <td><span class="plat-pill ${meta.cls}">${meta.icon} ${meta.label}</span></td>
         <td>${destBadges}</td>
         <td>${monitor}</td>
-        <td>${active}</td>
+        <td>${active} ${modeBadge}</td>
         <td class="muted">${lastSeen}</td>
         <td>
           <button class="btn ghost sm" onclick="openAnalytics(${t.id})" title="Analytics">▤</button>
+          <button class="btn ghost sm" onclick="toggleEditMode(${t.id}, ${!noedit})" title="${noedit ? 'Switch to Edit mode (AI processing)' : 'Switch to Raw mode (upload original, no edit)'}">${noedit ? '⚡' : '✂'}</button>
           <button class="btn ghost sm" onclick="toggleTask('${t.id}', '${isActive ? 'paused' : 'active'}')">${isActive ? '⏸' : '▶'}</button>
           <button class="btn danger sm" onclick="delTask('${t.id}')">✕</button>
         </td>
@@ -412,6 +425,19 @@ async function loadTasks() {
 async function toggleTask(id, status) {
   try {
     await api(`/api/tasks/${id}`, { method: 'PATCH', body: JSON.stringify({ status }) });
+    loadTasks();
+  } catch (e) { toast(e.message, 'err'); }
+}
+
+async function toggleEditMode(id, toNoedit) {
+  try {
+    await api(`/api/tasks/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ dest_provider: toNoedit ? 'youtube|noedit' : 'youtube' }),
+    });
+    toast(toNoedit
+      ? 'Raw mode on — original uploads right after download (no AI edit)'
+      : 'Edit mode on — AI captions, voiceover & effects before upload');
     loadTasks();
   } catch (e) { toast(e.message, 'err'); }
 }
