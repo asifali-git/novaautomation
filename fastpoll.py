@@ -6,10 +6,15 @@ against active tasks and registers new videos with the worker.
 ROLE: detection only. The worker triggers GitHub Actions (process.yml)
 on new videos/manual jobs — this service never calls GitHub for videos.
 
+Also runs a stuck-video reaper: if a process run dies/cancels mid-pipeline
+the video stays in a live status forever (worker auto-retry only sweeps
+status='failed'). When NO process run is active, any watched video still
+in downloading/editing/metadata/uploading is reset to 'detected' and
+re-dispatched immediately.
+
 Env vars:
   WORKER_URL, INTERNAL_TOKEN   — worker API access
-  GH_TOKEN, GH_REPO            — backup dispatch for manual jobs only
-                                 (worker is primary; skipped if dispatched)
+  GH_TOKEN, GH_REPO            — manual-job backup dispatch + reaper
   POLL_MIN, POLL_MAX           — seconds between polls (default 8 / 12)
 """
 import os
@@ -543,7 +548,207 @@ def gh_save_plan(key, plan):
 
 
 _recent_triggers = {}  # key -> monotonic ts (in-process debounce)
-_state = {"last_poll": 0, "last_manual_check": 0, "last_manual_found": None}
+_state = {"last_poll": 0, "last_manual_check": 0, "last_manual_found": None,
+          "last_reap": 0, "reaped": 0, "watch_count": 0}
+
+
+# --- Stuck-video reaper -------------------------------------------------------
+# If a GH process run dies/cancels mid-pipeline, the video stays in a live
+# status forever (worker auto-retry only sweeps status='failed'). Reaper rule:
+# NO active process run + video still mid-pipeline => it's stuck => reset.
+
+_WATCH_FILE = os.path.join(tempfile.gettempdir(), "nova_watch_ids.json")
+_watch_ids = set()
+_last_reap = [0.0]
+REAP_INTERVAL = 15  # seconds between reaper passes
+REAP_MAX_RETRY = 5
+
+
+def _load_watch():
+    try:
+        with open(_WATCH_FILE) as f:
+            _watch_ids.update(int(x) for x in json.load(f))
+    except Exception:
+        pass
+
+
+def _save_watch():
+    try:
+        with open(_WATCH_FILE, "w") as f:
+            json.dump(sorted(_watch_ids), f)
+    except Exception:
+        pass
+
+
+def _bootstrap_watch_from_gh():
+    """Cold start: recover recently-processed video ids from process run logs."""
+    if not GH_TOKEN or not GH_REPO:
+        return
+    try:
+        r = requests.get(
+            f"https://api.github.com/repos/{GH_REPO}/actions/workflows/process.yml/runs?per_page=3",
+            headers={"Authorization": f"token {GH_TOKEN}",
+                     "Accept": "application/vnd.github+json"},
+            timeout=20,
+        )
+        r.raise_for_status()
+        runs = r.json().get("workflow_runs", [])
+    except Exception as e:
+        log.warning("watch bootstrap: gh runs failed: %s", e)
+        return
+    import io as _io
+    import zipfile as _zip
+    for run in runs:
+        try:
+            r2 = requests.get(
+                f"https://api.github.com/repos/{GH_REPO}/actions/runs/{run['id']}/logs",
+                headers={"Authorization": f"token {GH_TOKEN}",
+                         "Accept": "application/vnd.github+json"},
+                timeout=60,
+            )
+            if r2.status_code != 200:
+                continue
+            zf = _zip.ZipFile(_io.BytesIO(r2.content))
+            for name in zf.namelist():
+                txt = zf.read(name).decode("utf-8", "replace")
+                for m in re.finditer(r"Processing video (\d+)", txt):
+                    _watch_ids.add(int(m.group(1)))
+                for m in re.finditer(r"video (\d+) -> id (\d+)", txt):
+                    _watch_ids.add(int(m.group(2)))
+        except Exception as e:
+            log.warning("watch bootstrap: run %s logs failed: %s", run.get("id"), e)
+    if _watch_ids:
+        keep = sorted(_watch_ids)[-80:]
+        _watch_ids.clear()
+        _watch_ids.update(keep)
+        _save_watch()
+        log.info("watch bootstrap: %d id(s), max=%s", len(_watch_ids), max(_watch_ids))
+
+
+MID_PIPELINE = ("downloading", "analyzing", "voiceover", "editing",
+                "metadata", "uploading")
+
+
+def _bootstrap_watch_probe():
+    """Cold start: probe recent video ids directly against the worker so
+    videos orphaned by a cancelled run (missing from logs) are still found."""
+    if not WORKER or not TOKEN:
+        return
+    known = max(_watch_ids) if _watch_ids else 0
+    top = 0
+    misses = 0
+    checked = 0
+    for vid in range(1, max(known + 20, 120)):
+        if checked >= 300:
+            break
+        checked += 1
+        try:
+            r = requests.get(f"{WORKER}/api/internal/videos/{vid}",
+                             headers=_h(), timeout=8)
+        except Exception:
+            continue
+        if r.status_code != 200:
+            misses += 1
+            if vid > known and misses >= 15:
+                break
+            continue
+        misses = 0
+        top = vid
+        v = r.json().get("video") or {}
+        st = v.get("status")
+        if st in MID_PIPELINE:
+            _watch_ids.add(vid)
+            log.warning("watch probe: video %s stuck at %s (retry %s)",
+                        vid, st, v.get("retry_count"))
+    _save_watch()
+    _state["watch_count"] = len(_watch_ids)
+    log.info("watch probe: checked %d id(s), top=%d, watching=%d",
+             checked, top, len(_watch_ids))
+
+
+def _process_run_active():
+    """True if any process.yml run is queued or in_progress."""
+    if not GH_TOKEN or not GH_REPO:
+        return False
+    try:
+        r = requests.get(
+            f"https://api.github.com/repos/{GH_REPO}/actions/workflows/process.yml/runs?per_page=5",
+            headers={"Authorization": f"token {GH_TOKEN}",
+                     "Accept": "application/vnd.github+json"},
+            timeout=15,
+        )
+        r.raise_for_status()
+        for run in r.json().get("workflow_runs", []):
+            if run.get("status") in ("queued", "in_progress"):
+                return True
+        return False
+    except Exception as e:
+        log.warning("reaper: active-run check failed: %s", e)
+        return True  # be safe — don't reap when unsure
+
+
+def reap_stuck_videos():
+    """Reset videos stuck in a mid-pipeline live status back to 'detected'.
+
+    Only fires when NO process run is active, so it never races a live runner.
+    """
+    if not WORKER or not TOKEN or not _watch_ids:
+        return
+    candidates = []
+    for vid in list(_watch_ids):
+        try:
+            r = requests.get(f"{WORKER}/api/internal/videos/{vid}",
+                             headers=_h(), timeout=10)
+            if r.status_code != 200:
+                continue
+            v = r.json().get("video") or {}
+        except Exception:
+            continue
+        st = v.get("status")
+        if st in ("downloading", "analyzing", "voiceover", "editing",
+                  "metadata", "uploading"):
+            candidates.append((vid, st, v.get("retry_count") or 0))
+        elif st in ("uploaded", "failed", "cancelled", "detected"):
+            _watch_ids.discard(vid)  # terminal / already queued — stop watching
+    _state["watch_count"] = len(_watch_ids)
+    if not candidates:
+        _save_watch()
+        return
+    if _process_run_active():
+        log.info("reaper: %d mid-pipeline video(s) but a run is active — waiting",
+                 len(candidates))
+        return
+    for vid, st, rc in candidates:
+        if rc >= REAP_MAX_RETRY:
+            log.warning("reaper: video %s stuck at %s retry=%d — marking failed",
+                        vid, st, rc)
+            try:
+                requests.patch(f"{WORKER}/api/internal/videos/{vid}",
+                               headers=_h(),
+                               json={"status": "failed",
+                                     "error": f"stuck at {st} (reaper, retries exhausted)"},
+                               timeout=15)
+            except Exception:
+                pass
+            _watch_ids.discard(vid)
+            continue
+        log.warning("reaper: video %s stuck at %s (no active run) -> detected (retry %d)",
+                    vid, st, rc + 1)
+        try:
+            requests.patch(
+                f"{WORKER}/api/internal/videos/{vid}",
+                headers=_h(),
+                json={"status": "detected", "error": "",
+                      "dispatched_at": 0, "retry_count": rc + 1},
+                timeout=15,
+            ).raise_for_status()
+        except Exception as e:
+            log.warning("reaper: patch video %s failed: %s", vid, e)
+            continue
+        _state["reaped"] = _state.get("reaped", 0) + 1
+        if _should_trigger(f"reap:{vid}", 120):
+            trigger_process([vid])
+    _save_watch()
 
 
 def _should_trigger(key, cooldown_s=900):
@@ -621,6 +826,8 @@ def _enqueue(tid, key, url, title, new_ids, undispached):
         return "known", None
     vid = res["video"]["id"]
     new_ids.append(vid)
+    _watch_ids.add(vid)
+    _save_watch()
     log.info("task %s video %s -> id %s (worker dispatched=%s)",
              tid, key, vid, res.get("dispatched"))
     if not res.get("dispatched"):
@@ -810,6 +1017,11 @@ def poll_loop():
             _state["last_poll"] = time.time()
             if new:
                 log.info("found %d new video(s)", len(new))
+            # Stuck-video reaper — every ~15s, reset orphaned mid-pipeline videos.
+            if time.time() - _last_reap[0] >= REAP_INTERVAL:
+                _last_reap[0] = time.time()
+                _state["last_reap"] = _last_reap[0]
+                reap_stuck_videos()
         except Exception as e:
             log.error("poll error: %s", e)
         time.sleep(random.randint(POLL_MIN, POLL_MAX))
@@ -898,6 +1110,9 @@ class Handler(BaseHTTPRequestHandler):
                 "task_err": _state.get("task_err"),
                 "task_err_ts": _state.get("task_err_ts"),
                 "fb": _FB_DBG,
+                "reap": {"last": _state.get("last_reap"),
+                         "reaped": _state.get("reaped", 0),
+                         "watch": _state.get("watch_count", len(_watch_ids))},
                 "plan_keys": list(_PLAN_STORE.keys())[-20:],
             }).encode()
             self.send_response(200)
@@ -1003,6 +1218,11 @@ class Handler(BaseHTTPRequestHandler):
 
 def main():
     port = int(os.getenv("PORT", "10000"))
+    _load_watch()
+    if not _watch_ids:
+        _bootstrap_watch_from_gh()
+    _bootstrap_watch_probe()
+    _state["watch_count"] = len(_watch_ids)
     t = threading.Thread(target=poll_loop, daemon=True)
     t.start()
     ka = threading.Thread(target=keepalive_loop, daemon=True)
