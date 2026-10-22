@@ -6,6 +6,11 @@ import requests
 
 URL = "https://openrouter.ai/api/v1/chat/completions"
 
+
+def _lang(lang=None):
+    return lang or os.getenv("VIDEO_LANG", "en")
+
+
 # Rolling history of recent upload titles (committed like facts vault so every
 # GH run sees previous titles) — used to kill near-duplicate YT titles.
 HISTORY_FILE = os.path.join(os.path.dirname(__file__), "title_history.json")
@@ -66,13 +71,13 @@ def is_near_dup(title, recent=None):
     return False
 
 
-def make_title(old_title, avoid=None, context="", lang="en"):
+def make_title(old_title, avoid=None, context="", lang=None):
     """Rewrite a title with a completely different angle. Returns title text only."""
     prompt = (
         "Rewrite this short-form video title with a COMPLETELY DIFFERENT angle "
         "and different opening words (not the same hook, not a rephrase). "
         "<=95 chars, catchy, fact-led or question-led. "
-        f"Language: {lang}. Return ONLY the title text, no quotes, no labels. "
+        f"Language: {_lang(lang)}. Return ONLY the title text, no quotes, no labels. "
         f"Old title: {old_title}."
     )
     if context:
@@ -154,13 +159,13 @@ def _json_or_text(raw):
         return None
 
 
-def make_script(title, description="", lang="en", secs=20):
+def make_script(title, description="", lang=None, secs=20):
     """Short voiceover script ~`secs` seconds (≈2.5 words/sec)."""
     n = int(secs * 2.5)
     prompt = (
         f"Write a punchy {n}-word voiceover narration for a short-form video. "
         f"Title: {title}. Context: {description[:400]}. "
-        f"Language: {lang} (write everything in this language). "
+        f"Language: {_lang(lang)} (write everything in this language). "
         "The narration must lead with a fascinating well-established fact about "
         "the subject (history/science/nutrition/practical) or a strong insight, "
         "then mix in opinion or a thought-provoking question. Never merely "
@@ -172,7 +177,7 @@ def make_script(title, description="", lang="en", secs=20):
         "commentary led by fascinating facts, never scene description."))
 
 
-def make_metadata(title, description="", tags=None, lang="en"):
+def make_metadata(title, description="", tags=None, lang=None):
     tags = tags or []
     prompt = (
         "Given this video, return JSON with keys: title (≤95 chars, catchy), "
@@ -181,7 +186,7 @@ def make_metadata(title, description="", tags=None, lang="en"):
         "not a paraphrase of the source title; description must include at least one "
         "fascinating fact or piece of added context, never mention Facebook, "
         "reposting, compilation, or another platform. "
-        f"Write output in language: {lang}. "
+        f"Write output in language: {_lang(lang)}. "
         f"Title: {title}. Description: {description[:400]}. "
         f"Existing tags: {', '.join(tags[:10])}."
     )

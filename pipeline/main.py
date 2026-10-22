@@ -40,6 +40,21 @@ ANALYZE = os.getenv("ANALYZE", "true").lower() in ("1", "true", "yes")
 VOICEOVER = os.getenv("VOICEOVER", "true").lower() in ("1", "true", "yes")
 PRIVACY = os.getenv("PRIVACY", "public")
 
+VOICE_LANG = {
+    "a": "English", "b": "English", "e": "Spanish", "f": "French",
+    "h": "Hindi", "i": "Italian", "j": "Japanese", "p": "Portuguese",
+    "z": "Chinese (Mandarin)",
+}
+DEFAULT_VOICE = "af_heart"
+
+
+def apply_voice_setting(voice):
+    voice = (voice or "").strip() or DEFAULT_VOICE
+    os.environ["KOKORO_VOICE"] = voice
+    lang = VOICE_LANG.get(voice[:1], "English")
+    os.environ["VIDEO_LANG"] = lang
+    print(f"[voice] tts={voice} lang={lang}")
+
 
 def _h():
     return {"x-token": TOKEN, "content-type": "application/json"}
@@ -379,6 +394,7 @@ def run():
     dest_platforms = ""
     task_uid = 0
     skip_edit = False
+    task = None
     try:
         task_data = worker_get(f"/api/internal/tasks")
         tasks = task_data.get("tasks", [])
@@ -392,6 +408,7 @@ def run():
             skip_edit = True
     except Exception as e:
         print(f"[warn] failed to fetch task dest_platforms: {e}", file=sys.stderr)
+    apply_voice_setting((task or {}).get("voice"))
     if task_uid:
         os.environ["PIPELINE_USER_ID"] = str(task_uid)
     os.environ["VIDEO_DEST_PLATFORMS"] = dest_platforms

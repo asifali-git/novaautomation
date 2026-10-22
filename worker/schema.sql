@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS tasks (
   platform TEXT NOT NULL DEFAULT 'unknown',
   dest_provider TEXT NOT NULL DEFAULT 'youtube',
   login_id INTEGER,
+  voice TEXT,
   status TEXT NOT NULL DEFAULT 'active',
   baseline_key TEXT,
   last_seen_key TEXT,

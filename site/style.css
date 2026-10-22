@@ -566,6 +566,16 @@ select.form-input {
   padding-right:36px;
 }
 
+.voice-row {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+@media (max-width:520px) {
+  .voice-row { grid-template-columns:1fr; }
+}
+
 .form-actions {
   display:flex;
   align-items:center;

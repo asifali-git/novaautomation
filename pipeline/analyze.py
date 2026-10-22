@@ -304,6 +304,13 @@ Rules:
 """
 
 
+def _prompt():
+    lang = os.getenv("VIDEO_LANG", "English")
+    if lang == "English":
+        return PROMPT
+    return PROMPT.replace("must be in ENGLISH", f"must be in {lang}")
+
+
 def _api_key():
     k = os.getenv("NVIDIA_API_KEY")
     if not k:
@@ -312,7 +319,7 @@ def _api_key():
 
 
 def _call_nemotron(frames, title_hint="", duration=None, audio_b64=None, correction="", extra=""):
-    content = [{"type": "text", "text": PROMPT}]
+    content = [{"type": "text", "text": _prompt()}]
     if extra:
         content.append({"type": "text", "text": extra})
     if title_hint:
@@ -376,7 +383,7 @@ def _call_gemini(frames, title_hint="", duration=None, audio_b64=None, correctio
     key = _gemini_key()
     if not key:
         raise RuntimeError("GEMINI_API_KEY / GOOGLE_API_KEY not set")
-    parts = [{"text": PROMPT}]
+    parts = [{"text": _prompt()}]
     if extra:
         parts.append({"text": extra})
     if title_hint:
@@ -450,7 +457,7 @@ def _call_openrouter(frames, title_hint="", duration=None, correction="", model=
     key = os.getenv("OPENROUTER_API_KEY")
     if not key:
         raise RuntimeError("OPENROUTER_API_KEY not set")
-    content = [{"type": "text", "text": PROMPT}]
+    content = [{"type": "text", "text": _prompt()}]
     if extra:
         content.append({"type": "text", "text": extra})
     if title_hint:

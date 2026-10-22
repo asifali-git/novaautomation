@@ -140,6 +140,53 @@ function detectCookieFormat(text, filename) {
   return { format: 'unknown', data: text };
 }
 
+/* ===== Kokoro voiceover languages (task add form) ===== */
+const KOKORO_LANGS = [
+  { label: '🇺🇸 American English', female: 'af_heart',   male: 'am_michael' },
+  { label: '🇬🇧 British English',  female: 'bf_alice',   male: 'bm_daniel'  },
+  { label: '🇪🇸 Spanish',          female: 'ef_dora',    male: 'em_antonio' },
+  { label: '🇫🇷 French',           female: 'ff_siwis',   male: 'fm_sarcastic' },
+  { label: '🇮🇳 Hindi',            female: 'hf_alpha',   male: 'hm_pritam'  },
+  { label: '🇮🇹 Italian',          female: 'if_sara',    male: 'im_nicola'  },
+  { label: '🇯🇵 Japanese',         female: 'jf_alpha',   male: 'jm_kumo'    },
+  { label: '🇧🇷 Portuguese (BR)',  female: 'pf_dora',    male: 'pm_alex'    },
+  { label: '🇨🇳 Mandarin Chinese', female: 'zf_xiaobei', male: 'zm_yunjian' },
+];
+
+function fillVoiceOptions() {
+  const langSel = $('f-lang');
+  const voiceSel = $('f-voice');
+  if (!langSel || !voiceSel) return;
+  if (!langSel.options.length) {
+    KOKORO_LANGS.forEach((l, i) => {
+      const o = document.createElement('option');
+      o.value = String(i);
+      o.textContent = l.label;
+      langSel.appendChild(o);
+    });
+  }
+  const lang = KOKORO_LANGS[Number(langSel.value) || 0] || KOKORO_LANGS[0];
+  const prev = voiceSel.value;
+  voiceSel.innerHTML = '';
+  [['Female', lang.female], ['Male', lang.male]].forEach(([sex, code]) => {
+    const o = document.createElement('option');
+    o.value = code;
+    o.textContent = `${sex} — ${code}`;
+    voiceSel.appendChild(o);
+  });
+  if (prev === lang.female || prev === lang.male) voiceSel.value = prev;
+}
+
+function resetVoicePicker() {
+  const langSel = $('f-lang');
+  if (!langSel) return;
+  langSel.value = '0';
+  fillVoiceOptions();
+}
+
+$('f-lang')?.addEventListener('change', fillVoiceOptions);
+fillVoiceOptions();
+
 /* ===== URL → detect platform + channel name ===== */
 let detectTimer = null;
 
@@ -159,6 +206,7 @@ $('f-url')?.addEventListener('input', () => {
     $('platform-display').style.display = 'none';
     $('dest-group').style.display = 'none';
     $('edit-group').style.display = 'none';
+    $('voice-group').style.display = 'none';
     return;
   }
 
@@ -172,6 +220,7 @@ $('f-url')?.addEventListener('input', () => {
     $('detected-platform-badge').innerHTML = `<span class="platform-dot ${meta.cls}">${meta.icon}</span> ${meta.label}`;
     $('dest-group').style.display = '';
     $('edit-group').style.display = '';
+    $('voice-group').style.display = '';
     populateAccountDropdowns();
   } else {
     status.textContent = '?';
@@ -275,8 +324,10 @@ function openModal() {
   $('platform-display').style.display = 'none';
   $('dest-group').style.display = 'none';
   $('edit-group').style.display = 'none';
+  $('voice-group').style.display = 'none';
   $('f-youtube').checked = true;
   $('f-edit').checked = true;
+  resetVoicePicker();
   ['tiktok', 'instagram', 'facebook'].forEach(p => {
     const cb = $(`f-${p}`);
     if (cb) { cb.checked = false; cb.onchange && cb.onchange(); }
@@ -317,12 +368,14 @@ $('add-form')?.addEventListener('submit', async e => {
   });
   if (dest.length === 0) return toast('Select at least one destination', 'err');
   const editOn = $('f-edit')?.checked !== false;
+  const voice = $('f-voice')?.value || '';
 
   try {
     await api('/api/tasks', {
       method: 'POST',
       body: JSON.stringify({
         source_url: url, name, platform, dest_platforms: dest,
+        ...(voice ? { voice } : {}),
         ...(editOn ? {} : { dest_provider: 'youtube|noedit' }),
       }),
     });

@@ -135,6 +135,17 @@ async function assertLoginOwned(db, user, loginId) {
   return null;
 }
 
+let voiceColReady = false;
+async function ensureVoiceColumn(db) {
+  if (voiceColReady) return;
+  try {
+    await db.prepare('ALTER TABLE tasks ADD COLUMN voice TEXT').run();
+  } catch (e) {
+    if (!/duplicate column|already exists/i.test(String(e?.message || e))) return;
+  }
+  voiceColReady = true;
+}
+
 async function createTask(db, body) {
   const url = (body.source_url || '').trim();
   if (!url) throw new Error('source_url required');
@@ -143,12 +154,14 @@ async function createTask(db, body) {
   const destPlatforms = body.dest_platforms ? (Array.isArray(body.dest_platforms) ? body.dest_platforms.join(',') : String(body.dest_platforms)) : null;
   const loginId = body.login_id || null;
   const userId = body.user_id || 0;
+  const voice = body.voice || null;
+  await ensureVoiceColumn(db);
   const res = await db
     .prepare(
-      `INSERT INTO tasks (name, source_url, platform, dest_provider, dest_platforms, login_id, user_id, status, created_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, 'active', ?)`
+      `INSERT INTO tasks (name, source_url, platform, dest_provider, dest_platforms, login_id, voice, user_id, status, created_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'active', ?)`
     )
-    .bind(body.name || platform, url, platform, dest, destPlatforms, loginId, userId, now())
+    .bind(body.name || platform, url, platform, dest, destPlatforms, loginId, voice, userId, now())
     .run();
   return getTask(db, res.meta?.last_row_id);
 }
@@ -156,9 +169,10 @@ async function createTask(db, body) {
 async function patchTask(db, id, body) {
   const task = await getTask(db, id);
   if (!task) return null;
+  if ('voice' in body) await ensureVoiceColumn(db);
   const fields = [];
   const vals = [];
-  for (const k of ['name', 'status', 'dest_provider', 'login_id', 'baseline_key', 'last_seen_key']) {
+  for (const k of ['name', 'status', 'dest_provider', 'login_id', 'baseline_key', 'last_seen_key', 'voice']) {
     if (k in body) {
       fields.push(`${k} = ?`);
       vals.push(body[k]);
