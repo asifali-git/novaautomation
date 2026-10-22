@@ -1,0 +1,445 @@
+{
+ "audio_type": "asmr",
+ "audio_mode": "lower",
+ "audio_volume": 0.4,
+ "has_speech": false,
+ "video_summary": "A hand skillfully peels a fresh green coconut on a wooden stump, revealing pink flesh and clear water.",
+ "style": "educational",
+ "title": "Why Street Vendors Tap Before Slicing: The Secret Behind Coconut Preparation",
+ "description": "A professional demonstrates the precise technique to open a fresh coconut, revealing its vibrant pink flesh and pure water. This traditional method ensures maximum freshness and quality for culinary use.",
+ "hashtags": [
+  "#coconut",
+  "#coconutjelly",
+  "#foodpreparation",
+  "#knife",
+  "#kitchen",
+  "#fresh",
+  "#tropical"
+ ],
+ "tags": [
+  "coconut",
+  "knife",
+  "kitchen",
+  "food",
+  "preparation",
+  "fresh",
+  "tropical",
+  "peeling",
+  "technique",
+  "ASMR",
+  "fresh",
+  "water",
+  "fruit",
+  "culinary"
+ ],
+ "segments": [
+  {
+   "index": 0,
+   "start": 0.0,
+   "end": 10.34,
+   "action": "keep",
+   "speed": 1.12,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Hot Kitchens Demand Speed",
+    "position": "center",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Why street vendors tap coconuts before slicing to save precious working time.",
+   "notes": "Hook: bold claim using fact 1; full frame, vivid color grade, fast pace"
+  },
+  {
+   "index": 1,
+   "start": 10.34,
+   "end": 20.69,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "center",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Fact 2: oil solidification; maintain vivid color, moderate speed"
+  },
+  {
+   "index": 2,
+   "start": 20.69,
+   "end": 31.03,
+   "action": "keep",
+   "speed": 1.11,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Heavy Nuts Hold Water",
+    "position": "center",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Heavier nuts for their size hold more water — weigh two in your palm for best yield.",
+   "notes": "Fact 3: weight-to-water ratio; subtle sharpness for clarity"
+  },
+  {
+   "index": 3,
+   "start": 31.03,
+   "end": 41.38,
+   "action": "keep",
+   "speed": 1.13,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.07,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "center",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Fact 4: wire vs blade efficiency; maintain vivid visuals"
+  },
+  {
+   "index": 4,
+   "start": 41.38,
+   "end": 51.72,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Browns via Evaporation",
+    "position": "center",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Evaporative concentration browns it; membrane concentration does not.",
+   "notes": "Fact 5: evaporation browning; steady pace for ASMR flow"
+  },
+  {
+   "index": 5,
+   "start": 51.72,
+   "end": 62.07,
+   "action": "keep",
+   "speed": 1.12,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.08,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Freshness Test",
+    "position": "center",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Sweet-smelling water at a test opening confirms freshness at once.",
+   "notes": "Fact 6: freshness indicator; maintain consistent speed"
+  },
+  {
+   "index": 6,
+   "start": 62.07,
+   "end": 72.41,
+   "action": "keep",
+   "speed": 1.08,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.06,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "center",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Insight on technique; subtle sharpness for precision"
+  },
+  {
+   "index": 7,
+   "start": 72.41,
+   "end": 82.76,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Culinary Value",
+    "position": "center",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Fresh coconut water adds natural sweetness to desserts without added sugar.",
+   "notes": "Consumer utility; maintain vivid color grading"
+  },
+  {
+   "index": 8,
+   "start": 82.76,
+   "end": 93.1,
+   "action": "keep",
+   "speed": 1.11,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.07,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "center",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Historical context; steady pace for engagement"
+  },
+  {
+   "index": 9,
+   "start": 93.1,
+   "end": 103.446,
+   "action": "keep",
+   "speed": 1.05,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.06,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Drink It Straight?",
+    "position": "center",
+    "style": "outline"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Would you drink it straight from the shell after watching this expert technique?",
+   "notes": "Final hook/question; ends within last 2-3 seconds, voice runs to end"
+  }
+ ],
+ "global": {
+  "intro_effect": "fade",
+  "ending_effect": "fade",
+  "voice_gain": 1.0
+ },
+ "caption_regions": [
+  {
+   "band": "top",
+   "top_frac": 0.0391,
+   "bottom_frac": 0.0641,
+   "action": "crop",
+   "confidence": 0.95
+  },
+  {
+   "band": "top",
+   "top_frac": 0.1672,
+   "bottom_frac": 0.1984,
+   "action": "crop",
+   "confidence": 0.95
+  },
+  {
+   "band": "bottom",
+   "top_frac": 0.85,
+   "bottom_frac": 0.89,
+   "action": "crop",
+   "confidence": 0.95
+  }
+ ]
+}
