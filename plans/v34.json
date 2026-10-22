@@ -1,0 +1,1319 @@
+{
+ "audio_type": "asmr",
+ "audio_mode": "lower",
+ "audio_volume": 0.4,
+ "has_speech": false,
+ "video_summary": "A person skillfully cuts a green coconut with a large knife on a wooden stump in a lush outdoor setting.",
+ "style": "educational",
+ "title": "Why Street Vendors Tap Before Slicing Coconut",
+ "description": "Watch a green coconut being sliced open to reveal its vibrant pink interior. Learn about regional coconut traditions and their culinary uses across South Asia and the Pacific.",
+ "hashtags": [
+  "#coconutpreparation",
+  "#streetfood",
+  "#cocoslicing",
+  "#foodscience",
+  "#regionalcuisine",
+  "#asmr"
+ ],
+ "tags": [
+  "coconut cutting",
+  "street food",
+  "samoan cuisine",
+  "kerala beef fry",
+  "palusami",
+  "tamarind",
+  "coconut ice",
+  "fresh coconut",
+  "knife technique",
+  "food prep",
+  "regional cooking",
+  "coconut water",
+  "coconut paste",
+  "desert cooking",
+  "fresh coconut use"
+ ],
+ "segments": [
+  {
+   "index": 0,
+   "start": 0.0,
+   "end": 3.0,
+   "action": "keep",
+   "speed": 1.12,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Pink Coconut Secret",
+    "position": "bottom",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Why street vendors tap before slicing — a bold claim that changes everything.",
+   "notes": "Hook segment with fact 1 as bold claim, 10-15 words."
+  },
+  {
+   "index": 1,
+   "start": 3.0,
+   "end": 6.0,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Fact 1: regional tradition. 10-15 words."
+  },
+  {
+   "index": 2,
+   "start": 6.0,
+   "end": 9.0,
+   "action": "keep",
+   "speed": 1.11,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.09,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Fact 2: Konkani tradition. 10-15 words."
+  },
+  {
+   "index": 3,
+   "start": 9.0,
+   "end": 12.0,
+   "action": "keep",
+   "speed": 1.09,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Fact 3: Samoan tradition. 10-15 words."
+  },
+  {
+   "index": 4,
+   "start": 12.0,
+   "end": 15.0,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Fact 4: gassi paste origin. 10-15 words."
+  },
+  {
+   "index": 5,
+   "start": 15.0,
+   "end": 18.0,
+   "action": "keep",
+   "speed": 1.11,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Fact 5: Kerala tradition. 10-15 words."
+  },
+  {
+   "index": 6,
+   "start": 18.0,
+   "end": 21.0,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Green Shell",
+    "position": "bottom",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Coconut ice — pink-and-white fudge rolled in desiccated coconut — persists in seaside towns.",
+   "notes": "Fact 6: coconut ice tradition. 10-15 words."
+  },
+  {
+   "index": 7,
+   "start": 21.0,
+   "end": 24.0,
+   "action": "keep",
+   "speed": 1.08,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Deep fact: natural pigment chemistry. 10-15 words."
+  },
+  {
+   "index": 8,
+   "start": 24.0,
+   "end": 27.0,
+   "action": "keep",
+   "speed": 1.12,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Professional technique insight. 10-15 words."
+  },
+  {
+   "index": 9,
+   "start": 27.0,
+   "end": 30.0,
+   "action": "keep",
+   "speed": 1.09,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Consumer utility tip. 10-15 words."
+  },
+  {
+   "index": 10,
+   "start": 30.0,
+   "end": 33.0,
+   "action": "keep",
+   "speed": 1.11,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Nutrition fact. 10-15 words."
+  },
+  {
+   "index": 11,
+   "start": 33.0,
+   "end": 36.0,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Technique tip: grain direction matters. 10-15 words."
+  },
+  {
+   "index": 12,
+   "start": 36.0,
+   "end": 39.0,
+   "action": "keep",
+   "speed": 1.08,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Botany fact: ripening process. 10-15 words."
+  },
+  {
+   "index": 13,
+   "start": 39.0,
+   "end": 42.0,
+   "action": "keep",
+   "speed": 1.12,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Green Shell",
+    "position": "bottom",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Street vendors tap to release pressure before opening the shell.",
+   "notes": "Myth-bust: tapping releases pressure. 10-15 words."
+  },
+  {
+   "index": 14,
+   "start": 42.0,
+   "end": 45.0,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Practical benefit explanation. 10-15 words."
+  },
+  {
+   "index": 15,
+   "start": 45.0,
+   "end": 48.0,
+   "action": "keep",
+   "speed": 1.09,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Taste description. 10-15 words."
+  },
+  {
+   "index": 16,
+   "start": 48.0,
+   "end": 51.0,
+   "action": "keep",
+   "speed": 1.11,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Visual-to-fact connection. 10-15 words."
+  },
+  {
+   "index": 17,
+   "start": 51.0,
+   "end": 54.0,
+   "action": "keep",
+   "speed": 1.12,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Global tradition note. 10-15 words."
+  },
+  {
+   "index": 18,
+   "start": 54.0,
+   "end": 57.0,
+   "action": "keep",
+   "speed": 1.08,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Technical detail: edge quality matters. 10-15 words."
+  },
+  {
+   "index": 19,
+   "start": 57.0,
+   "end": 60.0,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Pink Interior",
+    "position": "bottom",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "This method preserves the coconut's natural sweetness and texture.",
+   "notes": "Quality benefit statement. 10-15 words."
+  },
+  {
+   "index": 20,
+   "start": 60.0,
+   "end": 63.0,
+   "action": "keep",
+   "speed": 1.11,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Final question to invite comments. 10-15 words."
+  },
+  {
+   "index": 21,
+   "start": 63.0,
+   "end": 66.0,
+   "action": "keep",
+   "speed": 1.09,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Avoid repeating previous narration. Need new insight."
+  },
+  {
+   "index": 22,
+   "start": 66.0,
+   "end": 69.0,
+   "action": "keep",
+   "speed": 1.12,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Duplicate of fact 7. Must change to avoid repetition. Use new fact."
+  },
+  {
+   "index": 23,
+   "start": 69.0,
+   "end": 72.0,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Duplicate of fact 8. Need unique insight about technique."
+  },
+  {
+   "index": 24,
+   "start": 72.0,
+   "end": 75.0,
+   "action": "keep",
+   "speed": 1.11,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Duplicate of fact 9. Use different angle on freshness."
+  },
+  {
+   "index": 25,
+   "start": 75.0,
+   "end": 78.0,
+   "action": "keep",
+   "speed": 1.08,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Duplicate of fact 10. Need new technique insight."
+  },
+  {
+   "index": 26,
+   "start": 78.0,
+   "end": 81.0,
+   "action": "keep",
+   "speed": 1.12,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Green Shell",
+    "position": "bottom",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "This technique prevents spillage and preserves the coconut's delicate flavor.",
+   "notes": "Duplicate of fact 11. Use different benefit explanation."
+  },
+  {
+   "index": 27,
+   "start": 81.0,
+   "end": 84.0,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Duplicate of fact 12. Avoid repeating taste description."
+  },
+  {
+   "index": 28,
+   "start": 84.0,
+   "end": 87.0,
+   "action": "keep",
+   "speed": 1.11,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Duplicate of fact 13. Need new visual-to-fact link."
+  },
+  {
+   "index": 29,
+   "start": 87.0,
+   "end": 90.0,
+   "action": "keep",
+   "speed": 1.12,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Duplicate of fact 14. Need new global context."
+  },
+  {
+   "index": 30,
+   "start": 90.0,
+   "end": 93.0,
+   "action": "keep",
+   "speed": 1.09,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Duplicate of fact 15. Need fresh technical detail."
+  },
+  {
+   "index": 31,
+   "start": 93.0,
+   "end": 94.874,
+   "action": "keep",
+   "speed": 1.1,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "",
+    "position": "bottom",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "",
+   "notes": "Duplicate of fact 16. Need unique conclusion."
+  },
+  {
+   "index": 32,
+   "start": 94.874,
+   "end": 97.874,
+   "action": "keep",
+   "speed": 1.08,
+   "crop": {
+    "top": 0.0,
+    "bottom": 0.0,
+    "left": 0.0,
+    "right": 0.0
+   },
+   "zoom": {
+    "type": "none",
+    "amount": 1.0
+   },
+   "sharpness": 0.1,
+   "color": {
+    "preset": "vivid",
+    "brightness": 0.0,
+    "contrast": 1.06,
+    "saturation": 1.12
+   },
+   "overlay": {
+    "type": "none",
+    "value": ""
+   },
+   "caption": {
+    "text": "Green Shell",
+    "position": "bottom",
+    "style": "bold"
+   },
+   "voice_style": {
+    "speed": 1.0
+   },
+   "narration": "Would you drink it straight from the shell?",
+   "notes": "Final question must end video within 2-3 seconds. This is the last segment."
+  }
+ ],
+ "global": {
+  "intro_effect": "fade",
+  "ending_effect": "fade",
+  "voice_gain": 1.0
+ },
+ "caption_regions": [
+  {
+   "band": "top",
+   "top_frac": 0.0641,
+   "bottom_frac": 0.0891,
+   "action": "crop",
+   "confidence": 0.95
+  },
+  {
+   "band": "top",
+   "top_frac": 0.2047,
+   "bottom_frac": 0.2281,
+   "action": "crop",
+   "confidence": 0.95
+  },
+  {
+   "band": "bottom",
+   "top_frac": 0.85,
+   "bottom_frac": 0.89,
+   "action": "crop",
+   "confidence": 0.95
+  }
+ ]
+}
