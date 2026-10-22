@@ -19,11 +19,3 @@ services:
         value: 12
       - key: SELF_URL
         sync: false
-  - type: web
-    name: nova-ytapi
-    runtime: python
-    buildCommand: apt-get update && apt-get install -y ffmpeg && pip install -r requirements.txt
-    startCommand: python ytapi_server.py
-    envVars:
-      - key: YT_API_KEY
-        sync: false

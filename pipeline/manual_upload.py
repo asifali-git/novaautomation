@@ -72,7 +72,7 @@ def update_job(job_id, **fields):
 
 
 def download_best(url, out_dir="work"):
-    """Download best quality video. YouTube: FastAPI service first, then yt-dlp."""
+    """Download best quality video. YouTube: FastSaver API first, then yt-dlp."""
     os.makedirs(out_dir, exist_ok=True)
     import yt_dlp
 
@@ -80,25 +80,32 @@ def download_best(url, out_dir="work"):
     is_yt = "youtube.com" in u or "youtu.be" in u
 
     if is_yt:
-        api_url = os.getenv("YT_API_URL", "").strip()
-        api_key = os.getenv("YT_API_KEY", "").strip()
-        if api_url and api_key:
-            try:
-                r = requests.post(
-                    api_url.rstrip("/") + "/download",
-                    json={"url": url},
-                    headers={"X-API-Key": api_key},
-                    timeout=600,
-                )
-                if r.status_code == 200 and r.content:
+        key = os.getenv("FASTSAVER_API_KEY", "").strip()
+        if key:
+            base = "https://api.fastsaver.io/v1"
+            headers = {"X-Api-Key": key}
+            for quality in ("1080p", "720p", "480p", "360p"):
+                try:
+                    r = requests.post(
+                        f"{base}/youtube/download",
+                        json={"url": url, "format": quality},
+                        headers=headers,
+                        timeout=120,
+                    )
+                    data = r.json() if r.content else {}
+                    if not data.get("ok") or not data.get("download_url"):
+                        print(f"[download] fastsaver {quality}: {data.get('detail', r.status_code)}", file=sys.stderr)
+                        continue
                     path = os.path.join(out_dir, "src.mp4")
-                    with open(path, "wb") as f:
-                        f.write(r.content)
-                    print(f"[download] via API ok ({len(r.content)} bytes)", file=sys.stderr)
+                    with requests.get(data["download_url"], stream=True, timeout=600, allow_redirects=True) as dl:
+                        dl.raise_for_status()
+                        with open(path, "wb") as f:
+                            for chunk in dl.iter_content(1 << 20):
+                                f.write(chunk)
+                    print(f"[download] fastsaver ok {quality} ({os.path.getsize(path)} bytes)", file=sys.stderr)
                     return path, {"id": None, "title": None, "webpage_url": url}
-                print(f"[download] API status={r.status_code} body={r.text[:200]}", file=sys.stderr)
-            except Exception as e:
-                print(f"[download] API call failed: {e}", file=sys.stderr)
+                except Exception as e:
+                    print(f"[download] fastsaver {quality} failed: {e}", file=sys.stderr)
 
     def _attempt(player_client, use_cookies, fmt):
         opts = {

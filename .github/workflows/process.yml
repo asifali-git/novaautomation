@@ -95,6 +95,7 @@ jobs:
           FB_PAGES_JSON: ${{ secrets.FB_PAGES_JSON }}
           YT_API_URL: ${{ secrets.YT_API_URL }}
           YT_API_KEY: ${{ secrets.YT_API_KEY }}
+          FASTSAVER_API_KEY: ${{ secrets.FASTSAVER_API_KEY }}
         run: |
           echo "=== Processing manual job ${{ inputs.manual_job_id }} ==="
           MANUAL_JOB_ID="${{ inputs.manual_job_id }}" python pipeline/manual_upload.py
@@ -118,6 +119,7 @@ jobs:
           FB_PAGES_JSON: ${{ secrets.FB_PAGES_JSON }}
           YT_API_URL: ${{ secrets.YT_API_URL }}
           YT_API_KEY: ${{ secrets.YT_API_KEY }}
+          FASTSAVER_API_KEY: ${{ secrets.FASTSAVER_API_KEY }}
         run: |
           ids="${{ inputs.video_ids }}"
           if [ -z "$ids" ]; then
