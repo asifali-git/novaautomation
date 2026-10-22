@@ -1,8 +1,14 @@
-"""Download a video with yt-dlp. Supports FB, Instagram, TikTok, YouTube, Twitter."""
+"""Download a video with yt-dlp. Supports FB, Instagram, TikTok, YouTube, Twitter.
+
+YouTube: if YT_API_URL + YT_API_KEY are set, download goes through the
+FastAPI yt download service (ytapi_server.py on a residential-IP machine).
+Everything else keeps the direct yt-dlp path.
+"""
 import os
 import glob
 import sys
 import yt_dlp
+import requests
 
 
 def _cookies_opt():
@@ -11,6 +17,39 @@ def _cookies_opt():
     if path and os.path.exists(path):
         return {"cookiefile": path}
     return {}
+
+
+def _is_youtube(url):
+    u = (url or "").lower()
+    return "youtube.com" in u or "youtu.be" in u
+
+
+def _download_via_api(url, out_dir, max_secs=None):
+    """Try FastAPI yt download service. Returns local file path or None."""
+    api_url = os.getenv("YT_API_URL", "").strip()
+    api_key = os.getenv("YT_API_KEY", "").strip()
+    if not api_url or not api_key:
+        return None
+    body = {"url": url}
+    if max_secs:
+        body["max_secs"] = int(max_secs)
+    try:
+        r = requests.post(
+            api_url.rstrip("/") + "/download",
+            json=body,
+            headers={"X-API-Key": api_key},
+            timeout=600,
+        )
+        if r.status_code == 200 and r.content:
+            path = os.path.join(out_dir, "src.mp4")
+            with open(path, "wb") as f:
+                f.write(r.content)
+            print(f"[download] via API ok ({len(r.content)} bytes)", file=sys.stderr)
+            return path
+        print(f"[download] API status={r.status_code} body={r.text[:200]}", file=sys.stderr)
+    except Exception as e:
+        print(f"[download] API call failed: {e}", file=sys.stderr)
+    return None
 
 
 def _yt_attempts(url):
@@ -32,6 +71,11 @@ def _yt_attempts(url):
 def download(url, out_dir="work", max_secs=None):
     """Download `url` into out_dir. Returns (file_path, info_dict)."""
     os.makedirs(out_dir, exist_ok=True)
+    # YouTube: prefer FastAPI service (residential IP) when configured.
+    if _is_youtube(url) and os.getenv("YT_API_URL", "").strip():
+        p = _download_via_api(url, out_dir, max_secs=max_secs)
+        if p and os.path.exists(p) and os.path.getsize(p) > 0:
+            return p, {"id": None, "title": None, "webpage_url": url}
     base = {
         "outtmpl": os.path.join(out_dir, "src.%(ext)s"),
         "merge_output_format": "mp4",
