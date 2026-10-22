@@ -23,13 +23,102 @@ async function api(path, opts = {}) {
 }
 
 /* ===== Toast ===== */
+const TOAST_MAX = 4;
 function toast(msg, type = 'ok') {
+  const wrap = $('toasts');
+  if (!wrap) return;
+  while (wrap.children.length >= TOAST_MAX) wrap.firstElementChild.remove();
+
   const el = document.createElement('div');
-  el.className = `toast ${type}`;
-  el.innerHTML = `<span>${type === 'ok' ? '✓' : '✕'}</span> ${msg}`;
-  $('toasts').appendChild(el);
-  setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .3s'; }, 3200);
-  setTimeout(() => el.remove(), 3600);
+  el.className = `toast ${type === 'err' ? 'err' : 'ok'}`;
+
+  const icon = document.createElement('span');
+  icon.setAttribute('aria-hidden', 'true');
+  icon.textContent = type === 'ok' ? '✓' : '✕';
+
+  const text = document.createElement('span');
+  text.className = 'toast-msg';
+  text.textContent = String(msg ?? '');
+
+  const close = document.createElement('button');
+  close.type = 'button';
+  close.className = 'toast-close';
+  close.setAttribute('aria-label', 'Dismiss notification');
+  close.textContent = '×';
+
+  el.append(icon, text, close);
+  wrap.appendChild(el);
+
+  let hideTimer, removeTimer;
+  const dismiss = () => {
+    clearTimeout(hideTimer);
+    clearTimeout(removeTimer);
+    el.classList.add('out');
+    removeTimer = setTimeout(() => el.remove(), 300);
+  };
+  const start = () => { clearTimeout(hideTimer); hideTimer = setTimeout(dismiss, 4200); };
+  const pause = () => clearTimeout(hideTimer);
+
+  close.addEventListener('click', dismiss);
+  el.addEventListener('mouseenter', pause);
+  el.addEventListener('mouseleave', start);
+  el.addEventListener('focusin', pause);
+  el.addEventListener('focusout', start);
+  start();
+}
+
+/* ===== Load states: distinguish "loading" / "failed" / "genuinely empty" ===== */
+function resetEmpty(el) {
+  if (!el) return;
+  if (el.dataset.origHtml === undefined) {
+    el.dataset.origHtml = el.innerHTML;
+    el.dataset.origClass = el.className;
+  }
+  if (el.dataset.state === 'error') {
+    el.innerHTML = el.dataset.origHtml;
+    el.className = el.dataset.origClass;
+    delete el.dataset.state;
+  }
+}
+
+function showLoadError(el, message, retry, table) {
+  if (!el) { toast(message, 'err'); return; }
+  resetEmpty(el);
+  el.dataset.state = 'error';
+  el.className = 'empty-state error';
+  el.style.display = '';
+  if (table) table.style.display = 'none';
+  el.innerHTML = '';
+
+  const icon = document.createElement('div');
+  icon.className = 'empty-icon';
+  icon.setAttribute('aria-hidden', 'true');
+  icon.textContent = '⚠';
+
+  const p = document.createElement('p');
+  p.textContent = message;
+
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'btn ghost sm state-retry';
+  btn.textContent = 'Try again';
+  btn.addEventListener('click', () => {
+    resetEmpty(el);
+    if (table) table.style.display = '';
+    retry?.();
+  });
+
+  el.append(icon, p, btn);
+}
+
+function startLoad(el) {
+  if (!el) return;
+  resetEmpty(el);
+  el.classList.add('is-loading');
+}
+
+function endLoad(el) {
+  el?.classList.remove('is-loading');
 }
 
 /* ===== Navigation ===== */
@@ -39,12 +128,84 @@ const overlay = $('sidebar-overlay');
 $('hamburger')?.addEventListener('click', () => {
   sidebar.classList.toggle('open');
   overlay.classList.toggle('open');
+  $('hamburger').setAttribute('aria-expanded', String(sidebar.classList.contains('open')));
 });
 overlay?.addEventListener('click', closeSidebar);
 function closeSidebar() {
   sidebar.classList.remove('open');
   overlay.classList.remove('open');
+  $('hamburger')?.setAttribute('aria-expanded', 'false');
 }
+
+/* ===== Modal controller — Escape, focus trap, body lock, focus restore ===== */
+const MODAL_CLOSE = {
+  'modal-add': () => closeModal(),
+  'modal-analytics': () => closeAnalytics(),
+  'modal-update-cookies': () => closeUpdateCookies(),
+};
+let modalReturnFocus = null;
+
+function openModalEl(el) {
+  if (!el || el.classList.contains('open')) return;
+  modalReturnFocus = document.activeElement;
+  el.classList.add('open');
+  document.body.classList.add('modal-open');
+  requestAnimationFrame(() => {
+    const dlg = el.querySelector('[role="dialog"]') || el;
+    const target = dlg.querySelector('[autofocus]')
+      || dlg.querySelector('input:not([type=hidden]):not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled])')
+      || dlg;
+    target.focus({ preventScroll: true });
+  });
+}
+
+function closeModalEl(el) {
+  if (!el || !el.classList.contains('open')) return;
+  el.classList.remove('open');
+  if (document.querySelector('.modal-overlay.open')) return;
+  document.body.classList.remove('modal-open');
+  const back = modalReturnFocus;
+  modalReturnFocus = null;
+  if (back && document.contains(back)) back.focus({ preventScroll: true });
+}
+
+function visibleFocusables(root) {
+  return [...root.querySelectorAll(
+    'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+  )].filter(el => el.offsetWidth > 0 || el.offsetHeight > 0 || el === document.activeElement);
+}
+
+document.addEventListener('keydown', e => {
+  const open = document.querySelector('.modal-overlay.open');
+  if (e.key === 'Escape') {
+    if (open) {
+      const fn = MODAL_CLOSE[open.id];
+      if (fn) { e.preventDefault(); fn(); }
+      return;
+    }
+    if (sidebar?.classList.contains('open')) {
+      closeSidebar();
+      $('hamburger')?.focus();
+    }
+    return;
+  }
+  if (e.key !== 'Tab' || !open) return;
+  const dlg = open.querySelector('[role="dialog"]') || open;
+  const items = visibleFocusables(dlg);
+  if (!items.length) { e.preventDefault(); return; }
+  const first = items[0];
+  const last = items[items.length - 1];
+  if (!dlg.contains(document.activeElement)) {
+    e.preventDefault();
+    (e.shiftKey ? last : first).focus();
+  } else if (e.shiftKey && document.activeElement === first) {
+    e.preventDefault();
+    last.focus();
+  } else if (!e.shiftKey && document.activeElement === last) {
+    e.preventDefault();
+    first.focus();
+  }
+});
 
 document.querySelectorAll('.nav-item').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -261,6 +422,41 @@ $('f-url')?.addEventListener('input', () => {
   }
 });
 
+/* ===== Quick upload: live URL status ===== */
+const Q_HINT_DEFAULT = $('q-url-hint')?.textContent || 'Works with YouTube, TikTok, Instagram, Facebook, Twitter, and more';
+
+$('q-url')?.addEventListener('input', () => {
+  const url = $('q-url').value.trim();
+  const status = $('q-url-status');
+  const hint = $('q-url-hint');
+  if (!status) return;
+
+  if (!url) {
+    status.textContent = '';
+    status.className = 'input-status';
+    if (hint) { hint.textContent = Q_HINT_DEFAULT; hint.style.color = ''; }
+    return;
+  }
+
+  if (!/^https?:\/\//i.test(url)) {
+    status.textContent = '!';
+    status.className = 'input-status err';
+    if (hint) { hint.textContent = 'Link must start with http:// or https://'; hint.style.color = 'var(--red)'; }
+    return;
+  }
+
+  const plat = detectPlatformClient(url);
+  if (plat && PLATFORM_META[plat]) {
+    status.textContent = '✓';
+    status.className = 'input-status ok';
+    if (hint) { hint.textContent = `Detected: ${PLATFORM_META[plat].label}`; hint.style.color = 'var(--green)'; }
+  } else {
+    status.textContent = '?';
+    status.className = 'input-status err';
+    if (hint) { hint.textContent = 'Unknown platform — paste a YouTube, TikTok, Instagram, or Facebook link'; hint.style.color = 'var(--red)'; }
+  }
+});
+
 /* ===== Account dropdowns ===== */
 let allAccounts = [];
 
@@ -314,7 +510,7 @@ async function populateAccountDropdowns() {
 
 /* ===== Add Source modal ===== */
 function openModal() {
-  $('modal-add').classList.add('open');
+  openModalEl($('modal-add'));
   $('f-url').value = '';
   $('f-name').value = '';
   $('url-status').textContent = '';
@@ -337,12 +533,15 @@ function openModal() {
 }
 
 function closeModal() {
-  $('modal-add').classList.remove('open');
+  closeModalEl($('modal-add'));
 }
 
 $('btn-add-source')?.addEventListener('click', openModal);
 $('btn-quick-add')?.addEventListener('click', openModal);
 $('btn-empty-add')?.addEventListener('click', openModal);
+$('tasks-empty')?.addEventListener('click', e => {
+  if (e.target.closest('#btn-empty-add')) openModal();
+});
 $('modal-close')?.addEventListener('click', closeModal);
 $('btn-cancel-add')?.addEventListener('click', closeModal);
 $('modal-add')?.addEventListener('click', e => { if (e.target === $('modal-add')) closeModal(); });
@@ -392,6 +591,8 @@ $('add-form')?.addEventListener('submit', async e => {
 let ytLoginsForLabels = [];
 
 async function loadTasks() {
+  const table = document.querySelector('#tasks-table');
+  startLoad(table);
   try {
     const [d, dl] = await Promise.all([
       api('/api/tasks'),
@@ -406,6 +607,7 @@ async function loadTasks() {
 
     if (tasks.length === 0) {
       tbody.innerHTML = '';
+      resetEmpty(empty);
       empty.style.display = '';
       document.querySelector('#tasks-table').style.display = 'none';
       return;
@@ -435,7 +637,10 @@ async function loadTasks() {
 
       const s = t.stats || {};
       const monitor = `
-        <div class="job-monitor" onclick="openAnalytics(${t.id})" title="Click for full analytics">
+        <div class="job-monitor" role="button" tabindex="0" onclick="openAnalytics(${t.id})"
+             onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openAnalytics(${t.id})}"
+             title="Click for full analytics"
+             aria-label="Open analytics: ${s.uploaded || 0} uploaded, ${s.total || 0} total, ${s.failed || 0} failed">
           <span class="jm-num up" title="uploaded">${s.uploaded || 0}</span>
           <span class="jm-num" title="total">${s.total || 0}</span>
           <span class="jm-num ${s.failed ? 'down' : ''}" title="failed">${s.failed || 0}</span>
@@ -454,24 +659,27 @@ async function loadTasks() {
 
       return `<tr>
         <td>
-          <div class="cell-title">${esc(t.name || t.source_url)}</div>
-          <div class="cell-sub">${esc(t.source_url)}</div>
+          <div class="cell-title" title="${esc(t.name || t.source_url)}">${esc(t.name || t.source_url)}</div>
+          <div class="cell-sub" title="${esc(t.source_url)}">${esc(t.source_url)}</div>
         </td>
         <td><span class="plat-pill ${meta.cls}">${meta.icon} ${meta.label}</span></td>
         <td>${destBadges}</td>
         <td>${monitor}</td>
         <td>${active} ${modeBadge}</td>
         <td class="muted">${lastSeen}</td>
-        <td>
-          <button class="btn ghost sm" onclick="openAnalytics(${t.id})" title="Analytics">▤</button>
-          <button class="btn ghost sm" onclick="toggleEditMode(${t.id}, ${!noedit})" title="${noedit ? 'Switch to Edit mode (AI processing)' : 'Switch to Raw mode (upload original, no edit)'}">${noedit ? '⚡' : '✂'}</button>
-          <button class="btn ghost sm" onclick="toggleTask('${t.id}', '${isActive ? 'paused' : 'active'}')">${isActive ? '⏸' : '▶'}</button>
-          <button class="btn danger sm" onclick="delTask('${t.id}')">✕</button>
+        <td class="actions-cell">
+          <button class="btn ghost sm" onclick="openAnalytics(${t.id})" title="Analytics" aria-label="Open analytics for ${esc(t.name || t.source_url)}">▤</button>
+          <button class="btn ghost sm" onclick="toggleEditMode(${t.id}, ${!noedit})" title="${noedit ? 'Switch to Edit mode (AI processing)' : 'Switch to Raw mode (upload original, no edit)'}" aria-label="${noedit ? 'Switch to Edit mode' : 'Switch to Raw mode'}">${noedit ? '⚡' : '✂'}</button>
+          <button class="btn ghost sm" onclick="toggleTask('${t.id}', '${isActive ? 'paused' : 'active'}')" title="${isActive ? 'Pause source' : 'Resume source'}" aria-label="${isActive ? 'Pause source' : 'Resume source'}">${isActive ? '⏸' : '▶'}</button>
+          <button class="btn danger sm" onclick="delTask('${t.id}')" title="Delete source" aria-label="Delete source">✕</button>
         </td>
       </tr>`;
     }).join('');
   } catch (e) {
     console.error('loadTasks:', e);
+    showLoadError($('tasks-empty'), "Couldn't load your sources. Check your connection.", loadTasks, table);
+  } finally {
+    endLoad(table);
   }
 }
 
@@ -518,6 +726,8 @@ document.querySelectorAll('.pill[data-filter]').forEach(p => {
 });
 
 async function loadVideos() {
+  const table = document.querySelector('#videos-table');
+  startLoad(table);
   try {
     const d = await api('/api/videos?limit=300');
     let videos = d.videos || [];
@@ -534,6 +744,7 @@ async function loadVideos() {
 
     if (videos.length === 0) {
       tbody.innerHTML = '';
+      resetEmpty(empty);
       empty.style.display = '';
       document.querySelector('#videos-table').style.display = 'none';
       return;
@@ -546,21 +757,21 @@ async function loadVideos() {
       let ref = {};
       try { ref = v.upload_ref ? JSON.parse(v.upload_ref) : {}; } catch (_) {}
       const ytId = ref.id && ref.provider === 'youtube' ? ref.id : null;
-      const ytLink = ytId ? `<a href="https://youtu.be/${esc(ytId)}" target="_blank">YouTube ↗</a>` : '';
+      const ytLink = ytId ? `<a href="https://youtu.be/${esc(ytId)}" target="_blank" rel="noopener">YouTube ↗</a>` : '';
       const retryBadge = (v.retry_count || 0) > 0
         ? `<span class="badge warn" title="auto/manual retries used">↻ ${v.retry_count}/3</span>` : '';
       const errTitle = ref.error || v.error;
 
       return `<tr>
         <td>
-          <div class="cell-title">${esc(v.title || v.video_key)}</div>
-          <div class="cell-sub">${ytLink || `<span class="muted">${esc(v.url || '').slice(0, 60)}</span>`}</div>
+          <div class="cell-title" title="${esc(v.title || v.video_key)}">${esc(v.title || v.video_key)}</div>
+          <div class="cell-sub" title="${esc(v.url || '')}">${ytLink || `<span class="muted">${esc(v.url || '')}</span>`}</div>
         </td>
         <td class="muted">${esc(v.source_name || '—')}</td>
         <td>${badge} ${retryBadge}</td>
         <td>${stageChips(v)}</td>
         <td class="muted">${timeAgo(v.updated_at)}</td>
-        <td style="white-space:nowrap">
+        <td class="actions-cell">
           ${errTitle ? `<span class="muted" title="${esc(errTitle)}">⚠</span>` : ''}
           ${videoActions(v)}
         </td>
@@ -568,6 +779,9 @@ async function loadVideos() {
     }).join('');
   } catch (e) {
     console.error('loadVideos:', e);
+    showLoadError($('videos-empty'), "Couldn't load videos. Check your connection.", loadVideos, table);
+  } finally {
+    endLoad(table);
   }
 }
 
@@ -622,9 +836,9 @@ function fmtClock(ts) {
 function videoActions(v) {
   const btns = [];
   if (LIVE_STATUSES.includes(v.status)) {
-    btns.push(`<button class="btn danger sm" onclick="cancelVideo(${v.id})" title="Cancel processing">⊘</button>`);
+    btns.push(`<button class="btn danger sm" onclick="cancelVideo(${v.id})" title="Cancel processing" aria-label="Cancel processing">⊘</button>`);
   }
-  btns.push(`<button class="btn ghost sm" onclick="downloadPlan('v${v.id}')" title="Download edit-plan JSON">⬇ JSON</button>`);
+  btns.push(`<button class="btn ghost sm" onclick="downloadPlan('v${v.id}')" title="Download edit-plan JSON" aria-label="Download edit-plan JSON">⬇ JSON</button>`);
   if (v.status === 'failed' || v.status === 'cancelled') {
     const over = (v.retry_count || 0) >= 3;
     btns.push(`<button class="btn ghost sm" onclick="retryVideo(${v.id}${over ? ', true' : ''})" title="Retry (attempt ${(v.retry_count || 0) + 1}/3)${over ? ' — force beyond limit' : ''}">↻ Retry</button>`);
@@ -698,7 +912,7 @@ let analyticsTimer = null;
 
 function openAnalytics(taskId) {
   analyticsTaskId = taskId;
-  $('modal-analytics').classList.add('open');
+  openModalEl($('modal-analytics'));
   setAnalyticsRange(analyticsRange);
   loadJobAnalytics();
   clearInterval(analyticsTimer);
@@ -708,16 +922,13 @@ function openAnalytics(taskId) {
 }
 
 function closeAnalytics() {
-  $('modal-analytics').classList.remove('open');
+  closeModalEl($('modal-analytics'));
   clearInterval(analyticsTimer);
   analyticsTimer = null;
   analyticsTaskId = null;
 }
 $('an-close')?.addEventListener('click', closeAnalytics);
 $('modal-analytics')?.addEventListener('click', e => { if (e.target === $('modal-analytics')) closeAnalytics(); });
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape' && $('modal-analytics')?.classList.contains('open')) closeAnalytics();
-});
 
 document.querySelectorAll('#an-ranges .pill').forEach(p => {
   p.addEventListener('click', () => setAnalyticsRange(p.dataset.range));
@@ -812,7 +1023,7 @@ function renderJobAnalytics(d) {
     <td>${stageChips(v)}</td>
     <td class="muted">${(v.retry_count || 0)}/3${(v.attempts || 0) > 1 ? ` (up ${v.attempts})` : ''}</td>
     <td class="muted">${fmtClock(v.updated_at)}</td>
-    <td>${videoActions(v)}</td>
+    <td class="actions-cell">${videoActions(v)}</td>
   </tr>`).join('');
   $('an-live-empty').style.display = live.length ? 'none' : '';
 
@@ -825,7 +1036,7 @@ function renderJobAnalytics(d) {
     <td class="muted">${(v.retry_count || 0)}/3</td>
     <td class="muted">${v.duration ? Math.round(v.duration) + 's' : '—'}</td>
     <td class="muted">${fmtClock(v.updated_at)}</td>
-    <td style="white-space:nowrap">${videoActions(v)}</td>
+    <td class="actions-cell">${videoActions(v)}</td>
   </tr>`).join('');
   $('an-recent-empty').style.display = recent.length ? 'none' : '';
 }
@@ -833,7 +1044,7 @@ function renderJobAnalytics(d) {
 function ytLinkFrom(v) {
   try {
     const ref = v.upload_ref ? JSON.parse(v.upload_ref) : {};
-    if (ref.id && ref.provider === 'youtube') return `<a href="https://youtu.be/${esc(ref.id)}" target="_blank">YouTube ↗</a>`;
+    if (ref.id && ref.provider === 'youtube') return `<a href="https://youtu.be/${esc(ref.id)}" target="_blank" rel="noopener">YouTube ↗</a>`;
   } catch (_) {}
   return '';
 }
@@ -845,6 +1056,7 @@ async function loadLive() {
     const live = d.videos || [];
     const card = $('dash-live-card');
     const tbody = document.querySelector('#dash-live-table tbody');
+    resetEmpty($('dash-live-empty'));
     card.style.display = live.length ? '' : 'none';
     $('dash-live-empty').style.display = live.length ? 'none' : '';
     $('dash-live-count').textContent = live.length ? `${live.length} running` : '';
@@ -855,10 +1067,14 @@ async function loadLive() {
       <td>${statusBadge(v.status)}</td>
       <td>${stageChips(v)}</td>
       <td class="muted">${(v.retry_count || 0)}/3</td>
-      <td>${videoActions(v)}</td>
+      <td class="actions-cell">${videoActions(v)}</td>
     </tr>`).join('');
   } catch (e) {
     console.error('loadLive:', e);
+    const tb = document.querySelector('#dash-live-table tbody');
+    if (tb) tb.innerHTML = '';
+    if ($('dash-live-card')) $('dash-live-card').style.display = '';
+    showLoadError($('dash-live-empty'), "Couldn't load the live queue.", loadLive);
   }
 }
 
@@ -883,6 +1099,7 @@ async function loadDashboard() {
     // Recent activity feed
     const recent = videos.slice(0, 8);
     const feed = $('dash-activity');
+    startLoad(feed);
     if (recent.length === 0) {
       feed.innerHTML = '<div class="empty-state">No activity yet</div>';
     } else {
@@ -922,11 +1139,16 @@ async function loadDashboard() {
     $('nav-video-count').textContent = videos.length;
   } catch (e) {
     console.error('loadDashboard:', e);
+    showLoadError($('dash-activity'), "Couldn't load your dashboard.", loadDashboard);
+  } finally {
+    endLoad($('dash-activity'));
   }
 }
 
 /* ===== YouTube Account ===== */
 async function loadYouTube() {
+  const list = $('login-list');
+  startLoad(list);
   try {
     const d = await api('/api/state');
     const logins = (d.logins || []).filter(l => l.provider === 'youtube');
@@ -951,7 +1173,6 @@ async function loadYouTube() {
       btn.innerHTML = '<span class="g">▶</span> Connect Another Channel';
     }
 
-    const list = $('login-list');
     if (logins.length === 0) {
       list.innerHTML = '<div class="empty-state">No channels yet — click Connect to add one. You can connect as many channels as you like.</div>';
       return;
@@ -969,6 +1190,9 @@ async function loadYouTube() {
     `).join('');
   } catch (e) {
     console.error('loadYouTube:', e);
+    showLoadError(list, "Couldn't load your connected channels.", loadYouTube);
+  } finally {
+    endLoad(list);
   }
 }
 
@@ -1005,10 +1229,20 @@ async function delLogin(id) {
 async function loadSocial() {
   const grid = $('social-grid');
   let accounts = [];
+  startLoad(grid);
+  let failed = false;
   try {
     const d = await api('/api/accounts');
     accounts = d.accounts || [];
-  } catch (_) {}
+  } catch (e) {
+    console.error('loadSocial:', e);
+    failed = true;
+  }
+  endLoad(grid);
+  if (failed) {
+    showLoadError(grid, "Couldn't load connected accounts.", loadSocial);
+    return;
+  }
 
   const platforms = ['tiktok', 'instagram', 'facebook'];
   grid.innerHTML = platforms.map(p => {
@@ -1262,12 +1496,12 @@ async function openUpdateCookies(id) {
   $('uf-cookies').value = '';
   $('uc-file-drop').classList.remove('has-file');
   $('uc-file-text').textContent = 'Drop file or click to browse';
-  $('modal-update-cookies').classList.add('open');
-  setTimeout(() => $('uf-cookies').focus(), 100);
+  openModalEl($('modal-update-cookies'));
+  setTimeout(() => $('uf-cookies')?.focus(), 120);
 }
 
 function closeUpdateCookies() {
-  $('modal-update-cookies').classList.remove('open');
+  closeModalEl($('modal-update-cookies'));
   updateCookiesId = null;
 }
 $('uc-close')?.addEventListener('click', closeUpdateCookies);
@@ -1405,30 +1639,41 @@ function startQuickPoll(jobId) {
   }, 3000);
 }
 
+let qReachedIdx = 0;
+
 function updateProgressUI(status, error) {
   const steps = document.querySelectorAll('#q-progress-steps .progress-step');
   const order = ['queued', 'downloading', 'editing', 'generating_metadata', 'uploading', 'done'];
   const currentIdx = order.indexOf(status);
 
+  let failedIdx = -1;
+  if (status === 'failed') {
+    failedIdx = Math.min(Math.max(qReachedIdx, 0), steps.length - 1);
+  } else if (currentIdx >= 0) {
+    qReachedIdx = currentIdx;
+  }
+
   steps.forEach((el, i) => {
     el.classList.remove('active', 'done', 'failed');
-    if (status === 'failed' && i === currentIdx) {
-      el.classList.add('failed');
-    } else if (i < currentIdx || (status === 'done' && i <= order.indexOf('done'))) {
-      el.classList.add('done');
-    } else if (i === currentIdx) {
-      el.classList.add('active');
+    if (status === 'failed') {
+      if (i === failedIdx) el.classList.add('failed');
+      else if (i < failedIdx) el.classList.add('done');
+      return;
     }
+    if (i < currentIdx) el.classList.add('done');
+    else if (i === currentIdx) el.classList.add(status === 'done' ? 'done' : 'active');
   });
 
   const badge = $('q-status-badge');
   const text = $('q-status-text');
   if (badge && text) {
-    text.textContent = status.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    const label = status === 'done'
+      ? 'Done'
+      : status === 'failed'
+        ? 'Failed: ' + (error || '')
+        : status.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    text.textContent = label;
     badge.className = 'badge ' + (status === 'done' ? 'ok' : status === 'failed' ? 'err' : 'run');
-    if (status === 'done') badge.innerHTML = '<span class="badge-dot"></span> Done';
-    else if (status === 'failed') badge.innerHTML = '<span class="badge-dot"></span> Failed: ' + esc(error || '');
-    else badge.innerHTML = `<span class="badge-dot"></span> ${text.textContent}`;
   }
 }
 
@@ -1442,6 +1687,8 @@ function manualGoto(p) {
 }
 
 async function loadManualJobs() {
+  const table = document.querySelector('#manual-table');
+  startLoad(table);
   try {
     const [d, da] = await Promise.all([
       api('/api/manual/jobs'),
@@ -1468,6 +1715,7 @@ async function loadManualJobs() {
 
     if (total === 0) {
       tbody.innerHTML = '';
+      resetEmpty(empty);
       empty.style.display = '';
       pager.style.display = 'none';
       document.querySelector('#manual-table').style.display = 'none';
@@ -1559,22 +1807,25 @@ async function loadManualJobs() {
 
       return `<tr>
         <td>
-          <div class="cell-title">${esc(j.title || shortUrl(j.url))}</div>
-          <div class="cell-sub"><a href="${esc(j.url)}" target="_blank" rel="noopener">${esc(shortUrl(j.url))}</a> · ${timeAgo(j.created_at)}</div>
+          <div class="cell-title" title="${esc(j.title || shortUrl(j.url))}">${esc(j.title || shortUrl(j.url))}</div>
+          <div class="cell-sub"><a href="${esc(j.url)}" target="_blank" rel="noopener" title="${esc(j.url)}">${esc(shortUrl(j.url))}</a> · ${timeAgo(j.created_at)}</div>
         </td>
         <td>${dests || '—'}</td>
         <td>${badge}</td>
         <td>${timing}</td>
         <td>${links.join(' ') || '<span class="muted">—</span>'}</td>
-        <td style="white-space:nowrap">
-          <button class="btn ghost sm" onclick="downloadPlan('j${j.id}')" title="Download edit-plan JSON">⬇ JSON</button>
-          ${LIVE_JOB ? `<button class="btn danger sm" onclick="cancelManualJob(${j.id})" title="Cancel job">⊘</button>` : ''}
-          ${['queued','failed'].includes(j.status) ? `<button class="btn danger sm" onclick="delManualJob(${j.id})" title="Delete job">✕</button>` : ''}
+        <td class="actions-cell">
+          <button class="btn ghost sm" onclick="downloadPlan('j${j.id}')" title="Download edit-plan JSON" aria-label="Download edit-plan JSON">⬇ JSON</button>
+          ${LIVE_JOB ? `<button class="btn danger sm" onclick="cancelManualJob(${j.id})" title="Cancel job" aria-label="Cancel job">⊘</button>` : ''}
+          ${['queued','failed'].includes(j.status) ? `<button class="btn danger sm" onclick="delManualJob(${j.id})" title="Delete job" aria-label="Delete job">✕</button>` : ''}
         </td>
       </tr>`;
     }).join('');
   } catch (e) {
     console.error('loadManualJobs:', e);
+    showLoadError($('manual-empty'), "Couldn't load manual jobs.", loadManualJobs, table);
+  } finally {
+    endLoad(table);
   }
 }
 

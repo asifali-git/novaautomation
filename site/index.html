@@ -3,23 +3,26 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="theme-color" content="#0a0a0f" />
   <title>NOVA — Automation Hub</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 </head>
 <body>
 
   <!-- Mobile top bar -->
   <div class="mobile-bar">
-    <button class="hamburger" id="hamburger">☰</button>
+    <button class="hamburger" id="hamburger" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="sidebar">☰</button>
     <span class="mobile-brand">⚡ NOVA</span>
   </div>
   <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
   <!-- Sidebar -->
-  <nav class="sidebar" id="sidebar">
+  <nav class="sidebar" id="sidebar" aria-label="Main navigation">
     <div class="sidebar-brand">
       <div class="brand-icon">⚡</div>
       <span class="brand-name">NOVA</span>
@@ -142,12 +145,12 @@
           <table class="data-table" id="dash-live-table">
             <thead>
               <tr>
-                <th>Video</th>
-                <th>Source</th>
-                <th>Stage</th>
-                <th>Stages</th>
-                <th>Retries</th>
-                <th></th>
+                <th scope="col">Video</th>
+                <th scope="col">Source</th>
+                <th scope="col">Stage</th>
+                <th scope="col">Stages</th>
+                <th scope="col">Retries</th>
+                <th scope="col"><span class="sr-only">Actions</span></th>
               </tr>
             </thead>
             <tbody></tbody>
@@ -172,13 +175,13 @@
           <table class="data-table" id="tasks-table">
             <thead>
               <tr>
-                <th>Source</th>
-                <th>Platform</th>
-                <th>Upload To</th>
-                <th>Monitor</th>
-                <th>Status</th>
-                <th>Last Seen</th>
-                <th></th>
+                <th scope="col">Source</th>
+                <th scope="col">Platform</th>
+                <th scope="col">Upload To</th>
+                <th scope="col">Monitor</th>
+                <th scope="col">Status</th>
+                <th scope="col">Last Seen</th>
+                <th scope="col"><span class="sr-only">Actions</span></th>
               </tr>
             </thead>
             <tbody></tbody>
@@ -213,12 +216,12 @@
           <table class="data-table" id="videos-table">
             <thead>
               <tr>
-                <th>Video</th>
-                <th>Source</th>
-                <th>Status</th>
-                <th>Stages</th>
-                <th>Updated</th>
-                <th></th>
+                <th scope="col">Video</th>
+                <th scope="col">Source</th>
+                <th scope="col">Status</th>
+                <th scope="col">Stages</th>
+                <th scope="col">Updated</th>
+                <th scope="col"><span class="sr-only">Actions</span></th>
               </tr>
             </thead>
             <tbody></tbody>
@@ -335,12 +338,12 @@
           <table class="data-table" id="manual-table">
             <thead>
               <tr>
-                <th>Source</th>
-                <th>Destinations</th>
-                <th>Status</th>
-                <th>Timing</th>
-                <th>Published</th>
-                <th></th>
+                <th scope="col">Source</th>
+                <th scope="col">Destinations</th>
+                <th scope="col">Status</th>
+                <th scope="col">Timing</th>
+                <th scope="col">Published</th>
+                <th scope="col"><span class="sr-only">Actions</span></th>
               </tr>
             </thead>
             <tbody></tbody>
@@ -462,7 +465,7 @@
           <div class="form-actions">
             <button class="btn primary" type="submit">Connect Account</button>
             <p class="hint">
-              <b>How to export:</b> Install <a href="https://chromewebstore.google.com/detail/cookie-editor/hlkenndednhfkekhgcdicdfddnkalmdm" target="_blank">Cookie-Editor</a> extension →
+              <b>How to export:</b> Install <a href="https://chromewebstore.google.com/detail/cookie-editor/hlkenndednhfkekhgcdicdfddnkalmdm" target="_blank" rel="noopener">Cookie-Editor</a> extension →
               Login to the platform → Click extension → <b>Export → Export as JSON</b> → Upload here.
               Format is auto-detected.
             </p>
@@ -474,10 +477,10 @@
 
   <!-- ===== ADD SOURCE MODAL ===== -->
   <div class="modal-overlay" id="modal-add">
-    <div class="modal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-add-title">
       <div class="modal-header">
-        <h2>Add Source</h2>
-        <button class="modal-close" id="modal-close">&times;</button>
+        <h2 id="modal-add-title">Add Source</h2>
+        <button class="modal-close" id="modal-close" type="button" aria-label="Close dialog">&times;</button>
       </div>
       <form id="add-form" class="form pro-form">
         <div class="form-group full">
@@ -568,7 +571,7 @@
 
   <!-- ===== JOB ANALYTICS MODAL ===== -->
   <div class="modal-overlay" id="modal-analytics">
-    <div class="modal wide">
+    <div class="modal wide" role="dialog" aria-modal="true" aria-labelledby="an-title">
       <div class="modal-header">
         <h2 id="an-title">Job Analytics</h2>
         <div class="an-ranges" id="an-ranges">
@@ -578,7 +581,7 @@
           <button class="pill" data-range="year">Yearly</button>
           <button class="pill" data-range="custom">Custom</button>
         </div>
-        <button class="modal-close" id="an-close">&times;</button>
+        <button class="modal-close" id="an-close" type="button" aria-label="Close dialog">&times;</button>
       </div>
       <div class="an-custom-row" id="an-custom-row" style="display:none;">
         <label>From <input type="date" id="an-from" class="form-input" /></label>
@@ -610,7 +613,7 @@
           <div class="table-wrap">
             <table class="data-table" id="an-live-table">
               <thead>
-                <tr><th>Video</th><th>Stage</th><th>Stages</th><th>Retries</th><th>Updated</th><th></th></tr>
+                <tr><th scope="col">Video</th><th scope="col">Stage</th><th scope="col">Stages</th><th scope="col">Retries</th><th scope="col">Updated</th><th scope="col"><span class="sr-only">Actions</span></th></tr>
               </thead>
               <tbody></tbody>
             </table>
@@ -626,7 +629,7 @@
           <div class="table-wrap">
             <table class="data-table" id="an-recent-table">
               <thead>
-                <tr><th>Video</th><th>Status</th><th>Retries</th><th>Duration</th><th>Updated</th><th></th></tr>
+                <tr><th scope="col">Video</th><th scope="col">Status</th><th scope="col">Retries</th><th scope="col">Duration</th><th scope="col">Updated</th><th scope="col"><span class="sr-only">Actions</span></th></tr>
               </thead>
               <tbody></tbody>
             </table>
@@ -639,10 +642,10 @@
 
   <!-- ===== UPDATE COOKIES MODAL ===== -->
   <div class="modal-overlay" id="modal-update-cookies">
-    <div class="modal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="uc-title">
       <div class="modal-header">
-        <h2>Update Cookies</h2>
-        <button class="modal-close" id="uc-close">&times;</button>
+        <h2 id="uc-title">Update Cookies</h2>
+        <button class="modal-close" id="uc-close" type="button" aria-label="Close dialog">&times;</button>
       </div>
       <form id="update-cookies-form" class="form pro-form">
         <div class="uc-account-row" id="uc-account-row">
@@ -700,9 +703,9 @@
         <span class="brand-name">NOVA</span>
       </div>
 
-      <div class="auth-tabs">
-        <button type="button" class="auth-tab active" id="auth-tab-login">Log in</button>
-        <button type="button" class="auth-tab" id="auth-tab-register">Sign up</button>
+      <div class="auth-tabs" role="tablist" aria-label="Authentication">
+        <button type="button" class="auth-tab active" id="auth-tab-login" role="tab" aria-selected="true" aria-controls="auth-login-form">Log in</button>
+        <button type="button" class="auth-tab" id="auth-tab-register" role="tab" aria-selected="false" aria-controls="auth-register-form">Sign up</button>
       </div>
 
       <form id="auth-login-form" class="form">
@@ -743,7 +746,7 @@
     </div>
   </div>
 
-  <div id="toasts" class="toasts"></div>
+  <div id="toasts" class="toasts" role="status" aria-live="polite" aria-atomic="false"></div>
   <script src="app.js"></script>
 </body>
 </html>
