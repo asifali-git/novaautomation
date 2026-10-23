@@ -1185,9 +1185,9 @@ class Handler(BaseHTTPRequestHandler):
             self._serve_plan(m.group(1))
             return
         if self.path == "/health":
-            body = b'{"ok":true}'
-            self.send_response(200)
-        elif self.path == "/status":
+            self._send(200, b'{"ok":true}', {"Cache-Control": "no-store"})
+            return
+        if self.path == "/status":
             import json as _json
             body = _json.dumps({
                 "service": "fastpoll",
@@ -1204,23 +1204,20 @@ class Handler(BaseHTTPRequestHandler):
                          "reaped": _state.get("reaped", 0),
                          "watch": _state.get("watch_count", len(_watch_ids))},
                 "plan_keys": list(_PLAN_STORE.keys())[-20:],
-            }).encode()
-            self.send_response(200)
-        elif self.path == "/wake":
+            })
+            self._send(200, body, {"Cache-Control": "no-store"})
+            return
+        if self.path == "/wake":
             # Manual wake: trigger an immediate manual-job check (bypasses sleep).
             try:
                 triggered = check_manual_jobs()
-                body = ('{"ok":true,"manual_triggered":%s}' % ("true" if triggered else "false")).encode()
+                body = '{"ok":true,"manual_triggered":%s}' % ("true" if triggered else "false")
             except Exception as e:
-                body = ('{"ok":false,"error":"%s"}' % str(e).replace('"', "'")[:200]).encode()
-            self.send_response(200)
-        else:
-            body = b'{"service":"fastpoll","endpoints":["/health","/status","/wake"]}'
-            self.send_response(200)
-        self.send_header("Content-Type", "application/json")
-        self.send_header("Content-Length", str(len(body)))
-        self.end_headers()
-        self.wfile.write(body)
+                body = '{"ok":false,"error":"%s"}' % str(e).replace('"', "'")[:200]
+            self._send(200, body, {"Cache-Control": "no-store"})
+            return
+        self._send(200, b'{"service":"fastpoll","endpoints":["/health","/status","/wake"]}',
+                   {"Cache-Control": "no-store"})
 
     def do_POST(self):
         if self.path not in ("/api/plan", "/api/cancel"):

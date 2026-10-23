@@ -2357,26 +2357,53 @@ function diagItem(label, value, cls = '', mono = false) {
   return box;
 }
 
+async function fetchPollerStatus(timeoutMs = 12000) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+  try {
+    const resp = await fetch(FASTPOLL + '/status', { cache: 'no-store', signal: ctrl.signal });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    return await resp.json();
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 async function loadDetectorHealth() {
   const grid = $('diag-grid');
   if (!grid) return;
   grid.innerHTML = '';
   const loading = document.createElement('div');
   loading.className = 'empty-state';
-  loading.textContent = 'Loading…';
+  loading.textContent = 'Checking poller…';
   grid.appendChild(loading);
 
-  let r;
-  try {
-    const resp = await fetch(FASTPOLL + '/status');
-    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-    r = await resp.json();
-  } catch (_) {
+  let r = null;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      r = await fetchPollerStatus();
+      break;
+    } catch (_) {
+      if (attempt === 0) {
+        loading.textContent = 'Waking poller…';
+        await new Promise((res) => setTimeout(res, 4000));
+      }
+    }
+  }
+
+  if (!r) {
     grid.innerHTML = '';
-    const d = document.createElement('div');
-    d.className = 'empty-state error';
-    d.textContent = 'Poller unreachable — Render may be waking up. Try again in a minute.';
-    grid.appendChild(d);
+    const box = document.createElement('div');
+    box.className = 'empty-state error';
+    const msg = document.createElement('p');
+    msg.textContent = 'Poller unreachable. The Render instance may be waking up.';
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'btn ghost sm';
+    btn.textContent = 'Retry';
+    btn.addEventListener('click', loadDetectorHealth);
+    box.append(msg, btn);
+    grid.appendChild(box);
     return;
   }
 
@@ -2391,7 +2418,8 @@ async function loadDetectorHealth() {
     diagItem('Last poll', lastPoll),
     diagItem('Interval', interval),
     diagItem('Watching', String(watch)),
-    diagItem('Detector error', r.task_err || 'none', r.task_err ? 'err' : 'ok', !!r.task_err)
+    diagItem('Detector error', r.task_err || 'none', r.task_err ? 'err' : 'ok', !!r.task_err),
+    diagItem('Checked', new Date().toLocaleTimeString())
   );
 }
 
