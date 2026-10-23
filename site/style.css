@@ -1539,3 +1539,21 @@ body.modal-open { overflow: hidden; }
     scroll-behavior: auto !important;
   }
 }
+
+/* ===== Settings ===== */
+.settings-stack { display:flex; flex-direction:column; gap:16px; }
+.settings-stack .card { padding:18px; }
+.range-row { display:flex; align-items:center; gap:8px; }
+.range-row .form-input { width:100%; min-width:0; }
+.diag-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:12px; }
+.diag-item { background:var(--bg3); border:1px solid var(--border); border-radius:var(--radius); padding:10px 12px; min-width:0; }
+.diag-label { display:block; font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--text3); margin-bottom:4px; }
+.diag-value { font-size:14px; font-weight:600; word-break:break-word; }
+.diag-value.ok { color:var(--green); }
+.diag-value.err { color:var(--red); }
+.diag-value.mono { font-family:var(--mono); font-size:12.5px; }
+@media (max-width:720px) {
+  .diag-grid { grid-template-columns:1fr 1fr; }
+  .range-row { flex-direction:column; align-items:stretch; }
+  .range-row .muted { display:none; }
+}

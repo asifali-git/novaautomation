@@ -66,6 +66,13 @@
       </button>
     </div>
 
+    <div class="sidebar-section">
+      <span class="sidebar-label">System</span>
+      <button class="nav-item" data-view="settings">
+        <span class="nav-icon">⚙</span> Settings
+      </button>
+    </div>
+
     <div class="sidebar-footer">
       <div class="conn-status">
         <span class="conn-dot" id="conn"></span>
@@ -471,6 +478,139 @@
             </p>
           </div>
         </form>
+      </div>
+    </section>
+    <!-- ===== SETTINGS ===== -->
+    <section class="view" id="view-settings">
+      <header class="view-header">
+        <div>
+          <h1>Settings</h1>
+          <p class="subtitle">API keys, rotation order and pipeline services</p>
+        </div>
+        <button class="btn ghost" id="btn-settings-refresh" type="button">⟳ Refresh</button>
+      </header>
+
+      <div class="settings-stack">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2>API Keys</h2>
+              <p class="muted">Lowest priority number is tried first. Add several keys per service for automatic fallback.</p>
+            </div>
+          </div>
+
+          <form id="key-form" class="form pro-form" autocomplete="off">
+            <div class="form-row">
+              <label class="form-group">
+                <span class="form-label">Service</span>
+                <select id="kf-service" class="form-input" required></select>
+              </label>
+              <label class="form-group">
+                <span class="form-label">Label <span class="muted">(optional)</span></span>
+                <input id="kf-label" type="text" class="form-input" placeholder="main / backup" maxlength="40" />
+              </label>
+              <label class="form-group">
+                <span class="form-label">API key</span>
+                <input id="kf-value" type="password" class="form-input" placeholder="paste key" spellcheck="false" autocomplete="new-password" required />
+              </label>
+              <label class="form-group">
+                <span class="form-label">Priority</span>
+                <input id="kf-priority" type="number" class="form-input" value="0" step="1" />
+              </label>
+            </div>
+            <div class="form-actions">
+              <button class="btn primary" type="submit" id="kf-submit">Add key</button>
+            </div>
+          </form>
+
+          <div class="table-wrap">
+            <table class="data-table" id="keys-table">
+              <thead>
+                <tr>
+                  <th scope="col">Service</th>
+                  <th scope="col">Label</th>
+                  <th scope="col">Key</th>
+                  <th scope="col">Priority</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Used</th>
+                  <th scope="col"><span class="sr-only">Actions</span></th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+            <div class="empty-state" id="keys-empty">
+              <div class="empty-icon">🔑</div>
+              <p>No API keys yet</p>
+              <p class="muted">Add a key above — the pipeline picks it up on the next run.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2>Service Config</h2>
+              <p class="muted">Applied to every pipeline run without touching code.</p>
+            </div>
+          </div>
+
+          <form id="settings-form" class="form pro-form">
+            <div class="form-row">
+              <label class="form-group">
+                <span class="form-label">Download provider</span>
+                <select id="sf-download" class="form-input">
+                  <option value="">Default</option>
+                  <option value="fastsaver">FastSaver API</option>
+                  <option value="ytdlp">yt-dlp only</option>
+                </select>
+              </label>
+              <label class="form-group">
+                <span class="form-label">Analysis provider</span>
+                <select id="sf-analyze" class="form-input">
+                  <option value="">Auto</option>
+                  <option value="nvidia">NVIDIA NIM</option>
+                  <option value="gemini">Google Gemini</option>
+                  <option value="openrouter">OpenRouter</option>
+                </select>
+              </label>
+              <label class="form-group">
+                <span class="form-label">Video quality (p)</span>
+                <input id="sf-quality" type="number" class="form-input" min="360" max="2160" step="1" placeholder="1080" />
+              </label>
+              <label class="form-group">
+                <span class="form-label">Poll interval (sec)</span>
+                <div class="range-row">
+                  <input id="sf-pollmin" type="number" class="form-input" min="5" max="300" step="1" placeholder="8" aria-label="Minimum poll interval" />
+                  <span class="muted">to</span>
+                  <input id="sf-pollmax" type="number" class="form-input" min="5" max="600" step="1" placeholder="12" aria-label="Maximum poll interval" />
+                </div>
+              </label>
+            </div>
+
+            <label class="form-group full">
+              <span class="form-label">YouTube cookies <span class="muted" id="sf-cookies-state"></span></span>
+              <textarea id="sf-cookies" class="form-input" rows="3" spellcheck="false" placeholder="Paste Netscape cookies.txt so the Render poller can read YouTube without bot-checks"></textarea>
+              <span class="form-hint">Stored in D1. Leave blank to keep the saved cookies; use Clear cookies to remove them.</span>
+            </label>
+
+            <div class="form-actions">
+              <button class="btn primary" type="submit" id="sf-submit">Save config</button>
+              <button class="btn ghost" type="button" id="sf-clear-cookies">Clear cookies</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2>Detector Health</h2>
+              <p class="muted">Live status of the Render poller</p>
+            </div>
+          </div>
+          <div class="diag-grid" id="diag-grid">
+            <div class="empty-state">Loading…</div>
+          </div>
+        </div>
       </div>
     </section>
   </main>

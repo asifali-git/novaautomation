@@ -235,6 +235,7 @@ function switchView(name, skipHash = false) {
   if (name === 'social') loadSocial();
   if (name === 'quick') { populateQuickDropdowns(); $('q-progress-card').style.display = 'none'; $('q-submit').disabled = false; $('q-submit').textContent = '⚡ Start Upload'; }
   if (name === 'manual') loadManualJobs();
+  if (name === 'settings') loadSettings();
 }
 
 // Handle browser back/forward
@@ -902,6 +903,7 @@ function refreshActiveViews() {
   if (active === 'view-dashboard') { loadDashboard(); loadLive(); }
   if (active === 'view-sources') loadTasks();
   if (active === 'view-activity') loadVideos();
+  if (active === 'view-settings') loadSettings();
   if ($('modal-analytics').classList.contains('open') && analyticsTaskId) loadJobAnalytics();
 }
 
@@ -1980,3 +1982,298 @@ async function startApp(user) {
   }
   showAuth();
 })();
+
+/* ===== Settings: API keys + service config ===== */
+const settingsState = { keys: [], services: [], settings: {}, specs: {} };
+
+function settingsActionBtn(text, act, id) {
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.className = 'btn ghost sm';
+  b.dataset.act = act;
+  b.dataset.id = String(id);
+  b.textContent = text;
+  return b;
+}
+
+function renderKeyServices() {
+  const sel = $('kf-service');
+  if (!sel) return;
+  const current = sel.value;
+  sel.innerHTML = '';
+  for (const s of settingsState.services) {
+    const opt = document.createElement('option');
+    opt.value = s.id;
+    opt.textContent = s.label;
+    sel.appendChild(opt);
+  }
+  if (settingsState.services.some(s => s.id === current)) sel.value = current;
+}
+
+function renderKeys() {
+  const table = $('keys-table');
+  const empty = $('keys-empty');
+  if (!table || !empty) return;
+  const tbody = table.querySelector('tbody');
+  tbody.innerHTML = '';
+  const keys = settingsState.keys;
+  table.style.display = keys.length ? '' : 'none';
+  empty.style.display = keys.length ? 'none' : '';
+
+  for (const k of keys) {
+    const tr = document.createElement('tr');
+    const cells = [];
+
+    const svc = document.createElement('td');
+    svc.textContent = settingsState.services.find(s => s.id === k.service)?.label || k.service;
+    cells.push(svc);
+
+    const label = document.createElement('td');
+    label.textContent = k.label || '—';
+    cells.push(label);
+
+    const key = document.createElement('td');
+    key.className = 'key-mono';
+    key.textContent = k.hint;
+    cells.push(key);
+
+    const pri = document.createElement('td');
+    pri.textContent = String(k.priority);
+    cells.push(pri);
+
+    const status = document.createElement('td');
+    const badge = document.createElement('span');
+    const [cls, text] = !k.enabled
+      ? ['idle', 'disabled']
+      : k.status === 'error'
+        ? ['err', 'error']
+        : k.status === 'invalid'
+          ? ['warn', 'check failed']
+          : ['ok', 'active'];
+    badge.className = `badge ${cls}`;
+    badge.textContent = text;
+    if (k.last_error) badge.title = k.last_error;
+    status.appendChild(badge);
+    cells.push(status);
+
+    const used = document.createElement('td');
+    used.textContent = k.used_count ? `${k.used_count}×` : '—';
+    if (k.last_used) used.title = new Date(k.last_used).toLocaleString();
+    cells.push(used);
+
+    const actions = document.createElement('td');
+    actions.className = 'actions-cell';
+    actions.append(
+      settingsActionBtn(k.enabled ? 'Disable' : 'Enable', 'toggle', k.id),
+      settingsActionBtn('Test', 'test', k.id),
+      settingsActionBtn('Delete', 'del', k.id)
+    );
+    cells.push(actions);
+
+    tr.append(...cells);
+    tbody.appendChild(tr);
+  }
+}
+
+function fillSettingsForm() {
+  const s = settingsState.settings || {};
+  if ($('sf-download')) $('sf-download').value = s.download_provider || '';
+  if ($('sf-analyze')) $('sf-analyze').value = s.analyze_provider || '';
+  if ($('sf-quality')) $('sf-quality').value = s.video_quality ?? '';
+  if ($('sf-pollmin')) $('sf-pollmin').value = s.poll_min ?? '';
+  if ($('sf-pollmax')) $('sf-pollmax').value = s.poll_max ?? '';
+  if ($('sf-cookies')) $('sf-cookies').value = '';
+  if ($('sf-cookies-state')) {
+    $('sf-cookies-state').textContent = s.yt_cookies_set ? `(saved · ${s.yt_cookies_len} chars)` : '(none)';
+  }
+}
+
+async function loadSettings() {
+  const empty = $('keys-empty');
+  startLoad(empty);
+  try {
+    const [k, s] = await Promise.all([api('/api/keys'), api('/api/settings')]);
+    settingsState.keys = k.keys || [];
+    settingsState.services = k.services || [];
+    settingsState.settings = s.settings || {};
+    settingsState.specs = s.specs || {};
+    endLoad(empty);
+    renderKeyServices();
+    renderKeys();
+    fillSettingsForm();
+    loadDetectorHealth();
+  } catch (e) {
+    endLoad(empty);
+    showLoadError(empty, "Couldn't load settings.", loadSettings, $('keys-table'));
+  }
+}
+
+async function reloadKeys() {
+  const r = await api('/api/keys');
+  settingsState.keys = r.keys || [];
+  renderKeys();
+}
+
+function diagItem(label, value, cls = '', mono = false) {
+  const box = document.createElement('div');
+  box.className = 'diag-item';
+  const l = document.createElement('span');
+  l.className = 'diag-label';
+  l.textContent = label;
+  const v = document.createElement('span');
+  v.className = `diag-value ${cls}${mono ? ' mono' : ''}`.trim();
+  v.textContent = String(value ?? '—');
+  box.append(l, v);
+  return box;
+}
+
+async function loadDetectorHealth() {
+  const grid = $('diag-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  const loading = document.createElement('div');
+  loading.className = 'empty-state';
+  loading.textContent = 'Loading…';
+  grid.appendChild(loading);
+
+  let r;
+  try {
+    const resp = await fetch(FASTPOLL + '/status');
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    r = await resp.json();
+  } catch (_) {
+    grid.innerHTML = '';
+    const d = document.createElement('div');
+    d.className = 'empty-state error';
+    d.textContent = 'Poller unreachable — Render may be waking up. Try again in a minute.';
+    grid.appendChild(d);
+    return;
+  }
+
+  const watch = r?.reap && typeof r.reap.watch === 'number' ? r.reap.watch : 0;
+  const interval = Array.isArray(r.poll_interval) ? `${r.poll_interval[0]}–${r.poll_interval[1]}s` : '—';
+  const lastPoll = r.last_poll ? new Date(r.last_poll * 1000).toLocaleTimeString() : '—';
+  const online = r.service === 'fastpoll';
+
+  grid.innerHTML = '';
+  grid.append(
+    diagItem('Poller', online ? 'online' : 'unknown', online ? 'ok' : ''),
+    diagItem('Last poll', lastPoll),
+    diagItem('Interval', interval),
+    diagItem('Watching', String(watch)),
+    diagItem('Detector error', r.task_err || 'none', r.task_err ? 'err' : 'ok', !!r.task_err)
+  );
+}
+
+$('key-form')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = $('kf-submit');
+  const payload = {
+    service: $('kf-service').value,
+    label: $('kf-label').value.trim(),
+    value: $('kf-value').value,
+    priority: Number($('kf-priority').value) || 0,
+  };
+  if (!payload.value.trim()) {
+    toast('Paste an API key first', 'err');
+    return;
+  }
+  btn.disabled = true;
+  btn.textContent = 'Adding…';
+  try {
+    const r = await api('/api/keys', { method: 'POST', body: JSON.stringify(payload) });
+    settingsState.keys = r.keys || [];
+    renderKeys();
+    $('kf-value').value = '';
+    $('kf-label').value = '';
+    $('kf-priority').value = '0';
+    toast('API key added');
+  } catch (err) {
+    toast(err.message, 'err');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Add key';
+  }
+});
+
+$('keys-table')?.addEventListener('click', async (e) => {
+  const btn = e.target.closest('button[data-act]');
+  if (!btn) return;
+  const id = Number(btn.dataset.id);
+  const act = btn.dataset.act;
+  try {
+    if (act === 'toggle') {
+      const k = settingsState.keys.find(x => x.id === id);
+      if (!k) return;
+      await api(`/api/keys/${id}`, { method: 'PATCH', body: JSON.stringify({ enabled: !k.enabled }) });
+      toast(k.enabled ? 'Key disabled' : 'Key enabled');
+    } else if (act === 'test') {
+      const r = await api(`/api/keys/${id}/test`, { method: 'POST' });
+      toast(r.ok ? 'Key format looks valid' : `Check failed: ${r.error}`, r.ok ? 'ok' : 'err');
+    } else if (act === 'del') {
+      if (!confirm('Delete this API key?')) return;
+      await api(`/api/keys/${id}`, { method: 'DELETE' });
+      toast('Key deleted');
+    }
+    await reloadKeys();
+  } catch (err) {
+    toast(err.message, 'err');
+  }
+});
+
+$('settings-form')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = $('sf-submit');
+  const body = {};
+  const putNum = (key, raw, min, max) => {
+    if (raw === '') return null;
+    const n = Number(raw);
+    if (!Number.isFinite(n)) throw new Error(`${key} must be a number`);
+    if (n < min || n > max) throw new Error(`${key} must be ${min}–${max}`);
+    body[key] = n;
+    return n;
+  };
+  try {
+    if ($('sf-download').value) body.download_provider = $('sf-download').value;
+    if ($('sf-analyze').value) body.analyze_provider = $('sf-analyze').value;
+    try {
+      putNum('video_quality', $('sf-quality').value, 360, 2160);
+      putNum('poll_min', $('sf-pollmin').value, 5, 300);
+      putNum('poll_max', $('sf-pollmax').value, 5, 600);
+    } catch (err) {
+      toast(err.message, 'err');
+      return;
+    }
+    const cookies = $('sf-cookies').value.trim();
+    if (cookies) body.yt_cookies = cookies;
+
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
+    const r = await api('/api/settings', { method: 'PUT', body: JSON.stringify(body) });
+    settingsState.settings = r.settings || {};
+    fillSettingsForm();
+    toast('Config saved');
+  } catch (err) {
+    toast(err.message, 'err');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Save config';
+  }
+});
+
+$('sf-clear-cookies')?.addEventListener('click', async () => {
+  if (!confirm('Remove the stored YouTube cookies?')) return;
+  try {
+    const r = await api('/api/settings', { method: 'PUT', body: JSON.stringify({ yt_cookies: null }) });
+    settingsState.settings = r.settings || {};
+    fillSettingsForm();
+    toast('Cookies cleared');
+  } catch (err) {
+    toast(err.message, 'err');
+  }
+});
+
+$('btn-settings-refresh')?.addEventListener('click', () => {
+  loadSettings();
+  toast('Refreshed');
+});
