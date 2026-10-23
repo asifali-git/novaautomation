@@ -156,11 +156,24 @@ function normalizeSourceUrl(url) {
 }
 
 const API_SERVICES = {
-  fastsaver:  { label: 'FastSaver download',    env: 'FASTSAVER_API_KEY',  list: 'FASTSAVER_API_KEYS',  prefix: /^fs_sk_/ },
-  ytapi:      { label: 'ytapi download server', env: 'YT_API_KEY',         list: 'YT_API_KEYS',         prefix: /^\S{8,}$/ },
-  nvidia:     { label: 'NVIDIA NIM',            env: 'NVIDIA_API_KEY',     list: 'NVIDIA_API_KEYS',     prefix: /^nvapi-/ },
-  gemini:     { label: 'Google Gemini',         env: 'GEMINI_API_KEY',     list: 'GEMINI_API_KEYS',     prefix: /^\S{16,}$/ },
-  openrouter: { label: 'OpenRouter',            env: 'OPENROUTER_API_KEY', list: 'OPENROUTER_API_KEYS', prefix: /^sk-or-/ },
+  fastsaver:  { label: 'FastSaver download',    kind: 'key',     env: 'FASTSAVER_API_KEY',  list: 'FASTSAVER_API_KEYS',  prefix: /^fs_sk_/ },
+  ytapi:      { label: 'ytapi download server', kind: 'key',     env: 'YT_API_KEY',         list: 'YT_API_KEYS',         prefix: /^\S{8,}$/ },
+  nvidia:     { label: 'NVIDIA NIM',            kind: 'key',     env: 'NVIDIA_API_KEY',     list: 'NVIDIA_API_KEYS',     prefix: /^nvapi-/ },
+  gemini:     { label: 'Google Gemini',         kind: 'key',     env: 'GEMINI_API_KEY',     list: 'GEMINI_API_KEYS',     prefix: /^\S{16,}$/ },
+  openrouter: { label: 'OpenRouter',            kind: 'key',     env: 'OPENROUTER_API_KEY', list: 'OPENROUTER_API_KEYS', prefix: /^sk-or-/ },
+  cloudflare: { label: 'Cloudflare API token',  kind: 'key',     prefix: /^[A-Za-z0-9_-]{30,}$/ },
+  github:     { label: 'GitHub token',          kind: 'key',     prefix: /^(gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,})$/ },
+  render:     { label: 'Render API key',        kind: 'key',     prefix: /^rnd_[A-Za-z0-9]+$/ },
+  youtube:    { label: 'YouTube cookies',       kind: 'cookies' },
+};
+
+const PROBES = {
+  github: { url: 'https://api.github.com/user', auth: 'bearer' },
+  cloudflare: { url: 'https://api.cloudflare.com/client/v4/user/tokens/verify', auth: 'bearer' },
+  render: { url: 'https://api.render.com/v1/owners?limit=1', auth: 'bearer' },
+  nvidia: { url: 'https://integrate.api.nvidia.com/v1/models', auth: 'bearer' },
+  openrouter: { url: 'https://openrouter.ai/api/v1/key', auth: 'bearer' },
+  gemini: { url: 'https://generativelanguage.googleapis.com/v1beta/models', auth: 'query' },
 };
 
 const SETTING_SPECS = {
@@ -191,11 +204,20 @@ async function ensureAppTables(db) {
          last_error TEXT,
          last_used INTEGER,
          used_count INTEGER NOT NULL DEFAULT 0,
+         checked_at INTEGER,
+         meta TEXT,
          created_at INTEGER NOT NULL,
          updated_at INTEGER NOT NULL
        )`
     )
     .run();
+  for (const ddl of ['ALTER TABLE api_keys ADD COLUMN checked_at INTEGER', 'ALTER TABLE api_keys ADD COLUMN meta TEXT']) {
+    try {
+      await db.prepare(ddl).run();
+    } catch (e) {
+      if (!/duplicate column|already exists/i.test(String(e?.message || e))) throw e;
+    }
+  }
   await db
     .prepare(
       `CREATE TABLE IF NOT EXISTS settings (
@@ -219,17 +241,117 @@ function maskKey(v) {
   return `${s.slice(0, 6)}…${s.slice(-4)}`;
 }
 
-function cleanKeyValue(v) {
-  return String(v || '').trim().replace(/^Bearer\s+/i, '').replace(/\s+/g, '');
+function cleanKeyValue(v, kind = 'key') {
+  const s = String(v || '').trim();
+  if (kind === 'cookies') return s;
+  return s.replace(/^Bearer\s+/i, '').replace(/\s+/g, '');
 }
 
 function validateKey(service, value) {
   const spec = API_SERVICES[service];
   if (!spec) return `unknown service '${service}'`;
   if (!value) return 'value required';
+  if (spec.kind === 'cookies') {
+    if (value.length < 20) return 'cookies look too short';
+    if (!cookieStats(value).count) return 'not a recognised cookies file (Netscape or JSON)';
+    return null;
+  }
   if (value.length < 8) return 'value too short';
-  if (!spec.prefix.test(value)) return `value does not look like a ${spec.label} key`;
+  if (!spec.prefix || !spec.prefix.test(value)) return `value does not look like a ${spec.label} key`;
   return null;
+}
+
+function cookieStats(raw) {
+  const text = String(raw || '');
+  const empty = { count: 0, expires_at: null, expired: false, session: false };
+  if (!text) return empty;
+
+  let items = null;
+  try {
+    const parsed = JSON.parse(text);
+    if (Array.isArray(parsed)) items = parsed;
+    else if (parsed && Array.isArray(parsed.cookies)) items = parsed.cookies;
+  } catch {
+    items = null;
+  }
+
+  let count = 0;
+  let exp = null;
+  const bump = (v) => {
+    if (typeof v === 'string') v = Date.parse(v) / 1000;
+    if (typeof v === 'number' && Number.isFinite(v) && v > 0) {
+      exp = exp === null ? v : Math.min(exp, v);
+    }
+  };
+
+  if (items) {
+    for (const c of items) {
+      if (!c || typeof c !== 'object') continue;
+      count++;
+      bump(c.expirationDate ?? c.expires ?? c.expiry);
+    }
+  } else {
+    for (const line of text.split(/\r?\n/)) {
+      if (!line || line.startsWith('#')) continue;
+      const parts = line.split('\t');
+      if (parts.length < 7) continue;
+      count++;
+      bump(Number(parts[4]));
+    }
+  }
+
+  const nowSec = Math.floor(Date.now() / 1000);
+  return {
+    count,
+    expires_at: exp ? exp * 1000 : null,
+    expired: !!(exp && exp < nowSec),
+    session: !exp && count > 0,
+  };
+}
+
+async function probeKey(service, value) {
+  const cfg = PROBES[service];
+  if (!cfg) return null;
+  const headers = { 'user-agent': 'nova-hub', accept: 'application/json' };
+  let url = cfg.url;
+  if (cfg.auth === 'bearer') headers.authorization = `Bearer ${value}`;
+  else url += `?key=${encodeURIComponent(value)}`;
+  try {
+    const res = await fetch(url, { headers });
+    const text = await res.text().catch(() => '');
+    let data = null;
+    try {
+      data = text ? JSON.parse(text) : null;
+    } catch {
+      data = null;
+    }
+    const meta = {};
+    if (service === 'github') {
+      meta.rate_limit = res.headers.get('x-ratelimit-limit');
+      meta.rate_remaining = res.headers.get('x-ratelimit-remaining');
+      meta.rate_reset = res.headers.get('x-ratelimit-reset');
+      if (data?.login) meta.account = data.login;
+    }
+    if (service === 'openrouter' && data?.data) {
+      meta.limit = data.data.limit ?? null;
+      meta.usage = data.data.usage ?? null;
+      meta.limit_remaining = data.data.limit_remaining ?? null;
+      meta.label = data.data.label || null;
+    }
+    if (service === 'nvidia' && Array.isArray(data?.data)) meta.models = data.data.length;
+    if (service === 'gemini' && Array.isArray(data?.models)) meta.models = data.models.length;
+    if (service === 'cloudflare' && data) meta.verified = !!data.success;
+    if (service === 'render' && Array.isArray(data)) meta.owners = data.length;
+
+    const ok = res.ok && (!data || data.success !== false);
+    let error = null;
+    if (!ok) {
+      error = data?.error?.message || data?.errors?.[0]?.message || data?.message || `HTTP ${res.status}`;
+    }
+    return { ok, status: res.status, error: String(error || ''), meta };
+  } catch (e) {
+    return { ok: false, status: 0, error: String(e.message || e), meta: {} };
+  }
 }
 
 async function listApiKeys(db, user) {
@@ -237,40 +359,65 @@ async function listApiKeys(db, user) {
   const res = await db
     .prepare(
       `SELECT id, service, label, priority, enabled, status, last_error,
-              last_used, used_count, created_at, updated_at, value
+              last_used, used_count, checked_at, meta, created_at, updated_at, value
          FROM api_keys WHERE user_id = ? ORDER BY service, priority, id`
     )
     .bind(user.id)
     .all();
-  return (res.results || []).map((r) => ({
-    id: r.id,
-    service: r.service,
-    label: r.label || '',
-    priority: r.priority,
-    enabled: !!r.enabled,
-    status: r.status || '',
-    last_error: r.last_error || '',
-    last_used: r.last_used || null,
-    used_count: r.used_count || 0,
-    created_at: r.created_at,
-    updated_at: r.updated_at,
-    hint: maskKey(r.value),
-    value_len: String(r.value || '').length,
-  }));
+  return (res.results || []).map((r) => {
+    const spec = API_SERVICES[r.service] || {};
+    const isCookies = spec.kind === 'cookies';
+    let meta = null;
+    try {
+      meta = r.meta ? JSON.parse(r.meta) : null;
+    } catch {
+      meta = null;
+    }
+    return {
+      id: r.id,
+      service: r.service,
+      label: r.label || '',
+      kind: spec.kind || 'key',
+      priority: r.priority,
+      enabled: !!r.enabled,
+      status: r.status || '',
+      last_error: r.last_error || '',
+      last_used: r.last_used || null,
+      used_count: r.used_count || 0,
+      checked_at: r.checked_at || null,
+      meta,
+      created_at: r.created_at,
+      updated_at: r.updated_at,
+      hint: isCookies ? '' : maskKey(r.value),
+      value_len: String(r.value || '').length,
+      cookie_stats: isCookies ? cookieStats(r.value) : null,
+    };
+  });
 }
 
 async function createApiKey(db, user, body) {
   await ensureAppTables(db);
   const service = String(body.service || '').trim().toLowerCase();
-  const value = cleanKeyValue(body.value);
+  const value = cleanKeyValue(body.value, API_SERVICES[service]?.kind);
   const err = validateKey(service, value);
   if (err) return { error: err, status: 400 };
   const ts = now();
+  let status = 'active';
+  let lastError = null;
+  let meta = null;
+  if (API_SERVICES[service].kind === 'cookies') {
+    const st = cookieStats(value);
+    meta = JSON.stringify(st);
+    if (st.expired) {
+      status = 'expired';
+      lastError = `cookies expired on ${new Date(st.expires_at).toISOString().slice(0, 10)}`;
+    }
+  }
   const res = await db
     .prepare(
       `INSERT INTO api_keys (user_id, service, label, value, priority, enabled,
-                             status, created_at, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?, 'active', ?, ?)`
+                             status, last_error, meta, checked_at, created_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
     )
     .bind(
       user.id,
@@ -279,6 +426,10 @@ async function createApiKey(db, user, body) {
       value,
       Number.isFinite(Number(body.priority)) ? Number(body.priority) : 0,
       body.enabled === false ? 0 : 1,
+      status,
+      lastError,
+      meta,
+      meta ? ts : null,
       ts,
       ts
     )
@@ -309,11 +460,23 @@ async function patchApiKey(db, user, id, body) {
     vals.push(body.enabled ? 1 : 0);
   }
   if ('value' in body && body.value !== null && String(body.value).trim() !== '') {
-    const value = cleanKeyValue(body.value);
+    const value = cleanKeyValue(body.value, API_SERVICES[row.service]?.kind);
     const err = validateKey(row.service, value);
     if (err) return { error: err, status: 400 };
-    fields.push('value = ?', "status = 'active'", 'last_error = NULL');
+    fields.push('value = ?');
     vals.push(value);
+    if (API_SERVICES[row.service]?.kind === 'cookies') {
+      const st = cookieStats(value);
+      fields.push('status = ?', 'last_error = ?', 'meta = ?', 'checked_at = ?');
+      vals.push(
+        st.expired ? 'expired' : 'active',
+        st.expired ? `cookies expired on ${new Date(st.expires_at).toISOString().slice(0, 10)}` : null,
+        JSON.stringify(st),
+        now()
+      );
+    } else {
+      fields.push("status = 'active'", 'last_error = NULL');
+    }
   }
   if ('test' in body) {
     fields.push('status = ?', 'last_error = ?');
@@ -405,7 +568,8 @@ async function keysEnvFor(db, user) {
     .all();
   const byService = {};
   for (const r of res.results || []) {
-    if (!API_SERVICES[r.service] || !r.value) continue;
+    const spec = API_SERVICES[r.service];
+    if (!spec || !spec.env || !r.value) continue;
     (byService[r.service] = byService[r.service] || []).push(r.value);
   }
   const env = {};
@@ -1258,6 +1422,15 @@ export default {
       // ---- Accounts (social cookies) ----
       if (path === '/api/accounts' && req.method === 'GET') {
         const accounts = await listAccounts(env.DB, gateUser);
+        if (accounts.length) {
+          const placeholders = accounts.map(() => '?').join(',');
+          const rows = await env.DB
+            .prepare(`SELECT id, cookies FROM accounts WHERE id IN (${placeholders})`)
+            .bind(...accounts.map((a) => a.id))
+            .all();
+          const byId = new Map((rows.results || []).map((r) => [r.id, r.cookies]));
+          for (const a of accounts) a.cookie_stats = cookieStats(byId.get(a.id));
+        }
         return withCors(json({ accounts }));
       }
 
@@ -1707,7 +1880,12 @@ export default {
         return withCors(
           json({
             keys: await listApiKeys(env.DB, gateUser),
-            services: Object.entries(API_SERVICES).map(([id, s]) => ({ id, label: s.label })),
+            services: Object.entries(API_SERVICES).map(([id, s]) => ({
+              id,
+              label: s.label,
+              kind: s.kind || 'key',
+              injected: !!s.env,
+            })),
           })
         );
       }
@@ -1716,6 +1894,63 @@ export default {
         const res = await createApiKey(env.DB, gateUser, await readBody(req));
         if (res.error) return withCors(json({ error: res.error }, res.status || 400));
         return withCors(json({ keys: await listApiKeys(env.DB, gateUser) }, 201));
+      }
+
+      if (path.startsWith('/api/keys/') && path.endsWith('/check') && req.method === 'POST') {
+        const kid = Number(path.split('/')[3]);
+        const row = await env.DB
+          .prepare('SELECT service, value FROM api_keys WHERE id = ? AND user_id = ?')
+          .bind(kid, gateUser.id)
+          .first();
+        if (!row) return withCors(json({ error: 'not found' }, 404));
+
+        const spec = API_SERVICES[row.service] || {};
+        let status = 'active';
+        let error = null;
+        let meta = {};
+
+        if (spec.kind === 'cookies') {
+          const st = cookieStats(row.value);
+          meta = st;
+          if (!st.count) {
+            status = 'invalid';
+            error = 'no cookies found in the uploaded file';
+          } else if (st.expired) {
+            status = 'expired';
+            error = `cookies expired on ${new Date(st.expires_at).toISOString().slice(0, 10)}`;
+          }
+        } else {
+          const fmtErr = validateKey(row.service, row.value);
+          if (fmtErr) {
+            status = 'invalid';
+            error = fmtErr;
+          } else {
+            const probe = await probeKey(row.service, row.value);
+            if (!probe) {
+              meta = { check: 'format only' };
+            } else {
+              meta = probe.meta || {};
+              if (probe.ok) {
+                status = 'active';
+              } else {
+                error = probe.error;
+                const msg = String(probe.error || '');
+                if (probe.status === 429 || /rate limit|quota|credit|too many/i.test(msg)) status = 'quota';
+                else if (probe.status === 401 || probe.status === 403 || /expired|invalid|unauthor/i.test(msg)) status = 'expired';
+                else status = 'error';
+              }
+            }
+          }
+        }
+
+        const ts = now();
+        await env.DB
+          .prepare('UPDATE api_keys SET status = ?, last_error = ?, meta = ?, checked_at = ?, updated_at = ? WHERE id = ?')
+          .bind(status, error, JSON.stringify(meta), ts, ts, kid)
+          .run();
+        return withCors(
+          json({ ok: status === 'active', status, error: error || null, meta, keys: await listApiKeys(env.DB, gateUser) })
+        );
       }
 
       if (path.startsWith('/api/keys/') && path.endsWith('/test') && req.method === 'POST') {
@@ -1791,9 +2026,16 @@ export default {
           const owner = await adminOwner(env.DB);
           if (!owner) return withCors(json({}));
           const s = await readSettings(env.DB, owner, { revealSecrets: true });
+          await ensureAppTables(env.DB);
+          const ytRow = await env.DB
+            .prepare(
+              "SELECT value FROM api_keys WHERE user_id = ? AND service = 'youtube' AND enabled = 1 ORDER BY priority, id LIMIT 1"
+            )
+            .bind(owner.id)
+            .first();
           return withCors(
             json({
-              yt_cookies: s.yt_cookies || null,
+              yt_cookies: ytRow?.value || s.yt_cookies || null,
               poll_min: s.poll_min ?? null,
               poll_max: s.poll_max ?? null,
               download_provider: s.download_provider || null,
@@ -1817,12 +2059,19 @@ export default {
           const row = (rows.results || [])[Number(body.index)];
           if (!row) return withCors(json({ ok: false }));
           const ok = !!body.ok;
+          const msg = String(body.error || '').slice(0, 200);
+          let status = 'active';
+          if (!ok) {
+            if (/429|rate limit|quota|credit|too many/i.test(msg)) status = 'quota';
+            else if (/401|403|expired|invalid|unauthor/i.test(msg)) status = 'expired';
+            else status = 'error';
+          }
           await env.DB
             .prepare(
               `UPDATE api_keys SET used_count = used_count + 1, last_used = ?,
-                      status = ?, last_error = ?, updated_at = ? WHERE id = ?`
+                      status = ?, last_error = ?, checked_at = ?, updated_at = ? WHERE id = ?`
             )
-            .bind(now(), ok ? 'active' : 'error', ok ? null : String(body.error || '').slice(0, 200), now(), row.id)
+            .bind(now(), status, ok ? null : msg, now(), now(), row.id)
             .run();
           return withCors(json({ ok: true }));
         }

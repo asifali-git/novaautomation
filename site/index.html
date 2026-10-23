@@ -496,6 +496,7 @@
             <div>
               <h2>API Keys</h2>
               <p class="muted">Lowest priority number is tried first. Add several keys per service for automatic fallback.</p>
+              <p class="form-hint" id="cred-summary"></p>
             </div>
           </div>
 
@@ -509,7 +510,7 @@
                 <span class="form-label">Label <span class="muted">(optional)</span></span>
                 <input id="kf-label" type="text" class="form-input" placeholder="main / backup" maxlength="40" />
               </label>
-              <label class="form-group">
+              <label class="form-group" id="kf-value-group">
                 <span class="form-label">API key</span>
                 <input id="kf-value" type="password" class="form-input" placeholder="paste key" spellcheck="false" autocomplete="new-password" required />
               </label>
@@ -518,8 +519,13 @@
                 <input id="kf-priority" type="number" class="form-input" value="0" step="1" />
               </label>
             </div>
+            <label class="form-group full" id="kf-cookies-group" style="display:none;">
+              <span class="form-label">Cookies file</span>
+              <textarea id="kf-cookies" class="form-input" rows="3" spellcheck="false" placeholder="Netscape cookies.txt or JSON export"></textarea>
+            </label>
             <div class="form-actions">
               <button class="btn primary" type="submit" id="kf-submit">Add key</button>
+              <button class="btn ghost" type="button" id="kf-cancel" style="display:none;">Cancel edit</button>
             </div>
           </form>
 
@@ -532,6 +538,7 @@
                   <th scope="col">Key</th>
                   <th scope="col">Priority</th>
                   <th scope="col">Status</th>
+                  <th scope="col">Health</th>
                   <th scope="col">Used</th>
                   <th scope="col"><span class="sr-only">Actions</span></th>
                 </tr>
@@ -542,6 +549,70 @@
               <div class="empty-icon">🔑</div>
               <p>No API keys yet</p>
               <p class="muted">Add a key above — the pipeline picks it up on the next run.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2>Social Cookies</h2>
+              <p class="muted">Facebook, Instagram and TikTok accounts used for uploads. Expiry is read from the cookies file.</p>
+            </div>
+          </div>
+
+          <form id="cookie-form" class="form pro-form" autocomplete="off">
+            <div class="form-row">
+              <label class="form-group">
+                <span class="form-label">Platform</span>
+                <select id="cf-platform" class="form-input" required>
+                  <option value="facebook">Facebook</option>
+                  <option value="instagram">Instagram</option>
+                  <option value="tiktok">TikTok</option>
+                </select>
+              </label>
+              <label class="form-group">
+                <span class="form-label">Account <span class="muted">(optional)</span></span>
+                <input id="cf-username" type="text" class="form-input" placeholder="handle or page name" maxlength="60" />
+              </label>
+              <label class="form-group">
+                <span class="form-label">Proxy <span class="muted">(optional)</span></span>
+                <input id="cf-proxy" type="text" class="form-input" placeholder="http://user:pass@host:port" />
+              </label>
+              <label class="form-group">
+                <span class="form-label">Country <span class="muted">(optional)</span></span>
+                <input id="cf-country" type="text" class="form-input" placeholder="US" maxlength="3" />
+              </label>
+            </div>
+            <label class="form-group full">
+              <span class="form-label">Cookies file</span>
+              <textarea id="cf-cookies" class="form-input" rows="3" spellcheck="false" placeholder="Netscape cookies.txt or JSON export"></textarea>
+              <span class="form-hint">Stored in D1 and never shown again. Updating replaces the cookies for that account.</span>
+            </label>
+            <div class="form-actions">
+              <button class="btn primary" type="submit" id="cf-submit">Save account</button>
+              <button class="btn ghost" type="button" id="cf-cancel" style="display:none;">Cancel edit</button>
+            </div>
+          </form>
+
+          <div class="table-wrap">
+            <table class="data-table" id="cookie-table">
+              <thead>
+                <tr>
+                  <th scope="col">Platform</th>
+                  <th scope="col">Account</th>
+                  <th scope="col">Cookies</th>
+                  <th scope="col">Expires</th>
+                  <th scope="col">Status</th>
+                  <th scope="col"><span class="sr-only">Actions</span></th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+            <div class="empty-state" id="cookie-empty">
+              <div class="empty-icon">🍪</div>
+              <p>No social accounts yet</p>
+              <p class="muted">Upload a cookies file above to add one.</p>
             </div>
           </div>
         </div>
@@ -588,9 +659,9 @@
             </div>
 
             <label class="form-group full">
-              <span class="form-label">YouTube cookies <span class="muted" id="sf-cookies-state"></span></span>
+              <span class="form-label">Fallback YouTube cookies <span class="muted" id="sf-cookies-state"></span></span>
               <textarea id="sf-cookies" class="form-input" rows="3" spellcheck="false" placeholder="Paste Netscape cookies.txt so the Render poller can read YouTube without bot-checks"></textarea>
-              <span class="form-hint">Stored in D1. Leave blank to keep the saved cookies; use Clear cookies to remove them.</span>
+              <span class="form-hint">Used only when no YouTube cookies entry exists in API Keys above. Leave blank to keep the saved value.</span>
             </label>
 
             <div class="form-actions">

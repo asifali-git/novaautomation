@@ -1985,6 +1985,18 @@ async function startApp(user) {
 
 /* ===== Settings: API keys + service config ===== */
 const settingsState = { keys: [], services: [], settings: {}, specs: {} };
+const cookieState = { accounts: [], editing: null };
+
+function credDate(ms) {
+  if (!ms) return '—';
+  return new Date(ms).toLocaleDateString();
+}
+
+function credNum(v) {
+  const n = Number(v);
+  if (!Number.isFinite(n)) return String(v);
+  return n >= 1000 ? n.toLocaleString() : String(n);
+}
 
 function settingsActionBtn(text, act, id) {
   const b = document.createElement('button');
@@ -1996,6 +2008,48 @@ function settingsActionBtn(text, act, id) {
   return b;
 }
 
+function keyServiceKind() {
+  const sel = $('kf-service');
+  return settingsState.services.find(s => s.id === sel?.value)?.kind || 'key';
+}
+
+function syncKeyForm() {
+  const cookies = keyServiceKind() === 'cookies';
+  if ($('kf-value-group')) $('kf-value-group').style.display = cookies ? 'none' : '';
+  if ($('kf-cookies-group')) $('kf-cookies-group').style.display = cookies ? '' : 'none';
+  if ($('kf-value')) $('kf-value').required = !cookies;
+  if ($('kf-submit')) {
+    $('kf-submit').textContent = keyEditingId ? (cookies ? 'Update cookies' : 'Update key') : cookies ? 'Add cookies' : 'Add key';
+  }
+}
+
+let keyEditingId = null;
+
+function resetKeyForm() {
+  keyEditingId = null;
+  if ($('kf-value')) $('kf-value').value = '';
+  if ($('kf-cookies')) $('kf-cookies').value = '';
+  if ($('kf-label')) $('kf-label').value = '';
+  if ($('kf-priority')) $('kf-priority').value = '0';
+  if ($('kf-service')) $('kf-service').disabled = false;
+  if ($('kf-cancel')) $('kf-cancel').style.display = 'none';
+  syncKeyForm();
+}
+
+function editKey(k) {
+  keyEditingId = k.id;
+  if ($('kf-service')) {
+    $('kf-service').value = k.service;
+    $('kf-service').disabled = true;
+  }
+  if ($('kf-label')) $('kf-label').value = k.label || '';
+  if ($('kf-priority')) $('kf-priority').value = String(k.priority);
+  if ($('kf-value')) $('kf-value').value = '';
+  if ($('kf-cookies')) $('kf-cookies').value = '';
+  if ($('kf-cancel')) $('kf-cancel').style.display = '';
+  syncKeyForm();
+}
+
 function renderKeyServices() {
   const sel = $('kf-service');
   if (!sel) return;
@@ -2004,10 +2058,88 @@ function renderKeyServices() {
   for (const s of settingsState.services) {
     const opt = document.createElement('option');
     opt.value = s.id;
-    opt.textContent = s.label;
+    opt.textContent = s.kind === 'cookies' ? `${s.label} (file)` : s.label;
     sel.appendChild(opt);
   }
   if (settingsState.services.some(s => s.id === current)) sel.value = current;
+  syncKeyForm();
+}
+
+function keyHealthText(k) {
+  if (k.kind === 'cookies') {
+    const st = k.cookie_stats || {};
+    const bits = [];
+    if (st.count) bits.push(`${st.count} cookies`);
+    if (st.expires_at) bits.push(`expires ${credDate(st.expires_at)}`);
+    else if (st.count) bits.push('session only');
+    return bits.join(' · ') || '—';
+  }
+  const m = k.meta || {};
+  const bits = [];
+  if (m.limit_remaining !== null && m.limit_remaining !== undefined) bits.push(`left ${credNum(m.limit_remaining)}`);
+  else if (m.limit !== null && m.limit !== undefined && m.limit !== '') bits.push(`limit ${credNum(m.limit)}`);
+  if (m.usage !== null && m.usage !== undefined) bits.push(`used ${credNum(m.usage)}`);
+  if (m.rate_remaining) bits.push(`rate ${m.rate_remaining}`);
+  if (m.models) bits.push(`${m.models} models`);
+  if (m.owners) bits.push(`${m.owners} owners`);
+  if (m.account) bits.push(String(m.account));
+  if (m.verified === true) bits.push('verified');
+  if (m.check) bits.push(m.check);
+  return bits.join(' · ') || '—';
+}
+
+const KEY_BADGES = {
+  active: ['ok', 'active'],
+  expired: ['err', 'expired'],
+  quota: ['warn', 'limit hit'],
+  invalid: ['warn', 'invalid'],
+  error: ['err', 'error'],
+};
+
+function renderCredSummary() {
+  const el = $('cred-summary');
+  if (!el) return;
+  let expired = 0;
+  let quota = 0;
+  let failing = 0;
+  let disabled = 0;
+  let total = 0;
+
+  for (const k of settingsState.keys) {
+    total++;
+    if (!k.enabled) {
+      disabled++;
+      continue;
+    }
+    const st = String(k.status || 'active').toLowerCase();
+    if (st === 'expired' || k.cookie_stats?.expired) expired++;
+    else if (st === 'quota') quota++;
+    else if (st !== 'active') failing++;
+  }
+  for (const a of cookieState.accounts) {
+    total++;
+    const st = String(a.status || 'active').toLowerCase();
+    if (a.cookie_stats?.expired || st === 'expired') expired++;
+    else if (st !== 'active') failing++;
+  }
+
+  el.textContent = '';
+  el.style.color = '';
+  if (!total) {
+    el.textContent = 'No credentials stored yet.';
+    return;
+  }
+  if (!expired && !quota && !failing) {
+    el.textContent = `${total} credential${total === 1 ? '' : 's'} ready`;
+    return;
+  }
+  const parts = [];
+  if (expired) parts.push(`${expired} expired`);
+  if (quota) parts.push(`${quota} at limit`);
+  if (failing) parts.push(`${failing} failing`);
+  if (disabled) parts.push(`${disabled} disabled`);
+  el.textContent = `Needs attention: ${parts.join(' · ')}`;
+  el.style.color = 'var(--red)';
 }
 
 function renderKeys() {
@@ -2034,7 +2166,7 @@ function renderKeys() {
 
     const key = document.createElement('td');
     key.className = 'key-mono';
-    key.textContent = k.hint;
+    key.textContent = k.kind === 'cookies' ? `${k.value_len} chars` : k.hint;
     cells.push(key);
 
     const pri = document.createElement('td');
@@ -2045,16 +2177,19 @@ function renderKeys() {
     const badge = document.createElement('span');
     const [cls, text] = !k.enabled
       ? ['idle', 'disabled']
-      : k.status === 'error'
-        ? ['err', 'error']
-        : k.status === 'invalid'
-          ? ['warn', 'check failed']
-          : ['ok', 'active'];
+      : KEY_BADGES[String(k.status || '').toLowerCase()] || ['ok', 'active'];
     badge.className = `badge ${cls}`;
     badge.textContent = text;
     if (k.last_error) badge.title = k.last_error;
     status.appendChild(badge);
     cells.push(status);
+
+    const health = document.createElement('td');
+    health.className = 'key-mono';
+    health.textContent = keyHealthText(k);
+    if (k.last_error && k.status !== 'active') health.title = k.last_error;
+    else if (k.checked_at) health.title = `Checked ${new Date(k.checked_at).toLocaleString()}`;
+    cells.push(health);
 
     const used = document.createElement('td');
     used.textContent = k.used_count ? `${k.used_count}×` : '—';
@@ -2065,7 +2200,8 @@ function renderKeys() {
     actions.className = 'actions-cell';
     actions.append(
       settingsActionBtn(k.enabled ? 'Disable' : 'Enable', 'toggle', k.id),
-      settingsActionBtn('Test', 'test', k.id),
+      settingsActionBtn('Check', 'check', k.id),
+      settingsActionBtn('Update', 'edit', k.id),
       settingsActionBtn('Delete', 'del', k.id)
     );
     cells.push(actions);
@@ -2073,7 +2209,95 @@ function renderKeys() {
     tr.append(...cells);
     tbody.appendChild(tr);
   }
+  renderCredSummary();
 }
+
+function renderCookies() {
+  const table = $('cookie-table');
+  const empty = $('cookie-empty');
+  if (!table || !empty) return;
+  const tbody = table.querySelector('tbody');
+  tbody.innerHTML = '';
+  const rows = cookieState.accounts;
+  table.style.display = rows.length ? '' : 'none';
+  empty.style.display = rows.length ? 'none' : '';
+
+  for (const a of rows) {
+    const tr = document.createElement('tr');
+    const st = a.cookie_stats || {};
+
+    const platform = document.createElement('td');
+    platform.textContent = String(a.platform || '').replace(/^./, c => c.toUpperCase());
+    tr.appendChild(platform);
+
+    const account = document.createElement('td');
+    account.textContent = a.username || '—';
+    tr.appendChild(account);
+
+    const cookies = document.createElement('td');
+    cookies.className = 'key-mono';
+    cookies.textContent = st.count ? `${st.count} cookies` : 'none';
+    tr.appendChild(cookies);
+
+    const expires = document.createElement('td');
+    expires.className = 'key-mono';
+    expires.textContent = st.expires_at ? credDate(st.expires_at) : st.count ? 'session' : '—';
+    tr.appendChild(expires);
+
+    const status = document.createElement('td');
+    const badge = document.createElement('span');
+    const [cls, text] = st.expired
+      ? ['err', 'expired']
+      : String(a.status || 'active') !== 'active'
+        ? ['warn', String(a.status)]
+        : ['ok', 'active'];
+    badge.className = `badge ${cls}`;
+    badge.textContent = text;
+    if (st.expired && st.expires_at) badge.title = `Expired on ${credDate(st.expires_at)}`;
+    status.appendChild(badge);
+    tr.appendChild(status);
+
+    const actions = document.createElement('td');
+    actions.className = 'actions-cell';
+    actions.append(settingsActionBtn('Update', 'edit', a.id), settingsActionBtn('Delete', 'del', a.id));
+    tr.appendChild(actions);
+
+    tbody.appendChild(tr);
+  }
+  renderCredSummary();
+}
+
+async function loadCookies() {
+  try {
+    const r = await api('/api/accounts');
+    cookieState.accounts = r.accounts || [];
+  } catch (_) {
+    cookieState.accounts = [];
+  }
+  renderCookies();
+}
+
+function fillCookieForm(account) {
+  cookieState.editing = account ? account.id : null;
+  const sel = $('cf-platform');
+  if (sel) {
+    const p = account ? String(account.platform || 'facebook').toLowerCase() : 'facebook';
+    if (!Array.from(sel.options).some(o => o.value === p)) {
+      const opt = document.createElement('option');
+      opt.value = p;
+      opt.textContent = p;
+      sel.appendChild(opt);
+    }
+    sel.value = p;
+  }
+  if ($('cf-username')) $('cf-username').value = account ? account.username || '' : '';
+  if ($('cf-proxy')) $('cf-proxy').value = account ? account.proxy || '' : '';
+  if ($('cf-country')) $('cf-country').value = account ? account.country || '' : '';
+  if ($('cf-cookies')) $('cf-cookies').value = '';
+  if ($('cf-submit')) $('cf-submit').textContent = account ? 'Update cookies' : 'Save account';
+  if ($('cf-cancel')) $('cf-cancel').style.display = account ? '' : 'none';
+}
+
 
 function fillSettingsForm() {
   const s = settingsState.settings || {};
@@ -2102,6 +2326,7 @@ async function loadSettings() {
     renderKeys();
     fillSettingsForm();
     loadDetectorHealth();
+    loadCookies();
   } catch (e) {
     endLoad(empty);
     showLoadError(empty, "Couldn't load settings.", loadSettings, $('keys-table'));
@@ -2165,34 +2390,44 @@ async function loadDetectorHealth() {
   );
 }
 
+$('kf-service')?.addEventListener('change', syncKeyForm);
+
+$('kf-cancel')?.addEventListener('click', () => {
+  resetKeyForm();
+  syncKeyForm();
+});
+
 $('key-form')?.addEventListener('submit', async (e) => {
   e.preventDefault();
   const btn = $('kf-submit');
+  const isCookies = keyServiceKind() === 'cookies';
+  const editing = keyEditingId;
   const payload = {
     service: $('kf-service').value,
     label: $('kf-label').value.trim(),
-    value: $('kf-value').value,
+    value: isCookies ? $('kf-cookies').value : $('kf-value').value,
     priority: Number($('kf-priority').value) || 0,
   };
   if (!payload.value.trim()) {
-    toast('Paste an API key first', 'err');
+    toast(editing ? 'Paste the new value first' : isCookies ? 'Paste the cookies file first' : 'Paste an API key first', 'err');
     return;
   }
   btn.disabled = true;
-  btn.textContent = 'Adding…';
+  btn.textContent = editing ? 'Saving…' : 'Adding…';
   try {
-    const r = await api('/api/keys', { method: 'POST', body: JSON.stringify(payload) });
+    const r = editing
+      ? await api(`/api/keys/${editing}`, { method: 'PATCH', body: JSON.stringify(payload) })
+      : await api('/api/keys', { method: 'POST', body: JSON.stringify(payload) });
     settingsState.keys = r.keys || [];
     renderKeys();
-    $('kf-value').value = '';
-    $('kf-label').value = '';
-    $('kf-priority').value = '0';
-    toast('API key added');
+    const wasEditing = !!editing;
+    resetKeyForm();
+    toast(wasEditing ? (isCookies ? 'Cookies updated' : 'Key updated') : isCookies ? 'Cookies saved' : 'API key added');
   } catch (err) {
     toast(err.message, 'err');
   } finally {
     btn.disabled = false;
-    btn.textContent = 'Add key';
+    syncKeyForm();
   }
 });
 
@@ -2207,15 +2442,85 @@ $('keys-table')?.addEventListener('click', async (e) => {
       if (!k) return;
       await api(`/api/keys/${id}`, { method: 'PATCH', body: JSON.stringify({ enabled: !k.enabled }) });
       toast(k.enabled ? 'Key disabled' : 'Key enabled');
-    } else if (act === 'test') {
-      const r = await api(`/api/keys/${id}/test`, { method: 'POST' });
-      toast(r.ok ? 'Key format looks valid' : `Check failed: ${r.error}`, r.ok ? 'ok' : 'err');
+    } else if (act === 'edit') {
+      const k = settingsState.keys.find(x => x.id === id);
+      if (!k) return;
+      editKey(k);
+      $('kf-label')?.focus();
+    } else if (act === 'check') {
+      const r = await api(`/api/keys/${id}/check`, { method: 'POST' });
+      const health = keyHealthText((r.keys || []).find(x => x.id === id) || { meta: r.meta });
+      toast(
+        r.ok ? `Key OK${health && health !== '—' ? ' · ' + health : ''}` : `${r.status}: ${r.error || 'check failed'}`,
+        r.ok ? 'ok' : 'err'
+      );
     } else if (act === 'del') {
       if (!confirm('Delete this API key?')) return;
       await api(`/api/keys/${id}`, { method: 'DELETE' });
       toast('Key deleted');
     }
     await reloadKeys();
+  } catch (err) {
+    toast(err.message, 'err');
+  }
+});
+
+$('cookie-form')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = $('cf-submit');
+  const cookies = $('cf-cookies').value.trim();
+  if (!cookies) {
+    toast('Paste the cookies file first', 'err');
+    return;
+  }
+  const payload = {
+    platform: $('cf-platform').value,
+    username: $('cf-username').value.trim(),
+    proxy: $('cf-proxy').value.trim(),
+    country: $('cf-country').value.trim(),
+    cookies,
+  };
+  const editing = cookieState.editing;
+  btn.disabled = true;
+  btn.textContent = 'Saving…';
+  try {
+    if (editing) {
+      await api(`/api/accounts/${editing}`, { method: 'PATCH', body: JSON.stringify(payload) });
+      toast('Cookies updated');
+    } else {
+      await api('/api/accounts', { method: 'POST', body: JSON.stringify(payload) });
+      toast('Account added');
+    }
+    fillCookieForm(null);
+    await loadCookies();
+  } catch (err) {
+    toast(err.message, 'err');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = cookieState.editing ? 'Update cookies' : 'Save account';
+  }
+});
+
+$('cf-cancel')?.addEventListener('click', () => fillCookieForm(null));
+
+$('cookie-table')?.addEventListener('click', async (e) => {
+  const btn = e.target.closest('button[data-act]');
+  if (!btn) return;
+  const id = Number(btn.dataset.id);
+  const act = btn.dataset.act;
+  try {
+    if (act === 'edit') {
+      const acc = cookieState.accounts.find(a => a.id === id);
+      if (!acc) return;
+      fillCookieForm(acc);
+      $('cf-cookies')?.focus();
+    } else if (act === 'del') {
+      if (!confirm('Delete this account and its cookies?')) return;
+      await api(`/api/accounts/${id}`, { method: 'DELETE' });
+      toast('Account deleted');
+      if (cookieState.editing === id) fillCookieForm(null);
+      await loadCookies();
+    }
   } catch (err) {
     toast(err.message, 'err');
   }

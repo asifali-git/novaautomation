@@ -128,6 +128,8 @@ CREATE TABLE IF NOT EXISTS api_keys (
   last_error TEXT,
   last_used INTEGER,
   used_count INTEGER NOT NULL DEFAULT 0,
+  checked_at INTEGER,
+  meta TEXT,
   created_at INTEGER NOT NULL,
   updated_at INTEGER NOT NULL
 );
