@@ -2366,7 +2366,7 @@ function fillSettingsForm() {
   if ($('sf-quality')) $('sf-quality').value = s.video_quality ?? '';
   if ($('sf-pollmin')) $('sf-pollmin').value = s.poll_min ?? '';
   if ($('sf-pollmax')) $('sf-pollmax').value = s.poll_max ?? '';
-  if ($('sf-maxsecs')) $('sf-maxsecs').value = s.max_secs ?? '';
+  if ($('sf-maxsecs')) $('sf-maxsecs').value = s.max_secs ?? 60;
   if ($('sf-cookies')) $('sf-cookies').value = '';
   if ($('sf-cookies-state')) {
     $('sf-cookies-state').textContent = s.yt_cookies_set ? `(saved · ${s.yt_cookies_len} chars)` : '(none)';
