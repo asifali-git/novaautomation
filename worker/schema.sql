@@ -114,3 +114,30 @@ CREATE TABLE IF NOT EXISTS oauth_states (
   user_id INTEGER NOT NULL,
   created_at INTEGER NOT NULL
 );
+
+-- Service API keys (rotation: lowest priority first) + per-user settings
+CREATE TABLE IF NOT EXISTS api_keys (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  service TEXT NOT NULL,
+  label TEXT,
+  value TEXT NOT NULL,
+  priority INTEGER NOT NULL DEFAULT 0,
+  enabled INTEGER NOT NULL DEFAULT 1,
+  status TEXT,
+  last_error TEXT,
+  last_used INTEGER,
+  used_count INTEGER NOT NULL DEFAULT 0,
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_api_keys_scope ON api_keys(user_id, service, priority);
+
+CREATE TABLE IF NOT EXISTS settings (
+  user_id INTEGER NOT NULL,
+  key TEXT NOT NULL,
+  value TEXT,
+  updated_at INTEGER NOT NULL,
+  PRIMARY KEY (user_id, key)
+);

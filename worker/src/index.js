@@ -155,6 +155,276 @@ function normalizeSourceUrl(url) {
   return u.split('?')[0].split('#')[0].replace(/\/+$/, '') + '/videos';
 }
 
+const API_SERVICES = {
+  fastsaver:  { label: 'FastSaver download',    env: 'FASTSAVER_API_KEY',  list: 'FASTSAVER_API_KEYS',  prefix: /^fs_sk_/ },
+  ytapi:      { label: 'ytapi download server', env: 'YT_API_KEY',         list: 'YT_API_KEYS',         prefix: /^\S{8,}$/ },
+  nvidia:     { label: 'NVIDIA NIM',            env: 'NVIDIA_API_KEY',     list: 'NVIDIA_API_KEYS',     prefix: /^nvapi-/ },
+  gemini:     { label: 'Google Gemini',         env: 'GEMINI_API_KEY',     list: 'GEMINI_API_KEYS',     prefix: /^\S{16,}$/ },
+  openrouter: { label: 'OpenRouter',            env: 'OPENROUTER_API_KEY', list: 'OPENROUTER_API_KEYS', prefix: /^sk-or-/ },
+};
+
+const SETTING_SPECS = {
+  download_provider: { type: 'enum', values: ['fastsaver', 'ytdlp'] },
+  analyze_provider:  { type: 'enum', values: ['auto', 'nvidia', 'gemini', 'openrouter'] },
+  video_quality:     { type: 'int', min: 360, max: 2160 },
+  poll_min:          { type: 'int', min: 5, max: 300 },
+  poll_max:          { type: 'int', min: 5, max: 600 },
+  yt_cookies:        { type: 'text', max: 200000, secret: true },
+};
+
+const PUBLIC_SETTINGS = ['download_provider', 'analyze_provider', 'video_quality', 'poll_min', 'poll_max'];
+
+let appTablesReady = false;
+async function ensureAppTables(db) {
+  if (appTablesReady) return;
+  await db
+    .prepare(
+      `CREATE TABLE IF NOT EXISTS api_keys (
+         id INTEGER PRIMARY KEY AUTOINCREMENT,
+         user_id INTEGER NOT NULL,
+         service TEXT NOT NULL,
+         label TEXT,
+         value TEXT NOT NULL,
+         priority INTEGER NOT NULL DEFAULT 0,
+         enabled INTEGER NOT NULL DEFAULT 1,
+         status TEXT,
+         last_error TEXT,
+         last_used INTEGER,
+         used_count INTEGER NOT NULL DEFAULT 0,
+         created_at INTEGER NOT NULL,
+         updated_at INTEGER NOT NULL
+       )`
+    )
+    .run();
+  await db
+    .prepare(
+      `CREATE TABLE IF NOT EXISTS settings (
+         user_id INTEGER NOT NULL,
+         key TEXT NOT NULL,
+         value TEXT,
+         updated_at INTEGER NOT NULL,
+         PRIMARY KEY (user_id, key)
+       )`
+    )
+    .run();
+  await db
+    .prepare('CREATE INDEX IF NOT EXISTS idx_api_keys_scope ON api_keys(user_id, service, priority)')
+    .run();
+  appTablesReady = true;
+}
+
+function maskKey(v) {
+  const s = String(v || '');
+  if (s.length <= 10) return '••••';
+  return `${s.slice(0, 6)}…${s.slice(-4)}`;
+}
+
+function cleanKeyValue(v) {
+  return String(v || '').trim().replace(/^Bearer\s+/i, '').replace(/\s+/g, '');
+}
+
+function validateKey(service, value) {
+  const spec = API_SERVICES[service];
+  if (!spec) return `unknown service '${service}'`;
+  if (!value) return 'value required';
+  if (value.length < 8) return 'value too short';
+  if (!spec.prefix.test(value)) return `value does not look like a ${spec.label} key`;
+  return null;
+}
+
+async function listApiKeys(db, user) {
+  await ensureAppTables(db);
+  const res = await db
+    .prepare(
+      `SELECT id, service, label, priority, enabled, status, last_error,
+              last_used, used_count, created_at, updated_at, value
+         FROM api_keys WHERE user_id = ? ORDER BY service, priority, id`
+    )
+    .bind(user.id)
+    .all();
+  return (res.results || []).map((r) => ({
+    id: r.id,
+    service: r.service,
+    label: r.label || '',
+    priority: r.priority,
+    enabled: !!r.enabled,
+    status: r.status || '',
+    last_error: r.last_error || '',
+    last_used: r.last_used || null,
+    used_count: r.used_count || 0,
+    created_at: r.created_at,
+    updated_at: r.updated_at,
+    hint: maskKey(r.value),
+    value_len: String(r.value || '').length,
+  }));
+}
+
+async function createApiKey(db, user, body) {
+  await ensureAppTables(db);
+  const service = String(body.service || '').trim().toLowerCase();
+  const value = cleanKeyValue(body.value);
+  const err = validateKey(service, value);
+  if (err) return { error: err, status: 400 };
+  const ts = now();
+  const res = await db
+    .prepare(
+      `INSERT INTO api_keys (user_id, service, label, value, priority, enabled,
+                             status, created_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, 'active', ?, ?)`
+    )
+    .bind(
+      user.id,
+      service,
+      String(body.label || '').trim() || API_SERVICES[service].label,
+      value,
+      Number.isFinite(Number(body.priority)) ? Number(body.priority) : 0,
+      body.enabled === false ? 0 : 1,
+      ts,
+      ts
+    )
+    .run();
+  return { id: res.meta?.last_row_id };
+}
+
+async function patchApiKey(db, user, id, body) {
+  await ensureAppTables(db);
+  const row = await db
+    .prepare('SELECT id, service FROM api_keys WHERE id = ? AND user_id = ?')
+    .bind(id, user.id)
+    .first();
+  if (!row) return { error: 'not found', status: 404 };
+  const fields = [];
+  const vals = [];
+  if ('label' in body) {
+    fields.push('label = ?');
+    vals.push(String(body.label || '').trim());
+  }
+  if ('priority' in body) {
+    const p = Number(body.priority);
+    fields.push('priority = ?');
+    vals.push(Number.isFinite(p) ? p : 0);
+  }
+  if ('enabled' in body) {
+    fields.push('enabled = ?');
+    vals.push(body.enabled ? 1 : 0);
+  }
+  if ('value' in body && body.value !== null && String(body.value).trim() !== '') {
+    const value = cleanKeyValue(body.value);
+    const err = validateKey(row.service, value);
+    if (err) return { error: err, status: 400 };
+    fields.push('value = ?', "status = 'active'", 'last_error = NULL');
+    vals.push(value);
+  }
+  if ('test' in body) {
+    fields.push('status = ?', 'last_error = ?');
+    vals.push(body.test ? 'active' : 'invalid', body.test ? null : 'format check failed');
+  }
+  if (!fields.length) return { id };
+  fields.push('updated_at = ?');
+  vals.push(now(), id, user.id);
+  await db
+    .prepare(`UPDATE api_keys SET ${fields.join(', ')} WHERE id = ? AND user_id = ?`)
+    .bind(...vals)
+    .run();
+  return { id };
+}
+
+async function deleteApiKey(db, user, id) {
+  await ensureAppTables(db);
+  const res = await db.prepare('DELETE FROM api_keys WHERE id = ? AND user_id = ?').bind(id, user.id).run();
+  return res.meta?.changes > 0;
+}
+
+async function readSettings(db, user, { revealSecrets = false } = {}) {
+  await ensureAppTables(db);
+  const res = await db.prepare('SELECT key, value FROM settings WHERE user_id = ?').bind(user.id).all();
+  const out = {};
+  for (const r of res.results || []) {
+    const spec = SETTING_SPECS[r.key];
+    if (!spec) continue;
+    if (spec.secret && !revealSecrets) {
+      out[`${r.key}_set`] = !!r.value;
+      out[`${r.key}_len`] = String(r.value || '').length;
+    } else if (spec.type === 'int') {
+      const n = Number(r.value);
+      if (Number.isFinite(n)) out[r.key] = n;
+    } else if (spec.type === 'enum') {
+      if (spec.values.includes(r.value)) out[r.key] = r.value;
+    } else {
+      out[r.key] = r.value;
+    }
+  }
+  return out;
+}
+
+async function writeSettings(db, user, body) {
+  await ensureAppTables(db);
+  const saved = [];
+  for (const [key, raw] of Object.entries(body || {})) {
+    const spec = SETTING_SPECS[key];
+    if (!spec) return { error: `unknown setting '${key}'`, status: 400 };
+    if (raw === null) {
+      await db.prepare('DELETE FROM settings WHERE user_id = ? AND key = ?').bind(user.id, key).run();
+      saved.push(key);
+      continue;
+    }
+    let value = String(raw);
+    if (spec.type === 'int') {
+      const n = Number(raw);
+      if (!Number.isInteger(n) || n < spec.min || n > spec.max) {
+        return { error: `${key} must be a whole number ${spec.min}-${spec.max}`, status: 400 };
+      }
+      value = String(n);
+    } else if (spec.type === 'enum') {
+      if (!spec.values.includes(value)) {
+        return { error: `${key} must be one of: ${spec.values.join(', ')}`, status: 400 };
+      }
+    } else {
+      if (value.length > spec.max) return { error: `${key} is too long`, status: 400 };
+      if (spec.secret && !value.trim()) continue;
+    }
+    await db
+      .prepare(
+        `INSERT INTO settings (user_id, key, value, updated_at) VALUES (?, ?, ?, ?)
+         ON CONFLICT(user_id, key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at`
+      )
+      .bind(user.id, key, value, now())
+      .run();
+    saved.push(key);
+  }
+  return { saved };
+}
+
+async function keysEnvFor(db, user) {
+  await ensureAppTables(db);
+  const res = await db
+    .prepare(
+      'SELECT service, value FROM api_keys WHERE user_id = ? AND enabled = 1 ORDER BY service, priority, id'
+    )
+    .bind(user.id)
+    .all();
+  const byService = {};
+  for (const r of res.results || []) {
+    if (!API_SERVICES[r.service] || !r.value) continue;
+    (byService[r.service] = byService[r.service] || []).push(r.value);
+  }
+  const env = {};
+  for (const [service, values] of Object.entries(byService)) {
+    const spec = API_SERVICES[service];
+    env[spec.env] = values[0];
+    env[spec.list] = values.join(',');
+  }
+  const all = await readSettings(db, user, { revealSecrets: true });
+  const settings = {};
+  for (const k of PUBLIC_SETTINGS) if (k in all) settings[k] = all[k];
+  return { env, settings };
+}
+
+async function adminOwner(db) {
+  const adm = await db.prepare('SELECT id FROM users WHERE is_admin = 1 ORDER BY id LIMIT 1').first();
+  return adm ? { id: adm.id } : null;
+}
+
 async function createTask(db, body) {
   const url = normalizeSourceUrl(body.source_url);
   if (!url) throw new Error('source_url required');
@@ -1432,9 +1702,130 @@ export default {
         }
       }
 
+      // ---- API keys + service settings ----
+      if (path === '/api/keys' && req.method === 'GET') {
+        return withCors(
+          json({
+            keys: await listApiKeys(env.DB, gateUser),
+            services: Object.entries(API_SERVICES).map(([id, s]) => ({ id, label: s.label })),
+          })
+        );
+      }
+
+      if (path === '/api/keys' && req.method === 'POST') {
+        const res = await createApiKey(env.DB, gateUser, await readBody(req));
+        if (res.error) return withCors(json({ error: res.error }, res.status || 400));
+        return withCors(json({ keys: await listApiKeys(env.DB, gateUser) }, 201));
+      }
+
+      if (path.startsWith('/api/keys/') && path.endsWith('/test') && req.method === 'POST') {
+        const kid = Number(path.split('/')[3]);
+        const row = await env.DB
+          .prepare('SELECT service, value FROM api_keys WHERE id = ? AND user_id = ?')
+          .bind(kid, gateUser.id)
+          .first();
+        if (!row) return withCors(json({ error: 'not found' }, 404));
+        const err = validateKey(row.service, row.value);
+        await env.DB
+          .prepare('UPDATE api_keys SET status = ?, last_error = ?, updated_at = ? WHERE id = ?')
+          .bind(err ? 'invalid' : 'active', err || null, now(), kid)
+          .run();
+        return withCors(json({ ok: !err, error: err || null, keys: await listApiKeys(env.DB, gateUser) }));
+      }
+
+      const kmatch = path.match(/^\/api\/keys\/(\d+)$/);
+      if (kmatch && req.method === 'PATCH') {
+        const res = await patchApiKey(env.DB, gateUser, Number(kmatch[1]), await readBody(req));
+        if (res.error) return withCors(json({ error: res.error }, res.status || 400));
+        return withCors(json({ keys: await listApiKeys(env.DB, gateUser) }));
+      }
+
+      if (kmatch && req.method === 'DELETE') {
+        const gone = await deleteApiKey(env.DB, gateUser, Number(kmatch[1]));
+        if (!gone) return withCors(json({ error: 'not found' }, 404));
+        return withCors(json({ keys: await listApiKeys(env.DB, gateUser) }));
+      }
+
+      if (path === '/api/settings' && req.method === 'GET') {
+        return withCors(
+          json({
+            settings: await readSettings(env.DB, gateUser),
+            specs: {
+              download_provider: SETTING_SPECS.download_provider.values,
+              analyze_provider: SETTING_SPECS.analyze_provider.values,
+              video_quality: [SETTING_SPECS.video_quality.min, SETTING_SPECS.video_quality.max],
+              poll_min: [SETTING_SPECS.poll_min.min, SETTING_SPECS.poll_min.max],
+              poll_max: [SETTING_SPECS.poll_max.min, SETTING_SPECS.poll_max.max],
+            },
+          })
+        );
+      }
+
+      if (path === '/api/settings' && req.method === 'PUT') {
+        const body = await readBody(req);
+        if ('poll_min' in body || 'poll_max' in body) {
+          const cur = await readSettings(env.DB, gateUser);
+          const mn = 'poll_min' in body ? Number(body.poll_min) : cur.poll_min ?? 8;
+          const mx = 'poll_max' in body ? Number(body.poll_max) : cur.poll_max ?? 12;
+          if (Number.isFinite(mn) && Number.isFinite(mx) && mn > mx) {
+            return withCors(json({ error: 'poll_min cannot be greater than poll_max' }, 400));
+          }
+        }
+        const res = await writeSettings(env.DB, gateUser, body);
+        if (res.error) return withCors(json({ error: res.error }, res.status || 400));
+        return withCors(json({ saved: res.saved, settings: await readSettings(env.DB, gateUser) }));
+      }
+
       // ---- Internal API (CI runner) ----
       if (path.startsWith('/api/internal/')) {
         if (!checkInternal(req, env)) return withCors(json({ error: 'unauthorized' }, 401));
+
+        if (path === '/api/internal/keys/env' && req.method === 'GET') {
+          const uid = url.searchParams.get('user_id');
+          const owner = uid ? { id: Number(uid) } : await adminOwner(env.DB);
+          if (!owner) return withCors(json({ env: {}, settings: {} }));
+          return withCors(json(await keysEnvFor(env.DB, owner)));
+        }
+
+        if (path === '/api/internal/config' && req.method === 'GET') {
+          const owner = await adminOwner(env.DB);
+          if (!owner) return withCors(json({}));
+          const s = await readSettings(env.DB, owner, { revealSecrets: true });
+          return withCors(
+            json({
+              yt_cookies: s.yt_cookies || null,
+              poll_min: s.poll_min ?? null,
+              poll_max: s.poll_max ?? null,
+              download_provider: s.download_provider || null,
+              analyze_provider: s.analyze_provider || null,
+            })
+          );
+        }
+
+        if (path === '/api/internal/keys/report' && req.method === 'POST') {
+          const body = await readBody(req);
+          const service = String(body.service || '');
+          if (!API_SERVICES[service]) return withCors(json({ error: 'unknown service' }, 400));
+          const owner = await adminOwner(env.DB);
+          if (!owner) return withCors(json({ ok: false }));
+          const rows = await env.DB
+            .prepare(
+              'SELECT id FROM api_keys WHERE user_id = ? AND service = ? AND enabled = 1 ORDER BY priority, id'
+            )
+            .bind(owner.id, service)
+            .all();
+          const row = (rows.results || [])[Number(body.index)];
+          if (!row) return withCors(json({ ok: false }));
+          const ok = !!body.ok;
+          await env.DB
+            .prepare(
+              `UPDATE api_keys SET used_count = used_count + 1, last_used = ?,
+                      status = ?, last_error = ?, updated_at = ? WHERE id = ?`
+            )
+            .bind(now(), ok ? 'active' : 'error', ok ? null : String(body.error || '').slice(0, 200), now(), row.id)
+            .run();
+          return withCors(json({ ok: true }));
+        }
 
         if (path === '/api/internal/tasks' && req.method === 'GET') {
           const tasks = (await listTasks(env.DB)).filter((t) => t.status === 'active');
