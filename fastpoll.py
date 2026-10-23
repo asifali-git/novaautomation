@@ -104,6 +104,8 @@ def flat_recent(url, cookiefile=None, proxy=None, n=5):
         opts["cookiefile"] = cookiefile
     if proxy:
         opts["proxy"] = proxy
+    if "youtube.com" in (url or "") or "youtu.be" in (url or ""):
+        opts["extractor_args"] = {"youtube": {"player_client": ["web"]}}
     with yt_dlp.YoutubeDL(opts) as ydl:
         info = ydl.extract_info(url, download=False)
 
@@ -838,6 +840,31 @@ def _enqueue(tid, key, url, title, new_ids, undispached):
     return "created", vid
 
 
+_YT_TAB_RE = re.compile(r"/(videos|shorts|streams|playlists|featured)/?(?:[?#]|$)", re.I)
+
+
+def _yt_tab_url(url):
+    """Bare YouTube channel root -> /videos tab (chronological, no featured/pins).
+
+    Playlists, /watch links, youtu.be and already-tabbed URLs pass through.
+    """
+    u = (url or "").strip()
+    low = u.lower()
+    if not u or ("youtube.com" not in low and "youtu.be" not in low):
+        return u
+    if "youtu.be" in low or "/watch" in low or "list=" in low or "/playlist" in low:
+        return u
+    if _YT_TAB_RE.search(low):
+        return u
+    return u.split("?")[0].split("#")[0].rstrip("/") + "/videos"
+
+
+def _yt_cookiefile():
+    """Optional YouTube cookies exported by the workflow (COOKIES_FILE)."""
+    path = os.getenv("COOKIES_FILE")
+    return path if path and os.path.exists(path) else None
+
+
 def _check_task(t, new_ids, fetch_fb=True, undispached=None):
     """One task's detection pass (all platforms).
 
@@ -872,6 +899,8 @@ def _check_task(t, new_ids, fetch_fb=True, undispached=None):
                 raise ValueError(f"page '{page}': no feed cards")
         elif platform in ("tiktok", "instagram"):
             items = flat_recent(url, cookiefile=_cookie_file(platform, uid))
+        elif platform == "youtube" or "youtube.com" in (url or "") or "youtu.be" in (url or ""):
+            items = flat_recent(_yt_tab_url(url), cookiefile=_yt_cookiefile())
         else:
             items = flat_recent(url)
         if t.get("last_error"):
@@ -910,6 +939,14 @@ def _check_task(t, new_ids, fetch_fb=True, undispached=None):
         return found
 
     if not items or not items[0].get("id"):
+        msg = f"no entries returned for {url}"[:200]
+        log.warning("task %s: %s", tid, msg)
+        _state["task_err"] = f"task {tid}: {msg}"
+        _state["task_err_ts"] = time.time()
+        try:
+            patch_task(tid, last_error=msg)
+        except Exception:
+            pass
         return False
 
     if first:
@@ -934,8 +971,16 @@ def _check_task(t, new_ids, fetch_fb=True, undispached=None):
         newer.sort(key=lambda x: int(x["id"]))
         newer = newer[-5:]
     else:
-        # Non-numeric ids (YouTube): only the top item, only if changed.
-        newer = [items[0]] if str(items[0].get("id")) != str(seen_key) else []
+        # Non-numeric ids (YouTube): every entry above the last-seen one,
+        # because a pinned/featured entry can occupy position 0.
+        want = str(seen_key or "")
+        if want and want in ids:
+            newer = items[:ids.index(want)]
+        elif want:
+            newer = [items[0]] if ids[0] != want else []
+        else:
+            newer = [items[0]]
+        newer = newer[:5]
     found = False
     ok_advance = True
     for x in newer:
@@ -946,7 +991,7 @@ def _check_task(t, new_ids, fetch_fb=True, undispached=None):
         elif st == "failed":
             ok_advance = False
     if newer and ok_advance:
-        patch_task(tid, last_seen_key=str(newer[-1]["id"]))
+        patch_task(tid, last_seen_key=str(items[0]["id"]))
     return found
 
 

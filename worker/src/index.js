@@ -146,8 +146,17 @@ async function ensureVoiceColumn(db) {
   voiceColReady = true;
 }
 
+function normalizeSourceUrl(url) {
+  const u = (url || '').trim();
+  const low = u.toLowerCase();
+  if (!low || (!low.includes('youtube.com') && !low.includes('youtu.be'))) return u;
+  if (low.includes('youtu.be') || low.includes('/watch') || low.includes('list=') || low.includes('/playlist')) return u;
+  if (/\/(videos|shorts|streams|playlists|featured)\/?(?:[?#]|$)/i.test(low)) return u;
+  return u.split('?')[0].split('#')[0].replace(/\/+$/, '') + '/videos';
+}
+
 async function createTask(db, body) {
-  const url = (body.source_url || '').trim();
+  const url = normalizeSourceUrl(body.source_url);
   if (!url) throw new Error('source_url required');
   const platform = body.platform || detectPlatform(url);
   const dest = body.dest_provider || 'youtube';
