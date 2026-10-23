@@ -865,6 +865,50 @@ def _yt_cookiefile():
     return path if path and os.path.exists(path) else None
 
 
+_hub_cfg_ts = [0.0]
+
+
+def _apply_hub_config(force=False):
+    """Pull panel settings (YT cookies, poll bounds) from the hub."""
+    global POLL_MIN, POLL_MAX
+    if not WORKER or not TOKEN:
+        return
+    if not force and time.time() - _hub_cfg_ts[0] < 300:
+        return
+    _hub_cfg_ts[0] = time.time()
+    try:
+        r = requests.get(f"{WORKER}/api/internal/config", headers=_h(), timeout=15)
+        if not r.ok:
+            return
+        cfg = r.json() or {}
+    except Exception as e:
+        log.warning("hub config fetch failed: %s", e)
+        return
+
+    cookies = (cfg.get("yt_cookies") or "").strip()
+    if cookies:
+        path = os.path.join(tempfile.gettempdir(), "nova_yt_cookies.txt")
+        try:
+            with open(path, "w", encoding="utf-8") as f:
+                f.write(cookies if cookies.endswith("\n") else cookies + "\n")
+            os.environ["COOKIES_FILE"] = path
+        except Exception as e:
+            log.warning("cannot write yt cookies: %s", e)
+
+    for key, lo, hi in (("poll_min", 5, 300), ("poll_max", 5, 600)):
+        try:
+            n = int(cfg.get(key))
+        except (TypeError, ValueError):
+            continue
+        if lo <= n <= hi:
+            if key == "poll_min":
+                POLL_MIN = n
+            else:
+                POLL_MAX = n
+    if POLL_MIN > POLL_MAX:
+        POLL_MIN, POLL_MAX = POLL_MAX, POLL_MIN
+
+
 def _check_task(t, new_ids, fetch_fb=True, undispached=None):
     """One task's detection pass (all platforms).
 
@@ -1053,6 +1097,7 @@ def poll_loop():
     log.info("fastpoll started — interval %d-%ds", POLL_MIN, POLL_MAX)
     while True:
         try:
+            _apply_hub_config()
             # Check manual jobs first
             _state["last_manual_check"] = time.time()
             found = check_manual_jobs()
@@ -1263,6 +1308,7 @@ class Handler(BaseHTTPRequestHandler):
 
 def main():
     port = int(os.getenv("PORT", "10000"))
+    _apply_hub_config(force=True)
     _load_watch()
     if not _watch_ids:
         _bootstrap_watch_from_gh()
