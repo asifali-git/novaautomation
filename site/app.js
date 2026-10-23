@@ -140,6 +140,7 @@ function closeSidebar() {
 /* ===== Modal controller — Escape, focus trap, body lock, focus restore ===== */
 const MODAL_CLOSE = {
   'modal-add': () => closeModal(),
+  'modal-edit-source': () => closeEditSource(),
   'modal-analytics': () => closeAnalytics(),
   'modal-update-cookies': () => closeUpdateCookies(),
 };
@@ -601,6 +602,7 @@ async function loadTasks() {
     ]);
     ytLoginsForLabels = (dl.logins || []).filter(l => l.provider === 'youtube');
     const tasks = d.tasks || [];
+    tasksCache = tasks;
     $('nav-task-count').textContent = tasks.length;
 
     const tbody = document.querySelector('#tasks-table tbody');
@@ -671,6 +673,7 @@ async function loadTasks() {
         <td class="actions-cell">
           <button class="btn ghost sm" onclick="openAnalytics(${t.id})" title="Analytics" aria-label="Open analytics for ${esc(t.name || t.source_url)}">▤</button>
           <button class="btn ghost sm" onclick="toggleEditMode(${t.id}, ${!noedit})" title="${noedit ? 'Switch to Edit mode (AI processing)' : 'Switch to Raw mode (upload original, no edit)'}" aria-label="${noedit ? 'Switch to Edit mode' : 'Switch to Raw mode'}">${noedit ? '⚡' : '✂'}</button>
+          <button class="btn ghost sm" onclick="editTask(${t.id})" title="Edit source URL / name" aria-label="Edit source ${esc(t.name || t.source_url)}">✎</button>
           <button class="btn ghost sm" onclick="toggleTask('${t.id}', '${isActive ? 'paused' : 'active'}')" title="${isActive ? 'Pause source' : 'Resume source'}" aria-label="${isActive ? 'Pause source' : 'Resume source'}">${isActive ? '⏸' : '▶'}</button>
           <button class="btn danger sm" onclick="delTask('${t.id}')" title="Delete source" aria-label="Delete source">✕</button>
         </td>
@@ -713,6 +716,56 @@ async function delTask(id) {
     loadDashboard();
   } catch (e) { toast(e.message, 'err'); }
 }
+
+/* ===== Edit Source (URL / name) ===== */
+let tasksCache = [];
+
+function editTask(id) {
+  const t = tasksCache.find(x => String(x.id) === String(id));
+  if (!t) return toast('Source not found', 'err');
+  $('edit-source-form').dataset.id = t.id;
+  $('e-url').value = t.source_url || '';
+  $('e-name').value = t.name || '';
+  openModalEl($('modal-edit-source'));
+  setTimeout(() => { $('e-url').focus(); $('e-url').select(); }, 100);
+}
+
+function closeEditSource() {
+  closeModalEl($('modal-edit-source'));
+}
+
+$('edit-close')?.addEventListener('click', closeEditSource);
+$('btn-cancel-edit')?.addEventListener('click', closeEditSource);
+$('modal-edit-source')?.addEventListener('click', e => {
+  if (e.target === $('modal-edit-source')) closeEditSource();
+});
+
+$('edit-source-form')?.addEventListener('submit', async e => {
+  e.preventDefault();
+  const id = e.currentTarget.dataset.id;
+  const url = $('e-url').value.trim();
+  const name = $('e-name').value.trim();
+  if (!url) return toast('Source URL is required', 'err');
+  const btn = $('btn-save-edit');
+  btn.disabled = true;
+  try {
+    const platform = detectPlatformClient(url);
+    const body = { source_url: url, name: name || null };
+    if (platform) body.platform = platform;
+    await api(`/api/tasks/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(body),
+    });
+    toast('Source updated');
+    closeEditSource();
+    loadTasks();
+    loadDashboard();
+  } catch (err) {
+    toast(err.message, 'err');
+  } finally {
+    btn.disabled = false;
+  }
+});
 
 /* ===== Load Videos (Activity) ===== */
 let videoFilter = 'all';
@@ -797,6 +850,7 @@ const STAGE_META = {
   uploading:        { icon: '↑', label: 'Uploading' },
   uploaded:         { icon: '✓', label: 'Uploaded' },
   failed:           { icon: '✕', label: 'Failed' },
+  skipped:          { icon: '⏭', label: 'Skipped' },
   cancelled:        { icon: '⊘', label: 'Cancelled' },
 };
 
@@ -805,6 +859,7 @@ function statusBadge(s) {
   if (s === 'uploaded') return `<span class="badge ok"><span class="badge-dot"></span> Uploaded</span>`;
   if (s === 'failed') return `<span class="badge err"><span class="badge-dot"></span> Failed</span>`;
   if (s === 'cancelled') return `<span class="badge idle">⊘ Cancelled</span>`;
+  if (s === 'skipped') return `<span class="badge warn">⏭ Skipped</span>`;
   if (LIVE_STATUSES.includes(s)) return `<span class="badge run"><span class="badge-dot"></span> ${m ? m.label : esc(s)}</span>`;
   return `<span class="badge idle">${esc(s)}</span>`;
 }
@@ -1107,8 +1162,8 @@ async function loadDashboard() {
       feed.innerHTML = '<div class="empty-state">No activity yet</div>';
     } else {
       feed.innerHTML = recent.map(v => {
-        const cls = v.status === 'uploaded' ? 'ok' : v.status === 'failed' ? 'err' : v.status === 'cancelled' ? 'idle' : 'run';
-        const icon = v.status === 'uploaded' ? '✓' : v.status === 'failed' ? '✕' : v.status === 'cancelled' ? '⊘' : '⟳';
+        const cls = v.status === 'uploaded' ? 'ok' : v.status === 'failed' ? 'err' : (v.status === 'cancelled' || v.status === 'skipped') ? 'idle' : 'run';
+        const icon = v.status === 'uploaded' ? '✓' : v.status === 'failed' ? '✕' : v.status === 'skipped' ? '⏭' : v.status === 'cancelled' ? '⊘' : '⟳';
         const m = STAGE_META[v.status];
         const title = v.title || v.video_key || 'Untitled';
         return `<div class="feed-item" title="${esc(title)}">
@@ -2311,6 +2366,7 @@ function fillSettingsForm() {
   if ($('sf-quality')) $('sf-quality').value = s.video_quality ?? '';
   if ($('sf-pollmin')) $('sf-pollmin').value = s.poll_min ?? '';
   if ($('sf-pollmax')) $('sf-pollmax').value = s.poll_max ?? '';
+  if ($('sf-maxsecs')) $('sf-maxsecs').value = s.max_secs ?? '';
   if ($('sf-cookies')) $('sf-cookies').value = '';
   if ($('sf-cookies-state')) {
     $('sf-cookies-state').textContent = s.yt_cookies_set ? `(saved · ${s.yt_cookies_len} chars)` : '(none)';
@@ -2417,6 +2473,7 @@ async function loadDetectorHealth() {
     diagItem('Poller', online ? 'online' : 'unknown', online ? 'ok' : ''),
     diagItem('Last poll', lastPoll),
     diagItem('Interval', interval),
+    diagItem('Shorts limit', r.max_secs ? `${r.max_secs}s` : 'off'),
     diagItem('Watching', String(watch)),
     diagItem('Detector error', r.task_err || 'none', r.task_err ? 'err' : 'ok', !!r.task_err),
     diagItem('Checked', new Date().toLocaleTimeString())
@@ -2578,6 +2635,7 @@ $('settings-form')?.addEventListener('submit', async (e) => {
       putNum('video_quality', $('sf-quality').value, 360, 2160);
       putNum('poll_min', $('sf-pollmin').value, 5, 300);
       putNum('poll_max', $('sf-pollmax').value, 5, 600);
+      putNum('max_secs', $('sf-maxsecs').value, 10, 600);
     } catch (err) {
       toast(err.message, 'err');
       return;

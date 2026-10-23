@@ -102,7 +102,7 @@ def _yt_attempts(url):
     return [({}, "bv*[ext=mp4]+ba[ext=m4a]/b[ext=mp4]/b", True)]
 
 
-def download(url, out_dir="work", max_secs=None):
+def download(url, out_dir="work"):
     """Download `url` into out_dir. Returns (file_path, info_dict)."""
     os.makedirs(out_dir, exist_ok=True)
     # YouTube: FastSaver API (no bot-check from any IP).
@@ -130,8 +130,6 @@ def download(url, out_dir="work", max_secs=None):
         opts["format"] = fmt
         if use_cookies:
             opts.update(_cookies_opt())
-        if max_secs:
-            opts["download_ranges"] = yt_dlp.utils.download_range_func(None, [(0, max_secs)])
         try:
             with yt_dlp.YoutubeDL(opts) as ydl:
                 info = ydl.extract_info(url, download=True)

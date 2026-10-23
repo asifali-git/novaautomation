@@ -182,10 +182,11 @@ const SETTING_SPECS = {
   video_quality:     { type: 'int', min: 360, max: 2160 },
   poll_min:          { type: 'int', min: 5, max: 300 },
   poll_max:          { type: 'int', min: 5, max: 600 },
+  max_secs:          { type: 'int', min: 10, max: 600 },
   yt_cookies:        { type: 'text', max: 200000, secret: true },
 };
 
-const PUBLIC_SETTINGS = ['download_provider', 'analyze_provider', 'video_quality', 'poll_min', 'poll_max'];
+const PUBLIC_SETTINGS = ['download_provider', 'analyze_provider', 'video_quality', 'poll_min', 'poll_max', 'max_secs'];
 
 let appTablesReady = false;
 async function ensureAppTables(db) {
@@ -619,6 +620,17 @@ async function patchTask(db, id, body) {
     if (k in body) {
       fields.push(`${k} = ?`);
       vals.push(body[k]);
+    }
+  }
+  if ('source_url' in body) {
+    const src = normalizeSourceUrl(body.source_url);
+    fields.push('source_url = ?');
+    vals.push(src);
+    fields.push('platform = ?');
+    vals.push(body.platform || detectPlatform(src));
+    if (src !== task.source_url) {
+      fields.push('baseline_key = ?', 'last_seen_key = ?', 'last_poll_at = ?');
+      vals.push(null, null, null);
     }
   }
   if ('dest_platforms' in body) {
@@ -1762,6 +1774,9 @@ export default {
           return withCors(json({ error: 'forbidden' }, 403));
         }
         const body = await readBody(req);
+        if ('source_url' in body && !String(body.source_url || '').trim()) {
+          return withCors(json({ error: 'source_url required' }, 400));
+        }
         if ('dest_platforms' in body || 'login_id' in body) {
           const destErr =
             (await assertDestOwned(env.DB, gateUser, body.dest_platforms)) ||
@@ -2038,6 +2053,7 @@ export default {
               yt_cookies: ytRow?.value || s.yt_cookies || null,
               poll_min: s.poll_min ?? null,
               poll_max: s.poll_max ?? null,
+              max_secs: s.max_secs ?? null,
               download_provider: s.download_provider || null,
               analyze_provider: s.analyze_provider || null,
             })

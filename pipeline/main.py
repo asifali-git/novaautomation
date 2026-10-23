@@ -10,7 +10,7 @@ Env:
   ANALYZE=true|false           use AI edit-plan (default true; Nemotron -> smart fallback)
   NVIDIA_API_KEY               Nemotron omni key (build.nvidia.com)
   VOICEOVER=true|false         add Kokoro narration from plan (default true)
-  MAX_SECS                     cap clip length (default 200 — allows 3-min Shorts)
+  MAX_SECS                     shorts limit: longer sources are skipped (default 60)
   PRIVACY                      public|unlisted|private (default public)
   OPENROUTER_API_KEY           metadata fallback if plan lacks it
   YT_REFRESH_TOKEN/CLIENT_*    YouTube upload
@@ -36,7 +36,10 @@ import upload_social as us
 
 WORKER = os.getenv("WORKER_URL", "").rstrip("/")
 TOKEN = os.getenv("INTERNAL_TOKEN", "")
-MAX_SECS = float(os.getenv("MAX_SECS", "200"))
+try:
+    MAX_SECS = float(apikeys.setting("max_secs", os.getenv("MAX_SECS", "60")) or 60)
+except (TypeError, ValueError):
+    MAX_SECS = 60.0
 ANALYZE = os.getenv("ANALYZE", "true").lower() in ("1", "true", "yes")
 VOICEOVER = os.getenv("VOICEOVER", "true").lower() in ("1", "true", "yes")
 PRIVACY = os.getenv("PRIVACY", "public")
@@ -417,8 +420,20 @@ def run():
     print(f"[mode] {'raw upload (no edit)' if skip_edit else 'edit pipeline'}")
 
     set_status(vid, status="downloading")
-    src, info = dl.download(url, out_dir=work, max_secs=MAX_SECS)
+    src, info = dl.download(url, out_dir=work)
     print(f"[download] {src} ({os.path.getsize(src)//1024} KB)")
+
+    # Shorts/Reels only: reject long source videos instead of clipping them.
+    try:
+        src_dur = an.probe_duration(src)
+    except Exception:
+        src_dur = None
+    if src_dur and MAX_SECS and src_dur > MAX_SECS + 1:
+        msg = f"skipped: {src_dur:.0f}s source is over the {MAX_SECS:.0f}s shorts limit"
+        print(f"[skip] {msg}")
+        set_status(vid, status="skipped", error=msg, duration=src_dur)
+        return 0
+
     title_hint = (info.get("title") or "").strip() or (title or "").strip()
     if not title_hint or title_hint.lower() in ("short", "shorts"):
         # Same-title bug fix: every FB enqueue used to arrive as "Short" →

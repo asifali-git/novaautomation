@@ -37,6 +37,7 @@ GH_TOKEN = os.getenv("GH_TOKEN", "")
 GH_REPO = os.getenv("GH_REPO", "")  # e.g. "asifali-git/novaautomation"
 POLL_MIN = int(os.getenv("POLL_MIN", "8"))
 POLL_MAX = int(os.getenv("POLL_MAX", "12"))
+MAX_SECS = int(os.getenv("MAX_SECS", "60"))  # shorts/reels only; 0 disables the filter
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
 log = logging.getLogger("fastpoll")
@@ -116,6 +117,7 @@ def flat_recent(url, cookiefile=None, proxy=None, n=5):
                 "id": info.get("id"),
                 "title": info.get("title"),
                 "url": info.get("webpage_url") or url,
+                "duration": info.get("duration"),
             }]
         return []
 
@@ -123,6 +125,7 @@ def flat_recent(url, cookiefile=None, proxy=None, n=5):
         "id": e.get("id"),
         "title": e.get("title"),
         "url": e.get("url") or e.get("webpage_url") or url,
+        "duration": e.get("duration"),
     } for e in entries[:n]]
     ids = [x.get("id") for x in items if x.get("id") is not None]
     if ids and all(str(i).isdigit() for i in ids):
@@ -869,8 +872,8 @@ _hub_cfg_ts = [0.0]
 
 
 def _apply_hub_config(force=False):
-    """Pull panel settings (YT cookies, poll bounds) from the hub."""
-    global POLL_MIN, POLL_MAX
+    """Pull panel settings (YT cookies, poll bounds, shorts limit) from the hub."""
+    global POLL_MIN, POLL_MAX, MAX_SECS
     if not WORKER or not TOKEN:
         return
     if not force and time.time() - _hub_cfg_ts[0] < 300:
@@ -907,6 +910,13 @@ def _apply_hub_config(force=False):
                 POLL_MAX = n
     if POLL_MIN > POLL_MAX:
         POLL_MIN, POLL_MAX = POLL_MAX, POLL_MIN
+
+    try:
+        n = int(cfg.get("max_secs"))
+    except (TypeError, ValueError):
+        n = None
+    if n is not None and 0 <= n <= 600:
+        MAX_SECS = n
 
 
 def _check_task(t, new_ids, fetch_fb=True, undispached=None):
@@ -993,23 +1003,52 @@ def _check_task(t, new_ids, fetch_fb=True, undispached=None):
             pass
         return False
 
+    # Shorts/Reels only: drop entries whose duration is already over the limit.
+    # Unknown durations are kept (the pipeline re-checks after download).
+    raw_newest = str(items[0].get("id") or "")
+    all_items = items
+    if MAX_SECS and not is_fb:
+        kept = []
+        skipped = 0
+        for x in items:
+            try:
+                d = float(x.get("duration")) if x.get("duration") is not None else None
+            except (TypeError, ValueError):
+                d = None
+            if d is not None and d > MAX_SECS:
+                skipped += 1
+                continue
+            kept.append(x)
+        if skipped:
+            log.info("task %s: skipped %d long entr%s over %ss",
+                     tid, skipped, "y" if skipped == 1 else "ies", MAX_SECS)
+        items = kept
+        if not items:
+            if raw_newest:
+                if first:
+                    patch_task(tid, baseline_key=raw_newest, last_seen_key=raw_newest)
+                else:
+                    patch_task(tid, last_seen_key=raw_newest)
+                log.info("task %s: nothing under %ss (newest %s)", tid, MAX_SECS, raw_newest)
+            return False
+
     if first:
         # First contact: enqueue THE newest video only (back-catalog stays).
-        # On failure leave baseline unset → retried on the next pass.
+        # On failure leave baseline unset -> retried on the next pass.
         top = items[0]
         st, _v = _enqueue(tid, str(top["id"]), top.get("url") or url,
                           top.get("title"), new_ids, undispached)
         if st != "failed":
-            patch_task(tid, baseline_key=str(top["id"]),
-                       last_seen_key=str(top["id"]))
+            patch_task(tid, baseline_key=raw_newest,
+                       last_seen_key=raw_newest)
             log.info("task %s baseline set to %s", tid, top["id"])
         return st == "created"
 
-    ids = [str(x.get("id") or "") for x in items]
+    ids = [str(x.get("id") or "") for x in all_items]
     if (seen_key and str(seen_key).isdigit()
             and all(i.isdigit() for i in ids if i)):
         # Numeric platform (TikTok/IG): enqueue EVERY id newer than seen.
-        newer = [x for x in items
+        newer = [x for x in all_items
                  if str(x.get("id") or "").isdigit()
                  and int(x["id"]) > int(seen_key)]
         newer.sort(key=lambda x: int(x["id"]))
@@ -1019,12 +1058,15 @@ def _check_task(t, new_ids, fetch_fb=True, undispached=None):
         # because a pinned/featured entry can occupy position 0.
         want = str(seen_key or "")
         if want and want in ids:
-            newer = items[:ids.index(want)]
+            newer = all_items[:ids.index(want)]
         elif want:
-            newer = [items[0]] if ids[0] != want else []
+            newer = [all_items[0]] if ids[0] != want else []
         else:
-            newer = [items[0]]
+            newer = [all_items[0]]
         newer = newer[:5]
+    # Long entries were filtered out above; never enqueue them.
+    eligible = {str(x.get("id") or "") for x in items}
+    newer = [x for x in newer if str(x.get("id") or "") in eligible]
     found = False
     ok_advance = True
     for x in newer:
@@ -1034,8 +1076,8 @@ def _check_task(t, new_ids, fetch_fb=True, undispached=None):
             found = True
         elif st == "failed":
             ok_advance = False
-    if newer and ok_advance:
-        patch_task(tid, last_seen_key=str(items[0]["id"]))
+    if ok_advance and raw_newest:
+        patch_task(tid, last_seen_key=raw_newest)
     return found
 
 
@@ -1196,6 +1238,7 @@ class Handler(BaseHTTPRequestHandler):
                 "last_manual_check": _state.get("last_manual_check"),
                 "last_manual_found": _state.get("last_manual_found"),
                 "poll_interval": [POLL_MIN, POLL_MAX],
+                "max_secs": MAX_SECS,
                 "gh_repo": GH_REPO or None,
                 "task_err": _state.get("task_err"),
                 "task_err_ts": _state.get("task_err_ts"),
