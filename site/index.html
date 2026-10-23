@@ -101,21 +101,33 @@
 
       <div class="stats-grid">
         <div class="stat-card">
+          <span class="stat-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5Z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg>
+          </span>
           <span class="stat-label">Active Sources</span>
           <span class="stat-value" id="stat-sources">0</span>
           <span class="stat-trend neutral">watching</span>
         </div>
         <div class="stat-card">
+          <span class="stat-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="m16 10 6-3v10l-6-3"/></svg>
+          </span>
           <span class="stat-label">Total Videos</span>
           <span class="stat-value" id="stat-videos">0</span>
           <span class="stat-trend neutral">processed</span>
         </div>
         <div class="stat-card">
+          <span class="stat-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"/><path d="m6 10 6-6 6 6"/><path d="M4 20h16"/></svg>
+          </span>
           <span class="stat-label">Uploaded</span>
           <span class="stat-value" id="stat-uploaded">0</span>
           <span class="stat-trend up" id="stat-upload-rate">—</span>
         </div>
         <div class="stat-card">
+          <span class="stat-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
+          </span>
           <span class="stat-label">Failed</span>
           <span class="stat-value" id="stat-failed">0</span>
           <span class="stat-trend down" id="stat-fail-rate">—</span>
@@ -125,7 +137,7 @@
       <div class="dash-grid">
         <div class="card">
           <div class="card-header">
-            <h2>Recent Activity</h2>
+            <h2>Recent Activity<span class="card-count" id="dash-activity-count"></span></h2>
             <button class="btn ghost sm" data-goto="activity">View all →</button>
           </div>
           <div class="feed" id="dash-activity">
@@ -134,7 +146,7 @@
         </div>
         <div class="card">
           <div class="card-header">
-            <h2>Connected Accounts</h2>
+            <h2>Connected Accounts<span class="card-count" id="dash-accounts-count"></span></h2>
             <button class="btn ghost sm" data-goto="social">Manage →</button>
           </div>
           <div class="account-mini-list" id="dash-accounts">

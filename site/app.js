@@ -1099,9 +1099,10 @@ async function loadDashboard() {
     $('stat-fail-rate').textContent = failed > 0 ? `${failed} errors` : 'clean';
 
     // Recent activity feed
-    const recent = videos.slice(0, 8);
+    const recent = videos.slice(0, 6);
     const feed = $('dash-activity');
     startLoad(feed);
+    if ($('dash-activity-count')) $('dash-activity-count').textContent = videos.length > recent.length ? `${recent.length}/${videos.length}` : String(videos.length);
     if (recent.length === 0) {
       feed.innerHTML = '<div class="empty-state">No activity yet</div>';
     } else {
@@ -1109,10 +1110,11 @@ async function loadDashboard() {
         const cls = v.status === 'uploaded' ? 'ok' : v.status === 'failed' ? 'err' : v.status === 'cancelled' ? 'idle' : 'run';
         const icon = v.status === 'uploaded' ? '✓' : v.status === 'failed' ? '✕' : v.status === 'cancelled' ? '⊘' : '⟳';
         const m = STAGE_META[v.status];
-        return `<div class="feed-item">
+        const title = v.title || v.video_key || 'Untitled';
+        return `<div class="feed-item" title="${esc(title)}">
           <div class="feed-icon ${cls}">${icon}</div>
           <div class="feed-text">
-            <div class="feed-title">${esc(v.title || v.video_key)}</div>
+            <div class="feed-title">${esc(title)}</div>
             <div class="feed-meta">${m ? esc(m.label) : esc(v.status)} · ${timeAgo(v.updated_at)}</div>
           </div>
         </div>`;
@@ -1121,15 +1123,18 @@ async function loadDashboard() {
 
     // Connected accounts mini
     const accEl = $('dash-accounts');
+    const shownAccounts = accounts.slice(0, 6);
+    if ($('dash-accounts-count')) $('dash-accounts-count').textContent = accounts.length > shownAccounts.length ? `${shownAccounts.length}/${accounts.length}` : String(accounts.length);
     if (accounts.length === 0) {
       accEl.innerHTML = '<div class="empty-state">No social accounts connected</div>';
     } else {
-      accEl.innerHTML = accounts.map(a => {
+      accEl.innerHTML = shownAccounts.map(a => {
         const m = PLATFORM_META[a.platform];
-        return `<div class="account-mini">
+        const name = a.username || a.platform;
+        return `<div class="account-mini" title="${esc(name)}">
           <span class="platform-dot ${m?.cls || ''}">${m?.icon || '?'}</span>
-          <span class="account-mini-name">${esc(a.username || a.platform)}</span>
-          <span class="account-mini-status">● connected</span>
+          <span class="account-mini-name">${esc(name)}</span>
+          <span class="account-mini-status">connected</span>
         </div>`;
       }).join('');
     }
