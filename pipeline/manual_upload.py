@@ -33,6 +33,7 @@ import subprocess
 import requests
 
 import analyze as an
+import apikeys
 import smart
 import apply as ap
 import voice as vc
@@ -42,8 +43,8 @@ import upload_social as us
 
 WORKER = os.getenv("WORKER_URL", "").rstrip("/")
 TOKEN = os.getenv("INTERNAL_TOKEN", "")
-OPENROUTER_KEY = os.getenv("OPENROUTER_API_KEY", "")
-NVIDIA_KEY = os.getenv("NVIDIA_API_KEY", "")
+OPENROUTER_KEY = (apikeys.keys("openrouter", "OPENROUTER_API_KEYS", "OPENROUTER_API_KEY") or [""])[0]
+NVIDIA_KEY = (apikeys.keys("nvidia", "NVIDIA_API_KEYS", "NVIDIA_API_KEY") or [""])[0]
 PRIVACY = os.getenv("PRIVACY", "public")
 MAX_SECS = float(os.getenv("MAX_SECS", "200"))
 
@@ -79,33 +80,15 @@ def download_best(url, out_dir="work"):
     u = (url or "").lower()
     is_yt = "youtube.com" in u or "youtu.be" in u
 
-    if is_yt:
-        key = os.getenv("FASTSAVER_API_KEY", "").strip()
-        if key:
-            base = "https://api.fastsaver.io/v1"
-            headers = {"X-Api-Key": key}
-            for quality in ("1080p", "720p", "480p", "360p"):
-                try:
-                    r = requests.post(
-                        f"{base}/youtube/download",
-                        json={"url": url, "format": quality},
-                        headers=headers,
-                        timeout=120,
-                    )
-                    data = r.json() if r.content else {}
-                    if not data.get("ok") or not data.get("download_url"):
-                        print(f"[download] fastsaver {quality}: {data.get('detail', r.status_code)}", file=sys.stderr)
-                        continue
-                    path = os.path.join(out_dir, "src.mp4")
-                    with requests.get(data["download_url"], stream=True, timeout=600, allow_redirects=True) as dl:
-                        dl.raise_for_status()
-                        with open(path, "wb") as f:
-                            for chunk in dl.iter_content(1 << 20):
-                                f.write(chunk)
-                    print(f"[download] fastsaver ok {quality} ({os.path.getsize(path)} bytes)", file=sys.stderr)
-                    return path, {"id": None, "title": None, "webpage_url": url}
-                except Exception as e:
-                    print(f"[download] fastsaver {quality} failed: {e}", file=sys.stderr)
+    if is_yt and apikeys.setting("download_provider", "fastsaver") != "ytdlp":
+        try:
+            from download import _download_fastsaver
+        except Exception:
+            _download_fastsaver = None
+        if _download_fastsaver:
+            path = _download_fastsaver(url, out_dir)
+            if path and os.path.exists(path) and os.path.getsize(path) > 0:
+                return path, {"id": None, "title": None, "webpage_url": url}
 
     def _attempt(player_client, use_cookies, fmt):
         opts = {

@@ -18,6 +18,7 @@ import json
 import subprocess
 import re
 import requests
+import apikeys
 
 FFMPEG = os.getenv("FFMPEG_BIN", "ffmpeg")
 FFPROBE = os.getenv("FFPROBE_BIN", "ffprobe")
@@ -311,11 +312,18 @@ def _prompt():
     return PROMPT.replace("must be in ENGLISH", f"must be in {lang}")
 
 
+DEAD_CODES = (401, 402, 403, 429)
+
+
+def _keys(service, *env_names):
+    return apikeys.keys(service, *env_names)
+
+
 def _api_key():
-    k = os.getenv("NVIDIA_API_KEY")
-    if not k:
+    pool = _keys("nvidia", "NVIDIA_API_KEYS", "NVIDIA_API_KEY")
+    if not pool:
         raise RuntimeError("NVIDIA_API_KEY not set")
-    return k
+    return pool[0]
 
 
 def _call_nemotron(frames, title_hint="", duration=None, audio_b64=None, correction="", extra=""):
@@ -348,7 +356,9 @@ def _call_nemotron(frames, title_hint="", duration=None, audio_b64=None, correct
     if correction:
         content.append({"type": "text", "text": correction})
 
-    headers = {"Authorization": f"Bearer {_api_key()}", "Content-Type": "application/json"}
+    pool = _keys("nvidia", "NVIDIA_API_KEYS", "NVIDIA_API_KEY")
+    if not pool:
+        raise RuntimeError("NVIDIA_API_KEY not set")
     payload = {
         "model": MODEL,
         "messages": [{"role": "user", "content": content}],
@@ -359,29 +369,52 @@ def _call_nemotron(frames, title_hint="", duration=None, audio_b64=None, correct
     }
     import time
     last = None
-    for attempt in range(3):
-        try:
-            r = requests.post(API, headers=headers, json=payload, timeout=300)
-            if r.status_code >= 500:
-                last = RuntimeError(f"HTTP {r.status_code}")
+    for idx, key in enumerate(pool):
+        headers = {"Authorization": f"Bearer {key}", "Content-Type": "application/json"}
+        for attempt in range(3):
+            try:
+                r = requests.post(API, headers=headers, json=payload, timeout=300)
+                if r.status_code in DEAD_CODES:
+                    last = RuntimeError(f"HTTP {r.status_code}")
+                    apikeys.report("nvidia", idx, False, f"HTTP {r.status_code}")
+                    break
+                if r.status_code >= 500:
+                    last = RuntimeError(f"HTTP {r.status_code}")
+                    time.sleep(5 * (attempt + 1))
+                    continue
+                r.raise_for_status()
+                apikeys.report("nvidia", idx, True)
+                return r.json()["choices"][0]["message"]["content"]
+            except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
+                last = e
                 time.sleep(5 * (attempt + 1))
-                continue
-            r.raise_for_status()
-            return r.json()["choices"][0]["message"]["content"]
-        except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
-            last = e
-            time.sleep(5 * (attempt + 1))
+        if isinstance(last, (requests.exceptions.Timeout, requests.exceptions.ConnectionError)):
+            raise last
     raise last
 
 
+def _gemini_keys():
+    return _keys("gemini", "GEMINI_API_KEYS", "GEMINI_API_KEY", "GOOGLE_API_KEY")
+
+
 def _gemini_key():
-    return os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
+    pool = _gemini_keys()
+    return pool[0] if pool else None
+
+
+def _openrouter_keys():
+    return _keys("openrouter", "OPENROUTER_API_KEYS", "OPENROUTER_API_KEY")
+
+
+def _openrouter_key():
+    pool = _openrouter_keys()
+    return pool[0] if pool else None
 
 
 def _call_gemini(frames, title_hint="", duration=None, audio_b64=None, correction="", extra=""):
     """2nd-choice backend: same multimodal prompt -> Google Gemini generateContent."""
-    key = _gemini_key()
-    if not key:
+    keys = _gemini_keys()
+    if not keys:
         raise RuntimeError("GEMINI_API_KEY / GOOGLE_API_KEY not set")
     parts = [{"text": _prompt()}]
     if extra:
@@ -415,30 +448,43 @@ def _call_gemini(frames, title_hint="", duration=None, audio_b64=None, correctio
     url_base = "https://generativelanguage.googleapis.com/v1beta/models/"
     import time
     last = None
-    for model in models:
-        url = f"{url_base}{model}:generateContent?key={key}"
-        for attempt in range(3):
-            try:
-                r = requests.post(url, json=payload, timeout=300)
-                if r.status_code == 400 and "thinkingConfig" in (r.text or ""):
-                    payload.get("generationConfig", {}).pop("thinkingConfig", None)
-                    continue
-                if r.status_code == 429 or r.status_code >= 500:
-                    last = RuntimeError(f"{model}: HTTP {r.status_code}: {(r.text or '')[:200]}")
+    for kidx, key in enumerate(keys):
+        exhausted = False
+        for model in models:
+            url = f"{url_base}{model}:generateContent?key={key}"
+            for attempt in range(3):
+                try:
+                    r = requests.post(url, json=payload, timeout=300)
+                    if r.status_code == 400 and "thinkingConfig" in (r.text or ""):
+                        payload.get("generationConfig", {}).pop("thinkingConfig", None)
+                        continue
+                    if r.status_code in DEAD_CODES:
+                        last = RuntimeError(f"{model}: HTTP {r.status_code}: {(r.text or '')[:200]}")
+                        apikeys.report("gemini", kidx, False, f"HTTP {r.status_code}")
+                        if r.status_code == 429 and kidx == len(keys) - 1 and attempt < 2:
+                            time.sleep(5 * (attempt + 1))
+                            continue
+                        exhausted = True
+                        break
+                    if r.status_code >= 500:
+                        last = RuntimeError(f"{model}: HTTP {r.status_code}: {(r.text or '')[:200]}")
+                        time.sleep(5 * (attempt + 1))
+                        continue
+                    r.raise_for_status()
+                    data = r.json()
+                    cand = (data.get("candidates") or [{}])[0]
+                    txt = "".join(p.get("text", "") for p in (cand.get("content") or {}).get("parts") or [])
+                    if not txt:
+                        raise RuntimeError(f"gemini empty response: {str(data)[:300]}")
+                    apikeys.report("gemini", kidx, True)
+                    return txt
+                except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
+                    last = e
                     time.sleep(5 * (attempt + 1))
-                    continue
-                r.raise_for_status()
-                data = r.json()
-                cand = (data.get("candidates") or [{}])[0]
-                txt = "".join(p.get("text", "") for p in (cand.get("content") or {}).get("parts") or [])
-                if not txt:
-                    raise RuntimeError(f"gemini empty response: {str(data)[:300]}")
-                return txt
-            except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
-                last = e
-                time.sleep(5 * (attempt + 1))
-            except requests.exceptions.HTTPError as e:
-                last = e
+                except requests.exceptions.HTTPError as e:
+                    last = e
+                    break
+            if exhausted:
                 break
     raise last
 
@@ -454,8 +500,8 @@ OR_FREE_MODELS = [
 def _call_openrouter(frames, title_hint="", duration=None, correction="", model=None, extra=""):
     """3rd-choice backend: OpenRouter free video-capable models (image+video input;
     these have NO audio modality so audio_b64 is intentionally not attached)."""
-    key = os.getenv("OPENROUTER_API_KEY")
-    if not key:
+    pool = _openrouter_keys()
+    if not pool:
         raise RuntimeError("OPENROUTER_API_KEY not set")
     content = [{"type": "text", "text": _prompt()}]
     if extra:
@@ -487,26 +533,35 @@ def _call_openrouter(frames, title_hint="", duration=None, correction="", model=
         "max_tokens": 8192,
         "temperature": 0.7,
     }
-    headers = {"Authorization": f"Bearer {key}", "Content-Type": "application/json"}
     import time
     last = None
-    for attempt in range(3):
-        try:
-            r = requests.post("https://openrouter.ai/api/v1/chat/completions",
-                              headers=headers, json=payload, timeout=300)
-            if r.status_code == 429 or r.status_code >= 500:
-                last = RuntimeError(f"{payload['model']}: HTTP {r.status_code}: {(r.text or '')[:200]}")
+    for kidx, key in enumerate(pool):
+        headers = {"Authorization": f"Bearer {key}", "Content-Type": "application/json"}
+        for attempt in range(3):
+            try:
+                r = requests.post("https://openrouter.ai/api/v1/chat/completions",
+                                  headers=headers, json=payload, timeout=300)
+                if r.status_code in DEAD_CODES:
+                    last = RuntimeError(f"{payload['model']}: HTTP {r.status_code}: {(r.text or '')[:200]}")
+                    apikeys.report("openrouter", kidx, False, f"HTTP {r.status_code}")
+                    if r.status_code == 429 and kidx == len(pool) - 1 and attempt < 2:
+                        time.sleep(5 * (attempt + 1))
+                        continue
+                    break
+                if r.status_code >= 500:
+                    last = RuntimeError(f"{payload['model']}: HTTP {r.status_code}: {(r.text or '')[:200]}")
+                    time.sleep(5 * (attempt + 1))
+                    continue
+                r.raise_for_status()
+                data = r.json()
+                txt = ((data.get("choices") or [{}])[0].get("message") or {}).get("content") or ""
+                if not txt:
+                    raise RuntimeError(f"openrouter empty response: {str(data)[:300]}")
+                apikeys.report("openrouter", kidx, True)
+                return txt
+            except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
+                last = e
                 time.sleep(5 * (attempt + 1))
-                continue
-            r.raise_for_status()
-            data = r.json()
-            txt = ((data.get("choices") or [{}])[0].get("message") or {}).get("content") or ""
-            if not txt:
-                raise RuntimeError(f"openrouter empty response: {str(data)[:300]}")
-            return txt
-        except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
-            last = e
-            time.sleep(5 * (attempt + 1))
     raise last
 
 
@@ -575,7 +630,7 @@ def _classify_gemini(frames):
 
 
 def _classify_openrouter(frames):
-    key = os.getenv("OPENROUTER_API_KEY")
+    key = _openrouter_key()
     if not key:
         raise RuntimeError("OPENROUTER key not set")
     content = [{"type": "text", "text": CLASSIFY_PROMPT}]
@@ -1109,7 +1164,7 @@ def analyze_video(path, title_hint="", fps=1.0, max_frames=10, allow_fallback=Tr
     plan = None
     first_err = None
     corr = ""
-    if os.getenv("NVIDIA_API_KEY"):
+    if _keys("nvidia", "NVIDIA_API_KEYS", "NVIDIA_API_KEY"):
         for attempt in (0, 1):
             try:
                 raw = _call_nemotron(frames, title_hint=title_hint, duration=dur,
@@ -1156,7 +1211,7 @@ def analyze_video(path, title_hint="", fps=1.0, max_frames=10, allow_fallback=Tr
                     break
         else:
             print("[analyze] no GEMINI/GOOGLE API key; skipping to openrouter")
-    if plan is None and os.getenv("OPENROUTER_API_KEY"):
+    if plan is None and _openrouter_key():
         for or_model in OR_FREE_MODELS:
             for attempt in (0, 1):
                 try:

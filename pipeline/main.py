@@ -24,6 +24,7 @@ import traceback
 import requests
 
 import download as dl
+import apikeys
 import edit as ed
 import voice as vc
 import metadata as md
@@ -322,7 +323,7 @@ def build_meta(plan, info, video_key=None):
     if hashtags:
         meta["description"] = (meta["description"] + "\n\n" + " ".join(hashtags))[:4800]
     # If the plan gave no metadata, fall back to OpenRouter.
-    if not plan.get("title") and os.getenv("OPENROUTER_API_KEY"):
+    if not plan.get("title") and apikeys.keys("openrouter", "OPENROUTER_API_KEYS", "OPENROUTER_API_KEY"):
         try:
             m = md.make_metadata(info.get("title") or meta["title"],
                                  info.get("description") or "",
@@ -355,7 +356,7 @@ def build_meta_raw(info, title_hint, video_key=None):
         "description": (info.get("description") or ""),
         "tags": list(info.get("tags") or []),
     }
-    if os.getenv("OPENROUTER_API_KEY"):
+    if apikeys.keys("openrouter", "OPENROUTER_API_KEYS", "OPENROUTER_API_KEY"):
         try:
             m = md.make_metadata(meta["title"], info.get("description") or "", meta["tags"])
             meta.update(m)

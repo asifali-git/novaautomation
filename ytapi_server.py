@@ -32,21 +32,27 @@ PORT = int(os.getenv("PORT", os.getenv("YTAPI_PORT", "8787")))
 app = FastAPI(title="Nova YT Download API")
 
 
-def _load_or_create_key() -> str:
+def _load_keys() -> set[str]:
+    keys = {k.strip() for k in (os.getenv("YT_API_KEYS") or "").split(",") if k.strip()}
     env_key = os.getenv("YT_API_KEY", "").strip()
     if env_key:
-        return env_key
+        keys.add(env_key)
     if os.path.exists(API_KEY_FILE):
-        key = open(API_KEY_FILE, encoding="utf-8").read().strip()
-        if key:
-            return key
-    key = secrets.token_urlsafe(32)
-    with open(API_KEY_FILE, "w", encoding="utf-8") as f:
-        f.write(key)
-    return key
+        try:
+            stored = open(API_KEY_FILE, encoding="utf-8").read().strip()
+        except OSError:
+            stored = ""
+        if stored:
+            keys.add(stored)
+    if not keys:
+        key = secrets.token_urlsafe(32)
+        with open(API_KEY_FILE, "w", encoding="utf-8") as f:
+            f.write(key)
+        keys.add(key)
+    return keys
 
 
-API_KEY = _load_or_create_key()
+API_KEYS = _load_keys()
 
 
 class DLReq(BaseModel):
@@ -55,7 +61,7 @@ class DLReq(BaseModel):
 
 
 def _check_key(x_api_key: str):
-    if not x_api_key or x_api_key != API_KEY:
+    if not x_api_key or x_api_key not in API_KEYS:
         raise HTTPException(status_code=401, detail="invalid api key")
 
 

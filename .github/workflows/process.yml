@@ -79,6 +79,13 @@ jobs:
           echo "YT_CLIENT_ID=$cid" >> "$GITHUB_ENV"
           echo "YT_CLIENT_SECRET=$cs" >> "$GITHUB_ENV"
 
+      - name: Fetch API keys from hub
+        continue-on-error: true
+        env:
+          WORKER_URL: ${{ secrets.WORKER_URL }}
+          INTERNAL_TOKEN: ${{ secrets.INTERNAL_TOKEN }}
+        run: python pipeline/hub_keys.py
+
       - name: Process manual upload
         if: ${{ inputs.manual_job_id != '' }}
         env:

@@ -14,10 +14,11 @@ import subprocess
 import json
 import zlib
 import hashlib
+import apikeys
 
 FFMPEG = os.getenv("FFMPEG_BIN", "ffmpeg")
 FFPROBE = os.getenv("FFPROBE_BIN", "ffprobe")
-OPENROUTER_KEY = os.getenv("OPENROUTER_API_KEY", "")
+OPENROUTER_KEY = (apikeys.keys("openrouter", "OPENROUTER_API_KEYS", "OPENROUTER_API_KEY") or [""])[0]
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 OPENROUTER_MODEL = os.getenv("OPENROUTER_MODEL", "meta-llama/llama-3.3-70b-instruct")
 

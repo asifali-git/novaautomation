@@ -3,6 +3,7 @@ import os
 import json
 import re
 import requests
+import apikeys
 
 URL = "https://openrouter.ai/api/v1/chat/completions"
 
@@ -100,7 +101,7 @@ def ensure_unique_title(title, description="", tags=None, video_key=None):
         remember_title(title)
         return title
     print(f"[meta] near-duplicate title detected: {title!r}; rewriting", flush=True)
-    if os.getenv("OPENROUTER_API_KEY"):
+    if apikeys.keys("openrouter", "OPENROUTER_API_KEYS", "OPENROUTER_API_KEY"):
         for _ in range(2):
             try:
                 cand = make_title(title, avoid=recent,
@@ -122,10 +123,10 @@ def ensure_unique_title(title, description="", tags=None, video_key=None):
 
 
 def _key():
-    k = os.getenv("OPENROUTER_API_KEY")
-    if not k:
+    pool = apikeys.keys("openrouter", "OPENROUTER_API_KEYS", "OPENROUTER_API_KEY")
+    if not pool:
         raise RuntimeError("OPENROUTER_API_KEY not set")
-    return k
+    return pool[0]
 
 
 def _chat(prompt, system="", model=None):
