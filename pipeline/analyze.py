@@ -17,6 +17,7 @@ import base64
 import json
 import subprocess
 import re
+import time
 import requests
 import apikeys
 
@@ -314,6 +315,37 @@ def _prompt():
 
 DEAD_CODES = (401, 402, 403, 429)
 
+# Shared free endpoints return these under load; worth another shot before
+# falling back to a plan with no narration/captions.
+_TRANSIENT_HINTS = (
+    "429", "500", "502", "503", "504", "resourceexhausted", "overloaded",
+    "rate limit", "rate-limit", "too many requests", "timed out", "timeout",
+    "connection", "temporarily unavailable", "capacity",
+)
+
+
+def _is_transient(err):
+    s = str(err).lower()
+    return any(h in s for h in _TRANSIENT_HINTS)
+
+
+def _call_with_retry(fn, *args, **kwargs):
+    """Retry a backend call on transient failures (429/5xx/timeouts)."""
+    tries = int(os.getenv("ANALYZE_RETRIES", "4"))
+    last = None
+    for i in range(tries):
+        try:
+            return fn(*args, **kwargs)
+        except Exception as e:
+            last = e
+            if i == tries - 1 or not _is_transient(e):
+                raise
+            wait = min(30, 5 * (i + 1))
+            print(f"[analyze] transient failure ({e}); retry {i + 2}/{tries} in {wait}s",
+                  file=sys.stderr)
+            time.sleep(wait)
+    raise last
+
 
 def _keys(service, *env_names):
     return apikeys.keys(service, *env_names)
@@ -493,7 +525,7 @@ OR_FREE_MODELS = [
     "nvidia/nemotron-3.5-super-vl:free",
     "google/gemma-4-31b-it:free",
     "google/gemma-4-26b-a4b-it:free",
-    "minimax/minimax-m3.1-flash:free",
+    "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
 ]
 
 
@@ -1167,9 +1199,9 @@ def analyze_video(path, title_hint="", fps=1.0, max_frames=10, allow_fallback=Tr
     if _keys("nvidia", "NVIDIA_API_KEYS", "NVIDIA_API_KEY"):
         for attempt in (0, 1):
             try:
-                raw = _call_nemotron(frames, title_hint=title_hint, duration=dur,
-                                     audio_b64=audio_b64, correction=corr if attempt else "",
-                                     extra=fact_note)
+                raw = _call_with_retry(_call_nemotron, frames, title_hint=title_hint, duration=dur,
+                                       audio_b64=audio_b64, correction=corr if attempt else "",
+                                       extra=fact_note)
                 cand = _extract_json(raw)
                 n = _narration_count(cand)
                 need = _min_narration(cand.get("audio_type"), dur)
@@ -1191,9 +1223,9 @@ def analyze_video(path, title_hint="", fps=1.0, max_frames=10, allow_fallback=Tr
         if _gemini_key():
             for attempt in (0, 1):
                 try:
-                    raw = _call_gemini(frames, title_hint=title_hint, duration=dur,
-                                       audio_b64=audio_b64, correction=corr if attempt else "",
-                                       extra=fact_note)
+                    raw = _call_with_retry(_call_gemini, frames, title_hint=title_hint, duration=dur,
+                                           audio_b64=audio_b64, correction=corr if attempt else "",
+                                           extra=fact_note)
                     cand = _extract_json(raw)
                     n = _narration_count(cand)
                     need = _min_narration(cand.get("audio_type"), dur)
@@ -1215,8 +1247,8 @@ def analyze_video(path, title_hint="", fps=1.0, max_frames=10, allow_fallback=Tr
         for or_model in OR_FREE_MODELS:
             for attempt in (0, 1):
                 try:
-                    raw = _call_openrouter(frames, title_hint=title_hint, duration=dur,
-                                           correction=corr if attempt else "",
+                    raw = _call_with_retry(_call_openrouter, frames, title_hint=title_hint,
+                                           duration=dur, correction=corr if attempt else "",
                                            model=or_model, extra=fact_note)
                     cand = _extract_json(raw)
                     n = _narration_count(cand)

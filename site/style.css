@@ -576,6 +576,11 @@ body { display:flex; }
   text-overflow:ellipsis;
 }
 
+.cell-sub.err-reason {
+  color:var(--err, #e5484d);
+  cursor:help;
+}
+
 .actions-cell { white-space:nowrap; }
 
 .sr-only {

@@ -42,6 +42,7 @@ except (TypeError, ValueError):
     MAX_SECS = 60.0
 ANALYZE = os.getenv("ANALYZE", "true").lower() in ("1", "true", "yes")
 VOICEOVER = os.getenv("VOICEOVER", "true").lower() in ("1", "true", "yes")
+STRICT_EDIT = os.getenv("STRICT_EDIT", "true").lower() in ("1", "true", "yes")
 PRIVACY = os.getenv("PRIVACY", "public")
 
 VOICE_LANG = {
@@ -135,16 +136,23 @@ def fetch_target():
 
 
 def make_plan(src, title_hint, vid):
-    """Returns (plan, used_ai). used_ai=True when Nemotron path succeeded."""
+    """Returns (plan, used_ai). used_ai=True when an AI backend produced the plan.
+
+    Edit mode must never upload a silent, caption-less video: when every AI
+    backend fails we raise so the worker marks the video failed (and auto-retries
+    later) instead of shipping an unedited clip.
+    """
     if not ANALYZE:
         print("[analyze] disabled; simple visual-only plan")
         return smart.analyze_video(src, title_hint=title_hint), False
     set_status(vid, status="analyzing")
     try:
-        plan = an.analyze_video(src, title_hint=title_hint)
+        plan = an.analyze_video(src, title_hint=title_hint, allow_fallback=False)
         return plan, True
     except Exception as e:
-        print(f"[analyze] nemotron failed ({e}); using simple fallback", file=sys.stderr)
+        if STRICT_EDIT:
+            raise RuntimeError(f"AI edit plan unavailable ({e}) - not uploading an unedited video")
+        print(f"[analyze] AI failed ({e}); using simple fallback", file=sys.stderr)
         return smart.analyze_video(src, title_hint=title_hint), False
 
 
@@ -476,6 +484,9 @@ def run():
 
         # 2. Kokoro narration (AI path only; fallback = visual-only, no voice).
         voice_wavs = make_voices(plan, work, vid, used_ai=used_ai)
+        if (used_ai and VOICEOVER and not voice_wavs
+                and any((s.get("narration") or "").strip() for s in plan["segments"])):
+            raise RuntimeError("voiceover failed for every segment - not uploading without narration")
 
         # 2b. Extend segment durations so narration plays at natural speed (no crush).
         #     Cap at source video duration so segments never go beyond available footage.

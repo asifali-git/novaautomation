@@ -815,11 +815,15 @@ async function loadVideos() {
       const retryBadge = (v.retry_count || 0) > 0
         ? `<span class="badge warn" title="auto/manual retries used">↻ ${v.retry_count}/3</span>` : '';
       const errTitle = ref.error || v.error;
+      const reason = (v.status === 'failed' || v.status === 'skipped') && errTitle
+        ? `<div class="cell-sub err-reason" title="${esc(errTitle)}">⚠ ${esc(String(errTitle).replace(/\s+/g, ' ').slice(0, 90))}${String(errTitle).length > 90 ? '…' : ''}</div>`
+        : '';
 
       return `<tr>
         <td>
           <div class="cell-title" title="${esc(v.title || v.video_key)}">${esc(v.title || v.video_key)}</div>
           <div class="cell-sub" title="${esc(v.url || '')}">${ytLink || `<span class="muted">${esc(v.url || '')}</span>`}</div>
+          ${reason}
         </td>
         <td class="muted">${esc(v.source_name || '—')}</td>
         <td>${badge} ${retryBadge}</td>

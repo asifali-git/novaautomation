@@ -118,6 +118,7 @@ jobs:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
           ANALYZE: ${{ vars.ANALYZE || 'true' }}
           VOICEOVER: ${{ vars.VOICEOVER || 'true' }}
+          STRICT_EDIT: ${{ vars.STRICT_EDIT || 'true' }}
           MAX_SECS: ${{ vars.MAX_SECS || '60' }}
           PRIVACY: ${{ vars.PRIVACY || 'public' }}
           FB_PAGE_URL: ${{ vars.FB_PAGE_URL || '' }}

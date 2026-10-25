@@ -129,15 +129,18 @@ def download_best(url, out_dir="work"):
 
 # ── AI pipeline (YouTube) ──────────────────────────────────────────────────
 
-def make_plan(src, title_hint):
-    """Nemotron AI analysis -> fallback to smart simple plan."""
+def make_plan(src, title_hint, strict=False):
+    """AI analysis -> smart fallback. With strict=True (YouTube edit job) an AI
+    failure raises instead of silently shipping a caption-less, silent video."""
     try:
-        plan = an.analyze_video(src, title_hint=title_hint)
+        plan = an.analyze_video(src, title_hint=title_hint, allow_fallback=False)
         print(f"[plan] AI: {len(plan['segments'])} segs, audio={plan.get('audio_type')}, "
               f"mode={plan.get('audio_mode')}, style={plan.get('style')}")
         return plan, True
     except Exception as e:
-        print(f"[plan] nemotron failed ({e}); using simple fallback", file=sys.stderr)
+        if strict:
+            raise RuntimeError(f"AI edit plan unavailable ({e})")
+        print(f"[plan] AI failed ({e}); using simple fallback", file=sys.stderr)
         plan = smart.analyze_video(src, title_hint=title_hint)
         print(f"[plan] simple: {len(plan['segments'])} segs, visual-only")
         return plan, False
@@ -447,7 +450,7 @@ def main():
         # 2. Analyze -> edit plan
         update_job(job_id, status="analyzing", title=title_hint[:200])
         needs_ai = "youtube" in plats
-        plan, used_ai = make_plan(src_path, title_hint)
+        plan, used_ai = make_plan(src_path, title_hint, strict=needs_ai)
 
         # 2b. Detect burned-in captions for removal (crop/delogo).
         detect_captions(src_path, plan)
@@ -463,6 +466,9 @@ def main():
         if used_ai:
             update_job(job_id, status="voiceover")
             voice_wavs = make_voices(plan, work_dir, used_ai=used_ai)
+            if (not voice_wavs
+                    and any((s.get("narration") or "").strip() for s in plan["segments"])):
+                raise RuntimeError("voiceover failed for every segment")
             # Extend segments so narration plays at natural speed.
             if voice_wavs:
                 try:
