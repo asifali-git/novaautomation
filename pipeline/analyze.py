@@ -24,6 +24,12 @@ import apikeys
 FFMPEG = os.getenv("FFMPEG_BIN", "ffmpeg")
 FFPROBE = os.getenv("FFPROBE_BIN", "ffprobe")
 MODEL = os.getenv("NVIDIA_MODEL", "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning")
+# Backup vision models when the primary omni model is overloaded/retired.
+# Only "omni" models accept the audio track; the rest work from frames + title.
+MODEL_FALLBACKS = [m.strip() for m in os.getenv(
+    "NVIDIA_MODEL_FALLBACKS",
+    "nvidia/nemotron-3.5-super-vl-120b-a12b,meta/llama-3.2-11b-vision-instruct"
+).split(",") if m.strip()]
 API = "https://integrate.api.nvidia.com/v1/chat/completions"
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.8-flash")
 GEMINI_API = ("https://generativelanguage.googleapis.com/v1beta/models/"
@@ -358,7 +364,8 @@ def _api_key():
     return pool[0]
 
 
-def _call_nemotron(frames, title_hint="", duration=None, audio_b64=None, correction="", extra=""):
+def _nemotron_content(frames, title_hint="", duration=None, audio_b64=None,
+                      correction="", extra="", model=MODEL):
     content = [{"type": "text", "text": _prompt()}]
     if extra:
         content.append({"type": "text", "text": extra})
@@ -366,7 +373,7 @@ def _call_nemotron(frames, title_hint="", duration=None, audio_b64=None, correct
         content.append({"type": "text", "text": f"Source title/context: {title_hint}"})
     if duration:
         content.append({"type": "text", "text": _duration_note(duration)})
-    if audio_b64:
+    if audio_b64 and "omni" in model:
         content.append({
             "type": "audio_url",
             "audio_url": {"url": f"data:audio/wav;base64,{audio_b64}"},
@@ -374,6 +381,12 @@ def _call_nemotron(frames, title_hint="", duration=None, audio_b64=None, correct
         content.append({
             "type": "text",
             "text": "Audio attached. Listen to decide audio_type and narration.",
+        })
+    elif audio_b64:
+        content.append({
+            "type": "text",
+            "text": "Audio is NOT attached for this model. Infer audio_type "
+                    "(asmr/vocal/music/silent) from the visuals and title only.",
         })
     content.append({
         "type": "text",
@@ -387,41 +400,50 @@ def _call_nemotron(frames, title_hint="", duration=None, audio_b64=None, correct
         })
     if correction:
         content.append({"type": "text", "text": correction})
+    return content
 
+
+def _call_nemotron(frames, title_hint="", duration=None, audio_b64=None, correction="", extra=""):
     pool = _keys("nvidia", "NVIDIA_API_KEYS", "NVIDIA_API_KEY")
     if not pool:
         raise RuntimeError("NVIDIA_API_KEY not set")
-    payload = {
-        "model": MODEL,
-        "messages": [{"role": "user", "content": content}],
-        "max_tokens": 8192,
-        "temperature": 0.7,
-        "top_p": 0.95,
-        "chat_template_kwargs": {"enable_thinking": False},
-    }
-    import time
+    models = [MODEL] + [m for m in MODEL_FALLBACKS if m != MODEL]
     last = None
-    for idx, key in enumerate(pool):
-        headers = {"Authorization": f"Bearer {key}", "Content-Type": "application/json"}
-        for attempt in range(3):
-            try:
-                r = requests.post(API, headers=headers, json=payload, timeout=300)
-                if r.status_code in DEAD_CODES:
-                    last = RuntimeError(f"HTTP {r.status_code}")
-                    apikeys.report("nvidia", idx, False, f"HTTP {r.status_code}")
-                    break
-                if r.status_code >= 500:
-                    last = RuntimeError(f"HTTP {r.status_code}")
+    for model in models:
+        payload = {
+            "model": model,
+            "messages": [{"role": "user",
+                          "content": _nemotron_content(frames, title_hint, duration,
+                                                       audio_b64, correction, extra, model)}],
+            "max_tokens": 8192,
+            "temperature": 0.7,
+            "top_p": 0.95,
+            "chat_template_kwargs": {"enable_thinking": False},
+        }
+        for idx, key in enumerate(pool):
+            headers = {"Authorization": f"Bearer {key}", "Content-Type": "application/json"}
+            for attempt in range(3):
+                try:
+                    r = requests.post(API, headers=headers, json=payload, timeout=300)
+                    if r.status_code in DEAD_CODES:
+                        last = RuntimeError(f"{model}: HTTP {r.status_code}")
+                        apikeys.report("nvidia", idx, False, f"HTTP {r.status_code}")
+                        break
+                    if r.status_code >= 500:
+                        last = RuntimeError(f"{model}: HTTP {r.status_code}")
+                        time.sleep(5 * (attempt + 1))
+                        continue
+                    r.raise_for_status()
+                    apikeys.report("nvidia", idx, True)
+                    print(f"[analyze] nemotron model {model}", file=sys.stderr)
+                    return r.json()["choices"][0]["message"]["content"]
+                except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
+                    last = RuntimeError(f"{model}: {e}")
                     time.sleep(5 * (attempt + 1))
-                    continue
-                r.raise_for_status()
-                apikeys.report("nvidia", idx, True)
-                return r.json()["choices"][0]["message"]["content"]
-            except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
-                last = e
-                time.sleep(5 * (attempt + 1))
-        if isinstance(last, (requests.exceptions.Timeout, requests.exceptions.ConnectionError)):
-            raise last
+            if isinstance(last, (requests.exceptions.Timeout, requests.exceptions.ConnectionError)):
+                raise last
+        # Model unavailable on every key -> fall through to the next backup model.
+        print(f"[analyze] {model} unavailable ({last}); trying backup model", file=sys.stderr)
     raise last
 
 
