@@ -1,0 +1,170 @@
+name: docgen
+
+# Documentary shorts on GitHub runners (free stack):
+#   Gemini script -> Pixabay stock clips -> Edge TTS voice -> burned subtitles
+# Languages: en (English), hi (Hindi/Devanagari), hinglish (Roman Hinglish)
+# NVIDIA is not used here (it stays on text-to-video + video analysis).
+
+on:
+  workflow_dispatch:
+    inputs:
+      topic:
+        description: 'Documentary topic'
+        required: true
+        default: 'the history of coffee'
+      language:
+        description: 'Narration language'
+        required: true
+        type: choice
+        default: en
+        options: [en, hi, hinglish]
+      paragraphs:
+        description: 'Script paragraphs (~130 words / ~60s each)'
+        required: false
+        default: '1'
+      aspect:
+        description: 'Aspect ratio'
+        required: true
+        type: choice
+        default: 9:16
+        options: ['9:16', '16:9', '1:1']
+      source:
+        description: 'Stock clip source'
+        required: true
+        type: choice
+        default: pixabay
+        options: [pixabay, coverr]
+      qc:
+        description: 'Run NVIDIA VL quality check on the final video'
+        required: false
+        type: choice
+        default: 'true'
+        options: ['true', 'false']
+  workflow_call:
+    inputs:
+      topic:
+        required: true
+        type: string
+      language:
+        required: false
+        type: string
+        default: en
+      paragraphs:
+        required: false
+        type: string
+        default: '1'
+      aspect:
+        required: false
+        type: string
+        default: '9:16'
+      source:
+        required: false
+        type: string
+        default: pixabay
+      qc:
+        required: false
+        type: string
+        default: 'true'
+
+concurrency:
+  group: docgen-${{ inputs.topic }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  make:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      MPT_DIR: ${{ github.workspace }}/mpt
+      MAX_SECS: ${{ vars.MAX_SECS || '60' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: System deps (ffmpeg + fonts)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg fonts-dejavu-core fonts-liberation
+
+      - name: Clone MoneyPrinterTurbo
+        run: git clone --depth 1 https://github.com/harry0703/MoneyPrinterTurbo.git mpt
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: mpt/requirements.txt
+
+      - name: Install MoneyPrinterTurbo deps
+        run: |
+          python -m pip install -q --upgrade pip
+          pip install -q -r mpt/requirements.txt
+
+      - name: Install NOVA deps
+        run: pip install -q requests
+
+      - name: Write MPT config (Pixabay + free path)
+        env:
+          PIXABAY_API_KEYS: ${{ secrets.PIXABAY_API_KEYS || secrets.PIXABAY_API_KEY }}
+        run: python pipeline/mpt_config.py
+
+      - name: Hindi subtitle font
+        if: ${{ inputs.language == 'hi' }}
+        run: |
+          curl -fsSL -o "mpt/resource/fonts/NotoSansDevanagari-Bold.ttf" \
+            https://github.com/googlefonts/noto-fonts/raw/main/hinted/ttf/NotoSansDevanagari/NotoSansDevanagari-Bold.ttf
+          ls -l mpt/resource/fonts/NotoSansDevanagari-Bold.ttf
+
+      - name: Fetch API keys from hub (optional)
+        continue-on-error: true
+        env:
+          WORKER_URL: ${{ secrets.WORKER_URL }}
+          INTERNAL_TOKEN: ${{ secrets.INTERNAL_TOKEN }}
+        run: python pipeline/hub_keys.py
+
+      - name: Generate documentary
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_API_KEYS: ${{ secrets.GEMINI_API_KEYS || secrets.GEMINI_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          OPENROUTER_API_KEYS: ${{ secrets.OPENROUTER_API_KEYS || secrets.OPENROUTER_API_KEY }}
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          NVIDIA_API_KEYS: ${{ secrets.NVIDIA_API_KEYS || secrets.NVIDIA_API_KEY }}
+          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEYS || secrets.PIXABAY_API_KEY }}
+          MPT_DIR: ${{ github.workspace }}/mpt
+        run: |
+          set -o pipefail
+          QC=""
+          if [ "${{ inputs.qc }}" = "true" ]; then QC="--qc"; fi
+          python pipeline/docgen.py \
+            --topic "${{ inputs.topic }}" \
+            --language "${{ inputs.language }}" \
+            --paragraphs "${{ inputs.paragraphs }}" \
+            --aspect "${{ inputs.aspect }}" \
+            --source "${{ inputs.source }}" \
+            --threads 4 \
+            $QC 2>&1 | tee docgen.log
+
+      - name: Show result JSON
+        if: ${{ always() }}
+        continue-on-error: true
+        run: |
+          for f in pipeline/docs/*/meta.json pipeline/docs/*/qc.json; do
+            [ -f "$f" ] && echo "=== $f ===" && cat "$f"
+          done
+
+      - name: Upload video
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: docgen-${{ inputs.language }}-${{ github.run_number }}
+          path: |
+            pipeline/docs/**/final-1.mp4
+            pipeline/docs/**/brief.json
+            pipeline/docs/**/meta.json
+            pipeline/docs/**/qc.json
+            pipeline/docs/**/subtitle.srt
+          if-no-files-found: warn
+          retention-days: 7
