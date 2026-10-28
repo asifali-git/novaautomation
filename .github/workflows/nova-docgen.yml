@@ -1,0 +1,75 @@
+name: NOVA Documentary Generator
+
+on:
+  workflow_dispatch:
+    inputs:
+      topic:
+        description: 'Documentary topic'
+        required: true
+        default: 'the history of coffee'
+      language:
+        description: 'Language (en, hi, hinglish)'
+        required: false
+        default: 'en'
+      aspect:
+        description: 'Video aspect ratio'
+        required: false
+        default: '9:16'
+
+jobs:
+  docgen:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install -r pipeline/requirements.txt
+          pip install imageio-ffmpeg edge-tts kokoro-onnx onnxruntime numpy soundfile requests
+
+      - name: Clone MoneyPrinterTurbo
+        run: |
+          git clone --depth 1 https://github.com/harry0703/MoneyPrinterTurbo.git mpt
+          cd mpt
+          pip install -r requirements.txt 2>/dev/null || true
+
+      - name: Configure MPT for Pixabay
+        env:
+          PIXABAY_API_KEYS: ${{ secrets.PIXABAY_API_KEYS }}
+          VIDEO_SOURCE: 'pixabay'
+        run: |
+          python pipeline/mpt_config.py --print
+          python pipeline/mpt_config.py
+
+      - name: Run docgen pipeline
+        env:
+          GEMINI_API_KEYS: ${{ secrets.GEMINI_API_KEYS }}
+          NVIDIA_API_KEYS: ${{ secrets.NVIDIA_API_KEYS }}
+          MPT_DIR: ${{ github.workspace }}/mpt
+        run: |
+          python pipeline/docgen.py \
+            --topic "${{ github.event.inputs.topic }}" \
+            --language "${{ github.event.inputs.language }}" \
+            --aspect "${{ github.event.inputs.aspect }}" \
+            --source pixabay \
+            --voice-engine kokoro \
+            --no-vet \
+            --qc
+
+      - name: Upload final video artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nova-final-video
+          path: |
+            pipeline/docs/**/final-1.mp4
+            pipeline/docs/**/meta.json
+            pipeline/docs/**/brief.json
+          retention-days: 7
