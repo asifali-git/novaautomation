@@ -49,6 +49,16 @@ for stream in (sys.stdout, sys.stderr):
     except Exception:
         pass
 
+try:
+    import imageio_ffmpeg
+except Exception:  # ffmpeg comes from PATH then
+    imageio_ffmpeg = None
+
+DEVANAGARI_FONT_URL = (
+    "https://github.com/googlefonts/noto-fonts/raw/main/hinted/ttf/"
+    "NotoSansDevanagari/NotoSansDevanagari-Bold.ttf"
+)
+
 MPT_DIR = Path(os.getenv("MPT_DIR", r"D:\repos\MoneyPrinterTurbo"))
 MPT_CLI = MPT_DIR / "cli.py"
 MPT_STORAGE = MPT_DIR / "storage" / "tasks"
@@ -88,7 +98,7 @@ def make_brief(topic: str, paragraphs: int, language: str, angle: str) -> dict:
     return brief
 
 
-def build_command(args: argparse.Namespace, brief: dict) -> list[str]:
+def build_command(args: argparse.Namespace, brief: dict, custom_audio: Path | None = None) -> list[str]:
     terms = ",".join(brief.get("search_terms") or [])
     setup = LANGUAGE_SETUP[args.language]
     cmd = [
@@ -113,7 +123,11 @@ def build_command(args: argparse.Namespace, brief: dict) -> list[str]:
         cmd += ["--video-terms", terms]
     if args.font_name:
         cmd += ["--font-name", args.font_name]
-    cmd.append("--subtitle-enabled" if args.subtitle else "--no-subtitle-enabled")
+    if custom_audio:
+        # One narration track for the whole video; subtitles come from our own SRT.
+        cmd += ["--custom-audio-file", str(custom_audio), "--no-subtitle-enabled"]
+    else:
+        cmd.append("--subtitle-enabled" if args.subtitle else "--no-subtitle-enabled")
     if args.stop_at:
         cmd += ["--stop-at", args.stop_at]
     return cmd
@@ -169,6 +183,60 @@ def collect_outputs(task_id: str, out_dir: Path) -> dict:
     return info
 
 
+def ffmpeg_exe() -> str:
+    if imageio_ffmpeg is not None:
+        try:
+            return imageio_ffmpeg.get_ffmpeg_exe()
+        except Exception:
+            pass
+    found = shutil.which("ffmpeg")
+    if not found:
+        raise SystemExit("[docgen] ffmpeg not available (pip install imageio-ffmpeg)")
+    return found
+
+
+def ensure_font(work_dir: Path, language: str) -> Path | None:
+    """Put a subtitle font next to the video; Hindi needs a Devanagari face."""
+    work_dir.mkdir(parents=True, exist_ok=True)
+    font_dir = work_dir / "fonts"
+    if language != "hi":
+        return None
+    font_dir.mkdir(parents=True, exist_ok=True)
+    target = font_dir / "NotoSansDevanagari-Bold.ttf"
+    if target.exists() and target.stat().st_size > 50000:
+        return target
+    try:
+        import urllib.request
+
+        urllib.request.urlretrieve(DEVANAGARI_FONT_URL, target)
+        return target
+    except Exception as exc:  # subtitle rendering still works, glyphs may differ
+        print(f"[docgen] Devanagari font download failed ({exc}); using system fonts")
+        return None
+
+
+def burn_subtitles(video: Path, srt: Path, out: Path, font_dir: Path | None) -> Path:
+    """Second pass with libass so subtitle shaping (Hindi) is correct."""
+    work = video.parent
+    srt_local = work / srt.name
+    if srt.resolve() != srt_local.resolve():
+        shutil.copy2(srt, srt_local)
+    vf = f"subtitles={srt_local.name}"
+    if font_dir is not None and font_dir.exists():
+        vf += f":fontsdir={font_dir.name}"
+    cmd = [
+        ffmpeg_exe(), "-y", "-hide_banner", "-loglevel", "error",
+        "-i", video.name,
+        "-vf", vf,
+        "-c:v", "libx264", "-preset", "veryfast", "-crf", "20",
+        "-c:a", "copy",
+        out.name,
+    ]
+    print(f"[docgen] burning subtitles -> {out.name}")
+    subprocess.run(cmd, cwd=str(work), check=True, timeout=3600)
+    return out
+
+
 def run_qc(video: Path, out_dir: Path) -> None:
     """NVIDIA Nemotron VL analysis of the finished video -> qc.json (never fatal)."""
     try:
@@ -204,6 +272,9 @@ def main() -> int:
     parser.add_argument("--aspect", default="9:16", choices=["9:16", "16:9", "1:1"])
     parser.add_argument("--source", default="pixabay", choices=["pixabay", "coverr", "pexels"])
     parser.add_argument("--voice", default=None, help="Edge TTS voice (default depends on --language)")
+    parser.add_argument("--voice-engine", default="kokoro", choices=["kokoro", "edge"],
+                        help="kokoro = local free TTS (one track, works on GitHub runners); edge = Edge TTS")
+    parser.add_argument("--female", action="store_true", help="female narrator voice")
     parser.add_argument("--voice-rate", type=float, default=1.0)
     parser.add_argument("--font-name", default=None,
                         help="subtitle font inside MPT resource/fonts (auto per language)")
@@ -238,7 +309,28 @@ def main() -> int:
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / "brief.json").write_text(json.dumps(brief, indent=2, ensure_ascii=False), encoding="utf-8")
 
-    cmd = build_command(args, brief)
+    custom_audio: Path | None = None
+    srt_file: Path | None = None
+    voice_info: dict = {}
+    if args.voice_engine == "kokoro" and args.stop_at != "script":
+        from pipeline import kokoro_voice
+
+        print(f"[docgen] narration: kokoro ({args.language}, voice={args.voice})")
+        voice_info = kokoro_voice.synthesize(
+            brief["script"],
+            out_dir / "voice.wav",
+            language=args.language,
+            female=args.female,
+            srt_path=out_dir / "subtitles.srt",
+        )
+        custom_audio = Path(voice_info["wav"])
+        srt_file = Path(voice_info["srt"])
+        print(
+            f"[docgen] narration ready: {voice_info['seconds']}s / {voice_info['sentences']} sentences "
+            f"/ voice {voice_info['voice']} ({voice_info['elapsed_sec']}s)"
+        )
+
+    cmd = build_command(args, brief, custom_audio=custom_audio)
     log_path = out_dir / "run.log"
     print("[docgen] " + " ".join(cmd[1:5]) + " ...")
     started = time.time()
@@ -259,16 +351,40 @@ def main() -> int:
         "language_label": brief.get("language"),
         "aspect": args.aspect,
         "source": args.source,
-        "voice": args.voice,
+        "voice": voice_info.get("voice") or args.voice,
+        "voice_engine": args.voice_engine,
+        "narration_seconds": voice_info.get("seconds"),
+        "subtitle_file": str(srt_file) if srt_file else None,
         "font_name": args.font_name,
         "stop_at": args.stop_at,
         "exit_code": code,
         "elapsed_sec": elapsed,
-        "engine": "MoneyPrinterTurbo + Gemini script + Edge TTS voice + Pixabay clips",
+        "engine": (
+            "MoneyPrinterTurbo + Gemini script + kokoro narration + Pixabay clips"
+            if args.voice_engine == "kokoro"
+            else "MoneyPrinterTurbo + Gemini script + Edge TTS voice + Pixabay clips"
+        ),
         "log": str(log_path),
     }
     if task_id:
         meta.update(collect_outputs(task_id, out_dir))
+
+    final = meta.get("final")
+    if final and srt_file and srt_file.exists() and args.subtitle:
+        raw = Path(final)
+        plain = raw.with_name("video-raw.mp4")
+        try:
+            font_dir = ensure_font(out_dir, args.language)
+            shutil.move(str(raw), str(plain))
+            burn_subtitles(plain, srt_file, raw, font_dir)
+            meta["final"] = str(raw)
+            meta["raw_video"] = str(plain)
+            meta["size_mb"] = round(raw.stat().st_size / (1024 * 1024), 2)
+            meta["subtitle_font_dir"] = str(font_dir) if font_dir else None
+        except Exception as exc:  # keep the un-burned video
+            print(f"[docgen] subtitle burn failed ({str(exc)[:200]}); keeping plain video")
+            meta["final"] = str(plain) if plain.exists() else str(raw)
+
     (out_dir / "meta.json").write_text(json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8")
 
     print(f"[docgen] exit={code} in {elapsed}s")

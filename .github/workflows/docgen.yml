@@ -103,7 +103,13 @@ jobs:
           pip install -q -r mpt/requirements.txt
 
       - name: Install NOVA deps
-        run: pip install -q requests
+        run: pip install -q requests kokoro-onnx soundfile onnxruntime
+
+      - name: Cache kokoro model
+        uses: actions/cache@v4
+        with:
+          path: kokoro
+          key: kokoro-v1.0-model
 
       - name: Write MPT config (Pixabay + free path)
         env:
