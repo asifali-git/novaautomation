@@ -24,3 +24,12 @@ jobs:
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
           workingDirectory: worker
           command: deploy
+
+      # New tables (device_tokens, deliveries) must exist in D1.
+      # schema.sql uses IF NOT EXISTS, so re-running is safe.
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          workingDirectory: worker
+          command: d1 execute novahub --remote --file=./schema.sql
