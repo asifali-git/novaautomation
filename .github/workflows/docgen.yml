@@ -174,3 +174,19 @@ jobs:
             pipeline/docs/**/subtitle.srt
           if-no-files-found: warn
           retention-days: 7
+
+      - name: Push video to device (Catbox + FCM)
+        if: ${{ success() }}
+        continue-on-error: true
+        env:
+          CATBOX_USERHASH: ${{ secrets.CATBOX_USERHASH }}
+          WORKER_URL: ${{ secrets.WORKER_URL }}
+          INTERNAL_TOKEN: ${{ secrets.INTERNAL_TOKEN }}
+          NOVA_USER_ID: ${{ vars.NOVA_USER_ID }}
+        run: |
+          for video in pipeline/docs/*/final-1.mp4; do
+            [ -f "$video" ] || continue
+            dir="$(dirname "$video")"
+            python pipeline/catbox_push.py "$video" \
+              --brief "$dir/brief.json" --meta "$dir/meta.json"
+          done

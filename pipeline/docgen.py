@@ -98,16 +98,23 @@ def make_brief(topic: str, paragraphs: int, language: str, angle: str) -> dict:
     return brief
 
 
-def build_command(args: argparse.Namespace, brief: dict, custom_audio: Path | None = None) -> list[str]:
-    terms = ",".join(brief.get("search_terms") or [])
+def build_command(args: argparse.Namespace, brief: dict, custom_audio: Path | None = None,
+                  local_materials: list[Path] | None = None) -> list[str]:
     setup = LANGUAGE_SETUP[args.language]
+    if local_materials:
+        # clipvet already verified and cropped these, so MPT only concatenates.
+        source = "local"
+        materials = ",".join(str(p) for p in local_materials)
+    else:
+        source = args.source
+        materials = ""
     cmd = [
         sys.executable,
         str(MPT_CLI),
         "--video-subject", brief.get("title") or args.topic,
         "--video-script", brief["script"],
         "--video-language", setup["mpt_lang"],
-        "--video-source", args.source,
+        "--video-source", source,
         "--video-aspect", args.aspect,
         "--voice-name", args.voice,
         "--voice-rate", str(args.voice_rate),
@@ -119,8 +126,16 @@ def build_command(args: argparse.Namespace, brief: dict, custom_audio: Path | No
         "--subtitle-display-mode", "sentence",
         "--n-threads", str(args.threads),
     ]
-    if terms:
-        cmd += ["--video-terms", terms]
+    if materials:
+        cmd += ["--video-materials", materials]
+    else:
+        terms = ",".join(brains.shot_terms(brief))
+        if terms:
+            cmd += ["--video-terms", terms]
+        if args.match_script_order:
+            # Round-robin the candidates per term so an early term cannot eat the
+            # whole timeline; this is what keeps clips near their sentence.
+            cmd.append("--match-materials-to-script")
     if args.font_name:
         cmd += ["--font-name", args.font_name]
     if custom_audio:
@@ -237,6 +252,49 @@ def burn_subtitles(video: Path, srt: Path, out: Path, font_dir: Path | None) -> 
     return out
 
 
+def vet_clips(brief: dict, out_dir: Path, args: argparse.Namespace,
+              narration_seconds: float = 0.0) -> tuple[list[Path] | None, dict]:
+    """Option B: download candidates, judge each frame with NVIDIA VL, keep matches.
+
+    A clip that the vision model rejects is exactly the mismatch QC catches too
+    late ("strawberry drink under a line about coffee"). Doing it here means the
+    wrong clip never reaches the timeline. Returns (paths, report).
+    """
+    shots = brief.get("shots") or []
+    if not shots:
+        return None, {"reason": "brief has no shots"}
+    try:
+        from pipeline import clipvet
+    except Exception as exc:  # module missing -> plain stock path still works
+        print(f"[docgen] clipvet unavailable ({str(exc)[:120]}); using stock terms")
+        return None, {"reason": f"clipvet import failed: {exc}"}
+
+    # The timeline has to cover the narration, so ask for slightly more than
+    # measured; a slow TTS then cannot leave black frames at the end.
+    needed = float(narration_seconds) if narration_seconds else 0.0
+    try:
+        result = clipvet.vet_shots(
+            shots,
+            out_dir,
+            aspect=args.aspect,
+            clip_duration=args.clip_duration,
+            candidates_per_shot=args.candidates,
+            needed_seconds=needed,
+        )
+    except Exception as exc:
+        print(f"[docgen] clipvet failed ({str(exc)[:160]}); using stock terms")
+        return None, {"reason": f"clipvet failed: {exc}"}
+
+    (out_dir / "clipvet.json").write_text(
+        json.dumps(result, indent=2, ensure_ascii=False, default=str), encoding="utf-8"
+    )
+    clips = [Path(p) for p in result.get("clips") or [] if Path(p).exists()]
+    kept = sum(1 for r in result.get("report", []) if r.get("match"))
+    judged = sum(1 for r in result.get("report", []) if r.get("match") is not None)
+    print(f"[docgen] vet: {kept}/{judged} judged clips matched, {result.get('total_seconds')}s total")
+    return (clips or None), result
+
+
 def run_qc(video: Path, out_dir: Path) -> None:
     """NVIDIA Nemotron VL analysis of the finished video -> qc.json (never fatal)."""
     try:
@@ -271,6 +329,14 @@ def main() -> int:
     parser.add_argument("--paragraphs", type=int, default=1, help="script paragraphs (~130 words each)")
     parser.add_argument("--aspect", default="9:16", choices=["9:16", "16:9", "1:1"])
     parser.add_argument("--source", default="pixabay", choices=["pixabay", "coverr", "pexels"])
+    parser.add_argument("--vet", action="store_true",
+                        help="download + NVIDIA-VL-verify every clip before rendering (Option B)")
+    parser.add_argument("--no-vet", dest="vet", action="store_false")
+    parser.set_defaults(vet=True)
+    parser.add_argument("--match-script-order", action="store_true",
+                        help="keep MPT materials in script order (Option A, on when not vetting)")
+    parser.add_argument("--candidates", type=int, default=3,
+                        help="clipvet candidates to judge per shot")
     parser.add_argument("--voice", default=None, help="Edge TTS voice (default depends on --language)")
     parser.add_argument("--voice-engine", default="kokoro", choices=["kokoro", "edge"],
                         help="kokoro = local free TTS (one track, works on GitHub runners); edge = Edge TTS")
@@ -330,7 +396,18 @@ def main() -> int:
             f"/ voice {voice_info['voice']} ({voice_info['elapsed_sec']}s)"
         )
 
-    cmd = build_command(args, brief, custom_audio=custom_audio)
+    local_materials: list[Path] | None = None
+    vet_info: dict = {}
+    if args.vet and args.stop_at not in {"script", "terms", "audio"}:
+        local_materials, vet_info = vet_clips(
+            brief, out_dir, args, narration_seconds=float(voice_info.get("seconds") or 0.0)
+        )
+        if local_materials:
+            print(f"[docgen] {len(local_materials)} clips verified -> local source")
+        else:
+            print("[docgen] vet found nothing usable, falling back to Pixabay search terms")
+
+    cmd = build_command(args, brief, custom_audio=custom_audio, local_materials=local_materials)
     log_path = out_dir / "run.log"
     print("[docgen] " + " ".join(cmd[1:5]) + " ...")
     started = time.time()

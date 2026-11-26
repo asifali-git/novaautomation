@@ -309,9 +309,19 @@ BRIEF_SCHEMA = (
     '{"title": "<=60 chars searchable title", '
     '"hook": "one sentence that stops the scroll", '
     '"script": "narration text only, ready for text-to-speech", '
-    '"search_terms": ["6-8 short ENGLISH stock-footage queries, 1-3 words each"], '
+    '"shots": [{"sentence": "<one narration sentence, in script order>", '
+    '"visual": "<2-4 word ENGLISH stock-footage query showing exactly that moment>"}], '
     '"description": "2 sentence YouTube description", '
     '"tags": ["8-12 lowercase tags"]}'
+)
+
+# Stock search terms have to name something a camera can actually film. Abstract
+# phrasing ("midnight prayer", "modern thought") is what pulls random clips.
+VISUAL_RULE = (
+    "Each shot.visual must name a concrete filmable subject - an object, place, "
+    "action or animal - never an idea or an era. Good: 'monk pouring coffee', "
+    "'goats eating red berries', 'coffee beans roasting'. Bad: 'faith', "
+    "'enlightenment', 'midnight prayer'. Always 2-4 words, always English."
 )
 
 
@@ -338,9 +348,13 @@ def documentary_brief(
         prompt += f"Angle to emphasise: {angle}\n"
     prompt += (
         "Write one continuous narration for text-to-speech: short sentences, concrete imagery, "
-        "no bullet points, no headings. Then packaging: a title, a hook line, 6-8 stock-footage "
-        "search terms, a description, and tags.\n"
-        "IMPORTANT: search_terms must always be short English queries (they are sent to Pixabay).\n\n"
+        "no bullet points, no headings. Then packaging: a title, a hook line, one shot per "
+        "narration sentence (in the same order), a description, and tags.\n"
+        "IMPORTANT: split the narration into its sentences, then give every sentence its own "
+        "shot object. shots must have exactly as many entries as the script has sentences, in "
+        "the same order, and each shot.visual must describe what the viewer should SEE while "
+        "that sentence is spoken.\n"
+        f"{VISUAL_RULE}\n\n"
         f"JSON shape: {BRIEF_SCHEMA}"
     )
     data, result = complete_json(prompt, system=DOC_SYSTEM, max_tokens=4096, temperature=0.5, chain=chain)
@@ -355,6 +369,7 @@ def documentary_brief(
         "title": str(data.get("title") or topic).strip(),
         "hook": str(data.get("hook") or "").strip(),
         "script": script,
+        "shots": _clean_shots(data.get("shots"), script),
         "search_terms": terms,
         "description": str(data.get("description") or "").strip(),
         "tags": [str(t).strip() for t in (data.get("tags") or []) if str(t).strip()],
@@ -363,6 +378,41 @@ def documentary_brief(
         "model": result.model,
         "attempts": [a.as_dict() for a in result.attempts],
     }
+
+
+def _clean_shots(raw, script: str) -> list[dict]:
+    """Keep ordered (sentence, visual) pairs; search terms are derived from these.
+
+    The visual field has to be concrete or Pixabay returns unrelated footage, so
+    anything abstract is dropped here rather than trusted to the search.
+    """
+    out: list[dict] = []
+    for item in raw if isinstance(raw, list) else []:
+        if not isinstance(item, dict):
+            continue
+        sentence = str(item.get("sentence") or "").strip()
+        visual = str(item.get("visual") or item.get("search_term") or "").strip()
+        if not visual:
+            continue
+        words = [w for w in re.findall(r"[A-Za-z']+", visual.lower()) if len(w) > 2]
+        # One-word or purely abstract queries ("faith", "history") are useless.
+        if len(words) < 2:
+            continue
+        out.append({"sentence": sentence, "visual": visual.lower()})
+    return out
+
+
+def shot_terms(brief: dict) -> list[str]:
+    """Ordered unique search terms, one per shot, with a flat fallback."""
+    shots = brief.get("shots") or []
+    terms: list[str] = []
+    for shot in shots:
+        visual = str(shot.get("visual") or "").strip().lower()
+        if visual and visual not in terms:
+            terms.append(visual)
+    if not terms:
+        terms = [str(t).strip().lower() for t in (brief.get("search_terms") or []) if str(t).strip()]
+    return terms
 
 
 if __name__ == "__main__":

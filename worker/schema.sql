@@ -143,3 +143,39 @@ CREATE TABLE IF NOT EXISTS settings (
   updated_at INTEGER NOT NULL,
   PRIMARY KEY (user_id, key)
 );
+
+-- Mobile APK: FCM device tokens (token rotates on reinstall/refresh).
+CREATE TABLE IF NOT EXISTS device_tokens (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  token TEXT NOT NULL,
+  device_id TEXT NOT NULL DEFAULT '',
+  platform TEXT NOT NULL DEFAULT 'android',
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL,
+  UNIQUE(token)
+);
+CREATE INDEX IF NOT EXISTS idx_devices_user ON device_tokens(user_id);
+
+-- Pending video deliveries: CI uploads to Catbox -> worker queues a push.
+-- status: pending -> delivered (APK acks)
+CREATE TABLE IF NOT EXISTS deliveries (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL DEFAULT 0,
+  video_id INTEGER,
+  task_id INTEGER,
+  platform TEXT NOT NULL DEFAULT '',
+  source_url TEXT,
+  title TEXT,
+  file_name TEXT NOT NULL,
+  catbox_url TEXT NOT NULL,
+  mime TEXT NOT NULL DEFAULT 'video/mp4',
+  size_bytes INTEGER NOT NULL DEFAULT 0,
+  status TEXT NOT NULL DEFAULT 'pending',
+  error TEXT,
+  created_at INTEGER NOT NULL,
+  delivered_at INTEGER,
+  pushed_at INTEGER
+);
+CREATE INDEX IF NOT EXISTS idx_deliveries_user ON deliveries(user_id, status);
+CREATE INDEX IF NOT EXISTS idx_deliveries_video ON deliveries(video_id);

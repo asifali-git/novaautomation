@@ -1,6 +1,8 @@
 // nova-hub worker — single-file fetch router, no framework.
 // Public API (frontend) + internal API (CI runner) + OAuth callback.
 
+import { pushDeliveryToUser } from './fcm.js';
+
 const JSON_HEADERS = { 'content-type': 'application/json; charset=utf-8' };
 
 function json(data, status = 200) {
@@ -1411,6 +1413,91 @@ export default {
         return withCors(json({ user }));
       }
 
+      // ---- Mobile APK: register FCM token (same login as the website) ----
+      if (path === '/api/devices/register' && req.method === 'POST') {
+        const body = await readBody(req);
+        const token = String(body.token || '').trim();
+        const deviceId = String(body.device_id || '').trim().slice(0, 120);
+        if (token.length < 20 || token.length > 512) {
+          return withCors(json({ error: 'invalid FCM token' }, 400));
+        }
+        const t = now();
+        await env.DB.prepare(
+          `INSERT INTO device_tokens (user_id, token, device_id, platform, created_at, updated_at)
+           VALUES (?, ?, ?, 'android', ?, ?)
+           ON CONFLICT(token) DO UPDATE SET user_id=excluded.user_id, device_id=excluded.device_id,
+             updated_at=excluded.updated_at`
+        ).bind(gateUser.id, token, deviceId, t, t).run();
+        return withCors(json({ ok: true, user_id: gateUser.id }));
+      }
+
+      // ---- Mobile APK: platforms -> links -> full timeline (scoped to user) ----
+      if (path === '/api/mobile/tree' && req.method === 'GET') {
+        const [tasks, videos] = await Promise.all([
+          listTasks(env.DB, gateUser),
+          listVideos(env.DB, { limit: 500, user: gateUser }),
+        ]);
+        const platforms = {};
+        for (const task of tasks) {
+          const p = task.platform || 'unknown';
+          if (!platforms[p]) platforms[p] = { platform: p, tasks: [] };
+          platforms[p].tasks.push(task);
+        }
+        const byTask = {};
+        for (const v of videos) {
+          (byTask[v.task_id] ||= []).push({
+            id: v.id,
+            video_key: v.video_key,
+            url: v.url,
+            title: v.title,
+            status: v.status,
+            error: v.error || null,
+            detected_at: v.detected_at || null,
+            dispatched_at: v.dispatched_at || null,
+            downloaded_at: v.downloaded_at || null,
+            edited_at: v.edited_at || null,
+            uploaded_at: v.uploaded_at || null,
+            failed_at: v.failed_at || null,
+            cancelled_at: v.cancelled_at || null,
+            updated_at: v.updated_at || null,
+          });
+        }
+        for (const group of Object.values(platforms)) {
+          for (const task of group.tasks) task.links = byTask[task.id] || [];
+          group.total_links = group.tasks.reduce((n, t) => n + t.links.length, 0);
+        }
+        return withCors(json({
+          user: { id: gateUser.id, username: gateUser.username },
+          platforms: Object.values(platforms),
+        }));
+      }
+
+      // ---- Mobile APK: pending downloads (FCM may arrive while phone was off) ----
+      if (path === '/api/deliveries' && req.method === 'GET') {
+        const limit = Math.min(Number(url.searchParams.get('limit')) || 100, 300);
+        const scope = gateUser.is_admin ? '' : ' AND user_id = ?';
+        const vals = gateUser.is_admin ? [] : [gateUser.id];
+        const res = await env.DB.prepare(
+          `SELECT * FROM deliveries WHERE 1=1${scope} AND status = 'pending'
+           ORDER BY created_at DESC LIMIT ?`
+        ).bind(...vals, limit).all();
+        return withCors(json({ deliveries: res.results || [] }));
+      }
+
+      const deliveryAck = path.match(/^\/api\/deliveries\/(\d+)\/ack$/);
+      if (deliveryAck && req.method === 'POST') {
+        const id = Number(deliveryAck[1]);
+        const row = await env.DB.prepare('SELECT user_id FROM deliveries WHERE id = ?').bind(id).first();
+        if (!row) return withCors(json({ error: 'not found' }, 404));
+        if (!gateUser.is_admin && row.user_id !== gateUser.id) {
+          return withCors(json({ error: 'forbidden' }, 403));
+        }
+        await env.DB.prepare(
+          `UPDATE deliveries SET status='delivered', delivered_at=? WHERE id=?`
+        ).bind(now(), id).run();
+        return withCors(json({ ok: true }));
+      }
+
       // ---- Public API (frontend) ----
       if (path === '/api/state' && req.method === 'GET') {
         const [tasks, videos, logins, accounts] = await Promise.all([
@@ -2030,7 +2117,52 @@ export default {
       if (path.startsWith('/api/internal/')) {
         if (!checkInternal(req, env)) return withCors(json({ error: 'unauthorized' }, 401));
 
-        if (path === '/api/internal/keys/env' && req.method === 'GET') {
+        // ---- Internal: CI posts a Catbox delivery -> push to all user devices ----
+      if (path === '/api/internal/deliveries' && req.method === 'POST') {
+        const body = await readBody(req);
+        const catboxUrl = String(body.catbox_url || '').trim();
+        const fileName = String(body.file_name || '').trim();
+        if (!/^https?:\/\/files\.catbox\.moe\//i.test(catboxUrl)) {
+          return withCors(json({ error: 'invalid catbox_url' }, 400));
+        }
+        const owner = await adminOwner(env.DB);
+        if (!owner) return withCors(json({ error: 'no owner' }, 400));
+        const uidRaw = Number(body.user_id);
+        const userId = Number.isFinite(uidRaw) && uidRaw > 0 ? uidRaw : owner.id;
+        const t = now();
+        const res = await env.DB.prepare(
+          `INSERT INTO deliveries
+             (user_id, video_id, task_id, platform, source_url, title, file_name,
+              catbox_url, mime, size_bytes, status, created_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?)`
+        ).bind(
+          userId,
+          Number(body.video_id) || null,
+          Number(body.task_id) || null,
+          String(body.platform || ''),
+          String(body.source_url || ''),
+          String(body.title || ''),
+          fileName || catboxUrl.split('/').pop(),
+          catboxUrl,
+          String(body.mime || 'video/mp4'),
+          Number(body.size_bytes) || 0,
+          t
+        ).run();
+        const id = res.meta?.last_row_id;
+        const delivery = {
+          id, user_id: userId,
+          video_id: Number(body.video_id) || null,
+          title: body.title, file_name: fileName,
+          catbox_url: catboxUrl, platform: body.platform, size_bytes: Number(body.size_bytes) || 0,
+        };
+        const push = await pushDeliveryToUser(env.DB, env, delivery);
+        if (push.sent) {
+          await env.DB.prepare('UPDATE deliveries SET pushed_at=? WHERE id=?').bind(now(), id).run();
+        }
+        return withCors(json({ ok: true, id, push }, push.sent ? 201 : 202));
+      }
+
+      if (path === '/api/internal/keys/env' && req.method === 'GET') {
           const uid = url.searchParams.get('user_id');
           const owner = uid ? { id: Number(uid) } : await adminOwner(env.DB);
           if (!owner) return withCors(json({ env: {}, settings: {} }));
