@@ -47,6 +47,9 @@ data class Task(
     val platform: String,
     val status: String,
     val links: List<Video>,
+    val sendToApp: Boolean = true,
+    val appFile: String = "edited",
+    val uploadSocial: Boolean = true,
 ) {
     companion object {
         fun from(o: JSONObject) = Task(
@@ -59,6 +62,9 @@ data class Task(
                 val arr = o.optJSONArray("links") ?: JSONArray()
                 (0 until arr.length()).map { Video.from(arr.getJSONObject(it)) }
             },
+            sendToApp = o.optJSONObject("delivery")?.optInt("send_to_app", 1) != 0,
+            appFile = o.optJSONObject("delivery")?.optString("app_file", "edited") ?: "edited",
+            uploadSocial = o.optJSONObject("delivery")?.optInt("upload_social", 1) != 0,
         )
     }
 }

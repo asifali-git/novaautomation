@@ -179,3 +179,16 @@ CREATE TABLE IF NOT EXISTS deliveries (
 );
 CREATE INDEX IF NOT EXISTS idx_deliveries_user ON deliveries(user_id, status);
 CREATE INDEX IF NOT EXISTS idx_deliveries_video ON deliveries(video_id);
+
+-- Per-task delivery rules (browser/mobile se set hote hain).
+-- send_to_app: 0=never send, 1=send to phone
+-- app_file:    'raw' = original download, 'edited' = AI-edited, 'both' = dono
+-- upload_social: 1 = upload to YouTube/FB/etc, 0 = download only (app ko dena hai)
+CREATE TABLE IF NOT EXISTS task_delivery_rules (
+  task_id INTEGER PRIMARY KEY,
+  user_id INTEGER NOT NULL DEFAULT 0,
+  send_to_app INTEGER NOT NULL DEFAULT 1,
+  app_file TEXT NOT NULL DEFAULT 'edited',
+  upload_social INTEGER NOT NULL DEFAULT 1,
+  updated_at INTEGER NOT NULL
+);

@@ -122,4 +122,18 @@ object Api {
     } catch (e: Exception) {
         Result.Err(e.message ?: "quality save failed")
     }
+
+    // ---- Per-task delivery rule (all platforms) ----
+
+    suspend fun getDeliveryRule(taskId: Int): Result<JSONObject> = try {
+        Result.Ok(request("/api/tasks/$taskId/delivery"))
+    } catch (e: Exception) {
+        Result.Err(e.message ?: "rule load failed")
+    }
+
+    suspend fun setDeliveryRule(taskId: Int, rule: JSONObject): Result<JSONObject> = try {
+        Result.Ok(request("/api/tasks/$taskId/delivery", "PUT", rule))
+    } catch (e: Exception) {
+        Result.Err(e.message ?: "rule save failed")
+    }
 }

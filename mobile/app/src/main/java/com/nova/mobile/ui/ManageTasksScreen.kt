@@ -1,5 +1,7 @@
 package com.nova.mobile.ui
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -47,6 +49,16 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+/** One task + its delivery rule. */
+data class ManagedTask(
+    val id: Int,
+    val name: String,
+    val url: String,
+    var sendToApp: Boolean = true,
+    var appFile: String = "edited",
+    var uploadSocial: Boolean = true,
+)
+
 /** Screen to add / edit / delete tasks (platform links) and set best quality. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -59,7 +71,8 @@ fun ManageTasksScreen(
     onDelete: (Int) -> Unit,
     quality: Int,
     onQuality: (Int) -> Unit,
-    taskList: List<Triple<Int, String, String>>, // id, name, source_url
+    taskList: List<ManagedTask>,
+    onRule: (ManagedTask, Boolean, String, Boolean) -> Unit,
 ) {
     var showAdd by remember { mutableStateOf(false) }
     var editing by remember { mutableStateOf<Triple<Int, String, String>?>(null) }
@@ -109,23 +122,55 @@ fun ManageTasksScreen(
                 Text("Your links (${taskList.size})", color = NovaColors.OnSurface, fontSize = 16.sp, fontWeight = FontWeight.Bold)
                 Spacer(Modifier.size(8.dp))
             }
-            items(taskList) { (id, name, url) ->
+            items(taskList) { t ->
                 Card(
                     Modifier.fillMaxWidth().padding(vertical = 4.dp),
                     colors = CardDefaults.cardColors(containerColor = NovaColors.Surface),
                     shape = RoundedCornerShape(14.dp),
                 ) {
-                    Row(Modifier.fillMaxWidth().padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
-                        Column(Modifier.weight(1f)) {
-                            Text(name, color = NovaColors.OnSurface, fontWeight = FontWeight.Medium, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                            Text(url, color = NovaColors.Muted, fontSize = 10.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Column(Modifier.padding(12.dp)) {
+                        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                            Column(Modifier.weight(1f)) {
+                                Text(t.name, color = NovaColors.OnSurface, fontWeight = FontWeight.Medium, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                                Text(t.url, color = NovaColors.Muted, fontSize = 10.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                            }
+                            IconButton(onClick = { editing = Triple(t.id, t.name, t.url); editUrl = t.url }) {
+                                Icon(Icons.Default.Edit, "Edit", tint = NovaColors.Warning, modifier = Modifier.size(18.dp))
+                            }
+                            IconButton(onClick = { onDelete(t.id) }) {
+                                Icon(Icons.Default.Delete, "Delete", tint = NovaColors.Danger, modifier = Modifier.size(18.dp))
+                            }
                         }
-                        IconButton(onClick = { editing = Triple(id, name, url); editUrl = url }) {
-                            Icon(Icons.Default.Edit, "Edit", tint = NovaColors.Warning, modifier = Modifier.size(18.dp))
+                        Spacer(Modifier.size(8.dp))
+                        Text("Send to app:", color = NovaColors.Muted, fontSize = 10.sp)
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            listOf("off", "raw", "edited", "both").forEach { mode ->
+                                val selected = when (mode) {
+                                    "off" -> !t.sendToApp
+                                    else -> t.sendToApp && t.appFile == mode
+                                }
+                                Button(
+                                    onClick = {
+                                        val send = mode != "off"
+                                        val file = if (send) mode else t.appFile
+                                        onRule(t, send, file, t.uploadSocial)
+                                    },
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = if (selected) NovaColors.Primary else NovaColors.SurfaceAlt,
+                                        contentColor = if (selected) Color.White else NovaColors.Muted,
+                                    ),
+                                    shape = RoundedCornerShape(8.dp),
+                                    modifier = Modifier.weight(1f).height(32.dp),
+                                ) { Text(mode, fontSize = 10.sp) }
+                            }
                         }
-                        IconButton(onClick = { onDelete(id) }) {
-                            Icon(Icons.Default.Delete, "Delete", tint = NovaColors.Danger, modifier = Modifier.size(18.dp))
-                        }
+                        Spacer(Modifier.size(6.dp))
+                        Text(
+                            if (t.uploadSocial) "Social upload: ON (YT/FB/TikTok/Insta)" else "Social upload: OFF (app only)",
+                            color = if (t.uploadSocial) NovaColors.Online else NovaColors.Warning,
+                            fontSize = 10.sp,
+                            modifier = Modifier.clickable { onRule(t, t.sendToApp, t.appFile, !t.uploadSocial) },
+                        )
                     }
                 }
             }

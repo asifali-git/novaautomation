@@ -28,13 +28,22 @@ class NovaMessagingService : FirebaseMessagingService() {
         val delivery = Delivery(id, name, url, title, data["platform"] ?: "", 0)
         DownloadQueue.enqueue(this, delivery, auto)
 
-        // Alarm fires even if the phone was off when the message was sent:
-        // FCM delivers on reconnect, then WorkManager runs with network constraint.
-        if (auto) {
-            Notifications.show(this, id, "Video ready · saving", title)
-        } else {
-            Notifications.show(this, id, "New video ready", title)
-        }
+        // Tap opens THIS file directly (MainActivity reads the delivery id).
+        val open = android.app.PendingIntent.getActivity(
+            this,
+            id,
+            Intent(this, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                putExtra("delivery_id", id)
+                putExtra("catbox_url", url)
+                putExtra("file_name", name)
+                putExtra("title", title)
+            },
+            android.app.PendingIntent.FLAG_UPDATE_CURRENT or android.app.PendingIntent.FLAG_IMMUTABLE,
+        )
+
+        // Alarm rings until the user taps Stop or opens the app.
+        Notifications.showAlarm(this, id, "New video: $title", "Tap to open · Stop to silence", open)
     }
 
     override fun onNewToken(token: String) {

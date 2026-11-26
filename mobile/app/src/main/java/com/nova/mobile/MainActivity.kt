@@ -17,9 +17,11 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.nova.mobile.ui.TasksScreen
 import com.nova.mobile.ui.LinksScreen
 import com.nova.mobile.ui.TimelineScreen
+import com.nova.mobile.ui.FileOpenScreen
 import com.nova.mobile.ui.HomeScreen
 import com.nova.mobile.ui.HomeTab
 import com.nova.mobile.ui.LoginScreen
+import com.nova.mobile.ui.ManagedTask
 import com.nova.mobile.ui.ManageTasksScreen
 import com.nova.mobile.ui.NovaTheme
 import kotlinx.coroutines.launch
@@ -33,7 +35,22 @@ class MainActivity : ComponentActivity() {
         askNotificationPermission()
         Api.token = Prefs.token(this)
 
+        // Notification tap -> open the exact file that was clicked.
+        val openId = intent.getIntExtra("delivery_id", -1)
+        if (openId > 0) {
+            Notifications.stop(this, openId)
+            PendingDelivery.title = intent.getStringExtra("title") ?: ""
+            PendingDelivery.fileName = intent.getStringExtra("file_name") ?: ""
+            PendingDelivery.url = intent.getStringExtra("catbox_url") ?: ""
+        }
+
         setContent { NovaTheme { App() } }
+    }
+
+    object PendingDelivery {
+        var title: String = ""
+        var fileName: String = ""
+        var url: String = ""
     }
 
     private fun askNotificationPermission() {
@@ -56,12 +73,21 @@ class MainActivity : ComponentActivity() {
         data class Links(val platform: com.nova.mobile.Platform, val task: com.nova.mobile.Task) : Screen()
         data class Timeline(val video: com.nova.mobile.Video) : Screen()
         data object Manage : Screen()
+        data class FileOpen(val id: Int, val title: String, val url: String, val fileName: String) : Screen()
     }
 
     @Composable
     private fun App() {
         val scope = rememberCoroutineScope()
-        var screen by remember { mutableStateOf<Screen>(if (Api.token.isBlank()) Screen.Login else Screen.Home) }
+        val startScreen: Screen = if (PendingDelivery.title.isNotBlank()) {
+            Screen.FileOpen(
+                intent.getIntExtra("delivery_id", 0),
+                PendingDelivery.title,
+                PendingDelivery.url,
+                PendingDelivery.fileName,
+            )
+        } else if (Api.token.isBlank()) Screen.Login else Screen.Home
+        var screen by remember { mutableStateOf<Screen>(startScreen) }
         var platforms by remember { mutableStateOf(emptyList<com.nova.mobile.Platform>()) }
         var deliveries by remember { mutableStateOf(emptyList<Delivery>()) }
         var loading by remember { mutableStateOf(false) }
@@ -71,6 +97,7 @@ class MainActivity : ComponentActivity() {
         var quality by remember { mutableStateOf(1080) }
         var manageBusy by remember { mutableStateOf(false) }
         var manageMsg by remember { mutableStateOf<String?>(null) }
+        var fileSaved by remember { mutableStateOf(false) }
 
         fun loadSettings() {
             scope.launch {
@@ -235,8 +262,44 @@ class MainActivity : ComponentActivity() {
                     }
                 },
                 taskList = platforms.flatMap { p ->
-                    p.tasks.map { Triple(it.id, it.name, it.sourceUrl) }
+                    p.tasks.map { t ->
+                        com.nova.mobile.ui.ManagedTask(
+                            t.id, t.name, t.sourceUrl,
+                            t.sendToApp, t.appFile, t.uploadSocial,
+                        )
+                    }
                 },
+                onRule = { t, send, file, upload ->
+                    manageBusy = true
+                    scope.launch {
+                        val rule = org.json.JSONObject().apply {
+                            put("send_to_app", if (send) 1 else 0)
+                            put("app_file", file)
+                            put("upload_social", if (upload) 1 else 0)
+                        }
+                        when (val r = Api.setDeliveryRule(t.id, rule)) {
+                            is Api.Result.Ok -> {
+                                manageMsg = "Rule saved: ${if (!send) "off" else file}, upload ${if (upload) "on" else "off"}"
+                                t.sendToApp = send; t.appFile = file; t.uploadSocial = upload
+                            }
+                            is Api.Result.Err -> manageMsg = r.message
+                        }
+                        manageBusy = false
+                    }
+                },
+            )
+
+            is Screen.FileOpen -> FileOpenScreen(
+                title = s.title,
+                fileName = s.fileName,
+                url = s.url,
+                onBack = { screen = Screen.Home },
+                onDownload = {
+                    val d = Delivery(s.id, s.fileName, s.url, s.title, "", 0)
+                    DownloadQueue.enqueue(this@MainActivity, d, true)
+                    fileSaved = true
+                },
+                saved = fileSaved,
             )
         }
     }

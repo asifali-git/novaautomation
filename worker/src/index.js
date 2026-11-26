@@ -235,6 +235,21 @@ async function ensureAppTables(db) {
   await db
     .prepare('CREATE INDEX IF NOT EXISTS idx_api_keys_scope ON api_keys(user_id, service, priority)')
     .run();
+
+  // Per-task delivery rules: app ko bhejna hai ya nahi, raw/edited/both,
+  // aur social upload karna hai ya sirf download karke app ko dena hai.
+  await db
+    .prepare(
+      `CREATE TABLE IF NOT EXISTS task_delivery_rules (
+         task_id INTEGER PRIMARY KEY,
+         user_id INTEGER NOT NULL DEFAULT 0,
+         send_to_app INTEGER NOT NULL DEFAULT 1,
+         app_file TEXT NOT NULL DEFAULT 'edited',
+         upload_social INTEGER NOT NULL DEFAULT 1,
+         updated_at INTEGER NOT NULL
+       )`
+    )
+    .run();
   appTablesReady = true;
 }
 
@@ -1433,12 +1448,16 @@ export default {
 
       // ---- Mobile APK: platforms -> links -> full timeline (scoped to user) ----
       if (path === '/api/mobile/tree' && req.method === 'GET') {
-        const [tasks, videos] = await Promise.all([
+        const [tasks, videos, rules] = await Promise.all([
           listTasks(env.DB, gateUser),
           listVideos(env.DB, { limit: 500, user: gateUser }),
+          env.DB.prepare('SELECT task_id, send_to_app, app_file, upload_social FROM task_delivery_rules').all(),
         ]);
+        const ruleById = new Map((rules.results || []).map((r) => [r.task_id, r]));
         const platforms = {};
         for (const task of tasks) {
+          const r = ruleById.get(task.id);
+          task.delivery = r || { send_to_app: 1, app_file: 'edited', upload_social: 1 };
           const p = task.platform || 'unknown';
           if (!platforms[p]) platforms[p] = { platform: p, tasks: [] };
           platforms[p].tasks.push(task);
@@ -1854,6 +1873,43 @@ export default {
         return withCors(json({ task }, 201));
       }
 
+      // ---- Per-task delivery rule (app send / raw-edited-both / social upload) ----
+      const dRule = path.match(/^\/api\/tasks\/(\d+)\/delivery$/);
+      if (dRule) {
+        const id = Number(dRule[1]);
+        const taskRow = await getTask(env.DB, id);
+        if (!taskRow) return withCors(json({ error: 'not found' }, 404));
+        if (!gateUser.is_admin && taskRow.user_id !== gateUser.id) {
+          return withCors(json({ error: 'forbidden' }, 403));
+        }
+        if (req.method === 'GET') {
+          const rule = await env.DB.prepare(
+            `SELECT send_to_app, app_file, upload_social FROM task_delivery_rules WHERE task_id = ?`
+          ).bind(id).first();
+          return withCors(json({
+            rule: rule || { send_to_app: 1, app_file: 'edited', upload_social: 1 },
+          }));
+        }
+        if (req.method === 'PUT') {
+          await ensureAppTables(env.DB);
+          const body = await readBody(req);
+          const send = body.send_to_app ? 1 : 0;
+          const file = ['raw', 'edited', 'both'].includes(body.app_file) ? body.app_file : 'edited';
+          const upload = body.upload_social === 0 || body.upload_social === false ? 0 : 1;
+          await env.DB.prepare(
+            `INSERT INTO task_delivery_rules
+               (task_id, user_id, send_to_app, app_file, upload_social, updated_at)
+             VALUES (?, ?, ?, ?, ?, ?)
+             ON CONFLICT(task_id) DO UPDATE SET
+               send_to_app=excluded.send_to_app, app_file=excluded.app_file,
+               upload_social=excluded.upload_social, updated_at=excluded.updated_at`
+          ).bind(id, gateUser.id, send, file, upload, now()).run();
+          return withCors(json({
+            rule: { send_to_app: send, app_file: file, upload_social: upload },
+          }));
+        }
+      }
+
       if (path.startsWith('/api/tasks/') && req.method === 'PATCH') {
         const id = Number(path.split('/')[3]);
         const row = await getTask(env.DB, id);
@@ -2226,6 +2282,16 @@ export default {
 
         if (path === '/api/internal/tasks' && req.method === 'GET') {
           const tasks = (await listTasks(env.DB)).filter((t) => t.status === 'active');
+          // Attach per-task delivery rules so the CI pipeline knows:
+          // send to app? raw/edited/both? upload to social platforms?
+          const rules = await env.DB.prepare(
+            'SELECT task_id, send_to_app, app_file, upload_social FROM task_delivery_rules'
+          ).all();
+          const byId = new Map((rules.results || []).map((r) => [r.task_id, r]));
+          for (const t of tasks) {
+            const r = byId.get(t.id);
+            t.delivery = r || { send_to_app: 1, app_file: 'edited', upload_social: 1 };
+          }
           return withCors(json({ tasks }));
         }
 

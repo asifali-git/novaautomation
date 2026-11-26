@@ -22,6 +22,7 @@ import json
 import time
 import traceback
 import requests
+from pathlib import Path
 
 import download as dl
 import apikeys
@@ -418,6 +419,16 @@ def run():
         # Hijack: task.dest_provider 'youtube|noedit' = raw upload (no AI edit).
         if task and "noedit" in (task.get("dest_provider") or ""):
             skip_edit = True
+        # Per-task delivery rules: app send / raw-edited-both / social upload.
+        delivery = task.get("delivery") or {}
+        os.environ["NOVA_SEND_TO_APP"] = str(delivery.get("send_to_app", 1))
+        os.environ["NOVA_APP_FILE"] = str(delivery.get("app_file", "edited"))
+        os.environ["NOVA_UPLOAD_SOCIAL"] = str(delivery.get("upload_social", 1))
+        print(
+            f"[delivery] send_to_app={os.environ['NOVA_SEND_TO_APP']} "
+            f"file={os.environ['NOVA_APP_FILE']} "
+            f"upload_social={os.environ['NOVA_UPLOAD_SOCIAL']}"
+        )
     except Exception as e:
         print(f"[warn] failed to fetch task dest_platforms: {e}", file=sys.stderr)
     apply_voice_setting((task or {}).get("voice"))
@@ -511,6 +522,46 @@ def run():
     if is_cancelled(vid):
         print("[cancel] cancelled by user before upload — stopping")
         return 0
+    # 5. Deliver to the mobile app (Catbox + FCM) before social upload.
+    # Per-task rule: send_to_app=0 -> skip; app_file = raw|edited|both.
+    if os.getenv("NOVA_SEND_TO_APP", "1") != "0":
+        try:
+            from pipeline.catbox_push import upload, notify
+
+            app_file = os.getenv("NOVA_APP_FILE", "edited")
+            deliver = []
+            if app_file in ("edited", "both"):
+                deliver.append(("edited", out_path))
+            if app_file in ("raw", "both") and os.path.exists(src) and os.path.abspath(src) != os.path.abspath(out_path):
+                deliver.append(("raw", src))
+            for kind, path in deliver:
+                url = upload(Path(path))
+                notify(
+                    {
+                        "catbox_url": url,
+                        "file_name": f"{kind}-{os.path.basename(path)}",
+                        "title": meta.get("title") or title_hint or "New video",
+                        "platform": kind,
+                        "source_url": url,
+                        "size_bytes": os.path.getsize(path),
+                        "mime": "video/mp4",
+                        "user_id": task_uid or None,
+                        "task_id": video.get("task_id"),
+                        "video_id": vid,
+                    },
+                    os.getenv("WORKER_URL", ""),
+                    os.getenv("INTERNAL_TOKEN", ""),
+                )
+                print(f"[delivery] {kind} -> app ({os.path.getsize(path)//1024} KB)")
+        except Exception as e:
+            print(f"[delivery] app push failed: {e}", file=sys.stderr)
+
+    # 6. Social upload — skip when the task says "download only for app".
+    if os.getenv("NOVA_UPLOAD_SOCIAL", "1") == "0":
+        print("[upload] skipped by task rule (upload_social=0)")
+        set_status(vid, status="uploaded", upload_ref=json.dumps({"provider": "app-only", "id": None}))
+        return 0
+
     set_status(vid, status="uploading")
     pinned = False
     for part in (dest_platforms or "").split(","):
