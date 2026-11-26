@@ -20,6 +20,7 @@ import com.nova.mobile.ui.TimelineScreen
 import com.nova.mobile.ui.HomeScreen
 import com.nova.mobile.ui.HomeTab
 import com.nova.mobile.ui.LoginScreen
+import com.nova.mobile.ui.ManageTasksScreen
 import com.nova.mobile.ui.NovaTheme
 import kotlinx.coroutines.launch
 import org.json.JSONArray
@@ -54,6 +55,7 @@ class MainActivity : ComponentActivity() {
         data class Tasks(val platform: com.nova.mobile.Platform) : Screen()
         data class Links(val platform: com.nova.mobile.Platform, val task: com.nova.mobile.Task) : Screen()
         data class Timeline(val video: com.nova.mobile.Video) : Screen()
+        data object Manage : Screen()
     }
 
     @Composable
@@ -66,6 +68,27 @@ class MainActivity : ComponentActivity() {
         var error by remember { mutableStateOf<String?>(null) }
         var tab by remember { mutableStateOf(HomeTab.PLATFORMS) }
         var auto by remember { mutableStateOf(Prefs.autoDownload(this)) }
+        var quality by remember { mutableStateOf(1080) }
+        var manageBusy by remember { mutableStateOf(false) }
+        var manageMsg by remember { mutableStateOf<String?>(null) }
+
+        fun loadSettings() {
+            scope.launch {
+                when (val r = Api.settings()) {
+                    is Api.Result.Ok -> {
+                        val s = r.value.optJSONObject("settings") ?: r.value.optJSONObject("config")
+                        s?.optInt("video_quality")?.let { if (it > 0) quality = it }
+                    }
+                    is Api.Result.Err -> {}
+                }
+            }
+        }
+
+        fun reloadAll() {
+            loadTree()
+            loadDeliveries()
+            loadSettings()
+        }
 
         fun loadTree() {
             loading = true
@@ -113,8 +136,7 @@ class MainActivity : ComponentActivity() {
                                 val name = r.value.optJSONObject("user")?.optString("username") ?: identity
                                 Prefs.saveLogin(this@MainActivity, Api.token, name)
                                 registerFcm()
-                                loadTree()
-                                loadDeliveries()
+                                reloadAll()
                                 screen = Screen.Home
                                 loading = false
                             }
@@ -135,7 +157,8 @@ class MainActivity : ComponentActivity() {
                     tab = tab,
                     onTab = { tab = it },
                     onPlatform = { screen = Screen.Tasks(it) },
-                    onRefresh = { loadTree(); loadDeliveries() },
+                    onManage = { screen = Screen.Manage },
+                    onRefresh = { reloadAll() },
                     onSync = {
                         DownloadQueue.syncPending(this@MainActivity, deliveries, auto)
                         loadDeliveries()
@@ -165,6 +188,55 @@ class MainActivity : ComponentActivity() {
             is Screen.Timeline -> TimelineScreen(
                 video = s.video,
                 onBack = { screen = Screen.Home },
+            )
+
+            Screen.Manage -> ManageTasksScreen(
+                busy = manageBusy,
+                message = manageMsg,
+                onBack = { screen = Screen.Home; manageMsg = null },
+                onAdd = { url, dest ->
+                    manageBusy = true; manageMsg = null
+                    scope.launch {
+                        when (val r = Api.addTask(url, dest)) {
+                            is Api.Result.Ok -> { manageMsg = "Link added"; reloadAll() }
+                            is Api.Result.Err -> manageMsg = r.message
+                        }
+                        manageBusy = false
+                    }
+                },
+                onEdit = { id, url ->
+                    manageBusy = true
+                    scope.launch {
+                        val fields = org.json.JSONObject().apply { put("source_url", url) }
+                        when (val r = Api.editTask(id, fields)) {
+                            is Api.Result.Ok -> { manageMsg = "Link updated"; reloadAll() }
+                            is Api.Result.Err -> manageMsg = r.message
+                        }
+                        manageBusy = false
+                    }
+                },
+                onDelete = { id ->
+                    manageBusy = true
+                    scope.launch {
+                        when (val r = Api.deleteTask(id)) {
+                            is Api.Result.Ok -> { manageMsg = "Link deleted"; reloadAll() }
+                            is Api.Result.Err -> manageMsg = r.message
+                        }
+                        manageBusy = false
+                    }
+                },
+                quality = quality,
+                onQuality = { q ->
+                    scope.launch {
+                        when (val r = Api.setQuality(q)) {
+                            is Api.Result.Ok -> { quality = q; manageMsg = "Quality set to ${q}p" }
+                            is Api.Result.Err -> manageMsg = r.message
+                        }
+                    }
+                },
+                taskList = platforms.flatMap { p ->
+                    p.tasks.map { Triple(it.id, it.name, it.sourceUrl) }
+                },
             )
         }
     }

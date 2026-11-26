@@ -20,6 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.CloudDownload
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Refresh
@@ -69,6 +70,7 @@ fun HomeScreen(
     tab: HomeTab,
     onTab: (HomeTab) -> Unit,
     onPlatform: (Platform) -> Unit,
+    onManage: () -> Unit,
     onRefresh: () -> Unit,
     onSync: () -> Unit,
     onManualDownload: (Delivery) -> Unit,
@@ -132,7 +134,7 @@ fun HomeScreen(
     ) { padding ->
         Box(Modifier.fillMaxSize().padding(padding)) {
             when (tab) {
-                HomeTab.PLATFORMS -> PlatformsTab(platforms, loading, onPlatform)
+                HomeTab.PLATFORMS -> PlatformsTab(platforms, loading, onPlatform, onManage)
                 HomeTab.DOWNLOADS -> DownloadsTab(deliveries, onSync, onManualDownload)
                 HomeTab.SETTINGS -> SettingsTab(autoDownload, onAutoChange, onLogout, username)
             }
@@ -145,6 +147,7 @@ private fun PlatformsTab(
     platforms: List<Platform>,
     loading: Boolean,
     onPlatform: (Platform) -> Unit,
+    onManage: () -> Unit,
 ) {
     if (loading) {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -161,7 +164,17 @@ private fun PlatformsTab(
                 color = NovaColors.Muted,
                 fontSize = 12.sp,
             )
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(10.dp))
+            Button(
+                onClick = onManage,
+                colors = ButtonDefaults.buttonColors(containerColor = NovaColors.SurfaceAlt, contentColor = NovaColors.Primary),
+                shape = RoundedCornerShape(10.dp),
+            ) {
+                Icon(Icons.Default.Edit, null, Modifier.size(16.dp))
+                Spacer(Modifier.size(6.dp))
+                Text("Add / Edit / Delete links", fontSize = 12.sp)
+            }
+            Spacer(Modifier.height(12.dp))
         }
         if (platforms.isEmpty()) {
             item {

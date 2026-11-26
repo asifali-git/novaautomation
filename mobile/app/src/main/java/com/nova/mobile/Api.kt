@@ -83,4 +83,43 @@ object Api {
     } catch (e: Exception) {
         Result.Err(e.message ?: "ack failed")
     }
+
+    // ---- Task CRUD (platform links) ----
+
+    suspend fun addTask(url: String, dest: String = "youtube"): Result<JSONObject> = try {
+        Result.Ok(request("/api/tasks", "POST", JSONObject().apply {
+            put("source_url", url)
+            put("dest_platforms", dest)
+        }))
+    } catch (e: Exception) {
+        Result.Err(e.message ?: "add failed")
+    }
+
+    suspend fun editTask(id: Int, fields: JSONObject): Result<JSONObject> = try {
+        Result.Ok(request("/api/tasks/$id", "PATCH", fields))
+    } catch (e: Exception) {
+        Result.Err(e.message ?: "edit failed")
+    }
+
+    suspend fun deleteTask(id: Int): Result<JSONObject> = try {
+        Result.Ok(request("/api/tasks/$id", "DELETE"))
+    } catch (e: Exception) {
+        Result.Err(e.message ?: "delete failed")
+    }
+
+    // ---- Settings (best resolution) ----
+
+    suspend fun settings(): Result<JSONObject> = try {
+        Result.Ok(request("/api/settings"))
+    } catch (e: Exception) {
+        Result.Err(e.message ?: "settings failed")
+    }
+
+    suspend fun setQuality(quality: Int): Result<JSONObject> = try {
+        Result.Ok(request("/api/settings", "PUT", JSONObject().apply {
+            put("video_quality", quality)
+        }))
+    } catch (e: Exception) {
+        Result.Err(e.message ?: "quality save failed")
+    }
 }
