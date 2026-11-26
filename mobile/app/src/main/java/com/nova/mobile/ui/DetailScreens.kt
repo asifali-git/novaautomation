@@ -1,6 +1,5 @@
 package com.nova.mobile.ui
 
-import android.text.format.DateFormat
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -228,8 +227,6 @@ private fun TimelineRow(
 }
 
 private fun fmt(ms: Long): String {
-    val d = Date(ms)
-    return "${DateFormat.getDateFormat(java.util.Locale.getDefault()).format(d)}  " +
-        "${DateFormat.getTimeFormat(java.util.Locale.getDefault()).format(d)}  " +
-        android.text.format.DateFormat.format("MMM yyyy", d)
+    val fmt = java.text.SimpleDateFormat("dd MMM yyyy, hh:mm a", java.util.Locale.getDefault())
+    return fmt.format(Date(ms))
 }

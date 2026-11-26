@@ -14,7 +14,9 @@ import androidx.compose.runtime.setValue
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.firebase.messaging.FirebaseMessaging
-import com.nova.mobile.ui.DetailScreens
+import com.nova.mobile.ui.TasksScreen
+import com.nova.mobile.ui.LinksScreen
+import com.nova.mobile.ui.TimelineScreen
 import com.nova.mobile.ui.HomeScreen
 import com.nova.mobile.ui.HomeTab
 import com.nova.mobile.ui.LoginScreen
@@ -148,19 +150,19 @@ class MainActivity : ComponentActivity() {
                 )
             }
 
-            is Screen.Tasks -> DetailScreens.TasksScreen(
+            is Screen.Tasks -> TasksScreen(
                 platform = s.platform,
                 onBack = { screen = Screen.Home },
                 onTask = { screen = Screen.Links(s.platform, it) },
             )
 
-            is Screen.Links -> DetailScreens.LinksScreen(
+            is Screen.Links -> LinksScreen(
                 task = s.task,
                 onBack = { screen = Screen.Tasks(s.platform) },
                 onVideo = { screen = Screen.Timeline(it) },
             )
 
-            is Screen.Timeline -> DetailScreens.TimelineScreen(
+            is Screen.Timeline -> TimelineScreen(
                 video = s.video,
                 onBack = { screen = Screen.Home },
             )

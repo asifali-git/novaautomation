@@ -65,10 +65,10 @@ fun LoginScreen(
             Box(
                 Modifier
                     .size(76.dp)
-                    .clip(CircleShape),
+                    .clip(CircleShape)
+                    .background(NovaColors.Primary),
                 contentAlignment = Alignment.Center,
             ) {
-                background(color = NovaColors.Primary, shape = CircleShape) {}
                 Text(
                     "N",
                     color = Color.White,
