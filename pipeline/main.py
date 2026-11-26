@@ -439,7 +439,35 @@ def run():
     print(f"[mode] {'raw upload (no edit)' if skip_edit else 'edit pipeline'}")
 
     set_status(vid, status="downloading")
-    src, info = dl.download(url, out_dir=work)
+    try:
+        src, info = dl.download(url, out_dir=work)
+    except Exception as de:
+        msg = str(de)
+        dead = any(k in msg.lower() for k in (
+            "video unavailable", "private", "removed", "closed their", "account has been terminated",
+            "insufficient credits", "sign in to confirm", "age-restricted",
+        ))
+        try:
+            conn = requests.get(
+                f"{WORKER}/api/internal/videos/{vid}",
+                headers={"x-token": TOKEN}, timeout=30,
+            )
+            cur = conn.json().get("video") or {}
+            retries = int(cur.get("retry_count") or 0)
+        except Exception:
+            retries = 0
+        if dead:
+            set_status(vid, status="failed", error=f"unavailable source: {msg[-300:]}")
+            print(f"[download] permanent failure, marked failed: {msg[:160]}")
+            return 0
+        set_status(
+            vid,
+            status="failed",
+            error=f"download retry {retries + 1}/3: {msg[-300:]}",
+            retry_count=retries + 1,
+        )
+        print(f"[download] retryable failure: {msg[:160]}")
+        return 0
     print(f"[download] {src} ({os.path.getsize(src)//1024} KB)")
 
     # Shorts/Reels only: reject long source videos instead of clipping them.

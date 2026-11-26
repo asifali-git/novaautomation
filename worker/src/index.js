@@ -780,10 +780,18 @@ async function patchVideo(db, id, body) {
 }
 
 async function nextPendingVideo(db) {
+  // Skip videos that already exhausted retries (dead/unavailable sources),
+  // otherwise one broken video blocks the whole queue forever.
   const res = await db
-    .prepare(`SELECT * FROM videos WHERE status = 'detected' ORDER BY id ASC LIMIT 1`)
+    .prepare(
+      `SELECT * FROM videos
+       WHERE status = 'detected' AND COALESCE(retry_count, 0) < 3
+       ORDER BY id ASC LIMIT 1`
+    )
     .first();
-  return res;
+  if (res) return res;
+  // Nothing retryable: fall back to oldest detected (so a manual force still sees it).
+  return db.prepare(`SELECT * FROM videos WHERE status = 'detected' ORDER BY id ASC LIMIT 1`).first();
 }
 
 // --- Analytics ---------------------------------------------------------------

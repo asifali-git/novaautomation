@@ -1,5 +1,6 @@
 package com.nova.mobile
 
+import android.content.Intent
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import kotlinx.coroutines.CoroutineScope
@@ -29,16 +30,17 @@ class NovaMessagingService : FirebaseMessagingService() {
         DownloadQueue.enqueue(this, delivery, auto)
 
         // Tap opens THIS file directly (MainActivity reads the delivery id).
+        val openIntent = Intent(applicationContext, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            putExtra("delivery_id", id)
+            putExtra("catbox_url", url)
+            putExtra("file_name", name)
+            putExtra("title", title)
+        }
         val open = android.app.PendingIntent.getActivity(
-            this,
+            applicationContext,
             id,
-            Intent(this, MainActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-                putExtra("delivery_id", id)
-                putExtra("catbox_url", url)
-                putExtra("file_name", name)
-                putExtra("title", title)
-            },
+            openIntent,
             android.app.PendingIntent.FLAG_UPDATE_CURRENT or android.app.PendingIntent.FLAG_IMMUTABLE,
         )
 
