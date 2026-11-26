@@ -31,4 +31,4 @@ jobs:
           TITLE: ${{ inputs.title }}
         run: |
           pip install -q requests
-          python3 -c 'import os,requests; u=os.environ["CATBOX_URL"].strip(); assert u.startswith("https://files.catbox.moe/"), "invalid url"; r=requests.post(os.environ["WORKER_URL"].rstrip("/")+"/api/internal/deliveries",json={"catbox_url":u,"file_name":u.split("/")[-1],"title":os.environ.get("TITLE") or u.split("/")[-1],"platform":"manual","source_url":u,"size_bytes":0,"mime":"video/mp4"},headers={"Authorization":"Bearer "+os.environ["INTERNAL_TOKEN"]},timeout=60); print("worker:",r.status_code,r.text[:300])'
+          python3 -c 'import os,requests; u=os.environ["CATBOX_URL"].strip(); assert u.startswith("https://files.catbox.moe/"), "invalid url"; r=requests.post(os.environ["WORKER_URL"].rstrip("/")+"/api/internal/deliveries",json={"catbox_url":u,"file_name":u.split("/")[-1],"title":os.environ.get("TITLE") or u.split("/")[-1],"platform":"manual","source_url":u,"size_bytes":0,"mime":"video/mp4"},headers={"x-token":os.environ["INTERNAL_TOKEN"]},timeout=60); print("worker:",r.status_code,r.text[:300])'
