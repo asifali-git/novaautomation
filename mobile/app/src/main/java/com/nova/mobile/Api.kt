@@ -19,7 +19,7 @@ object Api {
         data class Err(val message: String) : Result<Nothing>()
     }
 
-    private fun request(
+    private suspend fun request(
         path: String,
         method: String = "GET",
         body: JSONObject? = null,
