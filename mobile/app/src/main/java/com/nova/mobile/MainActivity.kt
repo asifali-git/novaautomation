@@ -111,12 +111,6 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        fun reloadAll() {
-            loadTree()
-            loadDeliveries()
-            loadSettings()
-        }
-
         fun loadTree() {
             loading = true
             scope.launch {
@@ -141,6 +135,12 @@ class MainActivity : ComponentActivity() {
                     is Api.Result.Err -> error = r.message
                 }
             }
+        }
+
+        fun reloadAll() {
+            loadTree()
+            loadDeliveries()
+            loadSettings()
         }
 
         fun registerFcm() {

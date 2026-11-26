@@ -810,6 +810,13 @@ async function loadVideos() {
       const badge = statusBadge(v.status);
       let ref = {};
       try { ref = v.upload_ref ? JSON.parse(v.upload_ref) : {}; } catch (_) {}
+      let meta = {};
+      try { meta = v.meta ? JSON.parse(v.meta) : {}; } catch (_) {}
+      const finalTitle = String(meta.title || '').trim();
+      const tags = Array.isArray(meta.tags) ? meta.tags : [];
+      const hashtags = tags.map(t => '#' + String(t).replace(/^#/, '').trim()).filter(Boolean).join(' ');
+      const copyBtn = (label, text) => text
+        ? `<button class="btn ghost sm copy-btn" title="Copy ${label}" data-copy="${esc(text)}">⧉</button>` : '';
       const ytId = ref.id && ref.provider === 'youtube' ? ref.id : null;
       const ytLink = ytId ? `<a href="https://youtu.be/${esc(ytId)}" target="_blank" rel="noopener">YouTube ↗</a>` : '';
       const retryBadge = (v.retry_count || 0) > 0
@@ -821,8 +828,12 @@ async function loadVideos() {
 
       return `<tr>
         <td>
-          <div class="cell-title" title="${esc(v.title || v.video_key)}">${esc(v.title || v.video_key)}</div>
+          <div class="cell-title">
+            ${esc(v.title || v.video_key)} ${copyBtn('original title', v.title || v.video_key)}
+          </div>
           <div class="cell-sub" title="${esc(v.url || '')}">${ytLink || `<span class="muted">${esc(v.url || '')}</span>`}</div>
+          ${finalTitle ? `<div class="cell-sub final-title" title="AI-edited title">✂ ${esc(finalTitle)} ${copyBtn('edited title', finalTitle)}</div>` : ''}
+          ${hashtags ? `<div class="cell-sub hashtags" title="Hashtags">${esc(hashtags)} ${copyBtn('hashtags', hashtags)}</div>` : ''}
           ${reason}
         </td>
         <td class="muted">${esc(v.source_name || '—')}</td>
@@ -842,6 +853,27 @@ async function loadVideos() {
     endLoad(table);
   }
 }
+
+// Copy original title / edited title / hashtags from the activity table.
+document.querySelector('#videos-table')?.addEventListener('click', async (e) => {
+  const btn = e.target.closest('.copy-btn');
+  if (!btn) return;
+  e.preventDefault();
+  e.stopPropagation();
+  const text = btn.getAttribute('data-copy');
+  if (!text) return;
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch (_) {
+    const ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch (_) {}
+    ta.remove();
+  }
+  const old = btn.textContent;
+  btn.textContent = '✓';
+  setTimeout(() => { btn.textContent = old; }, 900);
+});
 
 const LIVE_STATUSES = ['detected', 'downloading', 'analyzing', 'voiceover', 'editing', 'metadata', 'uploading'];
 const STAGE_META = {

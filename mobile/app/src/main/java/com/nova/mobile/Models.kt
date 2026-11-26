@@ -19,6 +19,9 @@ data class Video(
     val failed: Long?,
     val cancelled: Long?,
     val updated: Long?,
+    val originalTitle: String,
+    val finalTitle: String,
+    val hashtags: String,
 ) {
     companion object {
         fun from(o: JSONObject) = Video(
@@ -36,6 +39,20 @@ data class Video(
             failed = o.optLong("failed_at", 0).takeIf { it > 0 },
             cancelled = o.optLong("cancelled_at", 0).takeIf { it > 0 },
             updated = o.optLong("updated_at", 0).takeIf { it > 0 },
+            originalTitle = o.optString("title"),
+            finalTitle = run {
+                val raw = o.optString("meta")
+                if (raw.isBlank()) "" else try {
+                    JSONObject(raw).optString("title")
+                } catch (_: Exception) { "" }
+            },
+            hashtags = run {
+                val raw = o.optString("meta")
+                if (raw.isBlank()) "" else try {
+                    val tags = JSONObject(raw).optJSONArray("tags") ?: JSONArray()
+                    (0 until tags.length()).joinToString(" ") { "#" + tags.optString(it).trimStart('#') }
+                } catch (_: Exception) { "" }
+            },
         )
     }
 }

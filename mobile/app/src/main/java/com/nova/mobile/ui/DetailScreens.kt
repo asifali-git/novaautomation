@@ -146,6 +146,12 @@ fun TimelineScreen(video: Video, onBack: () -> Unit) {
         LazyColumn(Modifier.fillMaxSize().padding(pad).padding(horizontal = 20.dp)) {
             item {
                 Spacer(Modifier.height(18.dp))
+                Text("VIDEO TITLES & TAGS", color = NovaColors.Muted, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                Spacer(Modifier.size(8.dp))
+                CopyRow("Original title (source)", video.originalTitle.ifBlank { video.title }, NovaColors.OnSurface)
+                CopyRow("Edited title (AI analysis)", video.finalTitle, NovaColors.Primary)
+                CopyRow("Hashtags", video.hashtags, NovaColors.Online, singleLine = false)
+                Spacer(Modifier.height(16.dp))
                 Card(
                     Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(containerColor = NovaColors.Surface),
