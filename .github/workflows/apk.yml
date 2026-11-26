@@ -1,0 +1,77 @@
+name: apk
+
+# Build the NOVA Kotlin APK on a GitHub runner — no local Gradle/SDK needed.
+# Secrets required:
+#   GOOGLE_SERVICES_JSON = firebase Android app's google-services.json (content)
+# Optional vars:
+#   NOVA_WORKER_URL = Cloudflare worker URL baked into the APK (Api.baseUrl)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'mobile/**'
+      - '.github/workflows/apk.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          api-level: 35
+          build-tools: 35.0.0
+
+      # Gradle is downloaded fresh on the runner — nothing installed on the laptop.
+      - name: Install Gradle 8.9
+        run: |
+          curl -fsSL -o /tmp/gradle.zip \
+            https://services.gradle.org/distributions/gradle-8.9-bin.zip
+          unzip -q /tmp/gradle.zip -d /opt/gradle
+          echo "/opt/gradle/gradle-8.9/bin" >> "$GITHUB_PATH"
+
+      - name: Write google-services.json (Firebase Android config)
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: |
+          if [ -z "$GOOGLE_SERVICES_JSON" ]; then
+            echo "::error::GOOGLE_SERVICES_JSON secret missing (Firebase Android config)"
+            exit 1
+          fi
+          printf '%s' "$GOOGLE_SERVICES_JSON" > mobile/app/google-services.json
+          python3 -c "import json;json.load(open('mobile/app/google-services.json'));print('google-services.json OK')"
+
+      - name: Bake worker URL into APK
+        env:
+          NOVA_WORKER_URL: ${{ vars.NOVA_WORKER_URL }}
+        run: |
+          if [ -n "$NOVA_WORKER_URL" ]; then
+            python3 -c 'import sys,re,pathlib; u=sys.argv[1].rstrip("/"); p=pathlib.Path("mobile/app/src/main/java/com/nova/mobile/Api.kt"); s=p.read_text(encoding="utf-8"); s=re.sub(r"var baseUrl: String = \"[^\"]*\"", "var baseUrl: String = \""+u+"\"", s, count=1); p.write_text(s, encoding="utf-8"); print("baked:",u)' "$NOVA_WORKER_URL"
+          fi
+
+      - name: Build debug APK
+        working-directory: mobile
+        env:
+          ANDROID_HOME: ${{ env.ANDROID_HOME }}
+        run: gradle assembleDebug --no-daemon --stacktrace
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: nova-apk-debug
+          path: mobile/app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+          retention-days: 14
