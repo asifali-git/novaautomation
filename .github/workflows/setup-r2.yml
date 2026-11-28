@@ -24,7 +24,12 @@ jobs:
           h = {"Authorization": "Bearer " + os.environ["CF_API_TOKEN"]}
           base = f"https://api.cloudflare.com/client/v4/accounts/{acc}/r2/buckets"
           r = requests.get(base, headers=h, timeout=30)
-          print("buckets:", r.status_code, [b["name"] for b in r.json().get("result",{}).get("buckets",[])])
+          print("list status:", r.status_code, "body:", r.text[:300])
+          try:
+              buckets = (r.json().get("result") or {}).get("buckets", [])
+          except Exception:
+              buckets = []
+          print("buckets:", [b["name"] for b in buckets])
           r2 = requests.put(base + "/nova-deliveries", headers=h, timeout=30)
           print("create:", r2.status_code, str(r2.text[:150]))
           '
