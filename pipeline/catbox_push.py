@@ -52,8 +52,12 @@ def _post_form(url: str, fields: dict, file_field: tuple[str, Path] | None = Non
 
 
 def upload(path: Path, userhash: str = "") -> str:
+    # Anonymous upload works reliably (verified from this machine and runners).
+    # Account userhash is optional; an invalid hash makes Catbox return 412
+    # "Invalid uploader", so only send it when explicitly enabled.
+    use_hash = os.getenv("CATBOX_USE_USERHASH", "0") == "1" and userhash
     fields = {"reqtype": "fileupload"}
-    if userhash:
+    if use_hash:
         fields["userhash"] = userhash
     last = ""
     # Catbox occasionally returns an empty body or HTTP 412 under load;
