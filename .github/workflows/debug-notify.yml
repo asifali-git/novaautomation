@@ -1,0 +1,32 @@
+name: debug-notify
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Direct notify with error body
+        env:
+          WORKER_URL: ${{ secrets.WORKER_URL }}
+          INTERNAL_TOKEN: ${{ secrets.INTERNAL_TOKEN }}
+        run: |
+          pip install -q requests
+          python3 -c '
+          import os, requests
+          base = os.environ["WORKER_URL"].rstrip("/")
+          t = os.environ["INTERNAL_TOKEN"]
+          r = requests.post(base + "/api/internal/deliveries",
+              json={"catbox_url":"https://tmpfiles.org/dl/test/test.mp4","file_name":"t.mp4",
+                    "title":"test","platform":"test","size_bytes":1,"mime":"video/mp4"},
+              headers={"x-token":t,"Content-Type":"application/json"}, timeout=30)
+          print("STATUS:", r.status_code)
+          print("BODY:", r.text[:300])
+          '
