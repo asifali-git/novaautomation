@@ -1,0 +1,19 @@
+name: check-deliveries
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          workingDirectory: worker
+          command: d1 execute novaautomation --remote --command="SELECT id,file_name,status,pushed_at,catbox_url FROM deliveries ORDER BY id;"
