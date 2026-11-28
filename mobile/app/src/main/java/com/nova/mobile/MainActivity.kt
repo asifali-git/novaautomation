@@ -89,6 +89,26 @@ class MainActivity : ComponentActivity() {
             )
         } else if (Api.token.isBlank()) Screen.Login else Screen.Home
         var screen by remember { mutableStateOf<Screen>(startScreen) }
+        // Navigation stack: back always returns to the previous screen, never
+        // exits the app (unless the user is already on Home and taps back twice).
+        val backStack = remember { mutableStateListOf<Screen>() }
+
+        fun go(next: Screen) {
+            backStack.add(screen)
+            screen = next
+        }
+
+        fun goBack() {
+            if (backStack.isNotEmpty()) {
+                screen = backStack.removeAt(backStack.size - 1)
+            } else {
+                screen = Screen.Home
+            }
+        }
+
+        androidx.activity.compose.BackHandler(enabled = screen !is Screen.Login) {
+            goBack()
+        }
         var platforms by remember { mutableStateOf(emptyList<com.nova.mobile.Platform>()) }
         var deliveries by remember { mutableStateOf(emptyList<Delivery>()) }
         var loading by remember { mutableStateOf(false) }
@@ -199,8 +219,8 @@ class MainActivity : ComponentActivity() {
                     autoDownload = auto,
                     tab = tab,
                     onTab = { tab = it },
-                    onPlatform = { screen = Screen.Tasks(it) },
-                    onManage = { screen = Screen.Manage },
+                    onPlatform = { go(Screen.Tasks(it)) },
+                    onManage = { go(Screen.Manage) },
                     onRefresh = { reloadAll() },
                     onSync = {
                         DownloadQueue.syncPending(this@MainActivity, deliveries, auto)
@@ -218,25 +238,25 @@ class MainActivity : ComponentActivity() {
 
             is Screen.Tasks -> TasksScreen(
                 platform = s.platform,
-                onBack = { screen = Screen.Home },
-                onTask = { screen = Screen.Links(s.platform, it) },
+                onBack = { goBack() },
+                onTask = { go(Screen.Links(s.platform, it)) },
             )
 
             is Screen.Links -> LinksScreen(
                 task = s.task,
-                onBack = { screen = Screen.Tasks(s.platform) },
-                onVideo = { screen = Screen.Timeline(it) },
+                onBack = { goBack() },
+                onVideo = { go(Screen.Timeline(it)) },
             )
 
             is Screen.Timeline -> TimelineScreen(
                 video = s.video,
-                onBack = { screen = Screen.Home },
+                onBack = { goBack() },
             )
 
             Screen.Manage -> ManageTasksScreen(
                 busy = manageBusy,
                 message = manageMsg,
-                onBack = { screen = Screen.Home; manageMsg = null },
+                onBack = { goBack(); manageMsg = null },
                 onAdd = { url, dest ->
                     manageBusy = true; manageMsg = null
                     scope.launch {
@@ -309,7 +329,7 @@ class MainActivity : ComponentActivity() {
                 title = s.title,
                 fileName = s.fileName,
                 url = s.url,
-                onBack = { screen = Screen.Home },
+                onBack = { goBack() },
                 onDownload = {
                     val d = Delivery(s.id, s.fileName, s.url, s.title, "", 0)
                     DownloadQueue.enqueue(this@MainActivity, d, true)
