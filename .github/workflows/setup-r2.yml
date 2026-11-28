@@ -1,0 +1,30 @@
+name: setup-r2
+
+# Create a public R2 bucket for permanent video delivery (CF credentials in secrets).
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create/list R2 bucket
+        env:
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+        run: |
+          pip install -q requests
+          python3 -c '
+          import os, requests
+          acc = os.environ["CF_ACCOUNT_ID"]
+          h = {"Authorization": "Bearer " + os.environ["CF_API_TOKEN"]}
+          base = f"https://api.cloudflare.com/client/v4/accounts/{acc}/r2/buckets"
+          r = requests.get(base, headers=h, timeout=30)
+          print("buckets:", r.status_code, [b["name"] for b in r.json().get("result",{}).get("buckets",[])])
+          r2 = requests.put(base + "/nova-deliveries", headers=h, timeout=30)
+          print("create:", r2.status_code, str(r2.text[:150]))
+          '
