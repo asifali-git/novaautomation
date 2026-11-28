@@ -1,0 +1,19 @@
+name: fix-fb-url
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          workingDirectory: worker
+          command: d1 execute novaautomation --remote --command="UPDATE tasks SET source_url='https://www.facebook.com/share/r/1E1fKJWBci/', baseline_key=NULL, last_seen_key=NULL WHERE platform='facebook'; SELECT id,name,source_url,status FROM tasks WHERE platform='facebook';"
