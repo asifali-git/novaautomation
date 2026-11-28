@@ -1,0 +1,20 @@
+name: pause-youtube
+
+# Pause YouTube tasks (keep links). Only Facebook remains active for polling.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pause:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          workingDirectory: worker
+          command: d1 execute novaautomation --remote --command="UPDATE tasks SET status='paused' WHERE platform='youtube' OR source_url LIKE '%youtube.com%' OR source_url LIKE '%youtu.be%'; SELECT id,name,platform,status FROM tasks;"

@@ -105,8 +105,15 @@ def _yt_attempts(url):
 def download(url, out_dir="work"):
     """Download `url` into out_dir. Returns (file_path, info_dict)."""
     os.makedirs(out_dir, exist_ok=True)
-    # YouTube: FastSaver API (no bot-check from any IP).
-    if _is_youtube(url) and apikeys.setting("download_provider", "fastsaver") != "ytdlp":
+    # YouTube: FastSaver API only when credits remain. With no keys/credits this
+    # wastes 4 API calls on every video, so default to the free ytdlp path.
+    # Set NOVA_USE_FASTSAVER=1 only if the paid provider is topped up.
+    use_fastsaver = (
+        _is_youtube(url)
+        and os.getenv("NOVA_USE_FASTSAVER", "0") == "1"
+        and apikeys.setting("download_provider", "ytdlp") != "ytdlp"
+    )
+    if use_fastsaver:
         p = _download_fastsaver(url, out_dir)
         if p and os.path.exists(p) and os.path.getsize(p) > 0:
             return p, {"id": None, "title": None, "webpage_url": url}
