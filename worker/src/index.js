@@ -2226,6 +2226,31 @@ export default {
         return withCors(json({ ok: true, id, push }, push.sent ? 201 : 202));
       }
 
+      // ---- Internal: re-push every pending delivery (no device needed earlier) ----
+      if (path === '/api/internal/deliveries/push-pending' && req.method === 'POST') {
+        const rows = await env.DB.prepare(
+          `SELECT * FROM deliveries WHERE status = 'pending' ORDER BY id ASC LIMIT 100`
+        ).all();
+        let pushed = 0;
+        const errors = [];
+        for (const d of (rows.results || [])) {
+          try {
+            const out = await pushDeliveryToUser(env.DB, env, d);
+            if (out.sent > 0) {
+              await env.DB.prepare('UPDATE deliveries SET pushed_at = ? WHERE id = ?').bind(now(), d.id).run();
+              pushed++;
+            } else {
+              errors.push(`id ${d.id}: ${out.error || 'no device'}`);
+            }
+          } catch (exc) {
+            errors.push(`id ${d.id}: ${exc?.message || String(exc)}`);
+          }
+        }
+        return withCors(json({
+          ok: true, total: (rows.results || []).length, pushed, errors,
+        }));
+      }
+
       if (path === '/api/internal/keys/env' && req.method === 'GET') {
           const uid = url.searchParams.get('user_id');
           const owner = uid ? { id: Number(uid) } : await adminOwner(env.DB);
