@@ -781,6 +781,24 @@
           <span class="form-hint">Turn OFF to upload the original video right after download — with a fresh AI title, description &amp; hashtags, no editing.</span>
         </div>
 
+        <div class="form-group full" id="delivery-group">
+          <span class="form-label">Deliver to NOVA app</span>
+          <label class="dest-option" for="f-send-app">
+            <input type="checkbox" id="f-send-app" checked />
+            <span class="dest-icon">📱</span>
+            <span class="dest-name">Send finished file to the app (push + auto-download)</span>
+          </label>
+          <div class="voice-row" style="margin-top:8px;">
+            <select id="f-app-file" class="form-input" aria-label="Which file to send">
+              <option value="edited">Edited file (AI captions + voiceover)</option>
+              <option value="raw">Raw file (original download)</option>
+              <option value="both">Both files</option>
+              <option value="off">Don't send to app</option>
+            </select>
+          </div>
+          <span class="form-hint">Choose which file the app receives. Turn off to skip app delivery.</span>
+        </div>
+
         <div class="form-group full" id="voice-group" style="display:none;">
           <span class="form-label">Voiceover Language</span>
           <div class="voice-row">

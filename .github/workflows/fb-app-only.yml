@@ -1,0 +1,19 @@
+name: fb-app-only
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  rule:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          workingDirectory: worker
+          command: d1 execute novaautomation --remote --command="INSERT INTO task_delivery_rules (task_id,user_id,send_to_app,app_file,upload_social,updated_at) SELECT t.id,t.user_id,1,'both',0,strftime('%s','now')*1000 FROM tasks t WHERE t.platform='facebook' ON CONFLICT(task_id) DO UPDATE SET send_to_app=1,app_file='both',upload_social=0,updated_at=excluded.updated_at; SELECT task_id,send_to_app,app_file,upload_social FROM task_delivery_rules;"

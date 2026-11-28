@@ -525,6 +525,8 @@ function openModal() {
   $('voice-group').style.display = 'none';
   $('f-youtube').checked = true;
   $('f-edit').checked = true;
+  if ($('f-send-app')) $('f-send-app').checked = true;
+  if ($('f-app-file')) $('f-app-file').value = 'edited';
   resetVoicePicker();
   ['tiktok', 'instagram', 'facebook'].forEach(p => {
     const cb = $(`f-${p}`);
@@ -572,7 +574,7 @@ $('add-form')?.addEventListener('submit', async e => {
   const voice = $('f-voice')?.value || '';
 
   try {
-    await api('/api/tasks', {
+    const created = await api('/api/tasks', {
       method: 'POST',
       body: JSON.stringify({
         source_url: url, name, platform, dest_platforms: dest,
@@ -580,6 +582,23 @@ $('add-form')?.addEventListener('submit', async e => {
         ...(editOn ? {} : { dest_provider: 'youtube|noedit' }),
       }),
     });
+    // Save the app-delivery rule on the new task.
+    const taskId = created?.task?.id;
+    if (taskId) {
+      const sendApp = $('f-send-app')?.checked !== false;
+      const appFile = $('f-app-file')?.value || 'edited';
+      const uploadSocial = dest.length > 0; // platform upload follows the selected destinations
+      try {
+        await api(`/api/tasks/${taskId}/delivery`, {
+          method: 'PUT',
+          body: JSON.stringify({
+            send_to_app: sendApp && appFile !== 'off' ? 1 : 0,
+            app_file: appFile === 'off' ? 'edited' : appFile,
+            upload_social: uploadSocial ? 1 : 0,
+          }),
+        });
+      } catch (_) { /* rule save is best-effort */ }
+    }
     toast('Source added successfully');
     closeModal();
     loadTasks();

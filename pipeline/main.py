@@ -554,7 +554,8 @@ def run():
     # Per-task rule: send_to_app=0 -> skip; app_file = raw|edited|both.
     if os.getenv("NOVA_SEND_TO_APP", "1") != "0":
         try:
-            from pipeline.catbox_push import upload, notify
+            # Runner cwd = pipeline/, so import the sibling module directly.
+            import catbox_push
 
             app_file = os.getenv("NOVA_APP_FILE", "edited")
             deliver = []
@@ -563,8 +564,8 @@ def run():
             if app_file in ("raw", "both") and os.path.exists(src) and os.path.abspath(src) != os.path.abspath(out_path):
                 deliver.append(("raw", src))
             for kind, path in deliver:
-                url = upload(Path(path))
-                notify(
+                url = catbox_push.upload(Path(path))
+                catbox_push.notify(
                     {
                         "catbox_url": url,
                         "file_name": f"{kind}-{os.path.basename(path)}",
