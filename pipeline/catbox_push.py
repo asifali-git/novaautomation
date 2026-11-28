@@ -52,17 +52,35 @@ def _post_form(url: str, fields: dict, file_field: tuple[str, Path] | None = Non
 
 
 def upload(path: Path, userhash: str = "") -> str:
-    # Anonymous upload works reliably (verified from this machine and runners).
-    # Account userhash is optional; an invalid hash makes Catbox return 412
-    # "Invalid uploader", so only send it when explicitly enabled.
-    use_hash = os.getenv("CATBOX_USE_USERHASH", "0") == "1" and userhash
-    fields = {"reqtype": "fileupload"}
-    if use_hash:
-        fields["userhash"] = userhash
-    last = ""
-    # Catbox occasionally returns an empty body or HTTP 412 under load;
-    # a short retry loop is enough to get a stable URL.
+    """Upload to tmpfiles.org (works from GitHub runners); Catbox is a fallback.
+
+    Catbox rejects datacenter IPs with HTTP 412 "Invalid uploader", so it is
+    only tried when tmpfiles fails or CATBOX_USE_USERHASH=1 is explicitly set.
+    """
+    tmp_url = "https://tmpfiles.org/api/v1/upload"
     for attempt in range(4):
+        try:
+            result = _post_form(
+                tmp_url, {}, file_field=("file", path)
+            )
+            parsed = json.loads(result)
+            if parsed.get("status") == "success" and parsed.get("data", {}).get("url"):
+                url = parsed["data"]["url"]
+                # tmpfiles.org URL -> direct download (/dl/) so yt-dlp/ExoPlayer
+                # do not have to parse an HTML preview page.
+                return url.replace("https://tmpfiles.org/", "https://tmpfiles.org/dl/", 1)
+        except Exception as exc:
+            print(f"[upload] tmpfiles attempt {attempt + 1}: {type(exc).__name__}: {str(exc)[:120]}", file=sys.stderr)
+        if attempt < 3:
+            time.sleep(2 * (attempt + 1))
+
+    # Fallback: Catbox (works from residential IPs; may 412 from runners).
+    if os.getenv("CATBOX_USE_USERHASH", "0") == "1" and userhash:
+        fields = {"reqtype": "fileupload", "userhash": userhash}
+    else:
+        fields = {"reqtype": "fileupload"}
+    last = ""
+    for attempt in range(3):
         try:
             result = _post_form(CATBOX_API, fields, file_field=("fileToUpload", path))
             if result.startswith("https://files.catbox.moe/"):
@@ -70,9 +88,9 @@ def upload(path: Path, userhash: str = "") -> str:
             last = f"unexpected response: {result[:120]}"
         except Exception as exc:
             last = f"{type(exc).__name__}: {str(exc)[:120]}"
-        if attempt < 3:
+        if attempt < 2:
             time.sleep(2 * (attempt + 1))
-    raise RuntimeError(last or "Catbox upload failed")
+    raise RuntimeError(last or "upload failed")
 
 
 def notify(delivery: dict, worker_url: str, token: str) -> dict:
