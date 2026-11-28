@@ -1,0 +1,28 @@
+name: check-worker-token
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check INTERNAL_TOKEN match
+        env:
+          GH_INTERNAL_TOKEN: ${{ secrets.INTERNAL_TOKEN }}
+          WORKER_URL: ${{ secrets.WORKER_URL }}
+        run: |
+          pip install -q requests
+          python3 -c '
+          import os, requests, hashlib
+          t = os.environ.get("GH_INTERNAL_TOKEN","")
+          print("github secret len:", len(t), "sha256-prefix:", hashlib.sha256(t.encode()).hexdigest()[:8])
+          base = os.environ.get("WORKER_URL","").rstrip("/")
+          # Try internal endpoint with x-token; 200 means match
+          r = requests.get(base + "/api/internal/tasks", headers={"x-token": t}, timeout=30)
+          print("worker x-token check:", r.status_code, r.text[:100])
+          '
