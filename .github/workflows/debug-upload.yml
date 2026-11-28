@@ -1,0 +1,45 @@
+name: debug-upload
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Test catbox_push.upload from runner
+        run: |
+          printf 'nova test data' > /tmp/t.mp4
+          python3 -c '
+          import sys
+          sys.path.insert(0, "pipeline")
+          import catbox_push
+          from pathlib import Path
+          try:
+              url = catbox_push.upload(Path("/tmp/t.mp4"))
+              print("UPLOAD OK:", url)
+          except Exception as exc:
+              print("UPLOAD FAIL:", type(exc).__name__, str(exc)[:200])
+          '
+      - name: Test worker notify
+        env:
+          WORKER_URL: ${{ secrets.WORKER_URL }}
+          INTERNAL_TOKEN: ${{ secrets.INTERNAL_TOKEN }}
+        run: |
+          python3 -c '
+          import os, sys
+          sys.path.insert(0, "pipeline")
+          import catbox_push
+          r = catbox_push.notify(
+              {"catbox_url":"https://tmpfiles.org/dl/test/test.mp4","file_name":"t.mp4",
+               "title":"test","platform":"test","source_url":"","size_bytes":1,"mime":"video/mp4"},
+              os.environ.get("WORKER_URL",""), os.environ.get("INTERNAL_TOKEN",""))
+          print("NOTIFY:", str(r)[:200])
+          '
