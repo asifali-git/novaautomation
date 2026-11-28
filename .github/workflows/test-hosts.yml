@@ -1,0 +1,32 @@
+name: test-hosts
+
+# Find a free file host that works from GitHub runners (Catbox returns 412).
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Test free hosts
+        run: |
+          pip install -q requests
+          echo "hello-nova" > /tmp/t.txt
+          echo "=== 0x0.st ==="
+          curl -s -m 60 -F "file=@/tmp/t.txt" https://0x0.st 2>&1 | head -c 200 || true
+          echo ""
+          echo "=== tmpfiles.org ==="
+          curl -s -m 60 -F "file=@/tmp/t.txt" https://tmpfiles.org/api/v1/upload 2>&1 | head -c 200 || true
+          echo ""
+          echo "=== litterbox.catbox.moe (1h) ==="
+          curl -s -m 60 -F "reqtype=fileupload" -F "time=1h" -F "fileToUpload=@/tmp/t.txt" https://litterbox.catbox.moe/resources/internals/api.php 2>&1 | head -c 200 || true
+          echo ""
+          echo "=== uguu.se ==="
+          curl -s -m 60 -F "file[]=@/tmp/t.txt" https://uguu.se/upload.php 2>&1 | head -c 200 || true
+          echo ""
