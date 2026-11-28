@@ -146,7 +146,22 @@ class MainActivity : ComponentActivity() {
         fun registerFcm() {
             FirebaseMessaging.getInstance().token.addOnSuccessListener { token ->
                 Api.token = Prefs.token(this@MainActivity)
-                scope.launch { Api.registerDevice(token, Prefs.deviceId(this@MainActivity)) }
+                if (Api.token.isBlank()) return@addOnSuccessListener
+                scope.launch {
+                    when (val r = Api.registerDevice(token, Prefs.deviceId(this@MainActivity))) {
+                        is Api.Result.Ok -> loadDeliveries()
+                        is Api.Result.Err -> {}
+                    }
+                }
+            }
+        }
+
+        // Register FCM + pull pending every time the app opens — fixes the
+        // "no device registered" case when the user was already logged in.
+        LaunchedEffect(Unit) {
+            if (Api.token.isNotBlank()) {
+                registerFcm()
+                loadDeliveries()
             }
         }
 
