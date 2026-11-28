@@ -1,0 +1,27 @@
+name: test-catbox
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test Catbox upload from GitHub runner
+        env:
+          CATBOX_USERHASH: ${{ secrets.CATBOX_USERHASH }}
+        run: |
+          python3 -c '
+          import os, requests
+          h = os.environ.get("CATBOX_USERHASH", "")
+          print("userhash len:", len(h))
+          for i in range(3):
+              r = requests.post("https://catbox.moe/user/api.php",
+                  data={"reqtype":"fileupload","userhash":h},
+                  files={"fileToUpload":("t.txt", b"hello", "text/plain")}, timeout=60)
+              print("attempt", i+1, "status", r.status_code, "response", repr(r.text[:150]))
+          '
