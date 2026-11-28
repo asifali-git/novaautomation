@@ -1,0 +1,20 @@
+name: check-state
+
+# Read-only: report pipeline state counts (no secrets printed).
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          workingDirectory: worker
+          command: d1 execute novaautomation --remote --command="SELECT status, COUNT(*) AS n FROM videos GROUP BY status; SELECT COUNT(*) AS pending FROM deliveries WHERE status='pending'; SELECT COUNT(*) AS devices FROM device_tokens; SELECT COUNT(*) AS links FROM tasks;"
