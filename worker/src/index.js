@@ -2186,7 +2186,7 @@ export default {
         const body = await readBody(req);
         const catboxUrl = String(body.catbox_url || '').trim();
         const fileName = String(body.file_name || '').trim();
-        if (!/^https?:\/\/(files\.catbox\.moe|tmpfiles\.org\/dl\/)/i.test(catboxUrl)) {
+        if (!/^https?:\/\/(files\.catbox\.moe\/|tmpfiles\.org\/dl\/|github\.com\/[^/]+\/[^/]+\/releases\/download\/)/i.test(catboxUrl)) {
           return withCors(json({ error: 'invalid file url' }, 400));
         }
         const owner = await adminOwner(env.DB);

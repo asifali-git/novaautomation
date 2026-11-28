@@ -19,6 +19,7 @@ import json
 import os
 import sys
 import time
+import urllib.parse
 import urllib.request
 from pathlib import Path
 
@@ -56,11 +57,39 @@ def _post_form(url: str, fields: dict, file_field: tuple[str, Path] | None = Non
 
 
 def upload(path: Path, userhash: str = "") -> str:
-    """Upload to tmpfiles.org (works from GitHub runners); Catbox is a fallback.
+    """Publish to a permanent host; returns a public URL.
 
-    Catbox rejects datacenter IPs with HTTP 412 "Invalid uploader", so it is
-    only tried when tmpfiles fails or CATBOX_USE_USERHASH=1 is explicitly set.
+    Priority: GitHub Releases (permanent, works from runners) -> tmpfiles.org
+    (1h expiry) -> Catbox (blocked on datacenter IPs with 412).
     """
+    # 1) GitHub Releases — permanent public asset URL.
+    gh_token = os.getenv("GH_TOKEN") or os.getenv("GITHUB_TOKEN") or ""
+    repo = os.getenv("GH_REPO") or os.getenv("REPO") or ""
+    if gh_token and repo:
+        import subprocess
+
+        tag = f"nova-delivery-{int(time.time())}"
+        cmd = [
+            "gh", "release", "create", tag, str(path),
+            "--repo", repo,
+            "--title", f"NOVA delivery {tag}",
+            "--notes", "Auto-generated delivery asset",
+        ]
+        try:
+            env = dict(os.environ)
+            env["GH_TOKEN"] = gh_token
+            proc = subprocess.run(cmd, capture_output=True, text=True, timeout=900, env=env)
+            if proc.returncode == 0:
+                encoded = urllib.parse.quote(path.name)
+                return f"https://github.com/{repo}/releases/download/{tag}/{encoded}"
+            print(
+                f"[upload] release failed: {(proc.stderr or '')[:200]}",
+                file=sys.stderr,
+            )
+        except Exception as exc:
+            print(f"[upload] release error: {type(exc).__name__}: {str(exc)[:120]}", file=sys.stderr)
+
+    # 2) tmpfiles.org — works from runners but expires after ~1 hour.
     tmp_url = "https://tmpfiles.org/api/v1/upload"
     for attempt in range(4):
         try:

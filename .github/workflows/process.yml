@@ -114,6 +114,8 @@ jobs:
         env:
           WORKER_URL: ${{ secrets.WORKER_URL }}
           INTERNAL_TOKEN: ${{ secrets.INTERNAL_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
