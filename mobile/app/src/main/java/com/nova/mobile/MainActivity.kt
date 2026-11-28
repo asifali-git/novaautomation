@@ -230,6 +230,7 @@ class MainActivity : ComponentActivity() {
                         loadDeliveries()
                     },
                     onManualDownload = { DownloadQueue.enqueue(this@MainActivity, it, true) },
+                    onCancel = { DownloadQueue.cancel(this@MainActivity, it) },
                     onAutoChange = { auto = it; Prefs.setAutoDownload(this@MainActivity, it) },
                     onLogout = {
                         Prefs.clear(this@MainActivity)
@@ -338,6 +339,7 @@ class MainActivity : ComponentActivity() {
                     val d = Delivery(s.id, s.fileName, s.url, s.title, "", 0)
                     workId = DownloadQueue.enqueue(this@MainActivity, d, true)
                 },
+                onCancel = { DownloadQueue.cancel(this@MainActivity, s.id) },
                 workId = workId,
                 ctx = this@MainActivity,
             )

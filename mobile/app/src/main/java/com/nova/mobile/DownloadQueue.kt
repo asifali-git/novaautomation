@@ -10,9 +10,9 @@ import androidx.work.WorkManager
 import androidx.work.workDataOf
 import java.util.concurrent.TimeUnit
 
-/** Enqueue a download that survives app restarts and waits for internet. */
+/** WorkManager queue for offline-safe downloads (one unique work per delivery). */
 object DownloadQueue {
-    private const val TAG = "nova_download"
+    fun name(id: Int) = "nova_$id"
 
     fun enqueue(ctx: Context, delivery: Delivery, autoSave: Boolean): java.util.UUID {
         val input = workDataOf(
@@ -29,17 +29,21 @@ object DownloadQueue {
             .setInputData(input)
             .setConstraints(constraints)
             .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 30, TimeUnit.SECONDS)
-            .addTag(TAG)
+            .addTag("nova_download")
             .build()
         WorkManager.getInstance(ctx).enqueueUniqueWork(
-            "nova_${delivery.id}",
+            name(delivery.id),
             ExistingWorkPolicy.KEEP,
             req,
         )
         return req.id
     }
 
+    fun cancel(ctx: Context, id: Int) {
+        WorkManager.getInstance(ctx).cancelUniqueWork(name(id))
+    }
+
     fun syncPending(ctx: Context, deliveries: List<Delivery>, autoSave: Boolean) {
-        deliveries.forEach { enqueue(ctx, it, autoSave) }
+        deliveries.forEach { if (!Prefs.isDownloaded(ctx, it.id)) enqueue(ctx, it, autoSave) }
     }
 }

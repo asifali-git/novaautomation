@@ -36,6 +36,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -47,6 +48,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -88,6 +90,7 @@ fun HomeScreen(
     onRefresh: () -> Unit,
     onSync: () -> Unit,
     onManualDownload: (Delivery) -> Unit,
+    onCancel: (Int) -> Unit,
     onAutoChange: (Boolean) -> Unit,
     onLogout: () -> Unit,
 ) {
@@ -149,7 +152,7 @@ fun HomeScreen(
         Box(Modifier.fillMaxSize().padding(padding)) {
             when (tab) {
                 HomeTab.PLATFORMS -> PlatformsTab(platforms, loading, onPlatform, onManage)
-                HomeTab.DOWNLOADS -> DownloadsTab(deliveries, onSync, onManualDownload, ctx)
+                HomeTab.DOWNLOADS -> DownloadsTab(deliveries, onSync, onManualDownload, onCancel, ctx)
                 HomeTab.SETTINGS -> SettingsTab(autoDownload, onAutoChange, onLogout, username)
             }
         }
@@ -248,37 +251,43 @@ private fun DownloadsTab(
     deliveries: List<Delivery>,
     onSync: () -> Unit,
     onManualDownload: (Delivery) -> Unit,
+    onCancel: (Int) -> Unit,
     ctx: Context,
 ) {
     var refresh by remember { mutableStateOf(0) }
     Column(Modifier.fillMaxSize().padding(16.dp)) {
         Spacer(Modifier.height(20.dp))
         Text("Downloads", color = NovaColors.OnSurface, fontSize = 24.sp, fontWeight = FontWeight.Bold)
-        Text("Videos delivered to your device", color = NovaColors.Muted, fontSize = 12.sp)
+        Text("${deliveries.size} video${if (deliveries.size == 1) "" else "s"} ready on the server", color = NovaColors.Muted, fontSize = 12.sp)
         Spacer(Modifier.height(12.dp))
-        Button(
+        OutlinedButton(
             onClick = { onSync(); refresh++ },
-            colors = ButtonDefaults.buttonColors(containerColor = NovaColors.PrimaryDark),
+            colors = ButtonDefaults.outlinedButtonColors(contentColor = NovaColors.Primary),
+            border = androidx.compose.foundation.BorderStroke(1.dp, NovaColors.Primary),
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier.fillMaxWidth(),
         ) { Icon(Icons.Default.Refresh, null, Modifier.size(18.dp)); Spacer(Modifier.size(8.dp)); Text("Sync now") }
         Spacer(Modifier.height(12.dp))
         if (deliveries.isEmpty()) {
             Card(colors = CardDefaults.cardColors(containerColor = NovaColors.Surface), shape = RoundedCornerShape(16.dp)) {
-                Column(Modifier.padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(Icons.Default.CheckCircle, null, tint = NovaColors.Online, modifier = Modifier.size(36.dp))
-                    Spacer(Modifier.size(8.dp))
-                    Text("All caught up", color = NovaColors.OnSurface, fontWeight = FontWeight.SemiBold)
-                    Text("No pending downloads", color = NovaColors.Muted, fontSize = 12.sp)
+                Column(Modifier.padding(28.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                    Icon(Icons.Default.CheckCircle, null, tint = NovaColors.Online, modifier = Modifier.size(40.dp))
+                    Spacer(Modifier.size(10.dp))
+                    Text("All caught up", color = NovaColors.OnSurface, fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
+                    Text("No videos waiting for download", color = NovaColors.Muted, fontSize = 12.sp)
                 }
             }
         } else {
-            LazyColumn {
-                items(deliveries) { d -> DownloadRow(d, ctx, refresh, onManualDownload) }
+            LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                items(deliveries) { d -> DownloadRow(d, ctx, refresh, onManualDownload, onCancel) }
             }
         }
     }
 }
+
+private data class DLState(val s: WorkInfo.State?, val p: Int, val sp: String, val err: String)
+
+private fun dlState(s: WorkInfo.State?, p: Int, sp: String, err: String) = DLState(s, p, sp, err)
 
 @Composable
 private fun DownloadRow(
@@ -286,44 +295,77 @@ private fun DownloadRow(
     ctx: Context,
     refresh: Int,
     onManualDownload: (Delivery) -> Unit,
+    onCancel: (Int) -> Unit,
 ) {
-    var pct by remember(d.id, refresh) { mutableStateOf(-1) }
+    var state by remember(d.id, refresh) { mutableStateOf<WorkInfo.State?>(null) }
+    var pct by remember(d.id, refresh) { mutableStateOf(0) }
     var speed by remember(d.id, refresh) { mutableStateOf("") }
+    var error by remember(d.id, refresh) { mutableStateOf("") }
     val saved = Prefs.isDownloaded(ctx, d.id)
 
     LaunchedEffect(d.id, refresh) {
-        WorkManager.getInstance(ctx).getWorkInfosForUniqueWorkFlow("nova_${d.id}")
+        WorkManager.getInstance(ctx).getWorkInfosForUniqueWorkFlow(DownloadQueue.name(d.id))
             .map { infos ->
                 val w = infos.firstOrNull()
-                when (w?.state) {
-                    WorkInfo.State.RUNNING -> Pair(w.progress.getInt(DownloadWorker.PROGRESS, 0), w.progress.getString(DownloadWorker.SPEED) ?: "")
-                    WorkInfo.State.SUCCEEDED -> Pair(100, "Complete")
-                    else -> Pair(-1, "")
-                }
+                dlState(
+                    w?.state,
+                    when (w?.state) {
+                        WorkInfo.State.RUNNING -> w.progress.getInt(DownloadWorker.PROGRESS, 0)
+                        WorkInfo.State.SUCCEEDED -> 100
+                        else -> 0
+                    },
+                    w?.progress?.getString(DownloadWorker.SPEED) ?: "",
+                    w?.outputData?.getString("error") ?: "",
+                )
             }
-            .collect { (p, s) -> pct = p; speed = s }
+            .collect { t -> state = t.s; pct = t.p; speed = t.sp; error = t.err }
     }
 
+    val running = state == WorkInfo.State.RUNNING || state == WorkInfo.State.ENQUEUED || state == WorkInfo.State.BLOCKED
+    val failed = state == WorkInfo.State.FAILED || error.isNotBlank()
+
     Card(
-        Modifier.fillMaxWidth().padding(vertical = 4.dp),
+        Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = NovaColors.Surface),
         shape = RoundedCornerShape(16.dp),
     ) {
-        Column(Modifier.padding(14.dp)) {
+        Column(Modifier.padding(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(
+                    Modifier.size(42.dp).clip(RoundedCornerShape(12.dp)).background(NovaColors.SurfaceAlt),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        if (saved) Icons.Default.CheckCircle else Icons.Default.CloudDownload,
+                        null,
+                        tint = if (saved) NovaColors.Online else NovaColors.Primary,
+                        modifier = Modifier.size(22.dp),
+                    )
+                }
+                Spacer(Modifier.size(12.dp))
                 Column(Modifier.weight(1f)) {
                     Text(d.title.ifBlank { d.fileName }, color = NovaColors.OnSurface, fontWeight = FontWeight.Medium, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                    Text("${d.platform} · MP4 · ${d.size / 1_000_000} MB", color = NovaColors.Muted, fontSize = 11.sp)
+                    Text(
+                        if (saved) "Downloaded · Movies/NOVA" else "${d.platform} · MP4 · ${d.size / 1_000_000} MB",
+                        color = if (saved) NovaColors.Online else NovaColors.Muted,
+                        fontSize = 11.sp,
+                    )
                 }
                 when {
-                    saved || pct == 100 -> {
-                        Icon(Icons.Default.CheckCircle, "Downloaded", tint = NovaColors.Online, modifier = Modifier.size(28.dp))
+                    saved || state == WorkInfo.State.SUCCEEDED -> {
                         IconButton(onClick = {
                             try { ctx.startActivity(Intent(Intent.ACTION_GET_CONTENT).apply { type = "video/*" }) } catch (_: Exception) {}
-                        }) { Icon(Icons.Default.Folder, "Open", tint = NovaColors.Primary) }
+                        }) { Icon(Icons.Default.Folder, "Open file", tint = NovaColors.Primary) }
                     }
-                    pct in 0..99 -> {
-                        Text("$pct%  $speed", color = NovaColors.Primary, fontSize = 11.sp)
+                    running -> {
+                        TextButton(onClick = { onCancel(d.id) }) {
+                            Text("Cancel", color = NovaColors.Danger, fontSize = 12.sp)
+                        }
+                    }
+                    failed -> {
+                        TextButton(onClick = { onManualDownload(d) }) {
+                            Text("Retry", color = NovaColors.Warning, fontSize = 12.sp)
+                        }
                     }
                     else -> {
                         Button(
@@ -334,18 +376,29 @@ private fun DownloadRow(
                     }
                 }
             }
-            if (pct in 0..99) {
-                Spacer(Modifier.size(8.dp))
+            if (running) {
+                Spacer(Modifier.size(10.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text("Downloading $pct%", color = NovaColors.OnSurface, fontSize = 12.sp, modifier = Modifier.weight(1f))
+                    Text(speed, color = NovaColors.Primary, fontSize = 11.sp)
+                }
+                Spacer(Modifier.size(5.dp))
                 LinearProgressIndicator(
                     progress = { pct / 100f },
-                    modifier = Modifier.fillMaxWidth().height(6.dp),
+                    modifier = Modifier.fillMaxWidth().height(6.dp).clip(RoundedCornerShape(3.dp)),
                     color = NovaColors.Primary,
                     trackColor = NovaColors.SurfaceAlt,
                 )
             }
+            if (failed && error.isNotBlank()) {
+                Spacer(Modifier.size(6.dp))
+                Text(error, color = NovaColors.Danger, fontSize = 11.sp, maxLines = 2)
+            }
         }
     }
 }
+
+
 
 @Composable
 private fun SettingsTab(

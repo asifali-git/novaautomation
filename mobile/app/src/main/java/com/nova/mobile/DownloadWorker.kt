@@ -50,7 +50,9 @@ class DownloadWorker(
                 Api.ack(id)
                 Result.success(workDataOf(KEY_ID to id, PROGRESS to 100))
             } catch (e: Exception) {
-                if (runAttemptCount < 5) Result.retry() else Result.failure()
+                val msg = e.message ?: "Download failed"
+                if (runAttemptCount < 5) Result.retry()
+                else Result.failure(workDataOf(KEY_ID to id, "error" to msg.take(160)))
             }
         }
     }
