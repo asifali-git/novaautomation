@@ -44,7 +44,11 @@ def _post_form(url: str, fields: dict, file_field: tuple[str, Path] | None = Non
     req = urllib.request.Request(
         url,
         data=b"".join(parts),
-        headers={"Content-Type": f"multipart/form-data; boundary={boundary}"},
+        headers={
+            "Content-Type": f"multipart/form-data; boundary={boundary}",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+            "Accept": "*/*",
+        },
         method="POST",
     )
     with urllib.request.urlopen(req, timeout=600) as resp:
