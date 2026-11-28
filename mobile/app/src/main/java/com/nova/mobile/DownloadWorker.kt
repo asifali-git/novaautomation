@@ -39,7 +39,11 @@ class DownloadWorker(
         return withContext(Dispatchers.IO) {
             try {
                 val cache = File(applicationContext.cacheDir, "dl_${id}.mp4")
+                val shownAt = System.currentTimeMillis()
                 download(url, cache, id)
+                // Keep the progress UI visible briefly even on very fast links.
+                val remain = 700 - (System.currentTimeMillis() - shownAt)
+                if (remain > 0) kotlinx.coroutines.delay(remain)
                 if (auto) {
                     Gallery.save(applicationContext, name, cache.readBytes())
                     Prefs.markDownloaded(applicationContext, id)
