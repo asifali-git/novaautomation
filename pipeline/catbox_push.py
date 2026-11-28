@@ -100,15 +100,19 @@ def upload(path: Path, userhash: str = "") -> str:
 def notify(delivery: dict, worker_url: str, token: str) -> dict:
     if not worker_url or not token:
         return {"skipped": "WORKER_URL / INTERNAL_TOKEN missing"}
-    body = json.dumps(delivery).encode()
-    req = urllib.request.Request(
+    # requests is available in both CI and local env; urllib gets a 403 from
+    # the Worker's Cloudflare edge (default Python UA / header handling).
+    import requests
+
+    resp = requests.post(
         worker_url.rstrip("/") + "/api/internal/deliveries",
-        data=body,
-        headers={"Content-Type": "application/json", "x-token": token},
-        method="POST",
+        json=delivery,
+        headers={"x-token": token},
+        timeout=120,
     )
-    with urllib.request.urlopen(req, timeout=120) as resp:
-        return json.loads(resp.read().decode("utf-8", errors="replace"))
+    if resp.status_code not in (200, 201, 202):
+        raise RuntimeError(f"worker {resp.status_code}: {resp.text[:200]}")
+    return resp.json()
 
 
 def main() -> int:
