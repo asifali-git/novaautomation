@@ -1,6 +1,7 @@
 package com.nova.mobile.ui
 
 import android.content.Context
+import com.nova.mobile.DownloadWorker
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
