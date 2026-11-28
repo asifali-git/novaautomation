@@ -38,4 +38,15 @@ object Prefs {
     fun setAutoDownload(ctx: Context, value: Boolean) {
         sp(ctx).edit().putBoolean(AUTO, value).apply()
     }
+
+    // Local record of files already saved to gallery (green tick in UI).
+    private const val DONE = "downloaded_ids"
+    fun markDownloaded(ctx: Context, id: Int) {
+        val set = sp(ctx).getStringSet(DONE, emptySet())?.toMutableSet() ?: mutableSetOf()
+        set.add(id.toString())
+        sp(ctx).edit().putStringSet(DONE, set).apply()
+    }
+
+    fun isDownloaded(ctx: Context, id: Int): Boolean =
+        sp(ctx).getStringSet(DONE, emptySet())?.contains(id.toString()) == true
 }

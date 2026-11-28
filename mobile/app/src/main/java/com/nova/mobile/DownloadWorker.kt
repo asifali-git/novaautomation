@@ -11,8 +11,7 @@ import java.io.File
 import java.net.HttpURLConnection
 import java.net.URL
 
-/** Download from the delivery URL -> save to gallery -> ACK worker.
- *  Reports 0-100 progress so the UI can show a real progress bar. */
+/** Download -> save to gallery -> ACK. Reports progress %, bytes and speed. */
 class DownloadWorker(
     ctx: Context,
     params: WorkerParameters,
@@ -25,8 +24,9 @@ class DownloadWorker(
         const val KEY_TITLE = "title"
         const val KEY_AUTO = "auto_save"
         const val PROGRESS = "progress"
-        const val PROGRESS_BYTES = "progress_bytes"
-        const val PROGRESS_TOTAL = "progress_total"
+        const val BYTES = "bytes"
+        const val TOTAL = "total"
+        const val SPEED = "speed" // KB/s as string
     }
 
     override suspend fun doWork(): Result {
@@ -39,12 +39,11 @@ class DownloadWorker(
         return withContext(Dispatchers.IO) {
             try {
                 val cache = File(applicationContext.cacheDir, "dl_${id}.mp4")
-                download(url, cache)
+                download(url, cache, id)
                 if (auto) {
                     Gallery.save(applicationContext, name, cache.readBytes())
-                    Notifications.show(applicationContext, id, "Saved to gallery", title)
-                } else {
-                    Notifications.show(applicationContext, id, "Ready to download", title)
+                    Prefs.markDownloaded(applicationContext, id)
+                    Notifications.show(applicationContext, id, "Downloaded ✓", "$title · saved to gallery")
                 }
                 cache.delete()
                 Api.token = Prefs.token(applicationContext)
@@ -56,19 +55,18 @@ class DownloadWorker(
         }
     }
 
-    /** Streamed download with progress updates. */
-    private suspend fun download(url: String, dest: File) {
+    private suspend fun download(url: String, dest: File, id: Int) {
         val conn = URL(url).openConnection() as HttpURLConnection
         conn.connectTimeout = 30_000
         conn.readTimeout = 60_000
         conn.instanceFollowRedirects = true
         conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Linux; Android) NOVA/1.1")
         try {
-            val code = conn.responseCode
-            if (code !in 200..299) throw IllegalStateException("HTTP $code")
+            if (conn.responseCode !in 200..299) throw IllegalStateException("HTTP ${conn.responseCode}")
             val total = conn.contentLengthLong
             var done = 0L
-            var last = -1
+            var lastPct = -1
+            val started = System.currentTimeMillis()
             BufferedInputStream(conn.inputStream).use { input ->
                 dest.outputStream().use { output ->
                     val buf = ByteArray(1 shl 16)
@@ -77,18 +75,19 @@ class DownloadWorker(
                         if (n < 0) break
                         output.write(buf, 0, n)
                         done += n
-                        if (total > 0) {
-                            val pct = (done * 100 / total).toInt().coerceIn(0, 100)
-                            if (pct != last) {
-                                last = pct
-                                setProgressAsync(
-                                    workDataOf(
-                                        PROGRESS to pct,
-                                        PROGRESS_BYTES to done,
-                                        PROGRESS_TOTAL to total,
-                                    ),
-                                )
-                            }
+                        val elapsed = (System.currentTimeMillis() - started).coerceAtLeast(1)
+                        val speed = done * 1000 / elapsed / 1024 // KB/s
+                        val pct = if (total > 0) (done * 100 / total).toInt().coerceIn(0, 100) else -1
+                        if (pct != lastPct || done % (2 shl 20) < (1 shl 16)) {
+                            lastPct = pct
+                            setProgressAsync(
+                                workDataOf(
+                                    PROGRESS to pct,
+                                    BYTES to done,
+                                    TOTAL to total,
+                                    SPEED to "$speed KB/s",
+                                ),
+                            )
                         }
                     }
                 }

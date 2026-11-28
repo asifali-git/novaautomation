@@ -1,5 +1,9 @@
 package com.nova.mobile.ui
 
+import android.content.Context
+import android.content.Intent
+import com.nova.mobile.DownloadWorker
+import com.nova.mobile.Prefs
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -36,6 +40,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
@@ -45,6 +50,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
+import kotlinx.coroutines.flow.map
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -63,6 +76,7 @@ enum class HomeTab { PLATFORMS, DOWNLOADS, SETTINGS }
 @Composable
 fun HomeScreen(
     username: String,
+    ctx: Context,
     platforms: List<Platform>,
     deliveries: List<Delivery>,
     loading: Boolean,
@@ -135,7 +149,7 @@ fun HomeScreen(
         Box(Modifier.fillMaxSize().padding(padding)) {
             when (tab) {
                 HomeTab.PLATFORMS -> PlatformsTab(platforms, loading, onPlatform, onManage)
-                HomeTab.DOWNLOADS -> DownloadsTab(deliveries, onSync, onManualDownload)
+                HomeTab.DOWNLOADS -> DownloadsTab(deliveries, onSync, onManualDownload, ctx)
                 HomeTab.SETTINGS -> SettingsTab(autoDownload, onAutoChange, onLogout, username)
             }
         }
@@ -234,14 +248,16 @@ private fun DownloadsTab(
     deliveries: List<Delivery>,
     onSync: () -> Unit,
     onManualDownload: (Delivery) -> Unit,
+    ctx: Context,
 ) {
+    var refresh by remember { mutableStateOf(0) }
     Column(Modifier.fillMaxSize().padding(16.dp)) {
         Spacer(Modifier.height(20.dp))
         Text("Downloads", color = NovaColors.OnSurface, fontSize = 24.sp, fontWeight = FontWeight.Bold)
-        Text("Videos waiting on the server", color = NovaColors.Muted, fontSize = 12.sp)
+        Text("Videos delivered to your device", color = NovaColors.Muted, fontSize = 12.sp)
         Spacer(Modifier.height(12.dp))
         Button(
-            onClick = onSync,
+            onClick = { onSync(); refresh++ },
             colors = ButtonDefaults.buttonColors(containerColor = NovaColors.PrimaryDark),
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier.fillMaxWidth(),
@@ -258,25 +274,74 @@ private fun DownloadsTab(
             }
         } else {
             LazyColumn {
-                items(deliveries) { d ->
-                    Card(
-                        Modifier.fillMaxWidth().padding(vertical = 4.dp),
-                        colors = CardDefaults.cardColors(containerColor = NovaColors.Surface),
-                        shape = RoundedCornerShape(16.dp),
-                    ) {
-                        Row(Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
-                            Column(Modifier.weight(1f)) {
-                                Text(d.title.ifBlank { d.fileName }, color = NovaColors.OnSurface, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                                Text("${d.platform} · ${d.size / 1_000_000} MB", color = NovaColors.Muted, fontSize = 11.sp)
-                            }
-                            Button(
-                                onClick = { onManualDownload(d) },
-                                colors = ButtonDefaults.buttonColors(containerColor = NovaColors.Primary),
-                                shape = RoundedCornerShape(10.dp),
-                            ) { Text("Get", fontSize = 12.sp) }
-                        }
+                items(deliveries) { d -> DownloadRow(d, ctx, refresh, onManualDownload) }
+            }
+        }
+    }
+}
+
+@Composable
+private fun DownloadRow(
+    d: Delivery,
+    ctx: Context,
+    refresh: Int,
+    onManualDownload: (Delivery) -> Unit,
+) {
+    var pct by remember(d.id, refresh) { mutableStateOf(-1) }
+    var speed by remember(d.id, refresh) { mutableStateOf("") }
+    val saved = Prefs.isDownloaded(ctx, d.id)
+
+    LaunchedEffect(d.id, refresh) {
+        WorkManager.getInstance(ctx).getWorkInfosForUniqueWorkFlow("nova_${d.id}")
+            .map { infos ->
+                val w = infos.firstOrNull()
+                when (w?.state) {
+                    WorkInfo.State.RUNNING -> Pair(w.progress.getInt(DownloadWorker.PROGRESS, 0), w.progress.getString(DownloadWorker.SPEED) ?: "")
+                    WorkInfo.State.SUCCEEDED -> Pair(100, "Complete")
+                    else -> Pair(-1, "")
+                }
+            }
+            .collect { (p, s) -> pct = p; speed = s }
+    }
+
+    Card(
+        Modifier.fillMaxWidth().padding(vertical = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = NovaColors.Surface),
+        shape = RoundedCornerShape(16.dp),
+    ) {
+        Column(Modifier.padding(14.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Column(Modifier.weight(1f)) {
+                    Text(d.title.ifBlank { d.fileName }, color = NovaColors.OnSurface, fontWeight = FontWeight.Medium, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Text("${d.platform} · MP4 · ${d.size / 1_000_000} MB", color = NovaColors.Muted, fontSize = 11.sp)
+                }
+                when {
+                    saved || pct == 100 -> {
+                        Icon(Icons.Default.CheckCircle, "Downloaded", tint = NovaColors.Online, modifier = Modifier.size(28.dp))
+                        IconButton(onClick = {
+                            try { ctx.startActivity(Intent(Intent.ACTION_GET_CONTENT).apply { type = "video/*" }) } catch (_: Exception) {}
+                        }) { Icon(Icons.Default.Folder, "Open", tint = NovaColors.Primary) }
+                    }
+                    pct in 0..99 -> {
+                        Text("$pct%  $speed", color = NovaColors.Primary, fontSize = 11.sp)
+                    }
+                    else -> {
+                        Button(
+                            onClick = { onManualDownload(d) },
+                            colors = ButtonDefaults.buttonColors(containerColor = NovaColors.Primary),
+                            shape = RoundedCornerShape(10.dp),
+                        ) { Text("Download", fontSize = 12.sp) }
                     }
                 }
+            }
+            if (pct in 0..99) {
+                Spacer(Modifier.size(8.dp))
+                LinearProgressIndicator(
+                    progress = { pct / 100f },
+                    modifier = Modifier.fillMaxWidth().height(6.dp),
+                    color = NovaColors.Primary,
+                    trackColor = NovaColors.SurfaceAlt,
+                )
             }
         }
     }

@@ -215,6 +215,7 @@ class MainActivity : ComponentActivity() {
                 if (platforms.isEmpty() && !loading) loadTree()
                 HomeScreen(
                     username = Prefs.username(this),
+                    ctx = this@MainActivity,
                     platforms = platforms,
                     deliveries = deliveries,
                     loading = loading,
@@ -328,6 +329,7 @@ class MainActivity : ComponentActivity() {
             )
 
             is Screen.FileOpen -> FileOpenScreen(
+                id = s.id,
                 title = s.title,
                 fileName = s.fileName,
                 url = s.url,
@@ -335,9 +337,7 @@ class MainActivity : ComponentActivity() {
                 onDownload = {
                     val d = Delivery(s.id, s.fileName, s.url, s.title, "", 0)
                     workId = DownloadQueue.enqueue(this@MainActivity, d, true)
-                    fileSaved = true
                 },
-                saved = fileSaved,
                 workId = workId,
                 ctx = this@MainActivity,
             )
