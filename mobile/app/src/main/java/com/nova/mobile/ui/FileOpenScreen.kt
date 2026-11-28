@@ -1,5 +1,6 @@
 package com.nova.mobile.ui
 
+import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,10 +20,20 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.work.WorkManager
+import androidx.work.WorkInfo
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -39,7 +50,24 @@ fun FileOpenScreen(
     onBack: () -> Unit,
     onDownload: () -> Unit,
     saved: Boolean,
+    workId: java.util.UUID? = null,
+    ctx: Context,
 ) {
+    var progress by remember { mutableStateOf(-1) }
+    LaunchedEffect(workId) {
+        if (workId == null) return@LaunchedEffect
+        WorkManager.getInstance(ctx)
+            .getWorkInfoByIdFlow(workId)
+            .map { info ->
+                when (info?.state) {
+                    WorkInfo.State.RUNNING -> info.progress.getInt(DownloadWorker.PROGRESS, 0)
+                    WorkInfo.State.SUCCEEDED -> 100
+                    else -> -1
+                }
+            }
+            .distinctUntilChanged()
+            .collect { progress = it }
+    }
     Scaffold(
         containerColor = NovaColors.Background,
         topBar = {
@@ -64,6 +92,17 @@ fun FileOpenScreen(
                 }
             }
             Spacer(Modifier.height(20.dp))
+            if (progress in 0..100) {
+                Text("Downloading… $progress%", color = NovaColors.OnSurface, fontSize = 13.sp)
+                Spacer(Modifier.size(6.dp))
+                LinearProgressIndicator(
+                    progress = { progress / 100f },
+                    modifier = Modifier.fillMaxWidth().height(8.dp),
+                    color = NovaColors.Primary,
+                    trackColor = NovaColors.SurfaceAlt,
+                )
+                Spacer(Modifier.height(12.dp))
+            }
             Button(
                 onClick = onDownload,
                 enabled = !saved,

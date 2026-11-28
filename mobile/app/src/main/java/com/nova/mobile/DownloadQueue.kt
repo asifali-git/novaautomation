@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit
 object DownloadQueue {
     private const val TAG = "nova_download"
 
-    fun enqueue(ctx: Context, delivery: Delivery, autoSave: Boolean) {
+    fun enqueue(ctx: Context, delivery: Delivery, autoSave: Boolean): java.util.UUID {
         val input = workDataOf(
             DownloadWorker.KEY_ID to delivery.id,
             DownloadWorker.KEY_URL to delivery.catboxUrl,
@@ -36,6 +36,7 @@ object DownloadQueue {
             ExistingWorkPolicy.KEEP,
             req,
         )
+        return req.id
     }
 
     fun syncPending(ctx: Context, deliveries: List<Delivery>, autoSave: Boolean) {

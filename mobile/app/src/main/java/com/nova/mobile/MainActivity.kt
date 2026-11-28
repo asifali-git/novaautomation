@@ -120,6 +120,7 @@ class MainActivity : ComponentActivity() {
         var manageBusy by remember { mutableStateOf(false) }
         var manageMsg by remember { mutableStateOf<String?>(null) }
         var fileSaved by remember { mutableStateOf(false) }
+        var workId by remember { mutableStateOf<java.util.UUID?>(null) }
 
         fun loadSettings() {
             scope.launch {
@@ -333,10 +334,12 @@ class MainActivity : ComponentActivity() {
                 onBack = { goBack() },
                 onDownload = {
                     val d = Delivery(s.id, s.fileName, s.url, s.title, "", 0)
-                    DownloadQueue.enqueue(this@MainActivity, d, true)
+                    workId = DownloadQueue.enqueue(this@MainActivity, d, true)
                     fileSaved = true
                 },
                 saved = fileSaved,
+                workId = workId,
+                ctx = this@MainActivity,
             )
         }
     }
