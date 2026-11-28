@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -31,16 +32,23 @@ def ffmpeg_exe() -> str:
 
 
 def probe(path: Path) -> dict:
+    # imageio-ffmpeg ships ffmpeg (not ffprobe) — parse `ffmpeg -i` stderr.
     r = subprocess.run(
-        [ffmpeg_exe(), "-v", "error", "-select_streams", "v:0",
-         "-show_entries", "stream=codec_name,width,height,r_frame_rate,avg_frame_rate",
-         "-show_entries", "format=format_name", "-of", "json", str(path)],
+        [ffmpeg_exe(), "-hide_banner", "-i", str(path)],
         capture_output=True, text=True, timeout=120,
     )
-    try:
-        return json.loads(r.stdout or "{}")
-    except json.JSONDecodeError:
-        return {}
+    text = r.stderr or ""
+    stream: dict = {}
+    m = re.search(r"Video:\s*(\w+).*?,\s*(\d+)x(\d+).*?(?:(\d+(?:\.\d+)?)\s*fps)", text)
+    if m:
+        stream = {
+            "codec_name": m.group(1),
+            "width": int(m.group(2)),
+            "height": int(m.group(3)),
+            "avg_frame_rate": m.group(4),
+        }
+    fmt = "mp4" if "mov,mp4" in text else ""
+    return {"format": {"format_name": fmt}, "streams": [stream] if stream else []}
 
 
 def is_mp4_h264(path: Path) -> bool:
@@ -55,21 +63,14 @@ def ensure_mp4(src: Path, dst: Path) -> Path:
     """Return a path to an MP4 (h264/aac) with identical fps + resolution."""
     if not src.exists():
         raise SystemExit(f"source missing: {src}")
+    # Only h264 in MP4 is universally playable on Android. AV1/VP9/HEVC
+    # inside MP4 must be transcoded even though the container says "mp4".
     if is_mp4_h264(src):
         if src.resolve() != dst.resolve():
             shutil.copy2(src, dst)
         return dst
 
-    # Preserve original fps/resolution: -c copy when codecs allow, else re-encode.
-    cmd_copy = [
-        ffmpeg_exe(), "-y", "-loglevel", "error", "-i", str(src),
-        "-c", "copy", "-movflags", "+faststart", str(dst),
-    ]
-    res = subprocess.run(cmd_copy, capture_output=True, text=True, timeout=1800)
-    if res.returncode == 0 and dst.exists() and dst.stat().st_size > 10_000:
-        return dst
-
-    # Re-encode: libx264 + aac, no -r / -s flags -> ffmpeg keeps source fps/size.
+    dst.unlink(missing_ok=True)
     cmd_enc = [
         ffmpeg_exe(), "-y", "-loglevel", "error", "-i", str(src),
         "-c:v", "libx264", "-preset", "veryfast", "-crf", "20",
