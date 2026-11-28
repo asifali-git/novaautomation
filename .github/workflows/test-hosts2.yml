@@ -1,0 +1,27 @@
+name: test-hosts2
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Test hosts with proper file
+        run: |
+          printf 'fake mp4 data' > /tmp/test.mp4
+          echo "=== tmpfiles.org mp4 ==="
+          curl -s -m 60 -F "file=@/tmp/test.mp4" https://tmpfiles.org/api/v1/upload || echo "(empty)"
+          echo ""
+          echo "=== uguu.se ==="
+          curl -s -m 60 -F "file[]=@/tmp/test.mp4" https://uguu.se/upload.php || echo "(empty)"
+          echo ""
+          echo "=== files.catbox.moe with UA ==="
+          curl -s -m 60 -A "Mozilla/5.0" -F "reqtype=fileupload" -F "fileToUpload=@/tmp/test.mp4" https://catbox.moe/user/api.php || echo "(empty)"
+          echo ""
