@@ -1,0 +1,33 @@
+name: reset-and-redownload
+
+# Clear video/delivery history (keep accounts + links), force re-detection,
+# then let poll -> process download everything again.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  reset:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Reset D1 state
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          workingDirectory: worker
+          command: d1 execute novaautomation --remote --file=./reset_pipeline.sql
+
+      - name: Trigger poll (detect -> process -> download -> FCM)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          gh api "repos/$REPO/actions/workflows/poll.yml/dispatches" \
+            -f ref=master
+          echo "poll dispatched"
