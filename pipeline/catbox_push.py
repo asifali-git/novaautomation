@@ -18,6 +18,7 @@ import argparse
 import json
 import os
 import sys
+import time
 import urllib.request
 from pathlib import Path
 
@@ -54,10 +55,20 @@ def upload(path: Path, userhash: str = "") -> str:
     fields = {"reqtype": "fileupload"}
     if userhash:
         fields["userhash"] = userhash
-    result = _post_form(CATBOX_API, fields, file_field=("fileToUpload", path))
-    if not result.startswith("https://files.catbox.moe/"):
-        raise RuntimeError(f"unexpected Catbox response: {result[:200]}")
-    return result
+    last = ""
+    # Catbox occasionally returns an empty body or HTTP 412 under load;
+    # a short retry loop is enough to get a stable URL.
+    for attempt in range(4):
+        try:
+            result = _post_form(CATBOX_API, fields, file_field=("fileToUpload", path))
+            if result.startswith("https://files.catbox.moe/"):
+                return result
+            last = f"unexpected response: {result[:120]}"
+        except Exception as exc:
+            last = f"{type(exc).__name__}: {str(exc)[:120]}"
+        if attempt < 3:
+            time.sleep(2 * (attempt + 1))
+    raise RuntimeError(last or "Catbox upload failed")
 
 
 def notify(delivery: dict, worker_url: str, token: str) -> dict:
@@ -67,7 +78,7 @@ def notify(delivery: dict, worker_url: str, token: str) -> dict:
     req = urllib.request.Request(
         worker_url.rstrip("/") + "/api/internal/deliveries",
         data=body,
-        headers={"Content-Type": "application/json", "Authorization": f"Bearer {token}"},
+        headers={"Content-Type": "application/json", "x-token": token},
         method="POST",
     )
     with urllib.request.urlopen(req, timeout=120) as resp:
