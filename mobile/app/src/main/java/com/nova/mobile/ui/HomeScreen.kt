@@ -2,6 +2,7 @@ package com.nova.mobile.ui
 
 import android.content.Context
 import android.content.Intent
+import com.nova.mobile.DownloadQueue
 import com.nova.mobile.DownloadWorker
 import com.nova.mobile.Prefs
 import androidx.compose.foundation.background
